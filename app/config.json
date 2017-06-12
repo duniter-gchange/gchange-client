@@ -1,5 +1,6 @@
 {
   "default": {
+    "defaultLanguage": "fr-FR",
     "timeout": 4000,
     "cacheTimeMs": 60000,
     "useRelative": true,
@@ -22,6 +23,7 @@
   },
 
   "dev": {
+    "defaultLanguage": "fr-FR",
     "timeout": 6000,
     "cacheTimeMs": 60000,
     "useRelative": true,

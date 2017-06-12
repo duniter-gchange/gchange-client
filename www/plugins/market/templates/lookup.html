@@ -41,7 +41,7 @@
       COMMON.SEARCH_NO_RESULT
     </div>
 
-    <ion-list class="{{::motion.ionListClass}}"
+    <ion-list class="list {{::motion.ionListClass}}"
          ng-if="!search.loading && search.results.length">
 
       <a ng-repeat="rec in search.results"

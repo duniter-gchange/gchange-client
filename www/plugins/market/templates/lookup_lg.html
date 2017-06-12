@@ -73,7 +73,7 @@
       COMMON.SEARCH_NO_RESULT
     </div>
 
-    <div class="list animate-ripple"
+    <ion-list class="list {{::motion.ionListClass}}"
          ng-if="!search.loading && search.results.length">
 
       <a ng-repeat="rec in search.results track by rec.id"
@@ -112,7 +112,7 @@
           </div>
         </div>
       </a>
-    </div>
+    </ion-list>
 
     <ion-infinite-scroll
       ng-if="!search.loading && search.hasMore"

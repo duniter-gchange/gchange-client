@@ -201,8 +201,8 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
     return csWallet.loadData(options)
       /*.catch(UIUtils.onError('ERROR.LOAD_WALLET_DATA_ERROR'))*/
 
+      /* Warn if wallet has been never used - see #167
       .then(function(walletData) {
-        // Warn if wallet has been never used - see #167
         var showAlert = !csConfig.initPhase && csWallet.isNeverUsed() && (!csSettings.data.wallet || csSettings.data.wallet.alertIfUnusedWallet);
         if (!showAlert) return walletData;
         return UIUtils.loading.hide()
@@ -216,7 +216,7 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
             if (confirm) return walletData;
             return csWallet.logout();
           });
-      })
+      })*/
 
       .then(function(walletData) {
         if (walletData) {

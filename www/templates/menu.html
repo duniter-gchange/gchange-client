@@ -39,7 +39,7 @@
                  width="225">
     <ion-header-bar>
       <h1 class="title dark hidden-sm hidden-xs" translate>
-        MENU.TITLE
+        COMMON.APP_NAME
       </h1>
 
       <div class="visible-sm visible-xs hero">
@@ -77,38 +77,11 @@
           <span translate>MENU.HOME</span>
         </ion-item>
 
-        <a menu-close
-           id="helptip-menu-btn-currency"
-           class="item item-icon-left"
-           active-link="active"
-           active-link-path-prefix="#/app/currency"
-           ui-sref="app.currency"
-           ng-if="!options.registry || !options.registry.enable">
-          <i class="icon ion-ios-world-outline"></i>
-          <span translate>MENU.CURRENCY</span>
-        </a>
-
-        <a menu-close
-           id="helptip-menu-btn-network"
-           class="item item-icon-left hidden-xs hidden-sm"
-           active-link="active"
-           active-link-path-prefix="#/app/network"
-           ui-sref="app.network">
-          <i class="icon ion-cloud"></i>
-          <span translate>MENU.NETWORK</span>
-        </a>
-
         <!-- Allow extension here -->
         <cs-extension-point name="menu-discover"></cs-extension-point>
 
         <!-- MAIN Section -->
         <div class="item item-divider"></div>
-
-        <a menu-close class="item item-icon-left" active-link="active" ui-sref="app.wot_lookup">
-          <i class="icon ion-person-stalker"></i>
-          <span translate>MENU.WOT</span>
-        </a>
-        <a id="helptip-menu-btn-wot"></a>
 
         <!-- Allow extension here -->
         <cs-extension-point name="menu-main"></cs-extension-point>
@@ -129,19 +102,6 @@
         </a>
         <a id="helptip-menu-btn-account"></a>
 
-        <a menu-close
-           class="item item-icon-left"
-           active-link="active"
-           active-link-path-prefix="#/app/history"
-           ng-click="loginAndGo('app.view_wallet_tx')"
-           ng-class="{'item-menu-disable': !login}">
-          <i class="icon ion-card"></i>
-          <span translate>MENU.TRANSACTIONS</span>
-        </a>
-        <a id="helptip-menu-btn-tx"></a>
-
-        <div class="item item-divider visible-xs visible-sm"></div>
-
         <!-- Allow extension here -->
         <cs-extension-point name="menu-user"></cs-extension-point>
 
@@ -154,27 +114,6 @@
           <span translate>MENU.SETTINGS</span>
         </a>
         <a id="helptip-menu-btn-settings"></a>
-
-        <!-- actions divider -->
-        <div class="item item-divider" ng-if="login"></div>
-
-        <!-- transfer -->
-        <ion-item menu-close class="item item-button-right hidden-xs hidden-sm" ng-if="login">
-          <span translate>MENU.TRANSFER</span>
-          <button class="button button-positive ink-dark" ng-click="showTransferModal()">
-          <i class="icon ion-paper-airplane"></i>
-          </button>
-        </ion-item>
-
-        <!-- scan QR code -->
-        <ion-item menu-close class="item item-button-right" ng-if="$root.device.barcode.enable">
-          <span translate>Scan</span>
-          <button class="button button-stable ink" ng-click="scanQrCodeAndGo()">
-            <i class="icon ion-qr-scanner"></i>
-          </button>
-        </ion-item>
-
-        <cs-extension-point name="menu-actions"></cs-extension-point>
 
       </ion-list>
 

@@ -1,6 +1,6 @@
 {
   "COMMON": {
-    "APP_NAME": "Cesium",
+    "APP_NAME": "ğ<b>change</b>",
     "APP_VERSION": "v{{version}}",
     "APP_BUILD": "date : {{build}}",
     "PUBKEY": "Clé publique",
@@ -74,7 +74,6 @@
     "BTN_PICTURE_CAMERA": "<b>Caméra</b>"
   },
   "MENU": {
-    "TITLE": "Cesium",
     "HOME": "Accueil",
     "WOT": "Annuaire",
     "MARKET": "Annonces",
@@ -99,9 +98,8 @@
     "REPORT_ISSUE": "Remonter un problème"
   },
   "HOME": {
-    "TITLE": "Cesium",
-    "MESSAGE": "Bienvenue dans l'application Cesium !<br/>Suivez vos comptes <a href=\"http://duniter.org\" target=\"_blank\">Duniter</a> en temps réel.",
-    "MESSAGE_SHORT": "Suivez vos comptes <a href=\"http://duniter.org\" target=\"_blank\">Duniter</a><br/>en temps réel !",
+    "MESSAGE": "Bienvenue dans l'application {{'COMMON.APP_NAME'|translate}} !<br/>Faites des échanges d'un genre nouveau !",
+    "MESSAGE_SHORT": "Faites des échanges d'un genre nouveau !",
     "BTN_REGISTRY": "Annuaire",
     "BTN_MARKET": "Offres/demandes",
     "BTN_CURRENCIES": "Explorer les monnaies",

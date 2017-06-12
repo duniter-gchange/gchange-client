@@ -13,10 +13,6 @@ angular.module('cesium.es.app.controllers', ['ngResource', 'cesium.es.services']
              templateUrl: "plugins/es/templates/menu_extend.html",
              controller: "ESMenuExtendCtrl"
            },
-           'menu-main': {
-             templateUrl: "plugins/es/templates/menu_extend.html",
-             controller: "ESMenuExtendCtrl"
-           },
            'menu-user': {
              templateUrl: "plugins/es/templates/menu_extend.html",
              controller: "ESMenuExtendCtrl"
@@ -33,20 +29,6 @@ angular.module('cesium.es.app.controllers', ['ngResource', 'cesium.es.services']
           }
         }
       });
-
-      // New account extension points
-      /*PluginServiceProvider.extendState('app', {
-        points: {
-          'select-account-type': {
-            templateUrl: "plugins/es/templates/join/modal_join_extend.html",
-            controller: "ESJoinCtrl"
-          },
-          'last-slide': {
-            templateUrl: "plugins/es/templates/join/modal_join_extend.html",
-            controller: "ESJoinCtrl"
-          },
-        }
-      });*/
     }
   })
 
@@ -55,7 +37,6 @@ angular.module('cesium.es.app.controllers', ['ngResource', 'cesium.es.services']
  .controller('ESMenuExtendCtrl', ESMenuExtendController)
 
  .controller('ESProfilePopoverExtendCtrl', ESProfilePopoverExtendController)
-
 
 ;
 
@@ -79,11 +60,6 @@ function ESMenuExtendController($scope, $state, PluginService, esSettings, UIUti
   'ngInject';
   $scope.extensionPoint = PluginService.extensions.points.current.get();
   $scope.enable = esSettings.isEnable();
-  console.log("Ise ES plugin enable: ", $scope.enable);
-
-  $scope.showMarketLookupView = function() {
-    $state.go(UIUtils.screen.isSmall() ? 'app.market_lookup': 'app.market_lookup_lg');
-  };
 
   $scope.showRegistryLookupView = function() {
     $state.go(UIUtils.screen.isSmall() ? 'app.registry_lookup': 'app.registry_lookup_lg');

@@ -1,5 +1,5 @@
 
-angular.module('cesium.settings.controllers', ['cesium.services', 'cesium.currency.controllers'])
+angular.module('cesium.settings.controllers', ['cesium.services'])
   .config(function($stateProvider) {
     'ngInject';
 

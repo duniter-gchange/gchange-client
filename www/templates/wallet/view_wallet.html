@@ -11,11 +11,11 @@
 
     <cs-extension-point name="nav-buttons"></cs-extension-point>
 
-    <button class="button button-icon button-clear visible-xs visible-sm"
+    <!--<button class="button button-icon button-clear visible-xs visible-sm"
             id="helptip-wallet-options-xs"
             ng-click="showActionsPopover($event)">
       <i class="icon ion-android-more-vertical"></i>
-    </button>
+    </button>-->
   </ion-nav-buttons>
 
   <ion-content scroll="true" bind-notifier="{ rebind:settings.useRelative, locale:$root.settings.locale.id}">
@@ -35,7 +35,7 @@
           <h3 class="light" ng-if=":rebind:formData.uid">{{:rebind:formData.uid}}</h3>
           <h3 class="light" ng-if=":rebind:!formData.uid"><i class="ion-key"></i> {{:rebind:formData.pubkey | formatPubkey}}</h3>
         </ng-if>
-        <h4 class="assertive"><ng-if ng-if=":rebind:(formData.name || formData.uid) && !formData.isMember" translate>WOT.NOT_MEMBER_PARENTHESIS</ng-if></h4>
+        <h4>&nbsp;</h4>
       </div>
       <h4 class="content light" ng-if="loading">
         <ion-spinner icon="android"></ion-spinner>
@@ -63,12 +63,12 @@
 
       &nbsp;&nbsp;
 
-      <button id="helptip-wallet-options"
+      <!--<button id="helptip-wallet-options"
               class="button button-stable icon-right ink"
               ng-click="showActionsPopover($event)">
         &nbsp; <i class="icon ion-android-more-vertical"></i>&nbsp;
         {{:locale:'COMMON.BTN_OPTIONS' | translate}}
-      </button>
+      </button>-->
 
       <div ng-if="formData.requirements.needRenew">
         <br/>

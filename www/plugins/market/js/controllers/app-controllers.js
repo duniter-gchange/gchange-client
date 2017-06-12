@@ -11,14 +11,69 @@ angular.module('cesium.market.app.controllers', ['ngResource', 'cesium.es.servic
          points: {
            'menu-main': {
              templateUrl: "plugins/market/templates/menu_extend.html",
-             controller: "ESMenuExtendCtrl"
+             controller: "MarketMenuExtendCtrl"
            }
          }
         });
 
+        // Home extension points
+        PluginServiceProvider.extendState('app.home', {
+            points: {
+                'buttons': {
+                    templateUrl: "plugins/market/templates/home_extend.html",
+                    controller: "MarketHomeExtendCtrl"
+                }
+            }
+        });
     }
   })
 
- .controller('ESMenuExtendCtrl', ESMenuExtendController)
+ .controller('MarketMenuExtendCtrl', MarketMenuExtendController)
 
+ .controller('MarketHomeExtendCtrl', MarketHomeExtendController)
 ;
+
+
+/**
+ * Control menu extension
+ */
+function MarketMenuExtendController($scope, esSettings) {
+    'ngInject';
+    $scope.enable = esSettings.isEnable();
+
+    esSettings.api.state.on.changed($scope, function(enable) {
+        $scope.enable = enable;
+    });
+}
+
+
+/**
+ * Control home extension
+ */
+function MarketHomeExtendController($scope, $state, esSettings, csWallet) {
+    'ngInject';
+    $scope.enable = esSettings.isEnable();
+
+    esSettings.api.state.on.changed($scope, function(enable) {
+        $scope.enable = enable;
+    });
+
+    $scope.showNewRecordModal = function() {
+        if (!csWallet.isLogin()) {
+            $state.go('app.market_add_record', {type: 'offer'});
+        }
+        else {
+            return $scope.loadWallet({minData: true})
+                .then(function () {
+                    return UIUtils.loading.hide();
+                }).then(function () {
+                    return ModalUtils.show('plugins/es/templates/market/modal_record_type.html');
+                })
+                .then(function (type) {
+                    if (type) {
+                        $state.go('app.market_add_record', {type: type});
+                    }
+                });
+        }
+    };
+}
