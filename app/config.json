@@ -1,0 +1,46 @@
+{
+  "default": {
+    "timeout": 4000,
+    "cacheTimeMs": 60000,
+    "useRelative": true,
+    "timeWarningExpireMembership": 5184000,
+    "timeWarningExpire": 7776000,
+    "useLocalStorage": false,
+    "rememberMe": false,
+    "showUDHistory": false,
+    "node": {
+      "host": "gtest.duniter.fr",
+      "port": "9201"
+    },
+    "plugins":{
+      "es": {
+        "enable": true,
+        "host": "data.duniter.fr",
+        "port": "80"
+      }
+    }
+  },
+
+  "dev": {
+    "timeout": 6000,
+    "cacheTimeMs": 60000,
+    "useRelative": true,
+    "timeWarningExpireMembership": 5184000,
+    "timeWarningExpire": 7776000,
+    "useLocalStorage": true,
+    "rememberMe": true,
+    "showUDHistory": false,
+    "node": {
+      "host": "g1-test.duniter.org",
+      "port": "10900"
+    },
+    "plugins":{
+      "es": {
+        "enable": false,
+        "host": "localhost",
+        "port": "9200",
+        "wsPort": "9400"
+      }
+    }
+  }
+}

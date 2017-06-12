@@ -1,0 +1,178 @@
+
+/**********
+   Categories select
+**********/
+
+.item-category {
+  border: 1px solid #ddd !important;
+}
+
+.item-category .h2 {
+  overflow: inherit ;
+  text-overflow: inherit ;
+  white-space: normal !important;
+}
+
+.item-category.item-divider,
+.item-category .item-divider{
+  background-color: #f5f5f5 !important;
+}
+
+/**********
+   Record list
+**********/
+
+.item-record {
+  height: 100px !important;
+  padding-top: 5px !important;
+}
+
+.row-record {
+  border-bottom: solid 1px #ccc !important;
+  padding: 0 !important;
+  height: 100px !important;
+  overflow: hidden;
+}
+
+.row-record .col {
+  padding-top: 5px;
+  padding-bottom: 0px;
+}
+
+.card-record .badge-picture-count,
+.row-record .badge-picture-count {
+  position: absolute !important;
+  left: 67px !important;
+  bottom: 15px !important;
+  right: inherit !important;
+  top: inherit !important;
+}
+
+.card-record .badge-price {
+  font-size: 12px;
+  position: absolute !important;
+  bottom: 10px !important;
+  right: 10px;
+  top: inherit !important;
+}
+
+.card-record .item-thumbnail-left {
+  padding-left: 150px;
+}
+
+.card-record .item-thumbnail-left .item-image {
+  border-radius: 0;
+  box-shadow: none;
+  max-width: 130px;
+  max-height: 130px;
+  top: inherit;
+  background-repeat: no-repeat;
+}
+
+
+.row-record .badge-price {
+  position: absolute !important;
+  bottom: 15px !important;
+  right: inherit !important;
+  top: inherit !important;
+}
+
+.row-record .col-text-wrap {
+    padding: 0;
+    margin: 0;
+}
+.row-record .col .text-wrap {
+    height: 93px;
+    white-space: normal;
+    position: relative;
+    word-wrap: break-word !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+}
+
+/* Source: See doc: http://stackoverflow.com/questions/15814346 */
+.row-record .col .text-wrap:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 30%;
+  background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);   /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(0255,255,255,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+.item.gallery {
+  display: inline-block;
+}
+
+.item-more-comments {
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: inherit !important;
+}
+
+/**********
+   Record view
+**********/
+
+.hero .content .button.button-camera {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
+
+.hero .content i.avatar .button {
+  display: none;
+  position: absolute;
+  bottom: -25px;
+  left: -3px;
+}
+
+.hero .content i.avatar:hover .button {
+  display: block;
+}
+
+.hero .content i.avatar {
+  font-size: 55px !important;
+  line-height: 88px;
+}
+
+/**
+* Message screen
+*/
+
+#composeMessage .list .item {
+  border-bottom: solid 1px #ccc;
+}
+
+.view-message h1.title {
+  font-size: 22px;
+  margin-top: 5px;
+}
+
+.view-messages .list .item h2.unread {
+  font-weight: bold !important;
+}
+.view-messages .list .item h2.read {
+  color: #444 !important;
+}
+.view-messages .list .item {
+  height: 80px;
+}
+.view-messages .list .item-content {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}

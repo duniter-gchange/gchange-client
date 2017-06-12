@@ -1,0 +1,33 @@
+<form name="popupForm" ng-submit="">
+
+  <span ng-bind-html="'SETTINGS.POPUP_PEER.HELP'|translate"></span>
+
+  <div class="list" ng-init="setPopupForm(popupForm)">
+    <label class="item item-input"
+           ng-class="{'item-input-error': popupForm.$submitted && popupForm.newNode.$invalid}">
+      <input name="newNode" type="text" placeholder="{{'SETTINGS.POPUP_PEER.PEER_HELP' | translate}}"
+             ng-model="popupData.newNode"
+             ng-minlength="3"
+             required>
+    </label>
+    <div class="form-errors"
+         ng-if="popupForm.$submitted && popupForm.newNode.$error"
+         ng-messages="popupForm.newNode.$error">
+      <div class="form-error" ng-message="required">
+        <span translate="ERROR.FIELD_REQUIRED"></span>
+      </div>
+      <div class="form-error" ng-message="minlength">
+        <span translate="ERROR.FIELD_TOO_SHORT"></span>
+      </div>
+    </div>
+  </div>
+
+  <small ng-bind-html="'SETTINGS.POPUP_PEER.BTN_SHOW_LIST_HELP' | translate"></small>
+
+  <button class="button button-positive button-clear positive button-outline button-full button-small-padding icon-left ink" ng-click="showNodeList()">
+    <i class="icon ion-wifi "></i>
+    {{'SETTINGS.POPUP_PEER.BTN_SHOW_LIST' | translate}}
+  </button>
+</form>
+
+

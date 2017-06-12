@@ -1,0 +1,164 @@
+<ion-view left-buttons="leftButtons"
+          id="wallet">
+  <ion-nav-title>
+    <!-- no title-->
+  </ion-nav-title>
+
+  <ion-nav-buttons side="secondary">
+
+    <button class="button button-icon button-clear icon ion-loop visible-xs visible-sm" ng-click="doUpdate()">
+    </button>
+
+    <cs-extension-point name="nav-buttons"></cs-extension-point>
+
+    <button class="button button-icon button-clear visible-xs visible-sm"
+            id="helptip-wallet-options-xs"
+            ng-click="showActionsPopover($event)">
+      <i class="icon ion-android-more-vertical"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content scroll="true" bind-notifier="{ rebind:settings.useRelative, locale:$root.settings.locale.id}">
+    <div class="positive-900-bg hero"  id="wallet-header"
+         ng-class="{'hero-qrcode-active': toggleQRCode}">
+      <div class="content" ng-if="!loading">
+        <i class="avatar"
+           ng-if=":rebind:!formData.avatar"
+           ng-class="{'avatar-wallet': !formData.isMember, 'avatar-member': formData.isMember}"></i>
+        <i class="avatar"
+           ng-if=":rebind:formData.avatar"
+           style="background-image: url({{:rebind:formData.avatar.src}})"></i>
+        <ng-if ng-if=":rebind:formData.name">
+          <h3 class="light">{{:rebind:formData.name}}</h3>
+        </ng-if>
+        <ng-if ng-if=":rebind:!formData.name">
+          <h3 class="light" ng-if=":rebind:formData.uid">{{:rebind:formData.uid}}</h3>
+          <h3 class="light" ng-if=":rebind:!formData.uid"><i class="ion-key"></i> {{:rebind:formData.pubkey | formatPubkey}}</h3>
+        </ng-if>
+        <h4 class="assertive"><ng-if ng-if=":rebind:(formData.name || formData.uid) && !formData.isMember" translate>WOT.NOT_MEMBER_PARENTHESIS</ng-if></h4>
+      </div>
+      <h4 class="content light" ng-if="loading">
+        <ion-spinner icon="android"></ion-spinner>
+      </h4>
+    </div>
+
+    <div id="qrcode" class="qrcode visible-xs visible-sm spin"
+         ng-class="{'active': toggleQRCode}"
+         ng-click="toggleQRCode = !toggleQRCode"></div>
+
+    <!-- Buttons bar-->
+    <div class="hidden-xs hidden-sm padding text-center" ng-if="!loading">
+
+      <button class="button button-stable button-small-padding icon ion-android-share-alt ink"
+              ng-click="showSharePopover($event)"
+              title="{{'COMMON.BTN_SHARE' | translate}}">
+      </button>
+
+      <button class="button button-stable button-small-padding icon ion-loop ink"
+              ng-click="doUpdate()"
+              title="{{'COMMON.BTN_REFRESH' | translate}}">
+      </button>
+
+      <cs-extension-point name="buttons"></cs-extension-point>
+
+      &nbsp;&nbsp;
+
+      <button id="helptip-wallet-options"
+              class="button button-stable icon-right ink"
+              ng-click="showActionsPopover($event)">
+        &nbsp; <i class="icon ion-android-more-vertical"></i>&nbsp;
+        {{:locale:'COMMON.BTN_OPTIONS' | translate}}
+      </button>
+
+      <div ng-if="formData.requirements.needRenew">
+        <br/>
+        <button class="button button-raised button-stable  ink"
+                ng-click="renewMembership()">
+          <span class="assertive">{{:locale:'ACCOUNT.BTN_MEMBERSHIP_RENEW' | translate}}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="row no-padding">
+      <div class="col col-20 hidden-xs hidden-sm">&nbsp;</div>
+
+      <div class="col">
+
+        <div class="list" ng-class="::motion.ionListClass" ng-hide="loading">
+
+          <!-- Certifications -->
+          <a id="helptip-wallet-certifications"
+             class="item item-icon-left item-icon-right item-text-wrap ink"
+             ng-if="formData.isMember||formData.requirements.pendingMembership"
+             ng-click="showCertifications()">
+            <i class="icon ion-ribbon-b"></i>
+            <b ng-if="formData.requirements.isSentry" class="ion-star icon-secondary" style="color: yellow; font-size: 16px; left: 25px; top: -7px;"></b>
+            {{:locale:'ACCOUNT.CERTIFICATION_COUNT'|translate}}
+            <cs-badge-certification requirements="formData.requirements"
+                                    parameters="{sigQty: formData.parameters.sigQty}">
+            </cs-badge-certification>
+            <i class="gray icon ion-ios-arrow-right"></i>
+          </a>
+
+          <!-- Signature stock -->
+          <a id="helptip-wallet-given-certifications"
+             class="item item-icon-left item-text-wrap item-icon-right ink visible-xs visible-sm"
+             ng-if="formData.isMember"
+             ng-click="showGivenCertifications()">
+            <i class="icon ion-ribbon-a"></i>
+            <span translate>WOT.GIVEN_CERTIFICATIONS.SENT</span>
+            <i class="gray icon ion-ios-arrow-right"></i>
+          </a>
+
+          <!-- Registration date -->
+          <ion-item class="item-icon-left" ng-if="formData.sigDate">
+            <i class="icon ion-calendar"></i>
+            <span>{{'WOT.REGISTERED_SINCE' | translate}}</span>
+            <h5 class="dark">{{::formData.sigDate | formatDate}}</h5>
+            <span class="badge badge-balanced">{{::formData.sigDate | formatFromNow}}</span>
+          </ion-item>
+
+          <!-- Events -->
+          <span class="item item-divider" ng-if="formData.events.length">
+            {{:locale:'ACCOUNT.EVENTS' | translate}}
+          </span>
+
+          <div
+            class="item item-text-wrap item-icon-left item-wallet-event"
+            ng-repeat="event in formData.events">
+            <i class="icon"
+               ng-class="{'ion-information-circled royal': event.type=='info','ion-alert-circled': event.type=='warn'||event.type=='error','assertive': event.type=='error','ion-clock': event.type=='pending'}"></i>
+            <span trust-as-html="event.message | translate:event.messageParams"></span>
+          </div>
+
+          <cs-extension-point name="before-technical"></cs-extension-point>
+
+          <span class="item item-divider" translate>WOT.TECHNICAL_DIVIDER</span>
+
+          <!-- Uid -->
+          <span class="item item-icon-left item-text-wrap ink"
+                ng-if=":rebind:formData.uid"
+                on-hold="copy(formData.uid)"
+                copy-on-click="{{:rebind:formData.uid}}">
+            <span translate>COMMON.UID</span>
+            <span class="badge badge-stable">{{:rebind:formData.uid}}</span>
+          </span>
+
+          <!-- Public key -->
+          <span id="helptip-wallet-pubkey"
+                class="item item-icon-left item-text-wrap ink"
+                on-hold="copy(formData.pubkey)"
+                copy-on-click="{{:rebind:formData.pubkey}}">
+            <i class="icon ion-key"></i>
+            {{:locale:'COMMON.PUBKEY'|translate}}
+            <h4 id="pubkey" class="dark">{{:rebind:formData.pubkey}}</h4>
+          </span>
+       </div>
+      </div>
+
+      <div class="col col-20 hidden-xs hidden-sm">&nbsp;
+      </div>
+    </div>
+  </ion-content>
+
+</ion-view>

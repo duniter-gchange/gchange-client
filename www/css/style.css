@@ -1,0 +1,207 @@
+
+
+#newAccount h1 {
+    font-size: 25px;
+    /*text-align: left;*/
+    margin-top: 30px;
+}
+
+.badge sub, .badge sup {
+    line-height: inherit;
+}
+
+#home h1 {
+    padding-top: 15px;
+    text-align: center;
+}
+
+#home h2 {
+    font-size: 22px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    text-align: center;
+    color: #fff;
+}
+
+#home h4 {
+    color: #fff;
+}
+
+#home h4 a {
+  color: inherit;
+}
+
+#home .footer .title {
+  padding-top: 0;
+  font-size: 14px;
+  color: grey;
+}
+
+.bar .button.button-clear {
+  font-size: 12px !important;
+  font-weight: 300 !important;
+  width: initial !important;
+  min-width: 38px !important;
+  max-width: 90px !important;
+}
+.bar .button.button-clear:first-child {
+  margin-left: 5px;
+}
+
+.popup-buttons .button {
+  padding: 0 2px !important; /*Need for 'cancel' button */
+}
+
+
+#transfer .list .item {
+  border-bottom: solid 1px #ccc;
+}
+
+#transfer .item.item-icon-right input {
+  padding-right: 50px !important;
+}
+
+
+
+
+.list .item-input {
+  border-bottom: solid 1px #ccc;
+}
+
+.popover .list .item {
+  border-bottom: solid 1px #ccc;
+}
+
+.menu .avatar {
+    height: 88px;
+    width: 88px;
+}
+
+.center {
+    text-align: center;
+}
+
+
+.col-pubkey {
+  min-width: 130px !important;
+}
+
+
+/*.button {*/
+    /*height: 50px !important;*/
+    /*font-size: 18px !important;*/
+/*}*/
+
+/*.button, a {*/
+    /*margin-top: 50px !important;*/
+/*}*/
+
+/*div.scroll, .slider-slides {*/
+    /*-webkit-transform: initial !important;*/
+/*}*/
+
+
+
+
+/**********
+   MODAL
+**********/
+
+.modal .title {
+    text-align: center !important;
+}
+.slider {
+    height: 100%;
+}
+.slider-slide {
+    color: #000;
+    background-color: #fff;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300;
+}
+
+#list {
+    width: 170px;
+    margin: 30px auto;
+    font-size: 20px;
+}
+#list ol {
+    margin-top: 30px;
+}
+#list ol li {
+    text-align: left;
+    list-style: decimal;
+    margin: 10px 0px;
+}
+
+.button.ng-hide{
+    display:none;
+}
+
+.item-peer {
+    padding-top: 9px;
+    padding-bottom: 3px;
+}
+
+.item-peer .badge {
+    top: 14px;
+    right: 6%;
+}
+
+.item-peer:hover .badge.badge-energized,
+.item-peer:hover .badge.badge-balanced
+{
+    color: #fff !important;
+}
+
+.settings .item-divider {
+    background-color: #f5f5f5;
+}
+
+
+.no-margin {
+  margin: 0 !important;
+}
+
+/**********
+   Block items
+**********/
+
+.item-block {
+  padding-top: 4px;
+  padding-bottom: 3px;
+  max-height: 48px;
+}
+
+.item-block .badge {
+  top: 12px;
+  right: 6%;
+}
+
+.item-block.item-block-empty {
+  min-height: 24px !important;
+  max-height: 24px !important;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.item-block.item-block-empty .badge {
+  padding-top: 0px !important;
+  top: inherit;
+}
+
+.item-block.item-block-empty .badge.badge-balanced {
+  top: 0px !important;
+  padding-top: 3px !important;
+  padding-bottom: 2px !important;
+}
+
+.item-block-empty.compacted {
+  min-height: 3px !important;
+  max-height: 3px !important;
+  border-bottom: 0px !important;
+}
+
+.item-block.item-block-empty.compacted {
+  border-bottom: double 1px #eee !important;
+}

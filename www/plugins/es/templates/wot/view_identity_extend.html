@@ -1,0 +1,18 @@
+<!-- Buttons section -->
+<ng-if ng-if="enable && extensionPoint === 'buttons'">
+  <button class="button button-stable button-small-padding icon ion-compose"
+          ng-click="showNewMessageModal()"
+          title="{{'MESSAGE.BTN_WRITE' | translate}}">
+  </button>
+</ng-if>
+
+<!-- General section -->
+<ng-if ng-if="enable && extensionPoint === 'general'">
+
+  <span class="item item-divider item-divider-top-border" translate>PROFILE.PROFILE_DIVIDER</span>
+
+  <div class="double-padding-x padding-bottom">
+    <ng-include src="'plugins/es/templates/user/items_profile.html'" ng-init="showName=false;"></ng-include>
+  </div>
+
+</ng-if>

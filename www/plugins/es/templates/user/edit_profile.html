@@ -1,0 +1,150 @@
+<ion-view left-buttons="leftButtons">
+  <ion-nav-title>
+    <!-- no title-->
+  </ion-nav-title>
+
+  <ion-nav-buttons side="secondary">
+      <button class="button button-icon button-clear ion-android-done visible-xs visible-sm" ng-click="submitAndSaveAndClose()">
+      </button>
+  </ion-nav-buttons>
+
+  <ion-content scroll="true">
+
+    <div class="positive-900-bg hero">
+      <div class="content">
+        <i class="avatar"
+           ng-style="avatarStyle"
+           ng-class="{'avatar-wallet': !loading && !avatar && walletData && !walletData.isMember, 'avatar-member': !loading && !avatar && walletData.isMember}">
+          <button class="button button-positive button-large button-clear flat icon ion-camera visible-xs visible-sm"
+                  style="display: inline-block;"
+                  ng-click="showAvatarModal()"></button>
+          <button class="button button-positive button-large button-clear icon ion-camera hidden-xs hidden-sm"
+                  ng-click="showAvatarModal()"></button>
+        </i>
+        <h3 class="light">
+          <ng-if ng-if="!loading && !formData.title && walletData && walletData.isMember">{{walletData.uid}}</ng-if>
+          <ng-if ng-if="!loading && !formData.title && walletData && !walletData.isMember">{{::walletData.pubkey | formatPubkey}}</ng-if>
+          <ng-if ng-if="!loading && formData.title">{{formData.title}}</ng-if>
+        </h3>
+        <h4 class="light">
+          <ion-spinner ng-if="loading" icon="android"></ion-spinner>
+        </h4>
+      </div>
+    </div>
+
+
+    <div class="row no-padding">
+      <div class="col col-20 hidden-xs hidden-sm">&nbsp;
+      </div>
+
+      <div class="col">
+        <form name="profileForm" novalidate="" ng-submit="saveAndClose()">
+
+          <div class="list item-text-wrap {{::motion.ionListClass}}"
+                    ng-init="setForm(profileForm)">
+
+            <!-- Public info -->
+            <div class="item item-icon-left item-text-wrap">
+              <i class="icon ion-ios-information-outline positive"></i>
+              <h4 class="positive" translate>PROFILE.HELP.WARNING_PUBLIC_DATA</h4>
+            </div>
+
+            <div class="item item-divider">
+              {{'PROFILE.GENERAL_DIVIDER' | translate}}
+            </div>
+
+            <!-- title -->
+            <ion-item class="item-input item-floating-label item-button-right"
+                      ng-class="{'item-input-error': form.$submitted && form.title.$invalid}">
+              <span class="input-label">{{'PROFILE.TITLE' | translate}}</span>
+              <input type="text" name="title" placeholder="{{'PROFILE.TITLE_HELP' | translate}}"
+                     id="profile-name"
+                     ng-model="formData.title"
+                     ng-model-options="{ debounce: 350 }"
+                     ng-maxlength="50"
+                     required>
+            </ion-item>
+            <div class="form-errors"
+                 ng-show="form.$submitted && form.title.$error"
+                 ng-messages="form.title.$error">
+              <div class="form-error" ng-message="required">
+                <span translate="ERROR.FIELD_REQUIRED"></span>
+              </div>
+              <div class="form-error" ng-message="maxlength">
+                <span translate="ERROR.FIELD_TOO_LONG_WITH_LENGTH" translate-values="{maxLength: 50}"></span>
+              </div>
+            </div>
+
+            <!-- description -->
+            <ion-item class="item-input item-floating-label item-button-right">
+              <span class="input-label" style="width: 100%">{{'PROFILE.DESCRIPTION' | translate}}</span>
+              <textarea placeholder="{{'PROFILE.DESCRIPTION_HELP' | translate}}"
+                        ng-model="formData.description"
+                        ng-model-options="{ debounce: 350 }"
+                        rows="4" cols="10">
+              </textarea>
+            </ion-item>
+
+            <div class="item item-divider" translate>PROFILE.LOCATION_DIVIDER</div>
+
+            <!-- address -->
+            <ion-item class="item-input item-floating-label item-button-right">
+              <span class="input-label">{{'PROFILE.ADDRESS' | translate}}</span>
+              <textarea placeholder="{{'PROFILE.ADDRESS_HELP' | translate}}"
+                        ng-model="formData.address"
+                        ng-model-options="{ debounce: 350 }"
+                        rows="4" cols="10">
+              </textarea>
+            </ion-item>
+
+            <!-- city -->
+            <div class="item item-input item-floating-label">
+              <span class="input-label" translate>PROFILE.CITY</span>
+              <input type="text" placeholder="{{'PROFILE.CITY_HELP'|translate}}"
+                     ng-model="formData.city"
+                     ng-model-options="{ debounce: 350 }">
+            </div>
+
+            <!-- social networks -->
+            <ng-include src="'plugins/es/templates/common/edit_socials.html'"></ng-include>
+
+            <div class="item item-divider">
+              {{'PROFILE.TECHNICAL_DIVIDER' | translate}}
+            </div>
+
+            <!-- uid -->
+            <ion-item class="item-icon-left" ng-if="walletData && walletData.uid">
+              <span translate>COMMON.UID</span>
+              <span class="badge badge-stable">{{::walletData.uid}}</span>
+            </ion-item>
+
+            <!-- pubkey-->
+            <ion-item class="item-icon-left item-icon-right item-text-wrap ink"
+                  on-hold="copy(formData.pubkey)"
+                  copy-on-click>
+                <i class="icon ion-key"></i>
+                <span translate>COMMON.PUBKEY</span>
+                <p class="gray">{{walletData.pubkey}}</p>
+            </ion-item>
+
+            <div class="item padding hidden-xs hidden-sm text-right">
+              <button class="button button-clear button-dark ink"
+                      ng-click="cancel()" type="button" translate>COMMON.BTN_CANCEL
+              </button>
+              <button class="button button-calm ink"
+                      ng-class="{'button-assertive': dirty}"
+                      type="submit">
+                {{'COMMON.BTN_SAVE' | translate}}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col col-20 hidden-xs hidden-sm">&nbsp;
+      </div>
+    </div>
+
+  </ion-content>
+
+</ion-view>

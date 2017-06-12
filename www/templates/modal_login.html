@@ -1,0 +1,136 @@
+<ion-modal-view class="modal-full-height">
+  <ion-header-bar class="bar-positive">
+    <button class="button button-clear visible-xs" ng-click="closeModal()" translate>COMMON.BTN_CANCEL
+    </button>
+    <h1 class="title" translate>LOGIN.TITLE</h1>
+    <div class="buttons buttons-right">
+      <span class="secondary-buttons">
+        <button class="button button-positive button-icon button-clear icon ion-android-done visible-xs" ng-click="doLogin()">
+        </button>
+    </span></div>
+
+  </ion-header-bar>
+
+  <ion-content>
+    <form name="loginForm" novalidate="" ng-submit="doLogin()">
+
+      <div class="list" ng-init="setForm(loginForm)">
+
+        <!-- salt (=username, to enable browser login cache) -->
+        <label class="item item-input"
+               ng-class="{ 'item-input-error': form.$submitted && form.username.$invalid}">
+          <span class="input-label hidden-xs" translate>LOGIN.SALT</span>
+          <input ng-if="!showSalt"
+                 name="username" type="password" placeholder="{{'LOGIN.SALT_HELP' | translate}}"
+                 ng-model="formData.username"
+                 ng-model-options="{ debounce: 650 }"
+                 class="highlight-light"
+                 required >
+          <input ng-if="showSalt"
+                 name="username" type="text" placeholder="{{'LOGIN.SALT_HELP' | translate}}"
+                 ng-model="formData.username"
+                 ng-model-options="{ debounce: 650 }"
+                 class="highlight-light"
+                 required>
+        </label>
+        <div class="form-errors"
+             ng-show="form.$submitted && form.username.$error"
+             ng-messages="form.username.$error">
+          <div class="form-error" ng-message="required">
+            <span translate="ERROR.FIELD_REQUIRED"></span>
+          </div>
+        </div>
+
+        <!-- Show salt -->
+        <div class="item item-toggle dark">
+          <span translate>LOGIN.SHOW_SALT</span>
+          <label class="toggle toggle-stable">
+            <input type="checkbox" ng-model="showSalt">
+            <div class="track">
+              <div class="handle"></div>
+            </div>
+          </label>
+        </div>
+
+        <!-- password-->
+        <label class="item item-input"
+               ng-class="{ 'item-input-error': form.$submitted && form.password.$invalid}">
+          <span class="input-label hidden-xs" translate>LOGIN.PASSWORD</span>
+          <input name="password" type="password" placeholder="{{'LOGIN.PASSWORD_HELP' | translate}}"
+                 ng-model="formData.password"
+                 ng-model-options="{ debounce: 650 }"
+                 select-on-click
+                 required>
+        </label>
+        <div class="form-errors"
+             ng-show="form.$submitted && form.password.$error"
+             ng-messages="form.password.$error">
+          <div class="form-error" ng-message="required">
+            <span translate="ERROR.FIELD_REQUIRED"></span>
+          </div>
+        </div>
+
+
+        <!-- remember me -->
+        <div class="item item-toggle dark hidden-xs">
+          <span translate>SETTINGS.REMEMBER_ME</span>
+          <label class="toggle toggle-calm">
+            <input type="checkbox" ng-model="formData.rememberMe">
+            <div class="track">
+              <div class="handle"></div>
+            </div>
+          </label>
+        </div>
+
+
+        <!-- Show public key -->
+        <div class="item item-button-right left">
+          <span ng-if="formData.username && formData.password"
+                class="input-label" translate>COMMON.PUBKEY</span>
+          <a class="button button-light button-small ink animate-if"
+             ng-click="showPubkey()"
+             ng-if="showPubkeyButton"
+            >
+            {{'COMMON.BTN_SHOW_PUBKEY' | translate}}
+          </a>
+          <h3 class="gray text-no-wrap" ng-if="!computing">
+            {{pubkey}}
+          </h3>
+          <h3 ng-if="computing">
+            <ion-spinner icon="android"></ion-spinner>
+          </h3>
+        </div>
+
+      </div>
+
+      <div class="padding hidden-xs text-right">
+        <button class="button button-clear button-dark ink"
+                ng-click="closeModal()" type="button" translate>COMMON.BTN_CANCEL
+        </button>
+        <button class="button button-positive ink" type="submit">
+          {{'COMMON.BTN_LOGIN' | translate}}
+        </button>
+      </div>
+
+      <!-- Register ? -->
+      <div class="text-center no-padding">
+        {{'LOGIN.NO_ACCOUNT_QUESTION'|translate}}
+        <br class="visible-xs">
+        <a ng-click="showJoinModal()" translate>
+          LOGIN.CREATE_ACCOUNT
+        </a>
+      </div>
+
+      <div class="text-center no-padding">
+        <a ng-click="showAccountSecurityModal()" translate>
+          LOGIN.FORGOTTEN_ID
+        </a>
+      </div>
+
+      <!--div class="padding hidden-xs text-right">
+        <a class="assertive ink" ng-click="openNewAccount()" type="button" translate>COMMON.NO_ACOUNT_QUESTION
+        </a>
+      </div-->
+    </form>
+  </ion-content>
+</ion-modal-view>

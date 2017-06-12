@@ -1,0 +1,48 @@
+<ion-popover-view class="popover-share" >
+  <ion-content scroll="false">
+    <div class="bar bar-header">
+      <h1 class="title">{{titleKey|translate:titleValues}}</h1>
+      <span class="gray pull-right">{{time|formatDate}}</span>
+    </div>
+    <div class="list no-margin no-padding has-header has-footer block">
+      <div class="item item-input">
+        <input type="text" ng-model="value">
+      </div>
+    </div>
+
+    <div class="bar bar-footer ">
+      <div class="button-bar">
+
+        <a class="button button-icon positive icon ion-social-facebook"
+           href="https://www.facebook.com/sharer/sharer.php?u={{postUrl|formatEncodeURI}}&amp;title={{postMessage|formatEncodeURI}}"
+           onclick="window.open(this.href, 'facebook-share','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=580,height=296');return false;"
+           title="{{'COMMON.POPOVER_SHARE.SHARE_ON_FACEBOOK'|translate}}">
+        </a>
+
+        <a class="button button-icon positive icon ion-social-twitter"
+           href="https://twitter.com/intent/tweet?url={{postUrl|formatEncodeURI}}&amp;text={{postMessage|formatEncodeURI}}"
+           onclick="window.open(this.href, 'twitter-share','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=580,height=296');return false;"
+           title="{{'COMMON.POPOVER_SHARE.SHARE_ON_TWITTER'|translate}}">
+        </a>
+
+        <a class="button button-icon positive icon ion-social-googleplus"
+           href="https://plus.google.com/share?url={{postUrl|formatEncodeURI}}"
+           onclick="window.open(this.href, 'google-plus-share', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=296,width=580');return false;"
+           title="{{'COMMON.POPOVER_SHARE.SHARE_ON_GOOGLEPLUS'|translate}}">
+        </a>
+
+        <a class="button button-icon positive icon ion-social-diaspora"
+           href="https://sharetodiaspora.github.io/?title={{postMessage|formatEncodeURI}}&amp;url={{postUrl|formatEncodeURI}}"
+           onclick="window.open(this.href, 'diaspora-share','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=580,height=296');return false;"
+           title="{{'COMMON.POPOVER_SHARE.SHARE_ON_DIASPORA'|translate}}">
+        </a>
+
+        <a class="button-close"
+           title="{{'COMMON.BTN_CLOSE'|translate}}"
+        ng-click="closePopover()">
+          <i class="icon ion-close"></i>
+        </a>
+        </div>
+    </div>
+  </ion-content>
+</ion-popover-view>

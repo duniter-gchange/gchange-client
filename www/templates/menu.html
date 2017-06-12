@@ -1,0 +1,199 @@
+<ion-side-menus enable-menu-with-back-views="true">
+  <!-- HEADER -->
+  <ion-side-menu-content
+    >
+    <ion-nav-bar class="bar-dark" title-align="left">
+      <ion-nav-back-button class="no-text">
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear icon ion-navicon visible-nomenu" menu-toggle="left" ></button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right" >
+        <!-- Allow extension here -->
+        <cs-extension-point name="nav-buttons-right"></cs-extension-point>
+
+        <!-- profile -->
+        <a id="helptip-header-bar-btn-profile"
+           class="button button-icon button-clear hidden-xs hidden-sm"
+           ng-click="showProfilePopover($event)">
+          <i class="avatar avatar-member"
+             ng-if="!$root.walletData.avatar"
+             ng-class="{'disable': !login, 'royal-bg': login}">
+          </i>
+          <i class="avatar"
+             ng-if="$root.walletData.avatar"
+             style="background-image: url('{{$root.walletData.avatar.src}}')">
+          </i>
+        </a>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <!-- MENU -->
+  <ion-side-menu id="menu"
+                 side="left"
+                 expose-aside-when="large"
+                 enable-menu-with-back-views="false"
+                 width="225">
+    <ion-header-bar>
+      <h1 class="title dark hidden-sm hidden-xs" translate>
+        MENU.TITLE
+      </h1>
+
+      <div class="visible-sm visible-xs hero">
+        <div class="content">
+          <i class="avatar avatar-member hero-icon" ng-if="!$root.walletData.avatar" ng-class="{'royal-bg': login, 'stable-bg': !login}" ng-click="!login ? showHome() : loginAndGo('app.view_wallet')" menu-close></i>
+          <i class="avatar hero-icon" ng-if="$root.walletData.avatar" style="background-image: url('{{$root.walletData.avatar.src}}')" ng-click="loginAndGo('app.view_wallet')" menu-close></i>
+          <h4 ng-if="login">
+            <a class="light" ng-click="loginAndGo('app.view_wallet')" menu-close>
+              {{$root.walletData.name||$root.walletData.uid}}
+              <span ng-if="!$root.walletData.name && !$root.walletData.uid"><i class="icon ion-key"></i>&nbsp;{{$root.walletData.pubkey|formatPubkey}}</span>
+            </a>
+          </h4>
+          <h4 ng-if="!login">
+            <a class="light" ui-sref="app.home"
+               menu-close>
+              {{'COMMON.BTN_LOGIN'|translate}}
+              <i class="ion-arrow-right-b"></i>
+            </a>
+          </h4>
+          <cs-extension-point name="menu-profile-user"></cs-extension-point>
+        </div>
+        <!-- logout -->
+        <a ng-if="login" class="button-icon" ng-click="logout({askConfirm: true})" style="position: absolute; top: 5px; left: 5px;">
+          <i class="icon stable ion-android-exit"></i>
+        </a>
+      </div>
+    </ion-header-bar>
+
+    <ion-content scroll="false">
+      <ion-list class="list">
+
+        <!-- DISCOVER Section -->
+        <ion-item menu-close class="item-icon-left hidden-xs" href="#/app/home" active-link="active">
+          <i class="icon ion-home"></i>
+          <span translate>MENU.HOME</span>
+        </ion-item>
+
+        <a menu-close
+           id="helptip-menu-btn-currency"
+           class="item item-icon-left"
+           active-link="active"
+           active-link-path-prefix="#/app/currency"
+           ui-sref="app.currency"
+           ng-if="!options.registry || !options.registry.enable">
+          <i class="icon ion-ios-world-outline"></i>
+          <span translate>MENU.CURRENCY</span>
+        </a>
+
+        <a menu-close
+           id="helptip-menu-btn-network"
+           class="item item-icon-left hidden-xs hidden-sm"
+           active-link="active"
+           active-link-path-prefix="#/app/network"
+           ui-sref="app.network">
+          <i class="icon ion-cloud"></i>
+          <span translate>MENU.NETWORK</span>
+        </a>
+
+        <!-- Allow extension here -->
+        <cs-extension-point name="menu-discover"></cs-extension-point>
+
+        <!-- MAIN Section -->
+        <div class="item item-divider"></div>
+
+        <a menu-close class="item item-icon-left" active-link="active" ui-sref="app.wot_lookup">
+          <i class="icon ion-person-stalker"></i>
+          <span translate>MENU.WOT</span>
+        </a>
+        <a id="helptip-menu-btn-wot"></a>
+
+        <!-- Allow extension here -->
+        <cs-extension-point name="menu-main"></cs-extension-point>
+
+
+        <!-- USER Section -->
+        <div class="item item-divider"></div>
+
+
+        <a menu-close
+           class="item item-icon-left"
+           active-link="active"
+           active-link-path-prefix="#/app/wallet"
+           ng-click="loginAndGo('app.view_wallet')"
+           ng-class="{'item-menu-disable': !login}">
+          <i class="icon ion-person"></i>
+          <span translate>MENU.ACCOUNT</span>
+        </a>
+        <a id="helptip-menu-btn-account"></a>
+
+        <a menu-close
+           class="item item-icon-left"
+           active-link="active"
+           active-link-path-prefix="#/app/history"
+           ng-click="loginAndGo('app.view_wallet_tx')"
+           ng-class="{'item-menu-disable': !login}">
+          <i class="icon ion-card"></i>
+          <span translate>MENU.TRANSACTIONS</span>
+        </a>
+        <a id="helptip-menu-btn-tx"></a>
+
+        <div class="item item-divider visible-xs visible-sm"></div>
+
+        <!-- Allow extension here -->
+        <cs-extension-point name="menu-user"></cs-extension-point>
+
+        <a menu-close
+           class="item item-icon-left visible-xs visible-sm"
+           active-link="active"
+           active-link-path-prefix="#/app/settings"
+           ui-sref="app.settings">
+          <i class="icon ion-android-settings"></i>
+          <span translate>MENU.SETTINGS</span>
+        </a>
+        <a id="helptip-menu-btn-settings"></a>
+
+        <!-- actions divider -->
+        <div class="item item-divider" ng-if="login"></div>
+
+        <!-- transfer -->
+        <ion-item menu-close class="item item-button-right hidden-xs hidden-sm" ng-if="login">
+          <span translate>MENU.TRANSFER</span>
+          <button class="button button-positive ink-dark" ng-click="showTransferModal()">
+          <i class="icon ion-paper-airplane"></i>
+          </button>
+        </ion-item>
+
+        <!-- scan QR code -->
+        <ion-item menu-close class="item item-button-right" ng-if="$root.device.barcode.enable">
+          <span translate>Scan</span>
+          <button class="button button-stable ink" ng-click="scanQrCodeAndGo()">
+            <i class="icon ion-qr-scanner"></i>
+          </button>
+        </ion-item>
+
+        <cs-extension-point name="menu-actions"></cs-extension-point>
+
+      </ion-list>
+
+    </ion-content>
+
+    <!-- removeIf(device) -->
+    <ion-footer-bar class="bar-stable footer hidden-xs hidden-sm" >
+      <a class="pull-left icon-help" menu-toggle="left" title="{{'HOME.BTN_HELP'|translate}}" ui-sref="app.help"></a>
+
+      <a class="title gray" ng-click="showAboutModal()" title="{{'HOME.BTN_ABOUT'|translate}}">
+        <!-- version -->
+        <span translate="COMMON.APP_VERSION" translate-values="{version: config.version}"></span>
+        |
+        <!-- about -->
+        <span translate>HOME.BTN_ABOUT</span>
+      </a>
+    </ion-footer-bar>
+    <!-- endRemoveIf(device) -->
+  </ion-side-menu>
+
+
+</ion-side-menus>
