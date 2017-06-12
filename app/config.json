@@ -10,13 +10,13 @@
     "rememberMe": false,
     "showUDHistory": false,
     "node": {
-      "host": "gtest.duniter.fr",
+      "host": "g1.duniter.org",
       "port": "9201"
     },
     "plugins":{
       "es": {
         "enable": true,
-        "host": "data.duniter.fr",
+        "host": "data.gchange.fr",
         "port": "80"
       }
     }
