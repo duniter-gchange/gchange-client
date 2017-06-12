@@ -4,16 +4,6 @@
 
   <ion-content scroll="true">
 
-    <div class="item item-toggle dark">
-      <div class="input-label" translate>ES_SETTINGS.ENABLE_TOGGLE</div>
-      <label class="toggle toggle-royal">
-        <input type="checkbox" ng-model="formData.enable" >
-        <div class="track">
-          <div class="handle"></div>
-        </div>
-      </label>
-    </div>
-
     <span class="item item-divider" translate>SETTINGS.NETWORK_SETTINGS</span>
 
     <div class="item ink" ng-click="formData.enable && changeEsNode()" ng-disabled="!formData.enable">

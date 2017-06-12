@@ -368,7 +368,7 @@ function ESMarketLookupController($scope, $state, $focus, $timeout, $filter,
       .then(function() {
         return UIUtils.loading.hide();
       }).then(function() {
-        return ModalUtils.show('plugins/es/templates/market/modal_record_type.html');
+        return ModalUtils.show('plugins/market/templates/modal_record_type.html');
       })
       .then(function(type){
         if (type) {
@@ -514,7 +514,7 @@ function ESMarketRecordViewController($scope, $anchorScroll, $ionicPopover, $sta
 
   $scope.showActionsPopover = function (event) {
     if (!$scope.actionsPopover) {
-      $ionicPopover.fromTemplateUrl('plugins/es/templates/market/view_popover_actions.html', {
+      $ionicPopover.fromTemplateUrl('plugins/market/templates/view_popover_actions.html', {
         scope: $scope
       }).then(function (popover) {
         $scope.actionsPopover = popover;
@@ -759,7 +759,7 @@ function ESMarketRecordEditController($scope, $timeout, $state, $ionicPopover, e
 
   /* -- modals -- */
   $scope.showRecordTypeModal = function() {
-    ModalUtils.show('plugins/es/templates/market/modal_record_type.html')
+    ModalUtils.show('plugins/market/templates/modal_record_type.html')
     .then(function(type){
       if (type) {
         $scope.formData.type = type;

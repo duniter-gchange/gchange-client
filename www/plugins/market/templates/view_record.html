@@ -23,7 +23,7 @@
           <ion-spinner icon="android"></ion-spinner>
         </div>
 
-        <ion-list class="{{motion.ionListClass}} item-text-wrap no-padding-xs">
+        <div class="list {{::motion.ionListClass}} item-text-wrap no-padding-xs">
 
           <div class="item item-text-wrap" ng-class="{'item-thumbnail-left': thumbnail}">
             <img ng-src="{{thumbnail.src}}" ng-if="thumbnail">
@@ -105,11 +105,6 @@
             <button class="button button-stable button-small-padding icon ion-android-share-alt"
                     ng-click="showSharePopover($event)">
             </button>
-            <button class="button button-calm ink-dark"
-                    ng-click="buy()"
-                    ng-if="!canEdit && formData.price && formData.type == 'offer'">
-              {{'MARKET.COMMON.BTN_BUY' | translate}}
-            </button>
             <button class="button button-stable icon-left ink-dark"
                     ng-if="canEdit"
                     ng-click="delete()">
@@ -141,7 +136,7 @@
             <!-- comments -->
             <ng-include src="'plugins/es/templates/common/view_comments.html'"></ng-include>
           </div>
-        </ion-list>
+        </div>
       </div>
 
       <div class="col col-20 hidden-xs hidden-sm">&nbsp;</div>

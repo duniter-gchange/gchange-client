@@ -42,6 +42,10 @@
         "host": "localhost",
         "port": "9200",
         "wsPort": "9400"
+      },
+      "market": {
+        "defaultCurrency": "€",
+        "homeMessage": "<i class=\"icon ion-location\"></i> Vide-grenier de Villiers-charlemagne"
       }
     }
   }

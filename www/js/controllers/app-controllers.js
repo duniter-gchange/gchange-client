@@ -33,17 +33,6 @@ angular.module('cesium.app.controllers', ['cesium.services'])
           }
         }
       })
-
-      .state('app.lock', {
-        cache: false,
-        url: "/lock",
-        views: {
-          'menuContent': {
-            templateUrl: "templates/common/view_passcode.html",
-            controller: 'PassCodeCtrl'
-          }
-        }
-      })
     ;
 
     // if none of the above states are matched, use this as the fallback
@@ -58,8 +47,6 @@ angular.module('cesium.app.controllers', ['cesium.services'])
   .controller('EmptyModalCtrl', EmptyModalController)
 
   .controller('AboutCtrl', AboutController)
-
-  .controller('PassCodeCtrl', PassCodeController)
 
 ;
 
@@ -428,7 +415,3 @@ function AboutController($scope, csConfig) {
   $scope.config = csConfig;
 }
 
-function PassCodeController($scope) {
-  'ngInject';
-
-}

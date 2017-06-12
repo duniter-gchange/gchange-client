@@ -56,47 +56,6 @@
       "ASK_CERTIFICATIONS": "Etes-vous sûr de vouloir <b>envoyer une demande de certification</b> à ces personnes ?"
     }
   },
-  "INVITATION": {
-    "TITLE": "Invitations",
-    "NO_RESULT": "Aucune invitation en attente",
-    "BTN_DELETE_ALL": "Supprimer toutes les invitations",
-    "BTN_DELETE": "Supprimer l'invitation",
-    "BTN_NEW_INVITATION": "Nouvelle invitation",
-    "ASK_CERTIFICATION": "<a href=\"#/app/wot/{{pubkey}}/{{::uid}}\">{{::name||uid}}</a> demande votre certification",
-    "SUGGESTION_CERTIFICATION": "<a href=\"#/app/wot/{{::pubkey}}/{{::uid}}\">{{::name||uid}}</a> vous est suggéré pour certification",
-    "SUGGESTED_BY": "Suggestion envoyée par <a class=\"positive\" href=\"#/app/wot/{{::issuer.pubkey}}/{{::issuer.uid}}\">{{::issuer.name||issuer.uid}}</a>",
-    "NOTIFICATIONS": {
-      "TITLE": "Invitations"
-    },
-    "LIST": {
-      "TITLE": "Invitations"
-    },
-    "NEW": {
-      "TITLE": "Nouvelle invitation",
-      "RECIPIENTS": "A",
-      "RECIPIENTS_HELP": "Destinataires de l'invitation",
-      "RECIPIENTS_MODAL_TITLE": "Destinataires",
-      "RECIPIENTS_MODAL_HELP": "Veuillez choisir les destinataires :",
-      "SUGGESTION_IDENTITIES": "Suggestions de certification",
-      "SUGGESTION_IDENTITIES_HELP": "Certifications à suggérer",
-      "SUGGESTION_IDENTITIES_MODAL_TITLE": "Suggestions",
-      "SUGGESTION_IDENTITIES_MODAL_HELP": "Veuillez choisir vos suggestions :"
-    },
-    "CONFIRM": {
-      "DELETE_ALL_CONFIRMATION": "La suppression des invitations est une <b>opération irréversible</b>.<br/><br/><b>Etes-vous sûr</b> de vouloir continuer ?",
-      "SEND_INVITATIONS_TO_CERTIFY": "Etes-vous sûr de vouloir <b>envoyer cette invitation à certfier</b> ?"
-    },
-    "INFO": {
-      "INVITATION_SENT": "Invitation envoyée"
-    },
-    "ERROR": {
-      "LOAD_INVITATIONS_FAILED": "Echec du chargement des invitations",
-      "REMOVE_INVITATION_FAILED": "Erreur lors de la suppression de l'invitation",
-      "REMOVE_ALL_INVITATIONS_FAILED": "Erreur lors de la suppression des invitations",
-      "SEND_INVITATION_FAILED": "Erreur lors de l'envoi de l'invitation",
-      "BAD_INVITATION_FORMAT": "<span class=\"assertive\"><i class=\"ion-close-circled\"></i> Invitation illisible (format inconnu)</span> - envoyée par <a href=\"#/app/wot/{{pubkey}}/{{::uid}}\">{{::name||uid}}</a>"
-    }
-  },
   "COMMENTS": {
     "DIVIDER": "Commentaires",
     "DIVIDER_WITH_TOTAL": "Commentaires ({{total}})",
@@ -176,122 +135,6 @@
       "REMOVE_All_MESSAGES_FAILED": "Erreur lors de la suppression de tous les messages.",
       "MARK_ALL_AS_READ_FAILED": "Erreur lors du marquage des message comme lu.",
       "RECIPIENT_IS_MANDATORY": "Le destinataire est obligatoire."
-    }
-  },
-  "BLOCKCHAIN": {
-    "LOOKUP": {
-      "SEARCH_HELP": "Numéro de bloc, hash, clé publique, etc.",
-      "POPOVER_FILTER_TITLE": "Filtres",
-      "HEADER_MEDIAN_TIME": "Date / Heure",
-      "HEADER_BLOCK": "Bloc #",
-      "HEADER_ISSUER": "Noeud émetteur",
-      "BTN_LAST": "Derniers blocs"
-    },
-    "ERROR": {
-      "SEARCH_BLOCKS_FAILED": "Erreur de la recherche des blocs."
-    }
-  },
-  "GROUP": {
-    "GENERAL_DIVIDER": "Informations générales",
-    "LOCATION_DIVIDER": "Adresse",
-    "SOCIAL_NETWORKS_DIVIDER": "Réseaux sociaux et site web",
-    "TECHNICAL_DIVIDER": "Informations techniques",
-    "NOTIFICATIONS": {
-      "TITLE": "Invitations"
-    },
-    "LOOKUP": {
-      "TITLE": "Groupes",
-      "SEARCH_HELP": "Nom de groupe, mots, lieu, etc.",
-      "LAST_RESULTS_LIST": "Nouveaux groupes :",
-      "OPEN_RESULTS_LIST": "Groupes ouverts :",
-      "MANAGED_RESULTS_LIST": "Groupes fermés :",
-      "BTN_LAST": "Nouveaux groupes",
-      "BTN_NEW": "J'ajoute un groupe"
-    },
-    "TYPE": {
-      "TITLE": "Nouveau groupe",
-      "SELECT_TYPE": "Type de groupe :",
-      "OPEN_GROUP": "Groupe ouvert",
-      "OPEN_GROUP_HELP": "Un groupe ouvert est accessible par n'importe quel membre de la monnaie.",
-      "MANAGED_GROUP": "Groupe administré",
-      "MANAGED_GROUP_HELP": "un groupe administré est gérer par des administrateurs et des modérateurs, qui peuvent accepter, refuser ou exclure un membre en son sein.",
-      "ENUM": {
-        "OPEN": "Groupe ouvert",
-        "MANAGED": "Groupe administré"
-      }
-    },
-    "EDIT": {
-      "TITLE": "Groupe",
-      "TITLE_NEW": "Nouveau groupe",
-      "RECORD_TITLE": "Titre",
-      "RECORD_TITLE_HELP": "Titre",
-      "RECORD_DESCRIPTION": "Description",
-      "RECORD_DESCRIPTION_HELP": "Description"
-    },
-    "ERROR": {
-      "SEARCH_GROUPS_FAILED": "Echec de la recherche de groupes"
-    }
-  },
-  "MARKET": {
-    "COMMON": {
-      "PRICE": "Prix",
-      "BTN_BUY": "Acheter",
-      "BTN_BUY_DOTS": "Acheter...",
-      "BTN_NEW_AD": "je dépose une annonce"
-    },
-    "SEARCH": {
-      "TITLE": "Annonces",
-      "SEARCH_HELP": "Recherche (voiture, livre...)",
-      "BTN_ADD": "Nouveau",
-      "BTN_OPTIONS": "Recherche avancée",
-      "BTN_AROUND_ME": "Autour de moi",
-      "SHOW_MORE": "Afficher plus",
-      "SHOW_MORE_COUNT": "(limite actuelle à {{limit}})",
-      "LOCATION": "Localisation",
-      "LOCATION_HELP": "Ville",
-      "LAST_RECORDS": "Dernières annonces :",
-      "RESULTS": "Résultats :",
-      "BTN_OFFERS": "Offres",
-      "BTN_NEEDS": "Demandes"
-    },
-    "VIEW": {
-      "TITLE": "Annonce",
-      "MENU_TITLE": "Options",
-      "POPOVER_SHARE_TITLE": "Annonce {{title}}",
-      "REMOVE_CONFIRMATION" : "Êtes-vous sûr de vouloir supprimer cette annonce ?<br/><br/>Cette opération est irréversible."
-    },
-    "TYPE": {
-      "TITLE": "Nouvelle annonce",
-      "SELECT_TYPE": "Type d'annonce :",
-      "OFFER": "Offre, Vente",
-      "NEED": "Demande, Recherche"
-    },
-    "EDIT": {
-      "TITLE": "Edition",
-      "TITLE_NEW": "Nouvelle annonce",
-      "RECORD_TITLE": "Titre",
-      "RECORD_TITLE_HELP": "Titre",
-      "RECORD_DESCRIPTION": "Description",
-      "RECORD_DESCRIPTION_HELP": "Description",
-      "RECORD_LOCATION": "Ville",
-      "RECORD_LOCATION_HELP": "Adresse, Ville",
-      "RECORD_PRICE": "Prix",
-      "RECORD_PRICE_HELP": "Prix (optionnel)",
-      "RECORD_CURRENCY": "Monnaie"
-    },
-    "ERROR": {
-      "FAILED_SAVE_RECORD": "Erreur lors de l'enregistrement de l'annonce",
-      "FAILED_UPDATE_RECORD": "Erreur lors de la mise à jour de l'annonce",
-      "LOAD_CATEGORY_FAILED": "Erreur d'initialisation des catégories",
-      "LOOKUP_RECORDS_FAILED": "Erreur lors de l'execution de la recherche.",
-      "LOAD_RECORD_FAILED": "Erreur lors du chargement de l'annonce.",
-      "REMOVE_RECORD_FAILED": "Erreur de la suppression de l'annonce",
-      "FAILED_SAVE_COMMENT": "Erreur lors de la sauvegarde du commentaire",
-      "FAILED_REMOVE_COMMENT": "Erreur lors de la suppression du commentaire",
-      "RECORD_NOT_EXISTS": "Annonce inexistante"
-    },
-    "INFO": {
-      "RECORD_REMOVED" : "Annonce supprimée"
     }
   },
   "REGISTRY": {
@@ -398,46 +241,9 @@
       "WARNING_PUBLIC_DATA": "Les informations renseignées dans votre profil <b>sont publiques</b> : visibles y compris par des personnes <b>non connectées</b>."
     }
   },
-  "SUBSCRIPTION": {
-    "SUBSCRIPTION_DIVIDER": "Services en ligne",
-    "BTN_ADD": "Ajouter un service",
-    "BTN_EDIT": "Gérer mes services",
-    "NO_SUBSCRIPTION": "Aucun service utilisé",
-    "SUBSCRIPTION_COUNT": "Services / Abonnements",
-    "EDIT": {
-      "TITLE": "Services en lignes",
-      "HELP_TEXT": "Gérer ici vos abonnements et autres services en ligne",
-      "PROVIDER": "Prestataire :"
-    },
-    "TYPE": {
-      "ENUM": {
-        "EMAIL": "Recevoir les notifications par email"
-      }
-    },
-    "CONFIRM": {
-      "DELETE_SUBSCRIPTION": "Etes-vous sûr de vouloir <b>supprimer cet abonnement</b> ?"
-    },
-    "ERROR": {
-      "LOAD_SUBSCRIPTIONS_FAILED": "Erreur lors du chargement des services en ligne",
-      "ADD_SUBSCRIPTION_FAILED": "Erreur de l'envoi de l'abonnement",
-      "UPDATE_SUBSCRIPTION_FAILED": "Erreur de la mise à jour de l'abonnement",
-      "DELETE_SUBSCRIPTION_FAILED": "Erreur lors de la suppression de l'abonnement"
-    },
-    "MODAL_EMAIL": {
-      "TITLE" : "Notification par email",
-      "HELP" : "Remplissez ce formulaire pour <b>être notifié par email</b> des événements de votre compte.<br/>Votre adresse email sera chiffrée pour n'être visible que par le prestataire de service.",
-      "EMAIL_LABEL" : "Votre email :",
-      "EMAIL_HELP": "jean.dupond@domaine.com",
-      "FREQUENCY_LABEL": "Fréquence des notifications :",
-      "FREQUENCY_DAILY": "Journalier",
-      "FREQUENCY_WEEKLY": "Hebdomadaire",
-      "PROVIDER": "Prestataire du service :"
-    }
-  },
   "ES_SETTINGS": {
-    "PLUGIN_NAME": "Cesium+",
-    "PLUGIN_NAME_HELP": "Profils, notifications, messages privés",
-    "ENABLE_TOGGLE": "Activer l'extension ?",
+    "PLUGIN_NAME": "Paramètres avancés",
+    "PLUGIN_NAME_HELP": "Filtrage des notifications, etc.",
     "ENABLE_MESSAGE_TOGGLE": "Activer les messages privés ?",
     "ENABLE_SETTINGS_TOGGLE": "Activer le stockage distant des paramètres ?",
     "PEER": "Addresse du nœud de données",
@@ -453,11 +259,6 @@
       "ENABLE_TX_RECEIVED": "Notifier la validation des <b>paiement reçus</b> ?",
       "ENABLE_CERT_SENT": "Notifier la validation des <b>certifications émises</b> ?",
       "ENABLE_CERT_RECEIVED": "Notifier la validation des <b>certifications reçues</b> ?"
-    },
-    "SUBSCRIPTIONS": {
-      "DIVIDER": "Abonnements",
-      "HELP_TEXT": "Activez les abonnements qui vous intéresse :",
-      "EMAIL": "Réception des notifications par email"
     },
     "CONFIRM": {
       "ASK_ENABLE_TITLE": "Nouvelles fonctionnalités",
@@ -482,12 +283,6 @@
     "TX_RECEIVED_MULTI": "Vous avez <b>reçu un paiement</b> de <b>{{params[1]}}</b>.",
     "CERT_SENT": "Votre <b>certification</b> à <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a été effectuée.",
     "CERT_RECEIVED": "Vous avez <b>reçu une certification</b> de <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
-    "MARKET": {
-      "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a commenté votre annonce : <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié son commentaire sur votre annonce : <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a répondu votre commentaire sur l'annonce : <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié la réponse à votre commentaire, sur l'annonce : <b>{{params[2]}}</b>"
-    },
     "REGISTRY": {
       "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a commenté votre référencement : <b>{{params[2]}}</b>",
       "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié son commentaire sur votre référencement : <b>{{params[2]}}</b>",

@@ -67,7 +67,7 @@ function MarketHomeExtendController($scope, $state, esSettings, csWallet) {
                 .then(function () {
                     return UIUtils.loading.hide();
                 }).then(function () {
-                    return ModalUtils.show('plugins/es/templates/market/modal_record_type.html');
+                    return ModalUtils.show('plugins/market/templates/modal_record_type.html');
                 })
                 .then(function (type) {
                     if (type) {

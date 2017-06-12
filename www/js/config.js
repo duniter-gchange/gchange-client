@@ -28,10 +28,15 @@ angular.module("cesium.config", [])
 			"host": "localhost",
 			"port": "9200",
 			"wsPort": "9400"
+		},
+		"market": {
+			"defaultCurrency": "€",
+			"homeMessage": "<i class=\"icon ion-location\"></i> Vide-grenier de Villiers-charlemagne",
+
 		}
 	},
 	"version": "0.3.3",
-	"build": "2017-06-12T15:29:39.978Z",
+	"build": "2017-06-12T16:00:42.407Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

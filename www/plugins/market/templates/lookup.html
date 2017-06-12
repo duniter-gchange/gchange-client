@@ -41,14 +41,14 @@
       COMMON.SEARCH_NO_RESULT
     </div>
 
-    <ion-list class="list {{::motion.ionListClass}}"
+    <div class="list {{::motion.ionListClass}}"
          ng-if="!search.loading && search.results.length">
 
       <a ng-repeat="rec in search.results"
          class="item no-padding-bottom no-padding-top"
          ui-sref="app.market_view_record({id: rec.id, title: rec.urlTitle})">
 
-        <div class="card card-record stable-bg ink padding-top">
+        <div class="card card-record stable-bg padding-top">
 
           <div class="card-item item-thumbnail-left item-text-wrap padding-right">
             <i class="item-image" ng-if="rec.thumbnail" style="background-image: url('{{::rec.thumbnail.src}}')"></i>
@@ -85,7 +85,7 @@
         </div>
 
       </a>
-    </ion-list>
+    </div>
 
     <ion-infinite-scroll
       ng-if="!search.loading && search.hasMore"
