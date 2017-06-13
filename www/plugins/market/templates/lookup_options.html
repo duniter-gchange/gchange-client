@@ -9,13 +9,13 @@
       </label>
     </div>
 
-    <span class="item item-icon-right" ng-click="showCategoryModal()" ng-if="search.options">
+    <span class="item item-icon-right" ng-click="showCategoryModal()" ng-if="search.options && options.category.show">
       <span translate>COMMON.CATEGORY</span>
       <span class="badge badge-royal badge-text-wrap" ng-bind-html="search.category.name"></span>&nbsp;
       <i class="gray icon ion-ios-arrow-right"></i>
     </span>
 
-    <span class="item item-button-right" ng-if="search.options && location.enable">
+    <span class="item item-button-right" ng-if="search.options && location.enable && options.location.show">
       <span translate>MARKET.SEARCH.BTN_AROUND_ME</span>
       <label class="toggle toggle-royal">
         <input type="checkbox" ng-model="search.localize">
@@ -25,11 +25,11 @@
       </label>
     </span>
 
-    <span class="item item-button-right" ng-if="search.options && !location.enable">
-      <span translate>MARKET.SEARCH.LOCATION</span>
+    <span class="item item-button-right" ng-if="search.options && !location.enable && options.location.show">
+      <span>{{(options.location.label||'MARKET.SEARCH.LOCATION')|translate}}</span>
       <div class="item-input-inset">
         <label class="item-input-wrapper">
-          <input type="text" placeholder="{{'MARKET.SEARCH.LOCATION_HELP'|translate}}"
+          <input type="text" placeholder="{{(options.location.help||'MARKET.SEARCH.LOCATION_HELP')|translate}}"
                  ng-model="search.location"
                  ng-model-options="{ debounce: 350 }"
                  ng-change="doSearch()"/>

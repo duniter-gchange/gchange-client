@@ -31,7 +31,7 @@
             <h2 class="gray hidden-xs">
               <a ng-if="formData.location" ui-sref="app.market_lookup({location:formData.location})">
                 <i class="icon ion-location"></i>
-                <span ng-bind-html="formData.location"></span>
+                {{options.location.prefix|translate}}<span ng-bind-html="formData.location"></span>
               </a>
               <span ng-if="formData.location && formData.category.name">&nbsp;|&nbsp;</span>
               <a ng-if="formData.category.name" ui-sref="app.market_lookup({category:formData.category.id})">
@@ -60,16 +60,17 @@
                 </span>
               </span>
             </h4>
-            <div class="badge badge-balanced">
+            <div class="badge badge-balanced" ng-if="options.type.show">
               <span>{{'MARKET.TYPE.'+formData.type|upper|translate}}</span>
             </div>
+
           </div>
 
           <div class="item visible-xs no-padding-top no-padding-bottom">
             <h2 class="gray">
               <a ng-if="formData.location" ui-sref="app.market_lookup({location:formData.location})">
                 <i class="icon ion-location"></i>
-                <span ng-bind-html="formData.location"></span>
+                {{options.location.prefix|translate}}<span ng-bind-html="formData.location"></span>
               </a>
               <br/>
               <a ng-if="formData.category.name" ui-sref="app.market_lookup({category:formData.category.id})">
@@ -98,6 +99,10 @@
                 </span>
               </span>
             </h4>
+            <div class="badge badge-calm badge-price">
+              <i class="icon ion-pricetag"></i>
+              <span ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></span>
+            </div>
           </div>
 
           <!-- Buttons bar-->
@@ -118,15 +123,15 @@
             </button>
           </div>
 
-          <ion-item>
+          <ion-item ng-if="options.description.show">
             <h2>
               <span class="text-keep-lines" ng-bind-html="formData.description"></span>
             </h2>
           </ion-item>
 
-          <span class="item item-icon-left item-button-right" ng-if="formData.price">
-              <i class="icon ion-pricetag"></i>
-              <span class="dark" ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></span>
+          <span class="item item-icon-left item-button-right hidden-xs" ng-if="formData.price">
+              <i class="calm icon ion-pricetag"></i>
+              <h1 class="calm" ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></h1>
           </span>
 
           <div class="lazy-load">

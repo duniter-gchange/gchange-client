@@ -219,7 +219,7 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   // Login and load wallet
   $scope.loadWallet = function(options) {
     if (!csWallet.isLogin()) {
-      return $scope.showLoginModal()
+      return $scope.showLoginModal(options)
         .then(function (walletData) {
           if (walletData) {
             $rootScope.viewFirstEnter = false;
@@ -281,8 +281,12 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   };
 
   // Show login modal
-  $scope.showLoginModal = function() {
-    return Modals.showLogin()
+  $scope.showLoginModal = function(options) {
+    options = options || {};
+    options.templateUrl = options.templateUrl ||
+        (csConfig.login && csConfig.login.templateUrl);
+
+    return Modals.showLogin(options)
     .then(function(formData){
       if (!formData) return;
       var rememberMeChanged = (csSettings.data.rememberMe !== formData.rememberMe);

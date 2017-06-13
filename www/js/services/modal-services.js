@@ -130,8 +130,13 @@ angular.module('cesium.modal.services', [])
       parameters, {focusFirstInput: true});
   }
 
-  function showLogin(parameters) {
-    return ModalUtils.show('templates/modal_login.html','LoginModalCtrl',
+  function showLogin(options) {
+    var parameters = angular.copy(options||{});
+    delete parameters.templateUrl;
+    delete parameters.controller;
+    return ModalUtils.show(
+        options && options.templateUrl || 'templates/modal_login.html',
+        options && options.controller  || 'LoginModalCtrl',
       parameters, {focusFirstInput: true});
   }
 

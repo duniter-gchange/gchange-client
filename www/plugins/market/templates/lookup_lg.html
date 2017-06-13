@@ -1,4 +1,4 @@
-<ion-view left-buttons="leftButtons">
+<ion-view left-buttons="leftButtons" class="market">
   <ion-nav-title>
     <span translate>MARKET.SEARCH.TITLE</span>
   </ion-nav-title>
@@ -45,7 +45,7 @@
         </h4>
       </div>
 
-      <div class="hidden-xs hidden-sm pull-right">
+      <div class="hidden-xs hidden-sm pull-right" ng-if="options.type.show">
         <a class="button button-text button-small ink icon cion-market-offer"
            ng-class="{'button-text-positive': search.type=='offer'}"
            ng-click="setAdType('offer')">
@@ -85,9 +85,9 @@
             <img ng-src="{{::rec.thumbnail.src}}" ng-if="rec.thumbnail">
             <i class="item-image ion-speakerphone" ng-if="!rec.thumbnail"></i>
             <h2 ng-bind-html="rec.title"></h2>
-            <h4 class="gray">
-              <i class="icon ion-location" ng-if="rec.location"></i>
-              <span ng-bind-html="rec.location"></span>
+            <h4 class="gray" ng-if="rec.location">
+              <i class="icon ion-location"></i>
+              {{options.location.prefix|translate}}<span ng-bind-html="rec.location"></span>
             </h4>
             <h4 class="gray" ng-if="rec.time">
               <i class="icon ion-clock" ></i>

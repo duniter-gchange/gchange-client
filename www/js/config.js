@@ -22,6 +22,9 @@ angular.module("cesium.config", [])
 		"host": "g1-test.duniter.org",
 		"port": "10900"
 	},
+	"login": {
+		"templateUrl": "plugins/market/templates/login/modal_simple_login.html"
+	},
 	"plugins": {
 		"es": {
 			"enable": false,
@@ -32,11 +35,44 @@ angular.module("cesium.config", [])
 		"market": {
 			"defaultCurrency": "€",
 			"homeMessage": "<i class=\"icon ion-location\"></i> Vide-grenier de Villiers-charlemagne",
-
+			"defaultTags": [
+				{
+					"tag": "vide-grenier",
+					"name": "Vide-grenier"
+				},
+				{
+					"tag": "villers-charlemagne-2017",
+					"name": "Vide-grenier de Villiers-charlemagne"
+				}
+			],
+			"record": {
+				"type": {
+					"show": false,
+					"default": "offer",
+					"canEdit": false
+				},
+				"category": {
+					"show": true,
+					"filter": "localeSale"
+				},
+				"description": {
+					"show": false
+				},
+				"location": {
+					"show": true,
+					"required": true,
+					"label": "MARKET.LOCAL_SALE.LOCATION",
+					"help": "MARKET.LOCAL_SALE.LOCATION_HELP",
+					"prefix": "MARKET.LOCAL_SALE.LOCATION_PREFIX"
+				},
+				"unit": {
+					"canEdit": false
+				}
+			}
 		}
 	},
 	"version": "0.3.3",
-	"build": "2017-06-12T16:00:42.407Z",
+	"build": "2017-06-13T14:42:02.885Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

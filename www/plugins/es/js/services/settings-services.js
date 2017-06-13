@@ -348,27 +348,6 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
       previousRemoteData = null;
     }, this);
     return refreshState();
-  })
-
-  .then(function() {
-    // Ask (once) user to enable ES plugin
-    if (csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.askEnable && // if config ask enable
-      csSettings.data.plugins.es && !csSettings.data.plugins.es.enable && // AND user settings has disable plugin
-      csSettings.data.plugins.es.askEnable // AND user has not yet answer 'NO'
-    ) {
-      return UIUtils.alert.confirm('ES_SETTINGS.CONFIRM.ASK_ENABLE', 'ES_SETTINGS.CONFIRM.ASK_ENABLE_TITLE',
-        {
-          cancelText: 'COMMON.BTN_NO',
-          okText: 'COMMON.BTN_YES'
-        })
-        .then(function (confirm) {
-          if (confirm) {
-            csSettings.data.plugins.es.enable = true;
-          }
-          csSettings.data.plugins.es.askEnable = false;
-          return csSettings.store();
-        });
-    }
   });
 
   return that;

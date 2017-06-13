@@ -20,7 +20,7 @@ angular.module('cesium.market.app.controllers', ['ngResource', 'cesium.es.servic
         PluginServiceProvider.extendState('app.home', {
             points: {
                 'buttons': {
-                    templateUrl: "plugins/market/templates/home_extend.html",
+                    templateUrl: "plugins/market/templates/home/home_extend.html",
                     controller: "MarketHomeExtendCtrl"
                 }
             }
@@ -50,7 +50,7 @@ function MarketMenuExtendController($scope, esSettings) {
 /**
  * Control home extension
  */
-function MarketHomeExtendController($scope, $state, esSettings, csWallet) {
+function MarketHomeExtendController($scope, $state, ModalUtils, UIUtils, esSettings, csWallet) {
     'ngInject';
     $scope.enable = esSettings.isEnable();
 

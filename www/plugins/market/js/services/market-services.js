@@ -3,19 +3,34 @@ angular.module('cesium.market.services', ['ngResource', 'cesium.services', 'cesi
 .factory('esMarket', function($q, csSettings, BMA, esHttp, esComment, esUser) {
   'ngInject';
 
-  function EsMarket() {
+  function EsMarket(id) {
 
     var
       fields = {
         commons: ["category", "title", "description", "issuer", "time", "location", "price", "unit", "currency", "thumbnail._content_type", "picturesCount", "type"]
       },
       exports = {
+        id: id,
         _internal: {}
+      },
+      filters = {
+          localSale: {
+              excludes: [
+              //'cat2',   // Voitures
+              //'cat3',   // Motos
+              //'cat5',   // Utilitaires
+              'cat71',  // Emploi
+              'cat8',   // Immobilier
+              'cat66',  // Vacances
+              'cat56',  // Matériel professionnel
+              'cat31',  // Services
+              'cat48'   // Vins &amp; Gastronomie
+            ]}
       };
 
     exports._internal.category= {
         get: esHttp.get('/market/category/:id'),
-        all: esHttp.get('/market/category/_search?sort=order&from=0&size=1000&_source=name,parent')
+        all: esHttp.get('/market/category/_search?sort=order&size=1000&_source=name,parent')
       };
 
 
@@ -45,6 +60,46 @@ angular.module('cesium.market.services', ['ngResource', 'cesium.services', 'cesi
           }
           return exports._internal.categories;
         });
+    }
+
+    function getFilteredCategories(options) {
+        options = options || {};
+        options.filter = angular.isDefined(options.filter) ? options.filter : undefined;
+
+        var cachedResult = exports._internal.filteredCategories && exports._internal.filteredCategories[options.type];
+        if (cachedResult && cachedResult.length) {
+            var deferred = $q.defer();
+            deferred.resolve(cachedResult);
+            return deferred.promise;
+        }
+
+        return exports._internal.category.all()
+            .then(function(res) {
+                // no result
+                if (res.hits.total === 0) return [];
+
+                // Filter (using excludes filters)
+                var excludes = options.filter && filters[options.filter] && filters[options.filter].excludes;
+                var excludePredicate = excludes && function(value) {
+                    return _.contains(excludes, value);
+                };
+                var categories = res.hits.hits.reduce(function(result, hit) {
+                    var cat = hit._source;
+                    cat.id = hit._id;
+                    return (excludePredicate &&
+                        ((cat.parent && excludePredicate(cat.parent)) || excludePredicate(cat.id))) ?
+                        result :
+                        result.concat(cat);
+                }, []);
+
+                // add as map also
+                _.forEach(categories, function(cat) {
+                    categories[cat.id] = cat;
+                });
+                exports._internal.filteredCategories = exports._internal.filteredCategories || {};
+                exports._internal.filteredCategories[options.type] = categories;
+                return categories;
+            });
     }
 
     function getCategory(params) {
@@ -205,6 +260,7 @@ angular.module('cesium.market.services', ['ngResource', 'cesium.services', 'cesi
 
     exports.category = {
         all: getCategories,
+        filtered: getFilteredCategories,
         get: getCategory,
         searchText: esHttp.get('/market/category/_search?q=:search'),
         search: esHttp.post('/market/category/_search'),
@@ -226,6 +282,6 @@ angular.module('cesium.market.services', ['ngResource', 'cesium.services', 'cesi
     return exports;
   }
 
-  return EsMarket();
+  return EsMarket('default');
 })
 ;

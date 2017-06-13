@@ -7,6 +7,13 @@
       "PRICE": "Prix",
       "BTN_NEW_AD": "Je dépose une annonce"
     },
+    "SIMPLE_LOGIN": {
+      "TITLE": "Coordonnées",
+      "HELP": "Veuillez indiquer un <b>email ou numéro de téléphone</b> portable, afin que nous puissions vous contacter durant l'événement :",
+      "EMAIL_OR_PHONE": "Email ou téléphone",
+      "EMAIL_OR_PHONE_HELP": "Email ou numéro de téléphone",
+      "REMEMBER_ME": "Se souvenir de moi ?",
+    },
     "HOME": {
       "BTN_NEW_AD": "Déposer une annonce",
       "BTN_SHOW_MARKET_OFFER": "Voir les annonces"
@@ -38,11 +45,16 @@
       "OFFER": "Offre, Vente",
       "NEED": "Demande, Recherche"
     },
+    "LOCAL_SALE": {
+      "LOCATION": "Numéro du stand",
+      "LOCATION_HELP": "Numéro du stand: 1, 2, ...",
+      "LOCATION_PREFIX": "Stand n°"
+    },
     "EDIT": {
       "TITLE": "Edition",
       "TITLE_NEW": "Nouvelle annonce",
       "RECORD_TITLE": "Titre",
-      "RECORD_TITLE_HELP": "Titre",
+      "RECORD_TITLE_HELP": "Titre: vélo, livre...",
       "RECORD_DESCRIPTION": "Description",
       "RECORD_DESCRIPTION_HELP": "Description",
       "RECORD_LOCATION": "Ville",

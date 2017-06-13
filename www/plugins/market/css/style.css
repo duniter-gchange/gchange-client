@@ -1,11 +1,35 @@
 
 /**
+* Market lookup screen
+*/
+
+.lookupForm .badge-price {
+    font-size: 28px !important;
+    line-height: 28px;
+    padding: 10px !important;
+}
+
+/*  Evite le redimensionnement pour les tout petit écran */
+.market .lookupForm .card > .item.item-thumbnail-left,
+.market .lookupForm .item-thumbnail-left, .item-thumbnail-left .item-content {
+   padding-left: 150px !important;
+}
+
+
+/**
 * Market record screen
 */
 
 .market.view-record h1 {
   font-size: 25px;
   margin-top: 5px;
+}
+
+.market.view-record .badge-price {
+    font-size: 20px !important;
+    line-height: 20px;
+    padding: 6px !important;
+    top: 0px !important;
 }
 
 /**

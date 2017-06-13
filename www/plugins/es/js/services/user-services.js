@@ -103,8 +103,10 @@ angular.module('cesium.es.user.services', ['cesium.services', 'cesium.es.http.se
 
   function onWalletLogin(data, deferred) {
     deferred = deferred || $q.defer();
-    if (!data || !data.pubkey || !data.keypair) {
-      deferred.resolve();
+    if (!data || !data.pubkey || !data.keypair ||
+        // Skip if already loaded
+        (data.profile && data.name)) {
+      deferred.resolve(data);
       return deferred.promise;
     }
 
@@ -144,6 +146,12 @@ angular.module('cesium.es.user.services', ['cesium.services', 'cesium.es.http.se
     // If membership pending, but not enough certifications: suggest to fill user profile
     if (!data.name && data.requirements.pendingMembership && data.requirements.needCertificationCount > 0) {
       data.events.push({type:'info',message: 'ACCOUNT.EVENT.MEMBER_WITHOUT_PROFILE'});
+    }
+
+    // If already loaded: skip
+    if (data.profile && data.name) {
+      deferred.resolve();
+      return deferred.promise;
     }
 
     console.debug('[ES] [user] Loading full user profile...');

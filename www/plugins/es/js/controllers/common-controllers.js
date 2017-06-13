@@ -138,7 +138,7 @@ function ESCommentsController($scope, $timeout, $filter, $state, $focus, UIUtils
   $scope.$on('$recordView.load', function(event, id, service) {
     $scope.id = id || $scope.id;
     $scope.service = service || $scope.service;
-    console.debug("[ES] [comment] Initialized service with: " + service.id);
+    console.debug("[ES] [comment] Initialized service in index: " + service.index);
     if ($scope.id) {
       $scope.load($scope.id);
     }

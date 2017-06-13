@@ -48,7 +48,7 @@ angular.module('cesium.market.controllers', ['cesium.market.services', 'cesium.e
       }
     })
 
-      .state('app.market_add_record', {
+    .state('app.market_add_record', {
       cache: false,
       url: "/market/add/:type",
       views: {
@@ -57,6 +57,8 @@ angular.module('cesium.market.controllers', ['cesium.market.services', 'cesium.e
           controller: 'ESMarketRecordEditCtrl'
         }
       }
+
+
     })
 
     .state('app.market_edit_record', {
@@ -68,6 +70,17 @@ angular.module('cesium.market.controllers', ['cesium.market.services', 'cesium.e
           controller: 'ESMarketRecordEditCtrl'
         }
       }
+    })
+
+    .state('app.market_view_picture', {
+      cache: false,
+      url: "/market/pictures/:id/:title",
+      views: {
+        'menuContent': {
+          templateUrl: "plugins/es/templates/common/view_pictures_slider.html",
+          controller: 'ESMarketViewPicturesCtrl'
+        }
+      }
     });
   })
 
@@ -77,10 +90,12 @@ angular.module('cesium.market.controllers', ['cesium.market.services', 'cesium.e
 
  .controller('ESMarketRecordEditCtrl', ESMarketRecordEditController)
 
+ .controller('ESMarketViewPicturesCtrl', ESMarketViewPicturesController)
+
 ;
 
-function ESMarketLookupController($scope, $state, $focus, $timeout, $filter,
-                                  UIUtils, ModalUtils, esMarket, BMA) {
+function ESMarketLookupController($scope, $rootScope, $state, $focus, $timeout, $filter,
+                                  UIUtils, ModalUtils, csConfig, esMarket, BMA) {
   'ngInject';
 
   var defaultSearchLimit = 10;
@@ -96,6 +111,25 @@ function ESMarketLookupController($scope, $state, $focus, $timeout, $filter,
     options: null,
     loadingMore: false
   };
+
+  // Screen options
+  $scope.options = $scope.options || angular.merge({
+      type: {
+        show: true
+      },
+      category: {
+        show: true
+      },
+      description: {
+        show: true
+      },
+      location: {
+        show: true,
+        prefix : undefined
+      }
+    }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
+
+  console.debug("[market] Screen options: ", $scope.options);
 
   $scope.$on('$ionicView.enter', function(e, state) {
     if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
@@ -376,11 +410,35 @@ function ESMarketLookupController($scope, $state, $focus, $timeout, $filter,
         }
       });
   };
+
+
+  $scope.showRecord = function(event, index) {
+    if (event.defaultPrevented) return;
+    var item = $scope.search.results[index];
+    if (item) {
+      $state.go('app.market_view_record', {
+        id: item.id,
+        title: item.title
+      });
+    }
+  };
+
+  $scope.showRecordPictures = function(event, index) {
+    var item = $scope.search.results[index];
+    if (item && item.thumbnail) {
+      event.preventDefault();
+      $rootScope.picture = item.thumbnail;
+      $state.go('app.market_view_picture', {
+        id: item.id,
+        title: item.title
+      });
+    }
+  };
 }
 
-function ESMarketRecordViewController($scope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q,
-                                      $timeout, $filter, Modals,
-                                      csWallet, esMarket, UIUtils,  esHttp) {
+function ESMarketRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q,
+                                      $timeout, $filter, Modals, csConfig,
+                                      csWallet, esMarket, UIUtils, esHttp) {
   'ngInject';
 
   $scope.formData = {};
@@ -391,6 +449,23 @@ function ESMarketRecordViewController($scope, $anchorScroll, $ionicPopover, $sta
   $scope.maxCommentSize = 10;
   $scope.loading = true;
   $scope.motion = UIUtils.motion.fadeSlideInRight;
+
+  // Screen options
+  $scope.options = $scope.options || angular.merge({
+    type: {
+      show: true
+    },
+    category: {
+      show: true
+    },
+    description: {
+      show: true
+    },
+    location: {
+      show: true,
+      prefix : undefined
+    }
+  }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
   $scope.$on('$ionicView.enter', function (e, state) {
     if (state.stateParams && state.stateParams.id) { // Load by id
@@ -536,7 +611,7 @@ function ESMarketRecordViewController($scope, $anchorScroll, $ionicPopover, $sta
     }
   };
 
-  $scope.showSharePopover = function (event) {
+  $scope.showSharePopover = function(event) {
     $scope.hideActionsPopover();
 
     var title = $scope.formData.title;
@@ -576,8 +651,8 @@ function ESMarketRecordViewController($scope, $anchorScroll, $ionicPopover, $sta
   };
 }
 
-function ESMarketRecordEditController($scope, $timeout, $state, $ionicPopover, esMarket, $ionicHistory, $focus,
-                                      UIUtils, ModalUtils, esHttp, csSettings, csCurrency) {
+function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarket, $ionicHistory, $focus,
+                                      UIUtils, ModalUtils, csConfig, esHttp, csSettings, csCurrency) {
   'ngInject';
 
   $scope.formData = {
@@ -588,6 +663,33 @@ function ESMarketRecordEditController($scope, $timeout, $state, $ionicPopover, e
   $scope.pictures = [];
   $scope.loading = true;
 
+  // Screen options
+  $scope.options = $scope.options || angular.merge({
+    recordType: {
+      show: true,
+      canEdit: true
+    },
+    category: {
+      show: true,
+      filter: undefined
+    },
+    description: {
+      show: true
+    },
+    location: {
+      show: true,
+      required: true
+    },
+    unit: {
+      canEdit: true
+    },
+    login: {
+      type: "full"
+    }
+  }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
+
+  console.debug("[market] Screen options: ", $scope.options);
+
   $scope.motion = UIUtils.motion.ripple;
 
   $scope.setForm =  function(form) {
@@ -596,7 +698,9 @@ function ESMarketRecordEditController($scope, $timeout, $state, $ionicPopover, e
 
   $scope.$on('$ionicView.enter', function(e, state) {
     // Load wallet
-    $scope.loadWallet({minData: true})
+    $scope.loadWallet({
+      minData: true
+    })
     .then(function() {
       $scope.useRelative = csSettings.data.useRelative;
       if (state.stateParams && state.stateParams.id) { // Load by id
@@ -605,18 +709,30 @@ function ESMarketRecordEditController($scope, $timeout, $state, $ionicPopover, e
       else {
         // New record
         if (state.stateParams && state.stateParams.type) {
-          $scope.formData.type=state.stateParams.type;
+          $scope.formData.type = state.stateParams.type;
         }
-        // Set the default currency
-        csCurrency.default()
-          .then(function(currency){
+        $scope.formData.type = $scope.formData.type || ($scope.options.type && $scope.options.type.default) || 'offer'; // default: offer
+
+        // Get the default currency
+        var getCurrency;
+        if (csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.defaultCurrency) {
+          getCurrency = $q.when({name: csConfig.plugins.market.defaultCurrency});
+        }
+        else {
+          getCurrency = csCurrency.default();
+        }
+        getCurrency.then(function(currency){
             $scope.formData.currency = currency.name;
             $scope.loading = false;
             UIUtils.loading.hide();
             $scope.motion.show();
           });
       }
-      $focus('market-record-title');
+
+      // Focus on title
+      if ($scope.options.focus && !UIUtils.screen.isSmall()) {
+        $focus('market-record-title');
+      }
     });
   });
 
@@ -769,7 +885,16 @@ function ESMarketRecordEditController($scope, $timeout, $state, $ionicPopover, e
 
   $scope.showCategoryModal = function() {
     // load categories
-    esMarket.category.all()
+    var getCategories;
+    console.log("getting categories");
+    if ($scope.options && $scope.options.category && $scope.options.category.filter) {
+      getCategories = esMarket.category.filtered({filter: $scope.options.category.filter});
+    }
+    else {
+      getCategories = esMarket.category.all();
+    }
+
+    getCategories
     .then(function(categories){
       return ModalUtils.show('plugins/es/templates/common/modal_category.html', 'ESCategoryModalCtrl as ctrl',
         {categories : categories},
@@ -782,4 +907,14 @@ function ESMarketRecordEditController($scope, $timeout, $state, $ionicPopover, e
       }
     });
   };
+}
+
+function ESMarketViewPicturesController($scope, $rootScope) {
+  console.log("enter ESMarketViewPicturesController", $rootScope);
+
+  $scope.formData = {
+    picture: $rootScope.picture
+  };
+  delete $rootScope.picture;
+
 }
