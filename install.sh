@@ -7,11 +7,11 @@ is_installed() {
 }
 
 if [ "_$1" != "_" ]; then
-  CESIUM_DIR="$1"
+  GCHANGE_DIR="$1"
 fi
-if [ "_$CESIUM_DIR" = "_" ]; then
+if [ "_$GCHANGE_DIR" = "_" ]; then
   DIRNAME=`pwd`
-  CESIUM_DIR="$DIRNAME/cesium"
+  GCHANGE_DIR="$DIRNAME/gchange"
 fi
 
 latest_version() {
@@ -19,7 +19,7 @@ latest_version() {
 }
 
 api_release_url() {
-  echo "https://api.github.com/repos/duniter/cesium/releases/tags/$(latest_version)"
+  echo "https://api.github.com/repos/duniter-change/duniter-client/releases/tags/$(latest_version)"
 }
 
 download() {
@@ -40,29 +40,29 @@ download() {
 install_from_github() {
 
   local RELEASE=`curl -XGET -i $(api_release_url)`
-  local CESIUM_URL=`echo "$RELEASE" | grep -P "\"browser_download_url\": \"[^\"]+" | grep -oP "https://[a-zA-Z0-9/.-]+-web.zip"`
-  local CESIUM_ARCHIVE=$CESIUM_DIR/cesium.zip
-  if [ -d "$CESIUM_DIR" ]; then
-    if [ -f "$CESIUM_ARCHIVE" ]; then
-      echo "WARNING: Deleting existing archive [$CESIUM_ARCHIVE]"
-      rm $CESIUM_ARCHIVE
+  local GCHANGE_URL=`echo "$RELEASE" | grep -P "\"browser_download_url\": \"[^\"]+" | grep -oP "https://[a-zA-Z0-9/.-]+-web.zip"`
+  local GCHANGE_ARCHIVE=$GCHANGE_DIR/cesium.zip
+  if [ -d "$GCHANGE_DIR" ]; then
+    if [ -f "$GCHANGE_ARCHIVE" ]; then
+      echo "WARNING: Deleting existing archive [$GCHANGE_ARCHIVE]"
+      rm $GCHANGE_ARCHIVE
     fi
   else
-    mkdir -p "$CESIUM_DIR"
+    mkdir -p "$GCHANGE_DIR"
   fi
 
-  echo "Downloading [$CESIUM_URL]"
-  download "$CESIUM_URL" -o "$CESIUM_ARCHIVE" || {
-      echo >&2 "Failed to download '$CESIUM_URL'"
+  echo "Downloading [$GCHANGE_URL]"
+  download "$GCHANGE_URL" -o "$GCHANGE_ARCHIVE" || {
+      echo >&2 "Failed to download '$GCHANGE_URL'"
       return 4
     }
-  echo "Unarchive to $CESIUM_DIR"
-  unzip -o $CESIUM_ARCHIVE -d $CESIUM_DIR
-  rm $CESIUM_ARCHIVE
+  echo "Unarchive to $GCHANGE_DIR"
+  unzip -o $GCHANGE_ARCHIVE -d $GCHANGE_DIR
+  rm $GCHANGE_ARCHIVE
 
   echo
 
-  echo "Cesium successfully installed at $CESIUM_DIR"
+  echo "Cesium successfully installed at $GCHANGE_DIR"
 }
 
 do_install() {
@@ -88,6 +88,6 @@ reset() {
     download install_from_github do_install
 }
 
-[ "_$CESIUM_ENV" = "_testing" ] || do_install $1
+[ "_$GCHANGE_ENV" = "_testing" ] || do_install $1
 
 } # this ensures the entire script is downloaded #
