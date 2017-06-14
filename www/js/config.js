@@ -14,6 +14,9 @@ angular.module("cesium.config", [])
 	"cacheTimeMs": 60000,
 	"useLocalStorage": true,
 	"rememberMe": true,
+	"helptip": {
+		"enable": false
+	},
 	"node": {
 		"host": "g1.duniter.org",
 		"port": "443"
@@ -66,8 +69,8 @@ angular.module("cesium.config", [])
 			}
 		}
 	},
-	"version": "0.4.0",
-	"build": "2017-06-14T10:59:31.142Z",
+	"version": "0.4.1",
+	"build": "2017-06-14T15:16:49.783Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
