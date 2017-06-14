@@ -22,9 +22,8 @@
     <div class="positive-900-bg hero"  id="wallet-header"
          ng-class="{'hero-qrcode-active': toggleQRCode}">
       <div class="content" ng-if="!loading">
-        <i class="avatar"
-           ng-if=":rebind:!formData.avatar"
-           ng-class="{'avatar-wallet': !formData.isMember, 'avatar-member': formData.isMember}"></i>
+        <i class="avatar avatar-member"
+           ng-if=":rebind:!formData.avatar"></i>
         <i class="avatar"
            ng-if=":rebind:formData.avatar"
            style="background-image: url({{:rebind:formData.avatar.src}})"></i>
