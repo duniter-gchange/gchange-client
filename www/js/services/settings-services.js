@@ -61,13 +61,12 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
     httpsMode: false,
     expertMode: false,
     decimalCount: 4,
-    forceNetworkViewToHttp: false,
     uiEffects: true,
-    minVersion: csConfig.compatProtocol_0_80 ? '0.80.0' : '0.90.0', // TODO update this if need
-    newIssueUrl: "https://github.com/duniter/cesium/issues/new?labels=bug",
+    minVersion: '0.1.0', // TODO update this if need
+    newIssueUrl: "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug",
     helptip: {
-      enable: true,
-      installDocUrl: "https://github.com/duniter/duniter/blob/master/doc/install-a-node.md",
+      enable: false,
+      installDocUrl: "https://github.com/duniter-gchange/gchange-client/blob/master/README.md",
       currency: 0,
       wot: 0,
       wotCerts: 0,
@@ -91,12 +90,6 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
   started = false,
   startPromise,
   api = new Api(this, "csSettings");
-
-  // Change some defaults, when no device
-  // removeIf(device)
-  defaultSettings.useLocalStorage = false;
-  defaultSettings.rememberMe = false;
-  // endRemoveIf(device)
 
   var
   reset = function() {

@@ -10,7 +10,9 @@
     <div class="list item-wrap-text">
       <div class="item item-complex item-icon-left item-text-wrap">
         <div class="item-content">
-          <span>{{'COMMON.APP_NAME'|translate}}&nbsp;{{'COMMON.APP_VERSION'|translate:config}}</span>
+          <span>
+            <ng-bind-html ng-bind-html="'COMMON.APP_NAME'|translate"></ng-bind-html> {{'COMMON.APP_VERSION'|translate:config}}
+          </span>
           <h3 ng-if="config.build" class="gray">{{'COMMON.APP_BUILD'|translate:config}}</h3>
           <span translate>ABOUT.LICENSE</span>
         </div>
@@ -19,23 +21,21 @@
         <div class="item-content">
           <i class="item-image icon ion-social-github"></i>
           {{'ABOUT.CODE' | translate}}
-          <h3><a href="https://github.com/duniter/cesium">https://github.com/duniter/cesium</a></h3>
+          <h3><a href="https://github.com/duniter/cesium">https://github.com/duniter-gchange/gchange-client</a></h3>
         </div>
       </div>
-      <div class="item item-complex item-icon-left">
+      <!--<div class="item item-complex item-icon-left">
         <div class="item-content">
           <i class="item-image icon ion-chatbubbles"></i>
           {{'ABOUT.FORUM' | translate}}
           <h3><a href="https://forum.duniter.org">https://forum.duniter.org</a>
         </div>
-      </div>
+      </div>-->
       <div class="item item-complex item-icon-left">
         <div class="item-content">
           <i class="item-image icon ion-chatbubbles"></i>
           {{'ABOUT.DEVELOPERS' | translate}}
           <h3>
-            <a href="https://github.com/c-geek">cgeek</a>,
-            <a href="https://github.com/devingfx">DiG</a>,
             <a href="https://github.com/blavenie">Benoit Lavenier</a>
           </h3>
         </div>

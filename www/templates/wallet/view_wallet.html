@@ -42,9 +42,9 @@
       </h4>
     </div>
 
-    <div id="qrcode" class="qrcode visible-xs visible-sm spin"
+    <!--div id="qrcode" class="qrcode visible-xs visible-sm spin"
          ng-class="{'active': toggleQRCode}"
-         ng-click="toggleQRCode = !toggleQRCode"></div>
+         ng-click="toggleQRCode = !toggleQRCode"></div-->
 
     <!-- Buttons bar-->
     <div class="hidden-xs hidden-sm padding text-center" ng-if="!loading">
@@ -77,6 +77,13 @@
           <span class="assertive">{{:locale:'ACCOUNT.BTN_MEMBERSHIP_RENEW' | translate}}</span>
         </button>
       </div>
+    </div>
+
+    <div class="visible-xs visible-sm padding text-center" ng-if="!loading">
+      <button class="button button-assertive button-small-padding icon ion-android-exit ink"
+              ng-click="logout({askConfirm: true})">
+        {{'COMMON.BTN_LOGOUT' | translate}}
+      </button>
     </div>
 
     <div class="row no-padding">

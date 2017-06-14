@@ -36,8 +36,8 @@ function WalletController($scope, $rootScope, $q, $ionicPopup, $timeout, $state,
           $scope.formData = walletData;
           $scope.loading=false; // very important, to avoid TX to be display before wallet.currentUd is loaded
           $scope.updateView();
-          $scope.showQRCode('qrcode', $scope.formData.pubkey, 1100);
-          $scope.showHelpTip();
+          //$scope.showQRCode('qrcode', $scope.formData.pubkey, 1100);
+          //$scope.showHelpTip();
           UIUtils.loading.hide(); // loading could have be open (e.g. new account)
         })
         .catch(function(err){

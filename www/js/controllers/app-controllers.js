@@ -330,7 +330,10 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
     UIUtils.loading.show();
     return csWallet.logout()
       .then(function() {
-        $ionicSideMenuDelegate.toggleLeft();
+        // Close left menu if open
+        if ($ionicSideMenuDelegate.isOpenLeft()) {
+          $ionicSideMenuDelegate.toggleLeft();
+        }
         $ionicHistory.clearHistory();
 
         return $ionicHistory.clearCache()

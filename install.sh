@@ -62,7 +62,7 @@ install_from_github() {
 
   echo
 
-  echo "Cesium successfully installed at $GCHANGE_DIR"
+  echo "ğchange successfully installed at $GCHANGE_DIR"
 }
 
 do_install() {
