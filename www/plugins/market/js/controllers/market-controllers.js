@@ -814,6 +814,7 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
         json.picturesCount = $scope.pictures.length;
         if (json.picturesCount) {
           json.pictures = $scope.pictures.reduce(function(res, pic) {
+            // TODO: resize image
             return res.concat({file: esHttp.image.toAttachment(pic)});
           }, []);
           return UIUtils.image.resizeSrc($scope.pictures[0].src, true) // resize thumbnail
