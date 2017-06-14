@@ -680,9 +680,9 @@ $screen-menu:                     845px;
 
 @media screen and (max-width: $screen-xs-max) {
   #home .logo {
-    height: 96px;
-    background-image: url('../img/logo_96px.png');
-    background-size: 96px 96px;
+    height: 128px;
+    background-image: url('../img/logo_128px.png');
+    background-size: 128px 128px;
   }
   #home .footer {
     display:none;
@@ -691,8 +691,8 @@ $screen-menu:                     845px;
 @media screen and (min-width: $screen-sm) and (max-width: $screen-sm-max) {
   #home .logo {
     height: 144px;
-    background-image: url('../img/logo_144px.png');
-    background-size: 144px 144px;
+    background-image: url('../img/logo_128px.png');
+    background-size: 128px 128px;
   }
   #home .button {
     max-width: 350px;
@@ -702,7 +702,7 @@ $screen-menu:                     845px;
 @media screen and (min-width: $screen-md) {
   #home .logo {
     height: 200px;
-    background-image: url('../../resources/logo/svg/colors/logo.large.cesium.dune.svg');
+    background-image: url('../img/logo.svg');
     background-size: 200px 200px;
   }
 
@@ -715,21 +715,8 @@ $screen-menu:                     845px;
 
 
 @media screen and (min-width: $screen-md) {
-  .circle-bg-dark {
-    ion-content.scroll-content {
-      background-image: url('../../resources/logo/svg/white/logo.large.empty.transparent.svg');
-      background-repeat: no-repeat;
-      background-position: -725px -145px;
-      background-size: 1024px 1024px;
-    }
-  }
 
   .menu.menu-left {
-    background-image: url('../../resources/logo/svg/white/logo.large.empty.transparent.svg');
-    background-repeat: no-repeat;
-    background-position: -500px -100px;
-    background-size: 1024px 1024px;
-    background-color: whitesmoke;
     height: 100%;
 
     .item.active {
@@ -1763,17 +1750,6 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   padding-right: 0px;
 }
 
-/**********
-  Item peer
-**********/
-
-.ion-es-user-api:before {
-  content: url('../img/logo.small.cs.dune.svg');
-}
-
-.ion-bma-tor-api:before {
-  content: url('../img/logo_tor_32px.png');
-}
 
 .row-header{
   border-bottom: solid 1px #ccc !important;
