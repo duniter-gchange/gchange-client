@@ -804,16 +804,16 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
           loadCurrentUD(),
 
           // Get requirements
-          loadRequirements(),
+          //loadRequirements(),
 
           // Get sources
-          loadSources(),
+        //loadSources(),
 
           // Get transactions
-          loadTransactions(),
+        //loadTransactions(),
 
           // Load sigStock
-          loadSigStock(),
+        //loadSigStock(),
 
           // API extension
           api.data.raisePromise.load(data, null)
@@ -824,10 +824,10 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
         ])
         .then(function() {
           // Process transactions and sources
-          return processTransactionsAndSources();
+          //return processTransactionsAndSources();
         })
         .then(function() {
-          finishLoadRequirements(); // must be call after loadParameters() and loadRequirements()
+          //finishLoadRequirements(); // must be call after loadParameters() and loadRequirements()
           return api.data.raisePromise.finishLoad(data)
             .catch(function(err) {
               console.error('Error while finishing wallet data load, on extension point. Try to continue');
@@ -847,9 +847,9 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
     loadMinData = function(options) {
       options = options || {};
       options.parameters = angular.isDefined(options.parameters) ? options.parameters : !data.parameters; // do not load if already done
-      options.requirements = angular.isDefined(options.requirements) ? options.requirements :
-        (!data.requirements || angular.isUndefined(data.requirements.needSelf));
-      if (!options.parameters && !options.requirements) {
+      //options.requirements = angular.isDefined(options.requirements) ? options.requirements :
+      //  (!data.requirements || angular.isUndefined(data.requirements.needSelf));
+      if (!options.parameters /*&& !options.requirements*/) {
         return $q.when(data);
       }
       return refreshData(options);
@@ -859,13 +859,13 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
         options = options || {
           parameters: !data.parameters, // do not load if already done
           currentUd: true,
-          requirements: true,
-          sources: true,
+          requirements: false,
+          sources: false,
           tx: {
-            enable: true,
+            enable: false,
             fromTime: data.tx ? data.tx.fromTime : undefined // keep previous time
           },
-          sigStock: true,
+          sigStock: false,
           api: true
         };
 
@@ -885,7 +885,7 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       if (options.currentUd) jobs.push(loadCurrentUD());
 
       // Get requirements
-      if (options.requirements) {
+      /*if (options.requirements) {
         jobs.push(loadRequirements()
           .then(function() {
             finishLoadRequirements();
@@ -902,17 +902,18 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
 
       // Load sigStock
       if (options.sigStock) jobs.push(loadSigStock());
+       */
 
       // API extension (force if no other jobs)
       if (!jobs.length || options.api) jobs.push(api.data.raisePromise.load(data, options));
 
       return $q.all(jobs)
-      .then(function() {
+      /*.then(function() {
         if (options.sources || (options.tx && options.tx.enable)) {
           // Process transactions and sources
           return processTransactionsAndSources();
         }
-      })
+      })*/
       .then(function(){
         return api.data.raisePromise.finishLoad(data);
       })
