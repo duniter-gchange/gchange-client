@@ -425,7 +425,7 @@ gulp.task('zip:web', ['clean-unused-directories:web'], function(done) {
     .pipe(header('\ufeff'))
     .pipe(txtFilter.restore)
 
-    .pipe(zip('cesium-web-'+version+'.zip'))
+    .pipe(zip('gchange-web-'+version+'.zip'))
 
     .pipe(gulp.dest('./platforms/web/build'))
     .on('end', done);
@@ -433,7 +433,7 @@ gulp.task('zip:web', ['clean-unused-directories:web'], function(done) {
 
 gulp.task('build:web', ['git-check', 'zip:web'], function(done) {
   var version = JSON.parse(fs.readFileSync('./package.json', 'utf8')).version;
-  gutil.log(gutil.colors.green("Build for web created at: 'plateforms/web/build/cesium-web-" + version + ".zip'"));
+  gutil.log(gutil.colors.green("Build for web created at: 'plateforms/web/build/gchange-web-" + version + ".zip'"));
   return del([
       './tmp'
     ]);

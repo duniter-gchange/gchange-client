@@ -10,27 +10,22 @@ angular.module("cesium.config", [])
 
 .constant("csConfig", {
 	"defaultLanguage": "fr-FR",
-	"timeout": 6000,
+	"timeout": 4000,
 	"cacheTimeMs": 60000,
-	"useRelative": true,
-	"timeWarningExpireMembership": 5184000,
-	"timeWarningExpire": 7776000,
 	"useLocalStorage": true,
 	"rememberMe": true,
-	"showUDHistory": false,
 	"node": {
-		"host": "g1-test.duniter.org",
-		"port": "10900"
+		"host": "g1.duniter.org",
+		"port": "443"
 	},
 	"login": {
 		"templateUrl": "plugins/market/templates/login/modal_simple_login.html"
 	},
 	"plugins": {
 		"es": {
-			"enable": false,
-			"host": "localhost",
-			"port": "9200",
-			"wsPort": "9400"
+			"enable": true,
+			"host": "data.gchange.fr",
+			"port": "443"
 		},
 		"market": {
 			"defaultCurrency": "€",
@@ -72,7 +67,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.3.3",
-	"build": "2017-06-14T07:53:44.446Z",
+	"build": "2017-06-14T10:29:58.942Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

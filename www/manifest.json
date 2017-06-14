@@ -1,24 +1,30 @@
 {
-  "short_name": "Cesium",
-  "name": "Cesium",
+  "short_name": "ğchange",
+  "name": "ğchange",
   "icons": [
     {
-      "src": "img/logo_96px.png",
-      "sizes": "96x96",
+      "src": "img/logo_64px.png",
+      "sizes": "64x64",
       "type": "image/png"
     },
     {
-      "src": "img/logo_144px.png",
-      "sizes": "144x144",
+      "src": "img/logo_128px.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo_256px.png",
+      "sizes": "256x256",
       "type": "image/png"
     },
     {
       "src": "img/logo.svg",
-      "sizes": "192x192",
+      "sizes": "512x512",
       "type": "image/svg"
     }
   ],
-  "start_url": "/#/app/home",
+  "start_url": "index.html/#/app/home",
   "display": "standalone",
-  "orientation": "portrait"
+  "background_color": "#1A237E",
+  "theme_color": "#1A237E"
 }

@@ -4,9 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width, minimal-ui">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>Cesium</title>
+  <title>ğchange</title>
   <link rel="icon" href="./img/favicon.ico">
-  <link rel="apple-touch-icon" href="./img/logo_57px.png">
+  <link rel="apple-touch-icon" href="./img/logo_128px.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./img/logo_180px.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="./img/logo_152px.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="./img/logo_167px.png">
   <link rel="manifest" href="/manifest.json">
   <!-- build:css dist_css/cesium.css -->
   <link href="css/ionic.app.css" rel="stylesheet">
@@ -22,6 +25,16 @@
   <link href="dist/dist_css/plugins/market/css/style.css" rel="stylesheet">
   <!--endRemoveIf(device)-->
   <!-- endbuild -->
+
+</head>
+<body ng-app="cesium" id="cesium" ng-strict-di ng-class="{'nobackdrop': $root.tour}">
+  <ion-nav-view>
+    <h3 style="text-align: center; margin-top: 44px;">
+      ğ<b>change</b>
+    </h3>
+    <h4 style="text-align: center; margin-top: 10px;">Chargement en cours. Veuillez patienter...</h4>
+  </ion-nav-view>
+
   <!-- build:js dist_js/vendor.js -->
   <!-- vendor js -->
   <script src="js/vendor/moment.min.js"></script>
@@ -152,8 +165,5 @@
   <!-- config  -->
   <script src="dist/dist_js/app/config.js"></script>
   <!-- endbuild -->
-</head>
-<body ng-app="cesium" id="cesium" ng-strict-di ng-class="{'nobackdrop': $root.tour}">
-  <ion-nav-view></ion-nav-view>
 </body>
 </html>
