@@ -67,7 +67,7 @@
           },
           "category": {
             "show": true,
-            "filter": "localeSale"
+            "filter": "localSale"
           },
           "description": {
             "show": false

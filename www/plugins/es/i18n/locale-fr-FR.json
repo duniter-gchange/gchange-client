@@ -1,6 +1,7 @@
 {
   "COMMON": {
     "CATEGORY": "Catégorie",
+    "CATEGORY_SELECT_HELP": "Sélectionner",
     "CATEGORIES": "Catégories",
     "CATEGORY_SEARCH_HELP": "Recherche",
     "LAST_MODIFICATION_DATE": "Mise à jour le",

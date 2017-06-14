@@ -53,7 +53,7 @@ angular.module("cesium.config", [])
 				},
 				"category": {
 					"show": true,
-					"filter": "localeSale"
+					"filter": "localSale"
 				},
 				"description": {
 					"show": false
@@ -72,7 +72,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.3.3",
-	"build": "2017-06-13T14:42:02.885Z",
+	"build": "2017-06-14T07:53:44.446Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

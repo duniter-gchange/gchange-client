@@ -138,14 +138,16 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $timeout, 
       var finishEntered = function() {
         $scope.search.options = hasOptions ? true : $scope.search.options; // keep null if first call
         if (runSearch) {
-          $timeout(function() {
-            $scope.doSearch();
-          }, 100);
+          $scope.doSearch()
+              .then(function() {
+                $scope.showFab('fab-add-market-record');
+              });
         }
         else { // By default : get last record
-          $timeout(function() {
-            $scope.doGetLastRecord();
-          }, 100);
+          $scope.doGetLastRecord()
+              .then(function() {
+                $scope.showFab('fab-add-market-record');
+              });
         }
         // removeIf(device)
         // Focus on search text (only if NOT device, to avoid keyboard opening)
@@ -185,8 +187,6 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $timeout, 
         finishEntered();
       }
     }
-    $scope.showFab('fab-add-market-record');
-
 
   });
 
@@ -402,6 +402,9 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $timeout, 
       .then(function() {
         return UIUtils.loading.hide();
       }).then(function() {
+        if (!$scope.options.type.show && $scope.options.type.default) {
+          return $scope.options.type.default;
+        }
         return ModalUtils.show('plugins/market/templates/modal_record_type.html');
       })
       .then(function(type){

@@ -3,7 +3,12 @@
     <span translate>MARKET.SEARCH.TITLE</span>
   </ion-nav-title>
 
-  <ion-content class="lookupForm padding no-padding-xs" scroll="true"
+  <ion-nav-buttons side="secondary">
+    <button class="button button-icon button-clear icon ion-loop visible-xs visible-sm" ng-click="doSearch()">
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content class="lookupForm "
                bind-notifier="{ rebind:$root.settings.useRelative }">
 
     <form ng-submit="doSearch()">
@@ -45,14 +50,13 @@
          ng-if="!search.loading && search.results.length">
 
       <div ng-repeat="rec in search.results"
-         class="item no-padding-bottom no-padding-top"
-         >
+         class="item no-padding-bottom no-padding-top">
 
-        <div class="card card-record stable-bg padding-top ink"
+        <a class="card card-record stable-bg padding-top ink"
              ng-click="showRecord($event, $index)">
 
           <div class="card-item item-thumbnail-left item-text-wrap padding-right">
-            <i class="item-image" ng-if="rec.thumbnail" style="background-image: url('{{::rec.thumbnail.src}}')" ng-click="showRecordPictures($event, $index)"></i>
+            <i class="item-image" ng-if="rec.thumbnail" style="background-image: url('{{::rec.thumbnail.src}}')" ></i>
             <i class="item-image ion-speakerphone" ng-if="!rec.thumbnail"></i>
             <h2 ng-bind-html="rec.title"></h2>
             <h4 class="gray">
@@ -84,9 +88,9 @@
               {{'MARKET.TYPE.NEED'|translate}}
             </div>
           </div>
-        </div>
+        </a>
 
-      </a>
+      </div>
     </div>
 
     <ion-infinite-scroll
@@ -97,8 +101,8 @@
     </ion-infinite-scroll>
   </ion-content>
 
-  <button id="fab-add-market-record bu"
-          class="button button-fab button-fab-bottom-right button-assertive icon ion-compose visible-xs visible-sm spin"
+  <button id="fab-add-market-record"
+          class="button button-fab button-fab-bottom-right button-assertive icon ion-plus spin"
           ng-click="showNewRecordModal()">
   </button>
 </ion-view>

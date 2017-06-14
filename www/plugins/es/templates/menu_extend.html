@@ -14,7 +14,8 @@
   </button>
 
   <!-- notifications -->
-  <button class="button button-clear icon ion-android-notifications hidden-xs hidden-sm"
+  <button class="button button-clear icon ion-android-notifications"
+          ng-class="{'hidden-xs hidden-sm': !$root.walletData.notifications.unreadCount}"
           ng-if="login"
           active-link="gray"
           active-link-path-prefix="#/app/notifications"

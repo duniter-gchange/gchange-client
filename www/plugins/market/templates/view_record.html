@@ -27,7 +27,11 @@
 
           <div class="item item-text-wrap" ng-class="{'item-thumbnail-left': thumbnail}">
             <img ng-src="{{thumbnail.src}}" ng-if="thumbnail">
-            <h1 class="padding-top" ng-bind-html="formData.title"></h1>
+
+            <!-- title -->
+            <h1 ng-bind-html="formData.title"></h1>
+
+            <!-- location and category-->
             <h2 class="gray hidden-xs">
               <a ng-if="formData.location" ui-sref="app.market_lookup({location:formData.location})">
                 <i class="icon ion-location"></i>
@@ -44,13 +48,13 @@
               <span translate>COMMON.SUBMIT_BY</span>
               <a ng-class="{'positive': issuer.uid, 'gray': !issuer.uid}"
                  ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.name||issuer.uid})">
-                <ng-if ng-if="issuer.uid">
+                <ng-if ng-if="::issuer.name||issuer.uid">
                   <i class="icon ion-person"></i>
-                  {{issuer.name||issuer.uid}}
+                  {{::issuer.name||issuer.uid}}
                 </ng-if>
-                <span ng-if="!issuer.uid">
+                <span ng-if="::!issuer.name&&!issuer.uid">
                   <i class="icon ion-key"></i>
-                  {{issuer.pubkey|formatPubkey}}
+                  {{::issuer.pubkey|formatPubkey}}
                 </span>
               </a>
               <span>
@@ -81,13 +85,12 @@
             <h4>
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
-              <a ng-class="{'positive': issuer.uid, 'gray': !issuer.uid}"
-                 ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.name||issuer.uid})">
-                <ng-if ng-if="issuer.uid">
+              <a ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.uid})">
+                <span class="positive" ng-if="issuer.name||issuer.uid">
                   <i class="icon ion-person"></i>
                   {{issuer.name||issuer.uid}}
-                </ng-if>
-                <span ng-if="!issuer.uid">
+                </span>
+                <span class="gray" ng-if="!issuer.name && !issuer.uid">
                   <i class="icon ion-key"></i>
                   {{issuer.pubkey|formatPubkey}}
                 </span>
@@ -99,7 +102,7 @@
                 </span>
               </span>
             </h4>
-            <div class="badge badge-calm badge-price">
+            <div class="badge badge-calm badge-price" ng-if="formData.price">
               <i class="icon ion-pricetag"></i>
               <span ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></span>
             </div>

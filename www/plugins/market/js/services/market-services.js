@@ -16,16 +16,20 @@ angular.module('cesium.market.services', ['ngResource', 'cesium.services', 'cesi
       filters = {
           localSale: {
               excludes: [
-              //'cat2',   // Voitures
-              //'cat3',   // Motos
-              //'cat5',   // Utilitaires
-              'cat71',  // Emploi
-              'cat8',   // Immobilier
-              'cat66',  // Vacances
-              'cat56',  // Matériel professionnel
-              'cat31',  // Services
-              'cat48'   // Vins &amp; Gastronomie
-            ]}
+                  'cat2',   // Voitures
+                  'cat3',   // Motos
+                  'cat4',   // Caravaning
+                  'cat5',   // Utilitaires
+                  'cat7',   // Nautisme
+                  'cat28',  // Animaux
+                  'cat71',  // Emploi
+                  'cat8',   // Immobilier
+                  'cat66',  // Vacances
+                  'cat56',  // Matériel professionnel
+                  'cat31',  // Services
+                  'cat48'   // Vins &amp; Gastronomie
+              ]
+          }
       };
 
     exports._internal.category= {
@@ -66,28 +70,31 @@ angular.module('cesium.market.services', ['ngResource', 'cesium.services', 'cesi
         options = options || {};
         options.filter = angular.isDefined(options.filter) ? options.filter : undefined;
 
-        var cachedResult = exports._internal.filteredCategories && exports._internal.filteredCategories[options.type];
+        var cachedResult = exports._internal.filteredCategories && exports._internal.filteredCategories[options.filter];
         if (cachedResult && cachedResult.length) {
             var deferred = $q.defer();
             deferred.resolve(cachedResult);
             return deferred.promise;
         }
 
+        // Prepare filter exclude function
+        var excludes = options.filter && filters[options.filter] && filters[options.filter].excludes;
+        var isExclude = excludes && function(value) {
+            return _.contains(excludes, value);
+        };
+
         return exports._internal.category.all()
             .then(function(res) {
                 // no result
                 if (res.hits.total === 0) return [];
 
-                // Filter (using excludes filters)
-                var excludes = options.filter && filters[options.filter] && filters[options.filter].excludes;
-                var excludePredicate = excludes && function(value) {
-                    return _.contains(excludes, value);
-                };
                 var categories = res.hits.hits.reduce(function(result, hit) {
                     var cat = hit._source;
                     cat.id = hit._id;
-                    return (excludePredicate &&
-                        ((cat.parent && excludePredicate(cat.parent)) || excludePredicate(cat.id))) ?
+                    var parentExclude = cat.parent && isExclude(cat.parent);
+                    if (parentExclude) console.log('will exclude: ', cat);
+                    return (isExclude &&
+                        ((cat.parent && isExclude(cat.parent)) || isExclude(cat.id))) ?
                         result :
                         result.concat(cat);
                 }, []);

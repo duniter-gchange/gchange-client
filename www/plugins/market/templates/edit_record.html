@@ -53,6 +53,8 @@
                  ng-class="{'item-input-error': form.$submitted && !formData.category.id}"
                  ng-click="showCategoryModal()">
                 <span class="item-label" translate>COMMON.CATEGORY</span>
+                <span ng-if="!formData.category.id"
+                      class="item-note">{{::'COMMON.CATEGORY_SELECT_HELP'|translate}}</span>
                 <span class="badge badge-royal" ng-bind-html="formData.category.name"></span>&nbsp;
                 <i class="gray icon ion-ios-arrow-right"></i>
               </a>
@@ -75,7 +77,7 @@
                          required>
               </div>
               <div class="form-errors"
-                   ng-show="form.$submitted && form.title.$error"
+                   ng-show="form.$submitted && form.title.$invalid"
                    ng-messages="form.title.$error">
                 <div class="form-error" ng-message="required">
                   <span translate="ERROR.FIELD_REQUIRED"></span>
@@ -111,7 +113,7 @@
                 </ng-if>
               </div>
               <div class="form-errors"
-                   ng-show="form.$submitted && form.price.$error"
+                   ng-show="form.$submitted && form.price.$invalid"
                    ng-messages="form.price.$error">
                 <div class="form-error" ng-message="numberFloat">
                   <span translate="ERROR.FIELD_NOT_NUMBER"></span>
@@ -150,7 +152,7 @@
                          placeholder="{{(options.location.help||'MARKET.EDIT.RECORD_LOCATION_HELP')|translate}}" ng-model="formData.location">
               </div>
               <div class="form-errors"
-                   ng-show="options.location.required && form.$submitted && form.location.$error"
+                   ng-show="options.location.required && form.$submitted && form.location.$invalid"
                    ng-messages="form.location.$error">
                 <div class="form-error">
                   <span translate="ERROR.FIELD_REQUIRED"></span>
