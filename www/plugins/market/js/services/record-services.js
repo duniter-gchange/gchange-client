@@ -1,4 +1,4 @@
-angular.module('cesium.market.services', ['ngResource', 'cesium.services', 'cesium.es.http.services', 'cesium.es.comment.services'])
+angular.module('cesium.market.record.services', ['ngResource', 'cesium.services', 'cesium.es.http.services', 'cesium.es.comment.services'])
 
 .factory('esMarket', function($q, csSettings, BMA, esHttp, esComment, esUser, csCurrency) {
   'ngInject';

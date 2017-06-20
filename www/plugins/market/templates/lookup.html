@@ -36,67 +36,9 @@
       </h4>
     </div>
 
-    <div class="center" ng-if="search.loading">
-      <ion-spinner icon="android"></ion-spinner>
-    </div>
+    <!-- list of records -->
+    <ng-include src="'plugins/market/templates/record/list_records.html'"></ng-include>
 
-    <div class="padding assertive" ng-if="!search.loading && search.results.length===0 && search.options != null" translate>
-      COMMON.SEARCH_NO_RESULT
-    </div>
-
-    <div class="list {{::motion.ionListClass}} no-padding"
-         ng-if="!search.loading && search.results.length">
-
-      <div ng-repeat="rec in search.results"
-         class="item no-padding">
-
-        <a class="card card-record stable-bg padding-top ink"
-             ng-click="showRecord($event, $index)">
-
-          <div class="card-item item-thumbnail-left item-text-wrap padding-right">
-            <i class="item-image" ng-if="rec.thumbnail" style="background-image: url('{{::rec.thumbnail.src}}')" ></i>
-            <i class="item-image ion-speakerphone" ng-if="!rec.thumbnail"></i>
-            <h2 ng-bind-html="rec.title"></h2>
-            <h4 class="gray">
-              <span ng-if="rec.location">
-                <i class="icon ion-location"></i> {{options.location.prefix|translate}}<span ng-bind-html="rec.location"></span>
-              </span>
-              <span ng-show="rec.time">
-                  <br ng-show="rec.location"/>
-                  <i class="icon ion-clock"></i> {{::rec.time | formatFromNow}}
-                </span>
-            </h4>
-            <h3 class="gray text-wrap" ng-bind-html="rec.description | truncText:200" ng-if="rec.description"></h3>
-            <div  ng-if="rec.picturesCount > 1"
-                   class="badge badge-balanced badge-picture-count">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i>
-            </div>
-
-          </div>
-          <div class="card-footer" style="height: 45px">
-            &nbsp;
-            <div class="badge badge-price badge-calm" ng-if="rec.type=='offer' && rec.price">
-              <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency}"></span>
-            </div>
-            <div class="badge badge-calm" ng-if="rec.type=='offer' && !rec.price && options.type.show">
-              <i class="cion-market-offer"></i>
-              <span translate>MARKET.TYPE.OFFER</span>
-            </div>
-            <div class="badge badge-energized" ng-if="rec.type=='need' && options.type.show">
-              <i class="cion-market-need"></i>
-              {{'MARKET.TYPE.NEED'|translate}}
-            </div>
-          </div>
-        </a>
-
-      </div>
-    </div>
-
-    <ion-infinite-scroll
-      ng-if="!search.loading && search.hasMore"
-      spinner="android"
-      on-infinite="showMore()"
-      distance="1%">
-    </ion-infinite-scroll>
   </ion-content>
 
   <button id="fab-add-market-record"

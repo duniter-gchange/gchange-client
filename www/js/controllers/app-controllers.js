@@ -301,6 +301,8 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
     options = options || {};
     options.templateUrl = options.templateUrl ||
         (csConfig.login && csConfig.login.templateUrl);
+    options.controller = options.controller ||
+        (csConfig.login && csConfig.login.controller);
 
     return Modals.showLogin(options)
     .then(function(formData){

@@ -22,7 +22,8 @@ angular.module("cesium.config", [])
 		"port": "443"
 	},
 	"login": {
-		"templateUrl": "plugins/market/templates/login/modal_simple_login.html"
+		"templateUrl": "plugins/market/templates/login/modal_simple_login.html",
+		"controller": "MarketLoginModalCtrl"
 	},
 	"plugins": {
 		"es": {

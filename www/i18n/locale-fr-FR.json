@@ -21,6 +21,7 @@
     "BTN_NEXT": "Suivant",
     "BTN_CANCEL": "Annuler",
     "BTN_CLOSE": "Fermer",
+    "BTN_LATER": "Plus tard",
     "BTN_LOGIN": "Se connecter",
     "BTN_LOGOUT": "Déconnexion",
     "BTN_ADD_ACCOUNT": "Nouveau compte",
@@ -30,11 +31,15 @@
     "BTN_ADD": "Ajouter",
     "BTN_SEARCH": "Rechercher",
     "BTN_REFRESH": "Actualiser",
+    "BTN_START": "Commencer",
     "BTN_CONTINUE": "Continuer",
     "BTN_UNDERSTOOD": "J'ai compris",
     "BTN_OPTIONS": "Options",
     "BTN_HELP_TOUR": "Visite guidée",
     "BTN_HELP_TOUR_SCREEN": "Découvrir cet écran",
+    "BTN_DOWNLOAD": "Télécharger",
+    "BTN_DOWNLOAD_ACCOUNT_STATEMENT": "Télécharger le relevé du compte",
+    "BTN_MODIFY": "Modifier",
     "DAYS": "jours",
     "NO_ACCOUNT_QUESTION": "Pas de encore membre ? Créer un compte !",
     "SEARCH_NO_RESULT": "Aucun résultat trouvé",
@@ -46,8 +51,10 @@
     "LANGUAGE": "Langue",
     "UNIVERSAL_DIVIDEND": "Dividende universel",
     "UD": "DU",
-    "DATE_PATTERN": "DD/MM/YYYY HH:mm",
-    "DATE_SHORT_PATTERN": "DD/MM/YYYY",
+    "DATE_PATTERN": "DD/MM/YY HH:mm",
+    "DATE_FILE_PATTERN": "YYYY-MM-DD",
+    "DATE_SHORT_PATTERN": "DD/MM/YY",
+    "DATE_MONTH_YEAR_PATTERN": "MM/YYYY",
     "EMPTY_PARENTHESIS": "(vide)",
     "UID": "Pseudonyme",
     "ENABLE": "Activé",
@@ -100,34 +107,45 @@
   "HOME": {
     "MESSAGE": "Bienvenue dans l'application {{'COMMON.APP_NAME'|translate}} !<br/>Faites des échanges d'un genre nouveau !",
     "MESSAGE_SHORT": "Faites des échanges d'un genre nouveau !",
-    "BTN_REGISTRY": "Annuaire",
-    "BTN_MARKET": "Offres/demandes",
-    "BTN_CURRENCIES": "Explorer les monnaies",
-    "BTN_CURRENCY": "Explorer la monnaie",
+    "BTN_CURRENCY": "Explorer la monnaie {{name|abbreviate}}",
     "BTN_ABOUT": "à propos",
     "BTN_HELP": "Aide en ligne",
-    "REPORT_ISSUE": "anomalie"
+    "REPORT_ISSUE": "anomalie",
+    "NOT_YOUR_ACCOUNT_QUESTION" : "Vous n'êtes pas propriétaire du compte <b><i class=\"ion-key\"></i> {{name|| (pubkey|formatPubkey) }}</b> ?",
+    "BTN_CHANGE_ACCOUNT": "Déconnecter ce compte",
+    "CONNECTION_ERROR": "Nœud <b>{{server}}</b> injoignable ou adresse invalide.<br/><br/>Vérifez votre connection Internet, ou changer de nœud <a class=\"positive\" ng-click=\"doQuickFix('settings')\">dans les paramètres</a>."
   },
   "SETTINGS": {
     "TITLE": "Paramètres",
     "NETWORK_SETTINGS": "Réseau",
     "PEER": "Adresse du nœud Duniter",
+    "PEER_CHANGED_TEMPORARY": "Adresse utilisée temporairement",
     "USE_LOCAL_STORAGE": "Activer le stockage local",
+    "USE_LOCAL_STORAGE_HELP": "Permet de sauvegarder vos paramètres",
     "ENABLE_HELPTIP": "Activer les bulles d'aide contextuelles",
     "ENABLE_UI_EFFECTS": "Activer les effets visuels",
     "HISTORY_SETTINGS": "Mon compte",
     "DISPLAY_UD_HISTORY": "Afficher les dividendes produits ?",
     "AUTHENTICATION_SETTINGS": "Authentification",
-    "REMEMBER_ME": "Se souvenir de moi",
+    "AUTO_LOGOUT": "Déconnexion automatique",
+    "AUTO_LOGOUT_OPTION_NEVER": "Jamais",
+    "AUTO_LOGOUT_OPTION_SECONDS": "Après {{value}} secondes",
+    "AUTO_LOGOUT_OPTION_MINUTE": "Après {{value}} minute",
+    "AUTO_LOGOUT_OPTION_MINUTES": "Après {{value}} minutes",
+    "AUTO_LOGOUT_OPTION_HOUR": "Après {{value}} heure",
+    "AUTO_LOGOUT_HELP": "Délai d'inactivité avant déconnection",
+    "REMEMBER_ME": "Se souvenir de moi ?",
+    "REMEMBER_ME_HELP": "Permet de rester toujours connecté (non recommandée).",
     "PLUGINS_SETTINGS": "Extensions",
     "BTN_RESET": "Restaurer les valeurs par défaut",
     "EXPERT_MODE": "Activer le mode expert",
     "EXPERT_MODE_HELP": "Permet un affichage plus détaillé",
     "POPUP_PEER": {
       "TITLE" : "Nœud Duniter",
-      "HELP" : "Adresse du nœud :",
-      "PEER_HELP": "serveur.domaine.com:port",
-      "BTN_SHOW_LIST_HELP" : "Saisissez ci-dessus au format <b>{{'SETTINGS.POPUP_PEER.PEER_HELP'|translate}}</b> ou bien cliquez sur le bouton ci-dessous :",
+      "HOST" : "Adresse",
+      "HOST_HELP": "Adresse : serveur:port",
+      "USE_SSL" : "Sécurisé ?",
+      "USE_SSL_HELP" : "(Chiffrement SSL)",
       "BTN_SHOW_LIST" : "Liste des noeuds"
     }
   },
@@ -136,7 +154,7 @@
     "VIEW": {
       "HEADER_TITLE": "Bloc #{{number}}-{{hash|formatHash}}",
       "TITLE_CURRENT": "Bloc courant",
-      "TITLE": "Bloc #{{number}}",
+      "TITLE": "Bloc #{{number|formatInteger}}",
       "COMPUTED_BY": "Calculé par le noeud de",
       "SHOW_RAW": "Voir le fichier brut",
       "TECHNICAL_DIVIDER": "Informations techniques",
@@ -180,17 +198,13 @@
     }
   },
   "CURRENCY": {
-    "SELECT": {
-      "TITLE": "Monnaies",
-      "CURRENCIES": "Monnaies connues",
-      "MEMBERS_COUNT": "{{membersCount}} membres"
-    },
     "VIEW": {
       "TITLE": "Monnaie",
       "TAB_CURRENCY": "Monnaie",
       "TAB_WOT": "Toile de confiance",
       "TAB_NETWORK": "Réseau",
       "TAB_BLOCKS": "Blocs",
+      "CURRENCY_SHORT_DESCRIPTION": "{{currency|abbreviate}} est une <b>monnaie libre</b>, démarrée {{firstBlockTime|formatFromNow}}. Elle compte actuellement <b>{{N}} membres</b>, qui produisent et perçoivent un <a ng-click=\"showHelpModal('ud')\">Dividende Universel</a> (DU), chaque {{dt|formatPeriod}}.",
       "NETWORK_RULES_DIVIDER": "Règles du réseau",
       "CURRENCY_NAME": "Nom de la monnaie",
       "MEMBERS": "Nombre de membres",
@@ -213,29 +227,42 @@
       "SIG_STOCK": "Nombre maximal de certifications émises par membre",
       "SIG_PERIOD": "Délai minimal d'attente entre 2 certifications successives émises par une même personne",
       "SIG_WINDOW": "Délai limite de prise en compte d'une certification",
-      "STEP_MAX": "Distance maximale entre un nouvel entrant et les membres référents",
+      "MS_WINDOW": "Délai limite de prise en compte d'une demande d'adhésion comme membre",
+      "STEP_MAX": "Distance maximale, par les certifications, entre un nouvel entrant et les membres référents",
       "WOT_RULES_DIVIDER": "Règles de la toile de confiance",
-      "SENTRIES": "Nombre de certifications requises pour être membre référent",
-      "SENTRIES_FORMULA": "Nombre de certification requises pour être un membre référent (formule)",
+      "SENTRIES": "Nombre de certifications (émises <b>et</b> reçues) pour devenir membre référent",
+      "SENTRIES_FORMULA": "Nombre de certification (émises <b>et</b> reçues) pour devenir membre référent (formule)",
       "XPERCENT":"Pourcentage minimum de membres référents à atteindre pour respecter la règle de distance",
       "AVG_GEN_TIME": "Temps moyen entre deux blocs",
       "CURRENT": "actuel",
-      "MATH_CEILING": "PLAFOND"
+      "MATH_CEILING": "PLAFOND",
+      "DISPLAY_ALL_RULES": "Afficher toutes les règles ?",
+      "BTN_SHOW_LICENSE": "Voir la licence",
+      "WOT_DIVIDER": "Toile de confiance"
+    },
+    "LICENSE": {
+      "TITLE": "License de la monnaie",
+      "BTN_DOWNLOAD": "Télécharger le fichier",
+      "NO_LICENSE_FILE": "Fichier de license non trouvé."
     }
   },
   "NETWORK": {
     "VIEW": {
       "MEDIAN_TIME": "Heure de la blockchain",
-      "LOADING_PEERS": "Chargement des noeuds..."
+      "LOADING_PEERS": "Chargement des noeuds...",
+      "NODE_ADDRESS": "Adresse du noeud",
+      "ENDPOINTS": {
+        "BMAS": "Interface sécurisée (SSL)",
+        "BMATOR": "Interface réseau TOR",
+        "ES_USER_API": "Noeud de données Cesium+"
+      }
     },
     "INFO": {
       "ONLY_SSL_PEERS": "Les noeuds non SSL ont un affichage dégradé, car Cesium fonctionne en mode HTTPS."
     }
   },
   "PEER": {
-    "TITLE": "Nœud",
     "PEERS": "Nœuds",
-    "KNOWN_PEERS": "Nœuds connus",
     "SIGNED_ON_BLOCK": "Signé sur le bloc",
     "MIRROR": "miroir",
     "MIRRORS": "Nœuds miroirs",
@@ -246,7 +273,18 @@
     "API" : "API",
     "CURRENT_BLOCK" : "Bloc #",
     "POPOVER_FILTER_TITLE": "Filtre",
-    "OFFLINE": "Nœuds hors ligne"
+    "OFFLINE": "Nœuds hors ligne",
+    "VIEW": {
+      "TITLE": "Nœud",
+      "OWNER": "Appartient à",
+      "SHOW_RAW_PEERING": "Voir la fiche de pair",
+      "KNOWN_PEERS": "Nœuds connus :",
+      "GENERAL_DIVIDER": "Informations générales",
+      "ERROR": {
+        "LOADING_TOR_NODE_ERROR": "Récupération des informations du noeud impossible. Le délai d'attente est dépassé.",
+        "LOADING_NODE_ERROR": "Récupération des informations du noeud impossible"
+      }
+    }
   },
   "WOT": {
     "SEARCH_HELP": "Recherche (pseudo ou clé publique)",
@@ -271,6 +309,7 @@
     "BTN_CERTIFY": "Certifier",
     "BTN_YES_CERTIFY": "Oui, certifier",
     "BTN_SELECT_AND_CERTIFY": "Nouvelle certification",
+    "ACCOUNT_OPERATIONS": "Opérations sur le compte",
     "VIEW": {
       "POPOVER_SHARE_TITLE": "Identité {{title}}"
     },
@@ -300,6 +339,9 @@
       "ERROR": "Certifications reçues en erreur",
       "SENTRY_MEMBER": "Membre référent"
     },
+    "OPERATIONS": {
+      "TITLE": "{{uid}} - Opérations"
+    },
     "GIVEN_CERTIFICATIONS": {
       "TITLE": "{{uid}} - Certifications émises",
       "SUMMARY": "Certifications émises",
@@ -319,12 +361,19 @@
     "PASSWORD_HELP": "Mot de passe",
     "NO_ACCOUNT_QUESTION": "Vous n'avez pas encore de compte ?",
     "CREATE_ACCOUNT": "Créer un compte",
-    "FORGOTTEN_ID": "Mot de passe oublié ?"
+    "FORGOTTEN_ID": "Mot de passe oublié ?",
+    "AUTO_LOGOUT": {
+      "TITLE": "Information",
+      "MESSAGE": "<i class=\"ion-android-time\"></i> Vous avez été <b>déconnecté</b> automatiquement, suite à une inactivité prolongée.",
+      "BTN_RELOGIN": "Me reconnecter",
+      "IDLE_WARNING": "Vous allez être déconnecté... {{countdown}}"
+    }
   },
   "ACCOUNT": {
     "TITLE": "Mon compte",
     "BALANCE": "Solde",
     "LAST_TX": "Dernières transactions",
+    "BALANCE_ACCOUNT": "Solde du compte",
     "NO_TX": "Aucune transaction",
     "SHOW_MORE_TX": "Afficher plus",
     "SHOW_ALL_TX": "Afficher tout",
@@ -358,15 +407,20 @@
     },
     "NEW": {
       "TITLE": "Inscription",
-      "SLIDE_1_TITLE": "Choix de la monnaie :",
-      "SLIDE_2_TITLE": "Type de compte :",
+      "INTRO_WARNING_TIME": "La création d'un compte sur {{name|capitalize}} est très simple. Veuillez néanmoins prendre suffisament de temps pour faire correctement cette formalité (pour ne pas oublier les identifiants, mots de passe, etc.).",
+      "INTRO_WARNING_SECURITY": "Vérifier que le matériel que vous utilisez actuellement (ordinateur, tablette, téléphone) <b>est sécurisé et digne de confiance</b>.",
+      "INTRO_WARNING_SECURITY_HELP": "Anti-virus à jour, pare-feu activé, session protégée par mot de passe ou code pin, etc.",
+      "INTRO_HELP": "Cliquez sur <b>{{'COMMON.BTN_START'|translate}}</b> pour débuter la création de compte. Vous serez guidé étape par étape.",
+      "REGISTRATION_NODE": "Votre inscription sera enregistrée via le noeud Duniter <b>{{server}}</b>, qui le diffusera ensuite au reste du réseau de la monnaie.",
+      "REGISTRATION_NODE_HELP": "Si vous ne faites pas confiance en ce noeud, veuillez en changer <a ng-click=\"doQuickFix('settings')\">dans les paramètres</a> de Cesium.",
+      "SELECT_ACCOUNT_TYPE": "Choisissez le type de compte à créer :",
       "MEMBER_ACCOUNT": "Compte membre",
-      "MEMBER_ACCOUNT_HELP": "Si vous n'etes pas encore inscrit en tant qu'individu (Un seul compte possible par individu).",
+      "MEMBER_ACCOUNT_HELP": "Si vous n'êtes pas encore inscrit en tant qu'individu (un seul compte possible par individu). Ce compte permet de co-produire la monnaie, en recevant un <b>dividende universel</b> chaque {{parameters.dt|formatPeriod}}.",
       "WALLET_ACCOUNT": "Simple portefeuille",
       "WALLET_ACCOUNT_HELP": "Pour tous les autres cas, par exemple si vous avez besoin d'un compte supplémentaire.<br/>Aucun dividende universel ne sera créé par ce compte.",
       "SALT_WARNING": "Choisissez votre identifiant secret.<br/>Il vous sera demandé à chaque connexion sur ce compte.<br/><br/><b>Retenez le bien</b>.<br/>En cas de perte, plus personne ne pourra accéder à votre compte !",
       "PASSWORD_WARNING": "Choisissez un mot de passe.<br/>Il vous sera demandé à chaque connexion sur ce compte.<br/><br/><b>Retenez bien ce mot de passe</b>.<br/>En cas de perte, plus personne ne pourra accéder à votre compte !",
-      "PSEUDO_WARNING": "Choisissez un pseudonyme.<br/>Il sert aux autres membres, pour vous identifier plus facilement.<br/><br/>Il ne doit contenir <b>ni espace, ni de caractère accentué</b>.<div class='hidden-xs'><br/>Exemple : <span class='gray'>SophieDupond, MarcelChemin, etc.</span>",
+      "PSEUDO_WARNING": "Choisissez un pseudonyme.<br/>Il sert aux autres membres, pour vous identifier plus facilement.<div class='hidden-xs'><br/>Il <b>ne pourra pas être modifié</b>, sans refaire un compte.</div><br/><br/>Il ne doit contenir <b>ni espace, ni de caractère accentué</b>.<div class='hidden-xs'><br/>Exemple : <span class='gray'>SophieDupond, MarcelChemin, etc.</span>",
       "PSEUDO": "Pseudonyme",
       "PSEUDO_HELP": "Pseudonyme",
       "SALT_CONFIRM": "Confirmation",
@@ -375,11 +429,15 @@
       "PASSWORD_CONFIRM_HELP": "Confirmation du mot de passe",
       "SLIDE_6_TITLE": "Confirmation :",
       "COMPUTING_PUBKEY": "Calcul en cours...",
-      "LAST_SLIDE_CONGRATULATION": "<b>Bravo !</b> Vous avez saisi toutes les informations nécessaires.<br/><b>Vous pouvez envoyer la demande</b> de création de compte.</b><br/><br/>Pour information, la clé publique ci-dessous identifiera votre futur compte.<br/>Elle pourra être communiquée à des tiers pour recevoir leur paiement.<br/>Cependant, <b>il n'est pas utile</b> de la noter ici.",
-      "CONFIRMATION_MEMBER_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant secret, le mot de passe et le pseudonyme ne pourront plus être modifiés.<br/><b>Assurez-vous de toujours vous en rappeller !</b><br/><br/><b>Etes-vous sûr</b> de vouloir envoyer cette demande d'inscription ?",
-      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant secret et le mot de passe ne pourront plus être modifiés.<br/><b>Assurez-vous de toujours vous en rappeller !</b><br/><br/><b>Etes-vous sûr</b> de vouloir continuer avec ces identifiants ?",
-      "MSG_UID_ALREADY_USED": "Pseudonyme déjà utilisé par quelqu'un d'autre.<br/>Veuillez en choisir un autre.",
-      "MSG_PUBKEY_ALREADY_USED": "Clé publique déjà utilisée par quelqu'un d'autre.<br/>Veuillez choisir d'autres identifiants de connexion."
+      "LAST_SLIDE_CONGRATULATION": "Vous avez saisi toutes les informations nécessaires : Bravo !<br/>Vous pouvez maintenant <b>envoyer la demande de création</b> de compte.</b><br/><br/>Pour information, la clé publique ci-dessous identifiera votre futur compte.<br/>Elle pourra être communiquée à des tiers pour recevoir leur paiement.<br/><b>Il n'est pas obligatoire</b> de la noter ici, vous pourrez également le faire plus tard.",
+      "CONFIRMATION_MEMBER_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant secret, le mot de passe et le pseudonyme ne pourront plus être modifiés.<br/><br/><b>Assurez-vous de toujours vous en rappeller !</b><br/><br/><b>Etes-vous sûr</b> de vouloir envoyer cette demande d'inscription ?",
+      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant secret et le mot de passe ne pourront plus être modifiés.<br/><br/><b>Assurez-vous de toujours vous en rappeller !</b><br/><br/><b>Etes-vous sûr</b> de vouloir continuer avec ces identifiants ?",
+      "CHECKING_PSEUDO": "Vérification...",
+      "PSEUDO_AVAILABLE": "Pseudonyme disponible",
+      "PSEUDO_NOT_AVAILABLE": "Pseudonyme non disponible",
+      "INFO_LICENSE": "Avant de créer un compte membre, <b>veuillez lire et accepter la licence</b> d'usage de la monnaie :",
+      "BTN_ACCEPT": "J'accepte",
+      "BTN_ACCEPT_LICENSE": "J'accepte la license"
     },
     "POPUP_REGISTER": {
       "TITLE": "Choisissez un pseudonyme",
@@ -417,11 +475,18 @@
       "QUESTION_19": "Quel était le métier de votre grand-père ?",
       "RECOVER_ID": "Recupérer vos identifiants",
       "REVOCATION": "Révocation ...",
+      "REVOCATION_FILENAME": "revocation-{{uid}}-{{pubkey|formatPubkey}}-{{currency}}.txt",
       "REVOKE": "Révoquer cette identité",
       "REVOKE_WITH_FILE": "Révoquer une identité à partir d'un fichier",
       "SAVE_ID": "Sauvegarder vos identifiants",
       "STRONG_LEVEL": "Fort <span class=\"hidden-xs \">(6 questions minimum)</span>",
       "TITLE": "Compte et sécurité"
+    },
+    "FILE_NAME": "{{currency}} - Relevé du compte {{pubkey|formatPubkey}} au {{currentTime|formatDateForFile}}.csv",
+    "HEADERS": {
+      "TIME": "Date",
+      "AMOUNT": "Montant",
+      "COMMENT": "Commentaire"
     }
   },
   "TRANSFER": {
@@ -467,7 +532,6 @@
     "SEND_MEMBERSHIP_OUT_FAILED": "Echec de l'arret de l'adhésion.",
     "REFRESH_WALLET_DATA": "Echec du rafraichissement du portefeuille.",
     "GET_CURRENCY_PARAMETER": "Echec de la récupération des règles de la monnaie.",
-    "GET_CURRENCIES_FAILED": "Impossible de charger la liste des monnaies. Veuillez ressayer plus tard.",
     "GET_CURRENCY_FAILED": "Chargement de la monnaie impossible. Veuillez ressayer plus tard.",
     "SEND_TX_FAILED": "Echec du virement.",
     "ALL_SOURCES_USED": "Veuillez attendre le calcul du prochain bloc (Toutes vos sources de monnaie ont été utilisées).",
@@ -513,7 +577,11 @@
     "SALT_OR_PASSWORD_NOT_CONFIRMED": "Identifiant secret ou mot de passe incorrects",
     "RECOVER_ID_FAILED": "Echec de la récupération des identifiants",
     "LOAD_FILE_FAILED" : "Echec du chargement du fichier",
-    "ONLY_TEXT_FILE": "Vous devez selectionner un fichier texte"
+    "ONLY_TEXT_FILE": "Vous devez selectionner un fichier texte",
+    "EXISTING_ACCOUNT": "Vos identifiants correspondent à un compte déjà existant, dont la <a ng-click=\"showHelpModal('pubkey')\">clef publique</a> est :",
+    "EXISTING_ACCOUNT_REQUEST": "Veuillez modifier vos identifiants afin qu'ils correspondent à un compte non utilisé.",
+    "GET_LICENSE_FILE_FAILED": "Récupérer du fichier de license impossible",
+    "CHECK_NETWORK_CONNECTION": "Aucun nœud ne semble accessible.<br/><br/>Veuillez <b>vérifier votre connection Internet</b>."
   },
   "INFO": {
     "POPUP_TITLE": "Information",
@@ -526,7 +594,8 @@
     "IDENTITY_WILL_MISSING_CERTIFICATIONS": "Cette identité va bientôt manquer de certification (au moins {{willNeedCertificationCount}}).",
     "REVOCATION_SENT": "Revocation envoyée",
     "REVOCATION_SENT_WAITING_PROCESS": "La <b>révocation de cette identité</b> a été demandée et est en attente de traitement.",
-    "FEATURES_NOT_IMPLEMENTED": "Cette fonctionnalité est encore en cours de développement.<br/><br/>Pourquoi ne pas <b>contribuer à Cesium</b>, pour l'obtenir plus rapidement ? ;)"
+    "FEATURES_NOT_IMPLEMENTED": "Cette fonctionnalité est encore en cours de développement.<br/><br/>Pourquoi ne pas <b>contribuer à Cesium</b>, pour l'obtenir plus rapidement ? ;)",
+    "EMPTY_TX_HISTORY": "Aucune transaction à exporter"
   },
   "CONFIRM": {
     "POPUP_TITLE": "<b>Confirmation</b>",
@@ -547,7 +616,12 @@
     "NOT_NEED_RENEW_MEMBERSHIP": "Votre adhésion n'a pas besoin d'être renouvellée (elle n'expirera que dans {{membershipExpiresIn|formatDuration}}).<br/></br/><b>Etes-vous sûr</b> de vouloir renouveler votre adhésion ?",
     "SAVE_BEFORE_LEAVE": "Voulez-vous <b>sauvegarder vos modifications</b> avant de quitter la page ?",
     "SAVE_BEFORE_LEAVE_TITLE": "Modifications non enregistrées",
-    "LOGOUT": "Etes-vous de vouloir vous déconnecter ?"
+    "LOGOUT": "Etes-vous de vouloir vous déconnecter ?",
+    "USE_FALLBACK_NODE": "Nœud <b>{{old}}</b> injoignable ou adresse invalide.<br/><br/>Voulez-vous temporairement utiliser le nœud <b>{{new}}</b> ?"
+  },
+  "DOWNLOAD": {
+    "POPUP_TITLE": "<b>Fichier de révocation</b>",
+    "POPUP_REVOKE_MESSAGE": "Pour sécuriser votre compte, veuillez télécharger le <b>document de révocation de compte</b>. Il vous permettra le cas échéant d'annuler votre compte (en cas d'un vol de compte, d'un changement d'identifiant, d'un compte créé à tort, etc.).<br/><br/><b>Veuillez le stocker en lieu sûr.</b>"
   },
   "HELP": {
     "TITLE": "Aide en ligne",
@@ -559,7 +633,7 @@
     },
     "GLOSSARY": {
       "SECTION": "Glossaire",
-      "PUBKEY_DEF": "Une clé publique identifie un portefeuille de monnaie. Il peut identifier un membre",
+      "PUBKEY_DEF": "Une clé publique identifie un portefeuille de monnaie. Il peut identifier un membre. Dans Cesium elle est calculée grâce à l'identifiant secret et au mot de passe.",
       "MEMBER": "Membre",
       "MEMBER_DEF": "Un membre est une personne humaine physique et vivante, désireuse de participer librement à la communauté monétaire. Elle percoit un dividende universel, suivant une période et un montant tels que définis dans les <span class=\"text-italic\">règles de la monnaie</span>",
       "CURRENCY_RULES": "Règles de la monnaie",
@@ -573,8 +647,8 @@
       "CURRENCY_WOT": "Le <b>nombre de membres</b> montre l'importance de la communauté et permet de <b>suivre son évolution</b>.",
       "CURRENCY_MASS": "Suivez ici la <b>quantité totale de monnaie</b> existante et sa <b>répartition moyenne</b> par membre.<br/><br/>Ceci permet de juger de l'<b>importance d'un montant</b>, vis à vis de ce que <b>possède les autres</b> sur leur compte (en moyenne).",
       "CURRENCY_UNIT_RELATIVE": "L'unité utilisée (&ldquo;<b>{{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub></b>&rdquo;) signifie que les montants en {{currency|capitalize}} ont été divisés par le <b>Dividende Universel</b> (DU).<br/><br/><small>Cette unité relative est <b>pertinente</b>, car stable malgré la quantitié de monnaie qui augmente en permanence.</small>",
-      "CURRENCY_CHANGE_UNIT": "Ce bouton permet de <b>changer d'unité</b>, pour visualiser les montants <b>directement en {{currency|capitalize}}</b> (plutôt qu'en &ldquo;<b>{{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub></b>&rdquo;).",
-      "CURRENCY_CHANGE_UNIT_TO_RELATIVE": "Ce bouton permet de <b>changer d'unité</b>, pour visualiser les montants en &ldquo;<b>{{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub></b>&rdquo;, c'est à dire relativement au Dividende Universel (le montant co-produit par chaque membre).",
+      "CURRENCY_CHANGE_UNIT": "L'option <b>{{'COMMON.BTN_RELATIVE_UNIT'|translate}}</b> permet de <b>changer d'unité</b>, pour visualiser les montants <b>directement en {{currency|capitalize}}</b> (plutôt qu'en &ldquo;<b>{{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub></b>&rdquo;).",
+      "CURRENCY_CHANGE_UNIT_TO_RELATIVE": "L'option <b>{{'COMMON.BTN_RELATIVE_UNIT'|translate}}</b> permet de <b>changer d'unité</b>, pour visualiser les montants en &ldquo;<b>{{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub></b>&rdquo;, c'est à dire relativement au Dividende Universel (le montant co-produit par chaque membre).",
       "CURRENCY_RULES": "Les <b>règles</b> de la monnaie fixent son fonctionnement <b>exact et prévisible</b>.<br/><br/>Véritable ADN de la monnaie, elles rendent son code monétaire <b>lisible et transparent</b>.",
       "MENU_BTN_NETWORK": "Le menu <b>{{'MENU.NETWORK'|translate}}</b> permet la consultation de l'état du réseau.",
       "NETWORK_BLOCKCHAIN": "Toutes les opérations de la monnaie sont enregistrées dans un grand livre de compte <b>public et infalsifiable</b>, appellé aussi <b>chaine de blocs</b> (<em>BlockChain</em> en anglais).",

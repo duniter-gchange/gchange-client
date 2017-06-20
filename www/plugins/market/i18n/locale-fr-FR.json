@@ -1,6 +1,7 @@
 {
   "MENU": {
-    "MARKET": "Annonces"
+    "MARKET": "Annonces",
+    "MY_RECORDS": "Mes annonces"
   },
   "MARKET": {
     "COMMON": {
@@ -13,6 +14,9 @@
       "EMAIL_OR_PHONE": "Email ou téléphone",
       "EMAIL_OR_PHONE_HELP": "Email ou numéro de téléphone",
       "REMEMBER_ME": "Se souvenir de moi ?",
+      "ERROR": {
+        "INVALID_USERNAME": "Email ou du téléphone non invalid"
+      }
     },
     "HOME": {
       "BTN_NEW_AD": "Déposer une annonce",

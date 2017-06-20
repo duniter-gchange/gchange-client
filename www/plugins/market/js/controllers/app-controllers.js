@@ -12,6 +12,10 @@ angular.module('cesium.market.app.controllers', ['ngResource', 'cesium.es.servic
            'menu-main': {
              templateUrl: "plugins/market/templates/menu_extend.html",
              controller: "MarketMenuExtendCtrl"
+           },
+           'menu-user': {
+             templateUrl: "plugins/market/templates/menu_extend.html",
+             controller: "MarketMenuExtendCtrl"
            }
          }
         });
@@ -37,8 +41,10 @@ angular.module('cesium.market.app.controllers', ['ngResource', 'cesium.es.servic
 /**
  * Control menu extension
  */
-function MarketMenuExtendController($scope, esSettings) {
+function MarketMenuExtendController($scope, esSettings, PluginService) {
     'ngInject';
+
+    $scope.extensionPoint = PluginService.extensions.points.current.get();
     $scope.enable = esSettings.isEnable();
 
     esSettings.api.state.on.changed($scope, function(enable) {

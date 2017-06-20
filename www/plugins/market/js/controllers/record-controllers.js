@@ -1,4 +1,4 @@
-angular.module('cesium.market.controllers', ['cesium.market.services', 'cesium.es.services', 'cesium.es.common.controllers'])
+angular.module('cesium.market.record.controllers', ['cesium.market.record.services', 'cesium.es.services', 'cesium.es.common.controllers'])
 
   .config(function($stateProvider) {
     'ngInject';
@@ -94,7 +94,7 @@ angular.module('cesium.market.controllers', ['cesium.market.services', 'cesium.e
 
 ;
 
-function ESMarketLookupController($scope, $rootScope, $state, $focus, $timeout, $filter,
+function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter,
                                   UIUtils, ModalUtils, csConfig, esMarket, BMA) {
   'ngInject';
 
@@ -109,7 +109,9 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $timeout, 
     category: null,
     location: null,
     options: null,
-    loadingMore: false
+    loadingMore: false,
+    focusElementId: 'marketSearchText',
+    fabAddNewRecordId: 'fab-add-market-record'
   };
 
   // Screen options
@@ -129,66 +131,76 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $timeout, 
       }
     }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
-  console.debug("[market] Screen options: ", $scope.options);
+  //console.debug("[market] Screen options: ", $scope.options);
+
+  $scope.enter = function(e, state) {
+
+    var hasOptions = false;
+
+    // Search by text
+    if (state.stateParams && state.stateParams.q) { // Query parameter
+      $scope.search.text=state.stateParams.q;
+      hasOptions = true;
+    }
+
+    // Search on type
+    if (state.stateParams && state.stateParams.type) {
+      $scope.search.type = state.stateParams.type;
+      hasOptions = true;
+    }
+
+    // Search on location
+    if (state.stateParams && state.stateParams.location) {
+      $scope.search.location = state.stateParams.location;
+      hasOptions = true;
+    }
+
+    // Search on category
+    if (state.stateParams && state.stateParams.category) {
+      esMarket.category.get({id: state.stateParams.category})
+        .then(function(cat) {
+          $scope.search.category = cat;
+          $scope.finishEnter(true);
+        });
+    }
+    else {
+      $scope.finishEnter(hasOptions);
+    }
+
+  };
 
   $scope.$on('$ionicView.enter', function(e, state) {
     if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
-      var hasOptions = false;
-      var runSearch = false;
-      var finishEntered = function() {
-        $scope.search.options = hasOptions ? true : $scope.search.options; // keep null if first call
-        if (runSearch) {
-          $scope.doSearch()
-              .then(function() {
-                $scope.showFab('fab-add-market-record');
-              });
-        }
-        else { // By default : get last record
-          $scope.doGetLastRecord()
-              .then(function() {
-                $scope.showFab('fab-add-market-record');
-              });
-        }
-        // removeIf(device)
-        // Focus on search text (only if NOT device, to avoid keyboard opening)
-        $focus('marketSearchText');
-        // endRemoveIf(device)
-        $scope.entered = true;
-      };
-
-      // Search by text
-      if (state.stateParams && state.stateParams.q) { // Query parameter
-        $scope.search.text=state.stateParams.q;
-        hasOptions = runSearch = true;
-      }
-
-      // Search on type
-      if (state.stateParams && state.stateParams.type) {
-        $scope.search.type = state.stateParams.type;
-        hasOptions = runSearch = true;
-      }
-
-      // Search on location
-      if (state.stateParams && state.stateParams.location) {
-        $scope.search.location = state.stateParams.location;
-        hasOptions = runSearch = true;
-      }
-
-      // Search on category
-      if (state.stateParams && state.stateParams.category) {
-        esMarket.category.get({id: state.stateParams.category})
-        .then(function(cat) {
-          $scope.search.category = cat;
-          hasOptions = runSearch = true;
-          finishEntered();
-        });
-      }
-      else {
-        finishEntered();
-      }
+      $scope.enter(e, state);
     }
-
   });
+
+  $scope.finishEnter = function(hasOptions) {
+    $scope.search.options = hasOptions ? true : $scope.search.options; // keep null if first call
+    if (hasOptions) {
+      $scope.doSearch()
+          .then(function() {
+            if ($scope.search.fabAddNewRecordId) {
+              $scope.showFab($scope.search.fabAddNewRecordId);
+            }
+          });
+    }
+    else { // By default : get last record
+      $scope.doGetLastRecord()
+          .then(function() {
+            if ($scope.search.fabAddNewRecordId) {
+              $scope.showFab($scope.search.fabAddNewRecordId);
+            }
+          });
+    }
+    // removeIf(device)
+    // Focus on search text (only if NOT device, to avoid keyboard opening)
+    if($scope.search.focusElementId) {
+      $focus('marketSearchText');
+    }
+    // endRemoveIf(device)
+    $scope.entered = true;
+  };
 
   $scope.setAdType = function(type) {
     if (type != $scope.search.type) {
