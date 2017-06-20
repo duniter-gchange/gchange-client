@@ -165,14 +165,14 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
     }
 
     function addListeners() {
-      // open web socket on block
+      /* open web socket on block
       var wsBlock = BMA.websocket.block();
-      wsBlock.on(onBlock);
+      wsBlock.on(onBlock);*/
 
       listeners = [
         // Listen if node changed
-        BMA.api.node.on.restart($rootScope, restart, this),
-        wsBlock.close
+        BMA.api.node.on.restart($rootScope, restart, this)
+        //,wsBlock.close
       ];
     }
 

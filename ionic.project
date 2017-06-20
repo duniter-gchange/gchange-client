@@ -1,6 +1,6 @@
 {
   "name": "gchange-client",
-  "app_id": "",
+  "app_id": "23c2212f",
   "watchPatterns": [
     "www/**/*",
     "!www/dist/**/*",

@@ -10,7 +10,7 @@ angular.module("cesium.config", [])
 
 .constant("csConfig", {
 	"defaultLanguage": "fr-FR",
-	"timeout": 4000,
+	"timeout": 6000,
 	"cacheTimeMs": 60000,
 	"useLocalStorage": true,
 	"rememberMe": true,
@@ -27,10 +27,12 @@ angular.module("cesium.config", [])
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "data.gchange.fr",
-			"port": "443"
+			"host": "localhost",
+			"port": "9200",
+			"wsPort": "9400"
 		},
 		"market": {
+			"enable": true,
 			"defaultCurrency": "€",
 			"homeMessage": "<i class=\"icon ion-location\"></i> Vide-grenier de Villiers-charlemagne",
 			"defaultTags": [
@@ -70,7 +72,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.4.1",
-	"build": "2017-06-14T15:16:49.783Z",
+	"build": "2017-06-20T08:45:18.099Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

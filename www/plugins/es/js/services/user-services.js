@@ -11,7 +11,7 @@ angular.module('cesium.es.user.services', ['cesium.services', 'cesium.es.http.se
   })
 
 .factory('esUser', function($rootScope, $q, $timeout, esHttp, $state, $sce, $sanitize,
-                            esSettings, CryptoUtils, UIUtils, csWallet, csWot, BMA, Device) {
+                            esSettings, CryptoUtils, UIUtils, csWallet, csWot, csPlatform) {
   'ngInject';
   var
     constants = {
@@ -103,10 +103,8 @@ angular.module('cesium.es.user.services', ['cesium.services', 'cesium.es.http.se
 
   function onWalletLogin(data, deferred) {
     deferred = deferred || $q.defer();
-    if (!data || !data.pubkey || !data.keypair ||
-        // Skip if already loaded
-        (data.profile && data.name)) {
-      deferred.resolve(data);
+    if (!data || !data.pubkey || !data.keypair) {
+      deferred.resolve();
       return deferred.promise;
     }
 
@@ -143,15 +141,13 @@ angular.module('cesium.es.user.services', ['cesium.services', 'cesium.es.http.se
 
   function onWalletFinishLoad(data, deferred) {
     deferred = deferred || $q.defer();
+
+    // Reset events
+    csWallet.events.cleanByContext('esUser');
+
     // If membership pending, but not enough certifications: suggest to fill user profile
     if (!data.name && data.requirements.pendingMembership && data.requirements.needCertificationCount > 0) {
-      data.events.push({type:'info',message: 'ACCOUNT.EVENT.MEMBER_WITHOUT_PROFILE'});
-    }
-
-    // If already loaded: skip
-    if (data.profile && data.name) {
-      deferred.resolve();
-      return deferred.promise;
+      csWallet.events.add({type:'info', message: 'ACCOUNT.EVENT.MEMBER_WITHOUT_PROFILE', context: 'esUser'});
     }
 
     console.debug('[ES] [user] Loading full user profile...');
@@ -181,17 +177,6 @@ angular.module('cesium.es.user.services', ['cesium.services', 'cesium.es.http.se
       });
 
     return deferred.promise;
-  }
-
-  function onWalletLoadTx(tx, deferred) {
-    fillAvatars((tx.history || []).concat(tx.pendings||[]), 'pubkey')
-      .then(function() {
-        deferred.resolve();
-      })
-      .catch(function(err) {
-        console.error(err);
-        deferred.resolve(); // silent
-      });
   }
 
   function onWotSearch(text, datas, pubkeyAtributeName, deferred) {
@@ -387,7 +372,6 @@ angular.module('cesium.es.user.services', ['cesium.services', 'cesium.es.http.se
       csWallet.api.data.on.finishLoad($rootScope, onWalletFinishLoad, this),
       csWallet.api.data.on.init($rootScope, onWalletReset, this),
       csWallet.api.data.on.reset($rootScope, onWalletReset, this),
-      csWallet.api.data.on.loadTx($rootScope, onWalletLoadTx, this),
       csWot.api.data.on.load($rootScope, onWotLoad, this),
       csWot.api.data.on.search($rootScope, onWotSearch, this)
     ];
@@ -423,7 +407,7 @@ angular.module('cesium.es.user.services', ['cesium.services', 'cesium.es.http.se
   }
 
   // Default actions
-  Device.ready().then(function() {
+  csPlatform.ready().then(function() {
     esHttp.api.node.on.start($rootScope, refreshState, this);
     esHttp.api.node.on.stop($rootScope, refreshState, this);
     return refreshState();

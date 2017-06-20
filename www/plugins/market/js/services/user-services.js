@@ -35,6 +35,16 @@ angular.module('cesium.market.user.services', ['cesium.es.services'])
     if (!data.name) {
 
       esUser.profile.get({id: data.pubkey})
+        .catch(function(err) {
+          // User not found: continue
+          if (err && err.ucode == 404) {
+            return;
+          }
+          else {
+            console.error(err);
+            deferred.reject(data);
+          }
+        })
         .then(function(res) {
           if (!res || !res.found) {
             console.debug("[market] new user detected: saving default profile");

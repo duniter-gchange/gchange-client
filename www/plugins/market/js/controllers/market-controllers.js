@@ -691,7 +691,7 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
     }
   }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
-  console.debug("[market] Screen options: ", $scope.options);
+  //console.debug("[market] Screen options: ", $scope.options);
 
   $scope.motion = UIUtils.motion.ripple;
 
