@@ -10,6 +10,7 @@ angular.module('cesium.services', [
     'cesium.device.services',
     'cesium.currency.services',
     'cesium.wallet.services',
+    'cesium.tx.services',
     'cesium.wot.services',
     'cesium.plugin.services'
     ])

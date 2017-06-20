@@ -6,7 +6,7 @@
   <ion-content class="has-header text-center padding-xs positive-900-bg">
 
     <div class="logo"></div>
-    <p>&nbsp;</p>
+    <p class="hidden-xs">&nbsp;</p>
     <h4 class="hidden-xs" translate>HOME.MESSAGE</h4>
     <h4 class="visible-xs" translate>HOME.MESSAGE_SHORT</h4>
 
@@ -14,40 +14,63 @@
 
       <br class="hidden-xs"/>
 
-      <!-- Help tour (NOT ready yet for small device)
-      <button type="button"
-              class="button button-block button-stable button-raised icon-left icon ion-easel ink-dark hidden-xs"
-              ng-click="startHelpTour()" >
-        {{'COMMON.BTN_HELP_TOUR'|translate}}
-      </button>-->
+      <div class="center padding" >
 
-      <cs-extension-point name="buttons"></cs-extension-point>
+        <ion-spinner icon="android" ng-if="loading"></ion-spinner>
 
-      <!--<button type="button"
-              class="button button-block button-positive button-raised icon icon-left ion-locked ink-dark"
-              ng-click="loginAndGo('app.view_wallet')" ng-show="!login" translate>COMMON.BTN_LOGIN</button>
+        <!--<div class="animate-fade-in animate-show-hide ng-hide" ng-show="!loading && error">
+          <div class="card card-item padding">
+            <p class="item-content item-text-wrap">
+              <span class="dark" trust-as-html="'HOME.CONNECTION_ERROR'|translate:node"></span>
+            </p>
 
-      <button type="button"
-              class="button button-block button-positive button-raised icon icon-left ion-person ink-dark"
-              ui-sref="app.view_wallet" ng-show="login" translate>MENU.ACCOUNT</button>-->
+            &lt;!&ndash; Retry&ndash;&gt;
+            <button type="button"
+                    class="button button-positive icon icon-left ion-refresh ink"
+                    ng-click="reload()">{{'COMMON.BTN_REFRESH'|translate}}</button>
+          </div>
+        </div>-->
+      </div>
 
-      <!--<br class="visible-xs visible-sm"/>
-      <div class="text-center no-padding "
-           ng-show="!login">
-        <br class="visible-xs visible-sm"/>
-        {{'LOGIN.NO_ACCOUNT_QUESTION'|translate}}
-        <b>
-          <a class="assertive hidden-xs hidden-sm" ng-click="showJoinModal()" translate>
-            LOGIN.CREATE_ACCOUNT
-          </a>
-        </b>
+      <div class="center animate-fade-in animate-show-hide ng-hide" ng-show="!loading && !error">
 
-      </div>-->
+
+        <!-- Help tour (NOT ready yet for small device)
+        <button type="button"
+                class="button button-block button-stable button-raised icon-left icon ion-easel ink-dark hidden-xs"
+                ng-click="startHelpTour()" >
+          {{'COMMON.BTN_HELP_TOUR'|translate}}
+        </button>-->
+
+        <cs-extension-point name="buttons"></cs-extension-point>
+
+        <!--<button type="button"
+                class="button button-block button-positive button-raised icon icon-left ion-locked ink-dark"
+                ng-click="loginAndGo('app.view_wallet')" ng-show="!login" translate>COMMON.BTN_LOGIN</button>
+
+        <button type="button"
+                class="button button-block button-positive button-raised icon icon-left ion-person ink-dark"
+                ui-sref="app.view_wallet" ng-show="login" translate>MENU.ACCOUNT</button>-->
+
+        <!--<br class="visible-xs visible-sm"/>
+        <div class="text-center no-padding "
+             ng-show="!login">
+          <br class="visible-xs visible-sm"/>
+          {{'LOGIN.NO_ACCOUNT_QUESTION'|translate}}
+          <b>
+            <a class="assertive hidden-xs hidden-sm" ng-click="showJoinModal()" translate>
+              LOGIN.CREATE_ACCOUNT
+            </a>
+          </b>
+
+        </div>-->
 
       <!--<button type="button"
               class="button button-block button-calm button-raised icon icon-left ion-wand ink-dark visible-xs visible-sm"
               ng-click="showJoinModal()" ng-show="!login" translate>LOGIN.CREATE_ACCOUNT</button>
 -->
+
+      </div>
 
       <div class="text-center no-padding visible-xs stable">
         <br/>

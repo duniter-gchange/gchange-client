@@ -27,7 +27,7 @@
   <!-- endbuild -->
 
 </head>
-<body ng-app="cesium" id="cesium" ng-strict-di ng-class="{'nobackdrop': $root.tour}">
+<body ng-app="cesium" id="cesium" ng-strict-di="" ng-class="{'nobackdrop': $root.tour}">
   <ion-nav-view>
     <h3 style="text-align: center; margin-top: 44px;">
       ğ<b>change</b>
@@ -49,9 +49,11 @@
   <script src="js/vendor/socket-io.js"></script>
   <script src="js/vendor/underscore.js"></script>
   <!--<script src="js/vendor/qrcode.min.js"></script>-->
+  <script src="js/vendor/bluebird.min.js"></script><!-- allow to define Promise globally -->
 
   <!-- ionic/angularjs js -->
   <script src="lib/ionic/js/ionic.bundle.js"></script>
+  <script src="lib/ionic/js/ionic.cloud.min.js"></script><!-- Ionic I/O-->
   <script src="lib/ionic/js/ionic.material.js"></script>
   <script src="lib/ionic/js/angular/angular-resource.js"></script>
   <script src="lib/ionic/js/angular/angular-translate.js"></script>
@@ -62,6 +64,7 @@
   <script src="lib/ionic/js/angular/angular-bind-notifier.min.js"></script>
   <script src="lib/ionic/js/angular/angular-image-crop.js"></script>
   <script src="lib/ionic/js/angular/angular-file-saver.bundle.js"></script>
+  <script src="lib/ionic/js/angular/angular-idle.js"></script>
 
   <script src="js/vendor/base58.js" async></script>
   <!--removeIf(android)-->
@@ -94,6 +97,7 @@
   <script src="dist/dist_js/app/services/currency-services.js"></script>
   <script src="dist/dist_js/app/services/bma-services.js"></script>
   <script src="dist/dist_js/app/services/wallet-services.js"></script>
+  <script src="dist/dist_js/app/services/tx-services.js"></script>
   <script src="dist/dist_js/app/services/wot-services.js"></script>
   <script src="dist/dist_js/app/services/plugin-services.js"></script>
   <script src="dist/dist_js/app/services.js"></script>
@@ -159,6 +163,8 @@
   <script src="dist/dist_js/app/app.js"></script>
   <script src="dist/dist_js/app/components.js"></script>
   <script src="dist/dist_js/app/directives.js"></script>
+  <script src="dist/dist_js/app/filters.js"></script>
+  <script src="dist/dist_js/app/platform.js"></script>
   <!-- endbuild -->
   <!-- build:js config.js -->
   <!-- config  -->

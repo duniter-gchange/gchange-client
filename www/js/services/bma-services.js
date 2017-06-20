@@ -1,6 +1,6 @@
 //var Base58, Base64, scrypt_module_factory = null, nacl_factory = null;
 
-angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.services', 'cesium.settings.services'])
+angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.settings.services'])
 
 .factory('BMA', function($q, $window, $rootScope, $timeout, Api, Device, csConfig, csSettings, csHttp) {
   'ngInject';
@@ -18,6 +18,7 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
       OUTPUT_FUNCTIONS = OUTPUT_FUNCTION+'([ ]*' + OUTPUT_OPERATOR + '[ ]*' + OUTPUT_FUNCTION +')*',
       OUTPUT_OBJ = 'OBJ\\(([0-9]+)\\)',
       OUTPUT_OBJ_OPERATOR = OUTPUT_OBJ + '[ ]*' + OUTPUT_OPERATOR + '[ ]*' + OUTPUT_OBJ,
+      REGEX_ENDPOINT_PARAMS = "( ([a-z_][a-z0-9-_./]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))",
       regexp = {
         USER_ID: "[A-Za-z0-9_-]+",
         CURRENCY: "[A-Za-z0-9_-]+",
@@ -26,8 +27,9 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
         // duniter://[uid]:[pubkey]@[host]:[port]
         URI_WITH_AT: "duniter://(?:([A-Za-z0-9_-]+):)?([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{43,44})@([a-zA-Z0-9-.]+.[ a-zA-Z0-9-_:/;*?!^\\+=@&~#|<>%.]+)",
         URI_WITH_PATH: "duniter://([a-zA-Z0-9-.]+.[a-zA-Z0-9-_:.]+)/([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{43,44})(?:/([A-Za-z0-9_-]+))?",
-        BMA_ENDPOINT: "BASIC_MERKLED_API( ([a-z_][a-z0-9-_.]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))",
-        BMAS_ENDPOINT: "BMAS( ([a-z_][a-z0-9-_.]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))"
+        BMA_ENDPOINT: "BASIC_MERKLED_API" + REGEX_ENDPOINT_PARAMS,
+        BMAS_ENDPOINT: "BMAS" + REGEX_ENDPOINT_PARAMS,
+        BMATOR_ENDPOINT: "BMATOR" + "( ([a-z0-9-_.]+.onion))( ([0-9]+))?"
       },
       errorCodes = {
         REVOCATION_ALREADY_REGISTERED: 1002,
@@ -70,7 +72,7 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
       that.cache = _emptyCache();
 
       // Allow to force SSL connection with port different from 443
-      var forceUseSsl = (csConfig.httpsMode === true || csConfig.httpsMode == 'true' ||csConfig.httpsMode === 'force') ||
+      var forceUseSsl = (csConfig.httpsMode === 'true' || csConfig.httpsMode === true || csConfig.httpsMode === 'force') ||
         ($window.location && $window.location.protocol === 'https:') ? true : false;
       if (forceUseSsl) {
         console.debug('[BMA] Enable SSL (forced by config or detected in URL)');
@@ -80,7 +82,7 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
         host = host || csSettings.data.node.host;
         port = port || csSettings.data.node.port;
 
-        useSsl = angular.isDefined(useSsl) ? useSsl : (csSettings.data.node.port == 443 || csSettings.data.node.useSsl || forceUseSsl);
+        useSsl = angular.isDefined(useSsl) ? useSsl : (port == 443 || csSettings.data.node.useSsl || forceUseSsl);
         useCache =  angular.isDefined(useCache) ? useCache : true;
       }
 
@@ -233,7 +235,7 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
     };
 
     that.ready = function() {
-      if (that.started) return $q.when();
+      if (that.started) return $q.when(true);
       return that._startPromise || that.start();
     };
 
@@ -269,7 +271,6 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
         .then(function(res) {
           that.alive = res[1];
           if (!that.alive) {
-            // TODO : alert user ?
             console.error('[BMA] Could not start [{0}]: node unreachable'.format(that.server));
             that.started = true;
             delete that._startPromise;
@@ -293,22 +294,28 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
     that.stop = function() {
       console.debug('[BMA] Stopping...');
       removeListeners();
+      csHttp.cache.clear();
       that.cleanCache();
       that.alive = false;
       that.started = false;
+      delete that._startPromise;
       that.api.node.raise.stop();
     };
 
     that.restart = function() {
-      csHttp.cache.clear();
       that.stop();
-      return $timeout(function() {
-        that.start();
-      }, 200);
+      return $timeout(that.start, 200)
+        .then(function(alive) {
+          if (alive) {
+            that.api.node.raise.restart();
+          }
+          return alive;
+        });
     };
 
     that.api.registerEvent('node', 'start');
     that.api.registerEvent('node', 'stop');
+    that.api.registerEvent('node', 'restart');
 
     var exports = {
       errorCodes: errorCodes,
@@ -321,6 +328,7 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
         URI: exact(regexp.URI),
         BMA_ENDPOINT: exact(regexp.BMA_ENDPOINT),
         BMAS_ENDPOINT: exact(regexp.BMAS_ENDPOINT),
+        BMATOR_ENDPOINT: exact(regexp.BMATOR_ENDPOINT),
         // TX output conditions
         TX_OUTPUT_SIG: exact(SIG),
         TX_OUTPUT_FUNCTION: test(OUTPUT_FUNCTION),
@@ -334,7 +342,7 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
       node: {
         summary: get('/node/summary', csHttp.cache.LONG),
         same: function(host2, port2) {
-          return host2 == host && ((!port && !port2) || (port == port2));
+          return host2 == that.host && ((!that.port && !port2) || (that.port == port2||80));
         }
       },
       network: {
@@ -501,19 +509,31 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
       }
       // Try BMAS
       matches = exports.regexp.BMAS_ENDPOINT.exec(endpoint);
-      if (!matches) return;
-      return {
-        "dns": matches[2] || '',
-        "ipv4": matches[4] || '',
-        "ipv6": matches[6] || '',
-        "port": matches[8] || 80,
-        "useSsl": true
-      };
+      if (matches) {
+        return {
+          "dns": matches[2] || '',
+          "ipv4": matches[4] || '',
+          "ipv6": matches[6] || '',
+          "port": matches[8] || 80,
+          "useSsl": true
+        };
+      }
+      // Try BMATOR
+      matches = exports.regexp.BMATOR_ENDPOINT.exec(endpoint);
+      if (matches) {
+        return {
+          "dns": matches[2] || '',
+          "port": matches[4] || 80,
+          "useSsl": false,
+          "useTor": true
+        };
+      }
     };
 
     exports.copy = function(otherNode) {
-      init(otherNode.host, otherNode.port, otherNode.useSsl, that.useCache/*keep original value*/);
-      return that.restart();
+      if (that.started) that.stop();
+      that.init(otherNode.host, otherNode.port, otherNode.useSsl, that.useCache/*keep original value*/);
+      return that.start();
     };
 
     exports.wot.member.uids = function() {
@@ -601,7 +621,7 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
             }
           })
           .catch(function(err){
-            if (err && err.ucode === errorCodes.HTTP_LIMITATION) {
+            if (err && err.ucode === exports.errorCodes.HTTP_LIMITATION) {
               resolve(result);
             }
             else {
@@ -609,6 +629,19 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
             }
           });
       });
+    };
+
+    exports.raw.getHttpWithRetryIfLimitation = function(exec) {
+      return exec()
+        .catch(function(err){
+          // When too many request, retry in 3s
+          if (err && err.ucode == exports.errorCodes.HTTP_LIMITATION) {
+            return $timeout(function() {
+              // retry
+              return exports.raw.getHttpWithRetryIfLimitation(exec);
+            }, exports.constants.LIMIT_REQUEST_DELAY);
+          }
+        });
     };
 
     exports.blockchain.lastUd = function() {
@@ -751,30 +784,33 @@ angular.module('cesium.bma.services', ['ngResource', 'ngApi', 'cesium.http.servi
     return bma;
   };
 
-  service.lightInstance = function(host, port, useSsl) {
+  service.lightInstance = function(host, port, useSsl, timeout) {
     port = port || 80;
     useSsl = angular.isDefined(useSsl) ? useSsl : (port == 443);
     return {
+      host: host,
+      port: port,
+      useSsl: useSsl,
       node: {
-        summary: csHttp.getWithCache(host, port, '/node/summary', useSsl, csHttp.cache.LONG)
+        summary: csHttp.getWithCache(host, port, '/node/summary', useSsl, csHttp.cache.LONG, false, timeout)
       },
       network: {
         peering: {
-          self: csHttp.get(host, port, '/network/peering', useSsl)
+          self: csHttp.get(host, port, '/network/peering', useSsl, timeout)
         },
-        peers: csHttp.get(host, port, '/network/peers', useSsl)
+        peers: csHttp.get(host, port, '/network/peers', useSsl, timeout)
       },
       blockchain: {
-        current: csHttp.get(host, port, '/blockchain/current', useSsl),
+        current: csHttp.get(host, port, '/blockchain/current', useSsl, timeout),
         stats: {
-          hardship: csHttp.get(host, port, '/blockchain/hardship/:pubkey', useSsl)
+          hardship: csHttp.get(host, port, '/blockchain/hardship/:pubkey', useSsl, timeout)
         }
       }
     };
   };
 
   // default action
-  service.start();
+  //service.start();
 
   return service;
 })

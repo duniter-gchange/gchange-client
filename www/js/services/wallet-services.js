@@ -4,10 +4,10 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
 
 
 .factory('csWallet', function($q, $rootScope, $timeout, $translate, $filter, Api, localStorage,
-                              CryptoUtils, BMA, csConfig, csSettings, FileSaver, Blob, csWot, Device) {
+                              CryptoUtils, BMA, csConfig, csSettings, FileSaver, Blob, csWot, csTx, csCurrency) {
   'ngInject';
 
-  factory = function(id) {
+  function factory(id, BMA) {
 
     var
     constants = {
@@ -20,34 +20,36 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       REVOKE_VERSION: csConfig.compatProtocol_0_80 ? 2 : BMA.constants.PROTOCOL_VERSION
     },
     data = {},
-
-
+    listeners,
+    started,
+    startPromise,
     api = new Api(this, 'csWallet-' + id),
 
     resetData = function(init) {
+      data.loaded = false;
       data.pubkey= null;
       data.keypair = {
           signSk: null,
           signPk: null
         };
       data.uid = null;
-      data.balance = 0;
-      data.sources = null;
+      data.isNew = null;
       data.sourcesIndexByKey = null;
       data.currency= null;
       data.parameters = null;
       data.currentUD = null;
       data.medianTime = null;
-      data.tx = data.tx || {};
-      data.tx.history = [];
-      data.tx.pendings = [];
-      data.tx.errors = [];
       data.requirements = {};
       data.blockUid = null;
       data.sigDate = null;
       data.isMember = false;
       data.events = [];
-      data.loaded = false;
+
+      resetTxAndSources();
+
+      started = false;
+      startPromise = undefined;
+
       if (init) {
         api.data.raise.init(data);
       }
@@ -59,130 +61,18 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       }
     },
 
-    reduceTxAndPush = function(txArray, result, processedTxMap, excludePending) {
-      if (!txArray || txArray.length === 0) {
-        return;
-      }
-      var txPendingsTimeByKey = excludePending ? [] : data.tx.pendings.reduce(function(res, tx) {
-        if (tx.time) {
-          res[tx.amount+':'+tx.hash] = tx.time;
-        }
-        return res;
-      }, []);
-
-      _.forEach(txArray, function(tx) {
-        if (!excludePending || tx.block_number !== null) {
-          var walletIsIssuer = false;
-          var otherIssuer = tx.issuers.reduce(function(issuer, res) {
-              walletIsIssuer = (res === data.pubkey) ? true : walletIsIssuer;
-              return issuer + ((res !== data.pubkey) ? ', ' + res : '');
-          }, '');
-          if (otherIssuer.length > 0) {
-            otherIssuer = otherIssuer.substring(2);
-          }
-          var otherReceiver;
-          var outputBase;
-          var sources = [];
-          var lockedOutputs;
-          var amount = tx.outputs.reduce(function(sum, output, noffset) {
-              var outputArray = output.split(':',3);
-              outputBase = parseInt(outputArray[1]);
-              var outputAmount = powBase(parseInt(outputArray[0]), outputBase);
-              var outputCondition = outputArray[2];
-              var sigMatches =  BMA.regexp.TX_OUTPUT_SIG.exec(outputCondition);
-
-              // Simple unlock condition
-              if (sigMatches) {
-                var outputPubkey = sigMatches[1];
-                if (outputPubkey == data.pubkey) { // output is for the wallet
-                  if (!walletIsIssuer) {
-                    return sum + outputAmount;
-                  }
-                  // If pending: use output as new sources
-                  else if (tx.block_number === null) {
-                    sources.push({
-                      amount: parseInt(outputArray[0]),
-                      base: outputBase,
-                      type: 'T',
-                      identifier: tx.hash,
-                      noffset: noffset,
-                      consumed: false
-                    });
-                  }
-                }
-                else { // output is for someone else
-                  if (outputPubkey !== '' && outputPubkey != otherIssuer) {
-                    otherReceiver = outputPubkey;
-                  }
-                  if (walletIsIssuer) {
-                    return sum - outputAmount;
-                  }
-                }
-              }
-
-              // Complex unlock condition, on the issuer pubkey
-              else if (outputCondition.indexOf('SIG('+data.pubkey+')') != -1) {
-                var lockedOutput = BMA.tx.parseUnlockCondition(outputCondition);
-                if (lockedOutput) {
-                  // Add a source
-                  // FIXME: should be uncomment when filtering source on transfer()
-                  /*sources.push(angular.merge({
-                    amount: parseInt(outputArray[0]),
-                    base: outputBase,
-                    type: 'T',
-                    identifier: tx.hash,
-                    noffset: noffset,
-                    consumed: false
-                  }, lockedOutput));
-                  */
-                  lockedOutput.amount = outputAmount;
-                  lockedOutputs = lockedOutputs || [];
-                  lockedOutputs.push(lockedOutput);
-                  console.debug('[BMA] [TX] has locked output:', lockedOutput);
-
-                  return sum + outputAmount;
-                }
-              }
-              return sum;
-            }, 0);
-
-          var pubkey = amount > 0 ? otherIssuer : otherReceiver;
-          var time = tx.time;
-          if (tx.block_number === null) {
-            time = tx.blockstampTime || txPendingsTimeByKey[amount + ':' + tx.hash];
-          }
-
-          // Avoid duplicated tx, or tx to him self
-          var txKey = amount + ':' + tx.hash + ':' + time;
-          if (!processedTxMap[txKey] && amount !== 0) {
-            processedTxMap[txKey] = true;
-            var newTx = {
-              time: time,
-              amount: amount,
-              pubkey: pubkey,
-              comment: tx.comment,
-              isUD: false,
-              hash: tx.hash,
-              locktime: tx.locktime,
-              block_number: tx.block_number
-            };
-            // If pending: store sources and inputs for a later use - see method processTransactionsAndSources()
-            if (walletIsIssuer && tx.block_number === null) {
-              newTx.inputs = tx.inputs;
-              newTx.sources = sources;
-            }
-            if (lockedOutputs) {
-              newTx.lockedOutputs = lockedOutputs;
-            }
-            result.push(newTx);
-          }
-        }
-      });
-    },
-
-    resetSources = function(){
+    resetTxAndSources = function(){
+      // reset sources data
       data.sources = [];
       data.sourcesIndexByKey = {};
+      data.balance = 0;
+      // reset TX data
+      data.tx = data.tx || {};
+      data.tx.history = [];
+      data.tx.pendings = [];
+      data.tx.errors = [];
+      delete data.tx.fromTime;
+      delete data.tx.toTime;
     },
 
     addSource = function(src, sources, sourcesIndexByKey) {
@@ -247,7 +137,7 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       if (!data.loaded) return undefined; // undefined if not full loaded
       return !data.pubkey ||
         (!data.isMember &&
-        (!data.requirements || !data.requirements.pendingMembership) &&
+        (!data.requirements || (!data.requirements.pendingMembership && !data.requirements.wasMember)) &&
          !data.tx.history.length &&
          !data.tx.pendings.length);
     },
@@ -272,21 +162,6 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
             pubkey: data.pubkey,
             version: csConfig.version
           };
-
-          if (data.tx && data.tx.pendings && data.tx.pendings.length>0) {
-            var pendings = data.tx.pendings.reduce(function(res, tx){
-              return tx.time ? res.concat({
-                amount: tx.amount,
-                time: tx.time,
-                hash: tx.hash
-              }) : res;
-            }, []);
-            if (pendings.length) {
-              dataToStore.tx = {
-                pendings: pendings
-              };
-            }
-          }
 
           localStorage.setObject(constants.STORAGE_KEY, dataToStore);
         }
@@ -315,12 +190,9 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
                   // Call extend api
                   api.data.raisePromise.login(data),
 
-                  // Load parameters
+                  // Load currency (e.g parameters)
                   // This prevent timeout error, when loading a market record after a browser refresh (e.g. F5)
-                  loadParameters(),
-
-                  // Load current UD is need by features tour
-                  loadCurrentUD()
+                  loadCurrency()
                 ]);
               }
               else */if (storedData && storedData.keypair && storedData.pubkey) {
@@ -329,28 +201,21 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
 
                 // FOR DEV ONLY - on crosschain
                 // console.error('TODO REMOVE this code - dev only'); data.pubkey = '36j6pCNzKDPo92m7UXJLFpgDbcLFAZBgThD2TCwTwGrd';
-
-                if (storedData.tx && storedData.tx.pendings) {
-                  data.tx.pendings = storedData.tx.pendings;
-                }
                 data.loaded = false;
 
                 return $q.all([
                   // Call extend api
                   api.data.raisePromise.login(data),
 
-                  // Load parameters
-                  // This prevent timeout error, when loading a market record after a browser refresh (e.g. F5)
-                  loadParameters(),
-
-                  // Load current UD is need by features tour
-                  loadCurrentUD()
+                  // Load currency
+                  // This prevent timeout error, when loading record after a browser refresh (e.g. F5)
+                  loadCurrency()
                 ]);
               }
               else {
-                // Load parameters
+                // Load currency
                 // This prevent timeout error, when loading a market record after a browser refresh (e.g. F5)
-                return loadParameters();
+                return loadCurrency();
               }
             })
             .then(function(){
@@ -370,6 +235,7 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
         canMembershipOut: false,
         needRenew: false,
         pendingMembership: false,
+        wasMember: false,
         certificationCount: 0,
         needCertifications: false,
         needCertificationCount: 0,
@@ -414,6 +280,7 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
               score += (100000000   * (idty.membershipPendingExpiresIn > 0 ? 1 : 0));
               score += (10000000    * (!idty.expired ? 1 : 0));
               score += (1000000     * (!idty.outdistanced ? 1 : 0));
+              score += (100000      * (idty.wasMember ? 1 : 0));
               var certCount = !idty.expired && idty.certifications ? idty.certifications.length : 0;
               score += (1         * (certCount ? certCount : 0));
               score += (1         * (!certCount && idty.membershipPendingExpiresIn > 0 ? idty.membershipPendingExpiresIn/1000 : 0));
@@ -427,10 +294,13 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
 
           // Compute useful fields
           idty.needSelf = false;
-          idty.needMembership = (idty.membershipExpiresIn <= 0 && idty.membershipPendingExpiresIn <= 0 );
+          idty.wasMember = angular.isDefined(idty.wasMember) ? idty.wasMember : false; // Compat with Duniter 0.9
+          idty.needMembership = (idty.membershipExpiresIn <= 0 && idty.membershipPendingExpiresIn <= 0 && !idty.wasMember);
           idty.needRenew = (!idty.needMembership &&
                             idty.membershipExpiresIn <= csSettings.data.timeWarningExpireMembership &&
-                            idty.membershipPendingExpiresIn <= 0);
+                            idty.membershipPendingExpiresIn <= 0) ||
+                           (idty.wasMember && idty.membershipExpiresIn === 0 &&
+                            idty.membershipPendingExpiresIn === 0);
           idty.canMembershipOut = (idty.membershipExpiresIn > 0);
           idty.pendingMembership = (idty.membershipExpiresIn <= 0 && idty.membershipPendingExpiresIn > 0);
           idty.certificationCount = (idty.certifications) ? idty.certifications.length : 0;
@@ -490,239 +360,34 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       });
     },
 
-    loadSources = function() {
-      return $q(function(resolve, reject) {
-        // Get transactions
-        BMA.tx.sources({pubkey: data.pubkey})
+    loadTxAndSources = function(fromTime) {
+      return csTx.load(data.pubkey, fromTime)
         .then(function(res){
-          resetSources();
-          var balance = 0;
-          if (res.sources) {
-            _.forEach(res.sources, function(src) {
-              src.consumed = false;
-              balance += powBase(src.amount, src.base);
-            });
-            addSources(res.sources);
-          }
-          data.balance = balance;
-          resolve();
+          angular.merge(data, res);
         })
         .catch(function(err) {
-          resetSources();
-          reject(err);
-        });
-      });
-    },
-
-    loadTransactions = function(fromTime) {
-      return $q(function(resolve, reject) {
-        var txHistory = [];
-        var udHistory = [];
-        var txPendings = [];
-
-        var now = new Date().getTime();
-        var nowInSec = Math.trunc(now / 1000);
-        fromTime = fromTime || (nowInSec - csSettings.data.walletHistoryTimeSecond);
-        var processedTxMap = {};
-
-        var reduceTx = function(res){
-          reduceTxAndPush(res.history.sent, txHistory, processedTxMap, true/*exclude pending*/);
-          reduceTxAndPush(res.history.received, txHistory, processedTxMap, true/*exclude pending*/);
-          reduceTxAndPush(res.history.sending, txHistory, processedTxMap, true/*exclude pending*/);
-          reduceTxAndPush(res.history.pending, txPendings, processedTxMap, false/*include pending*/);
-        };
-
-        var jobs = [
-          // get pendings history
-          BMA.tx.history.pending({pubkey: data.pubkey})
-            .then(reduceTx)
-        ];
-
-        // get TX history since
-        if (fromTime !== -1) {
-          var sliceTime = csSettings.data.walletHistorySliceSecond;
-          for(var i = fromTime - (fromTime % sliceTime); i - sliceTime < nowInSec; i += sliceTime)  {
-            jobs.push(BMA.tx.history.times({pubkey: data.pubkey, from: i, to: i+sliceTime-1})
-              .then(reduceTx)
-            );
-          }
-
-          jobs.push(BMA.tx.history.timesNoCache({pubkey: data.pubkey, from: nowInSec - (nowInSec % sliceTime), to: nowInSec+999999999})
-            .then(reduceTx));
-        }
-
-        // get all TX
-        else {
-          jobs.push(BMA.tx.history.all({pubkey: data.pubkey})
-            .then(reduceTx)
-          );
-        }
-
-        // get UD history
-        if (csSettings.data.showUDHistory) {
-          jobs.push(
-            BMA.ud.history({pubkey: data.pubkey})
-            .then(function(res){
-              udHistory = !res.history || !res.history.history ? [] :
-               res.history.history.reduce(function(res, ud){
-                 if (ud.time < fromTime) return res; // skip to old UD
-                 var amount = powBase(ud.amount, ud.base);
-                 return res.concat({
-                   time: ud.time,
-                   amount: amount,
-                   isUD: true,
-                   block_number: ud.block_number
-                 });
-               }, []);
-            }));
-        }
-
-        // Execute jobs
-        $q.all(jobs)
-        .then(function(){
-          // sort by time desc
-          data.tx.history  = txHistory.concat(udHistory).sort(function(tx1, tx2) {
-             return (tx2.time - tx1.time);
-          });
-          data.tx.pendings = txPendings;
-          data.tx.fromTime = fromTime;
-          data.tx.toTime = data.tx.history.length ? data.tx.history[0].time /*=max(tx.time)*/: fromTime;
-
-          // Call extend api
-          return api.data.raisePromise.loadTx(data.tx)
-            .then(function() {
-              console.debug('[wallet] TX history loaded in '+ (new Date().getTime()-now) +'ms');
-              resolve();
-            });
-        })
-        .catch(function(err) {
-          data.tx.history = [];
-          data.tx.pendings = [];
-          data.tx.errors = [];
-          delete data.tx.fromTime;
-          delete data.tx.toTime;
-          reject(err);
-        });
-      });
-    },
-
-    processTransactionsAndSources = function() {
-      return BMA.wot.member.uids()
-        .then(function(uids){
-          var txPendings = [];
-          var txErrors = [];
-          var balance = data.balance;
-
-          // process TX history
-          _.forEach(data.tx.history, function(tx) {
-             tx.uid = uids[tx.pubkey] || null;
-          });
-
-          var processPendingTx = function(tx) {
-            tx.uid = uids[tx.pubkey] || null;
-
-            var consumedSources = [];
-            var valid = true;
-            if (tx.amount > 0) { // do not check sources from received TX
-              valid = false;
-              // TODO get sources from the issuer ?
-            }
-            else {
-              _.forEach(tx.inputs, function(input) {
-                var inputKey = input.split(':').slice(2).join(':');
-                var srcIndex = data.sourcesIndexByKey[inputKey];
-                if (angular.isDefined(srcIndex)) {
-                  consumedSources.push(data.sources[srcIndex]);
-                }
-                else {
-                  valid = false;
-                  return false; // break
-                }
-              });
-              if (tx.sources) { // add source output
-                addSources(tx.sources);
-              }
-              delete tx.sources;
-              delete tx.inputs;
-            }
-            if (valid) {
-              balance += tx.amount; // update balance
-              txPendings.push(tx);
-              _.forEach(consumedSources, function(src) {
-                src.consumed=true;
-              });
-            }
-            else {
-              txErrors.push(tx);
-            }
-          };
-
-          var txs = data.tx.pendings;
-          var retry = true;
-          while(txs && txs.length > 0) {
-            // process TX pendings
-            _.forEach(txs, processPendingTx);
-
-            // Retry once (TX could be chained and processed in a wrong order)
-            if (txErrors.length > 0 && txPendings.length > 0 && retry) {
-              txs = txErrors;
-              txErrors = [];
-              retry = false;
-            }
-            else {
-              txs = null;
-            }
-          }
-
-          data.tx.pendings = txPendings;
-          data.tx.errors = txErrors;
-          data.balance = balance;
+          resetTxAndSources();
+          throw err;
         });
     },
 
-    loadParameters = function() {
+    loadCurrency = function() {
       if (data.parameters && data.currency) return $q.when();
-      return BMA.blockchain.parameters()
-        .then(function(json){
-          data.currency = json.currency;
-          data.parameters = json;
-          if (data.currentUD == -1) data.currentUD = data.parameters.ud0;
+      return csCurrency.get()
+        .then(function(currency){
+          data.currency = currency.name;
+          data.parameters = currency.parameters;
+          data.currentUD = currency.currentUD;
         })
         .catch(function(err) {
           data.currency = null;
           data.parameters = null;
+          data.currentUD = -1;
           throw err;
         });
     },
 
-    loadCurrentUD = function() {
-      return BMA.blockchain.stats.ud()
-        .then(function(res){
-          // Special case for currency init
-          if (!res.result.blocks.length) {
-            data.currentUD = data.parameters ? data.parameters.ud0 : -1;
-            return data.currentUD ;
-          }
-          else {
-            var lastBlockWithUD = res.result.blocks[res.result.blocks.length - 1];
-            return BMA.blockchain.block({ block: lastBlockWithUD })
-              .then(function(block){
-                data.currentUD = powBase(block.dividend, block.unitbase);
-                return data.currentUD;
-              })
-              .catch(function(err) {
-                data.currentUD = null;
-                throw err;
-              });
-            }
-        })
-        .catch(function(err) {
-          data.currentUD = null;
-          throw err;
-        });
-    },
-
-    // Must be call after loadParameters() and loadRequirements()
+    // Must be call after loadCurrency() and loadRequirements()
     finishLoadRequirements = function() {
       data.requirements.needCertificationCount = (!data.requirements.needMembership && (data.requirements.certificationCount < data.parameters.sigQty)) ?
           (data.parameters.sigQty - data.requirements.certificationCount) : 0;
@@ -798,22 +463,16 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       return $q.all([
 
           // Get currency parameters
-          loadParameters(),
-
-          // Get current UD
-          loadCurrentUD(),
+          loadCurrency(),
 
           // Get requirements
-          //loadRequirements(),
+          loadRequirements(),
 
-          // Get sources
-        //loadSources(),
-
-          // Get transactions
-        //loadTransactions(),
+          // Get TX and sources
+          //loadTxAndSources(),
 
           // Load sigStock
-        //loadSigStock(),
+          //loadSigStock(),
 
           // API extension
           api.data.raisePromise.load(data, null)
@@ -823,11 +482,7 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
             })
         ])
         .then(function() {
-          // Process transactions and sources
-          //return processTransactionsAndSources();
-        })
-        .then(function() {
-          //finishLoadRequirements(); // must be call after loadParameters() and loadRequirements()
+          //finishLoadRequirements(); // must be call after loadCurrency() and loadRequirements()
           return api.data.raisePromise.finishLoad(data)
             .catch(function(err) {
               console.error('Error while finishing wallet data load, on extension point. Try to continue');
@@ -878,11 +533,8 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       // Reset events
       cleanEventsByContext('requirements');
 
-      // Get parameters
-      if (options.parameters) jobs.push(loadParameters());
-
-      // Get current UD
-      if (options.currentUd) jobs.push(loadCurrentUD());
+      // Get currency (e.g parameters)
+      if (options.parameters || options.currentUd) jobs.push(loadCurrency());
 
       // Get requirements
       /*if (options.requirements) {
@@ -893,11 +545,8 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       }
 
       if (options.sources || (options.tx && options.tx.enable)) {
-        // Get sources
-        jobs.push(loadSources());
-
-        // Get transactions
-        jobs.push(loadTransactions(options.tx.fromTime));
+        // Get TX and sources
+        jobs.push(loadTxAndSources(options.tx ? options.tx.fromTime: undefined));
       }
 
       // Load sigStock
@@ -908,12 +557,6 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       if (!jobs.length || options.api) jobs.push(api.data.raisePromise.load(data, options));
 
       return $q.all(jobs)
-      /*.then(function() {
-        if (options.sources || (options.tx && options.tx.enable)) {
-          // Process transactions and sources
-          return processTransactionsAndSources();
-        }
-      })*/
       .then(function(){
         return api.data.raisePromise.finishLoad(data);
       })
@@ -1099,7 +742,6 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
               csWot.extendAll([pendingTx], 'pubkey')
                 .then(function() {
                   data.tx.pendings.unshift(pendingTx);
-                  store(); // save pendings in local storage
                   resolve();
                 }).catch(function(err){reject(err);});
             }).catch(function(err){reject(err);});
@@ -1252,58 +894,6 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
         });
     },
 
-    checkUidNotExists = function(uid, pubkey) {
-      return $q(function(resolve, reject) {
-        BMA.wot.lookup({ search: uid }) // search on uid
-          .then(function(res) {
-            var found = res.results &&
-              res.results.length > 0 &&
-              res.results.some(function(pub){
-                return pub.uids && pub.uids.length > 0 &&
-                  pub.uids.some(function(idty) {
-                    return (idty.uid === uid) && // same Uid
-                      (idty.revoked || pub.pubkey !== pubkey); // but not same pubkey
-                  });
-              });
-            if (found) { // uid is already used : display a message and call failed callback
-              reject('ACCOUNT.NEW.MSG_UID_ALREADY_USED');
-            }
-            else {
-              resolve(uid);
-            }
-          })
-          .catch(function() {
-            resolve(uid); // not found, so OK
-          });
-      });
-    },
-
-    checkPubkeyNotExists = function(uid, pubkey) {
-      return $q(function(resolve, reject) {
-        BMA.wot.lookup({ search: pubkey }) // search on pubkey
-          .then(function(res) {
-            var found = res.results &&
-              res.results.length > 0 &&
-              res.results.some(function(pub){
-                return pub.pubkey === pubkey &&
-                  pub.uids && pub.uids.length > 0 &&
-                  pub.uids.some(function(idty) {
-                    return (!idty.revoked); // excluded revoked uid
-                  });
-              });
-            if (found) { // uid is already used : display a message and reopen the popup
-              reject('ACCOUNT.NEW.MSG_PUBKEY_ALREADY_USED');
-            }
-            else {
-              resolve(uid);
-            }
-          })
-          .catch(function() {
-            resolve(uid); // not found, so OK
-          });
-      });
-    },
-
     getIdentityDocument = function(uid, blockUid) {
       uid = uid || data.uid;
       blockUid = blockUid || data.blockUid;
@@ -1332,59 +922,56 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
     * Send self identity
     */
     self = function(uid, needToLoadRequirements) {
-      if (!BMA.regexp.USER_ID.test(uid)){
-        return $q.reject({message: 'ERROR.INVALID_USER_ID'});
-      }
-      var block;
-      return $q.all([
-        // check uid used by another pubkey
-        checkUidNotExists(uid, data.pubkey),
-
-        // Load parameters (need to known the currency)
-        loadParameters(),
-
-        // Get th current block
-        BMA.blockchain.current()
-          .then(function(current) {
-            block = current;
-          })
-          .catch(function(err) {
-            // Special case for currency init (root block not exists): use fixed values
-            if (err && err.ucode == BMA.errorCodes.NO_CURRENT_BLOCK) {
-              block = {number: 0, hash: BMA.constants.ROOT_BLOCK_HASH};
-            }
-            else {
-              throw err;
-            }
-          })
-      ])
-
-      // Create identity document
-      .then(function() {
-        return getIdentityDocument(uid, block.number + '-' + block.hash);
-      })
-
-      // Send to node
-      .then(function (identity) {
-        return BMA.wot.add({identity: identity});
-      })
-
-      .then(function () {
-        if (!!needToLoadRequirements) {
-          // Refresh membership data (if need)
-          return loadRequirements();
+        if (!BMA.regexp.USER_ID.test(uid)){
+          return $q.reject({message: 'ERROR.INVALID_USER_ID'});
         }
-        else {
-          data.uid = uid;
-          data.blockUid = block.number + '-' + block.hash;
-        }
-      })
-      .catch(function (err) {
-        if (err && err.ucode === BMA.errorCodes.IDENTITY_SANDBOX_FULL) {
-          throw {ucode: BMA.errorCodes.IDENTITY_SANDBOX_FULL, message: 'ERROR.IDENTITY_SANDBOX_FULL'};
-        }
-        throw err;
-      });
+        var block;
+        return $q.all([
+
+          // Load currency (e.g parameters)
+          loadCurrency(),
+
+          // Get th current block
+          BMA.blockchain.current()
+            .then(function(current) {
+              block = current;
+            })
+            .catch(function(err) {
+              // Special case for currency init (root block not exists): use fixed values
+              if (err && err.ucode == BMA.errorCodes.NO_CURRENT_BLOCK) {
+                block = {number: 0, hash: BMA.constants.ROOT_BLOCK_HASH};
+              }
+              else {
+                throw err;
+              }
+            })
+        ])
+        // Create identity document
+        .then(function() {
+          return getIdentityDocument(uid, block.number + '-' + block.hash);
+        })
+
+        // Send to node
+        .then(function (identity) {
+          return BMA.wot.add({identity: identity});
+        })
+
+        .then(function () {
+          if (!!needToLoadRequirements) {
+            // Refresh membership data (if need)
+            return loadRequirements();
+          }
+          else {
+            data.uid = uid;
+            data.blockUid = block.number + '-' + block.hash;
+          }
+        })
+        .catch(function (err) {
+          if (err && err.ucode === BMA.errorCodes.IDENTITY_SANDBOX_FULL) {
+            throw {ucode: BMA.errorCodes.IDENTITY_SANDBOX_FULL, message: 'ERROR.IDENTITY_SANDBOX_FULL'};
+          }
+          throw err;
+        });
     },
 
    /**
@@ -1699,7 +1286,10 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
         return getRevocationDocument()
           .then(function(revocation) {
             var revocationFile = new Blob([revocation], {type: 'text/plain; charset=utf-8'});
-            FileSaver.saveAs(revocationFile, 'revocation.txt');
+            return $translate('ACCOUNT.SECURITY.REVOCATION_FILENAME', {uid: data.uid, currency: data.currency, pubkey: data.pubkey})
+              .then(function(fileName){
+                FileSaver.saveAs(revocationFile, fileName);
+              });
           });
       },
 
@@ -1708,16 +1298,6 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
         if (event.context && event.context == context) return res;
         return res.concat(event);
       },[]);
-    },
-
-    /**
-    * Serialize to JSON string
-    */
-    toJson = function() {
-      return $q(function(resolve, reject) {
-        var json = JSON.stringify(data);
-        resolve(json);
-      });
     },
 
     /**
@@ -1776,17 +1356,86 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
     }
     ;
 
+    function addListeners() {
+      listeners = [
+        // Listen if settings changed
+        csSettings.api.data.on.changed($rootScope, store, this),
+        // Listen if node changed
+        BMA.api.node.on.restart($rootScope, restart, this)
+      ];
+    }
+
+    function removeListeners() {
+      _.forEach(listeners, function(remove){
+        remove();
+      });
+      listeners = [];
+    }
+
+    function ready() {
+      if (started) return $q.when();
+      return startPromise || start();
+    }
+
+    function stop() {
+      console.debug('[wallet] Stopping...');
+      removeListeners();
+      resetData();
+    }
+
+    function restart() {
+      stop();
+      return $timeout(start, 200);
+    }
+
+    function start() {
+      console.debug('[wallet] Starting...');
+      var now = new Date().getTime();
+
+      startPromise = $q.all([
+          csSettings.ready(),
+          csCurrency.ready(),
+          BMA.ready()
+        ])
+
+        // Restore
+        .then(restore)
+
+        // Load data (if a wallet restored)
+        .then(function(data) {
+          if (data && data.pubkey) {
+            return loadData({minData: true});
+          }
+        })
+
+        // Emit ready event
+        .then(function() {
+          addListeners();
+
+          console.debug('[wallet] Started in ' + (new Date().getTime() - now) + 'ms');
+
+          started = true;
+          startPromise = null;
+
+          // Emit event (used by plugins)
+          api.data.raise.ready(data);
+        })
+        .then(function(){
+          return data;
+        });
+
+      return startPromise;
+    }
+
     // Register extension points
+    api.registerEvent('data', 'ready');
     api.registerEvent('data', 'init');
     api.registerEvent('data', 'login');
     api.registerEvent('data', 'load');
     api.registerEvent('data', 'finishLoad');
     api.registerEvent('data', 'logout');
     api.registerEvent('data', 'reset');
-    api.registerEvent('data', 'loadTx');
     api.registerEvent('action', 'certify');
-
-    csSettings.api.data.on.changed($rootScope, store);
 
     // init data
     resetData(true);
@@ -1794,12 +1443,16 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
     return {
       id: id,
       data: data,
+      ready: ready,
+      start: start,
+      stop: stop,
       // auth
       login: login,
       logout: logout,
       isLogin: isLogin,
       hasSelf: hasSelf,
       isNeverUsed: isNeverUsed,
+      isNew: function() {return !!data.isNew;},
       isUserPubkey: isUserPubkey,
       getData: getData,
       loadData: loadData,
@@ -1809,6 +1462,7 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
       self: self,
       revoke: revoke,
       revokeWithFile: revokeWithFile,
+      certify: certify,
       downloadSaveId: downloadSaveId,
       getCryptedId: getCryptedId,
       recoverId: recoverId,
@@ -1818,19 +1472,14 @@ angular.module('cesium.wallet.services', ['ngResource', 'ngApi', 'cesium.bma.ser
         out: membership(false)
       },
       events: {
-        add: addEvent
+        add: addEvent,
+        cleanByContext: cleanEventsByContext
       },
-      certify: certify,
-      store: store,
-      restore: restore,
-      // serialization
-      toJson: toJson,
-      fromJson: fromJson,
       api: api
     };
-  };
+  }
 
-  var service = factory('default');
+  var service = factory('default', BMA);
   service.instance = factory;
 
   return service;

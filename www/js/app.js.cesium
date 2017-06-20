@@ -4,12 +4,11 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht.translate',
-  'ngApi', 'angular-cache', 'angular.screenmatch', 'angular.bind.notifier', 'ImageCropper', 'ngFileSaver', 'ngIdle',
+angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht.translate', 'Idle',
+  'ngApi', 'angular-cache', 'angular.screenmatch', 'angular.bind.notifier', 'ImageCropper',
   //'ui-leaflet',
   // removeIf(no-device)
   'ngCordova',
-  'ionic.cloud',
   // endRemoveIf(no-device)
   // removeIf(no-plugin)
   'cesium.plugins',
@@ -96,16 +95,10 @@ angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht
     };
   })
 
-  .config(function($ionicCloudProvider) {
-    $ionicCloudProvider.init({
-      "core": {
-        "app_id": "23c2212f"
-      }
-    });
-  })
 
-.run(function($rootScope, $translate, $state, $window, ionicReady, Device, UIUtils, $ionicConfig, PluginService,
-              csPlatform, csCurrency, csWallet, csSettings, csConfig) {
+
+.run(function($rootScope, $translate, $state, $window, ionicReady, localStorage,
+              filterTranslations, Device, BMA, UIUtils, csHttp, $ionicConfig, PluginService, csPlatform, csWallet, csSettings, csConfig, csCurrency) {
   'ngInject';
 
   // Allow access to service data, from HTML templates

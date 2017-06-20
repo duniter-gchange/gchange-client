@@ -1,6 +1,6 @@
 angular.module('cesium.market.services', ['ngResource', 'cesium.services', 'cesium.es.http.services', 'cesium.es.comment.services'])
 
-.factory('esMarket', function($q, csSettings, BMA, esHttp, esComment, esUser) {
+.factory('esMarket', function($q, csSettings, BMA, esHttp, esComment, esUser, csCurrency) {
   'ngInject';
 
   function EsMarket(id) {
@@ -152,7 +152,7 @@ angular.module('cesium.market.services', ['ngResource', 'cesium.services', 'cesi
       // pictures
       if (hit._source.pictures && hit._source.pictures.reduce) {
         record.pictures = hit._source.pictures.reduce(function(res, pic) {
-          return res.concat(esHttp.image.fromAttachment(pic.file));
+          return pic && pic.file ? res.concat(esHttp.image.fromAttachment(pic.file)) : res;
         }, []);
       }
 

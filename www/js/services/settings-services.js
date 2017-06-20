@@ -43,7 +43,7 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
 
   var
   constants = {
-    STORAGE_KEY: 'CESIUM_SETTINGS'
+    STORAGE_KEY: 'GCHANGE_SETTINGS'
   },
   defaultSettings = angular.merge({
     timeout : 4000,
@@ -55,12 +55,10 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
     walletHistoryTimeSecond: 30 * 24 * 60 * 60 /*30 days*/,
     walletHistorySliceSecond: 5 * 24 * 60 * 60 /*download using 5 days slice*/,
     rememberMe: true, // override to false if no device
-    showUDHistory: true,
     showLoginSalt: false,
-    initPhase: false, // For currency start (when block #0 not written)
     httpsMode: false,
     expertMode: false,
-    decimalCount: 4,
+    decimalCount: 2,
     uiEffects: true,
     minVersion: '0.1.0', // TODO update this if need
     newIssueUrl: "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug",

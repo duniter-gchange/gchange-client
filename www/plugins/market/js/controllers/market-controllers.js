@@ -736,6 +736,11 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
       if ($scope.options.focus && !UIUtils.screen.isSmall()) {
         $focus('market-record-title');
       }
+    })
+    .catch(function(err){
+      if (err == 'CANCELLED') {
+        $scope.showHome();
+      }
     });
   });
 
@@ -788,8 +793,9 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
     }
     $scope.saving = true;
 
-    return UIUtils.loading.show()
-
+    return UIUtils.loading.show({
+        delay: 0
+      })
       // Preparing json (pictures + resizing thumbnail)
       .then(function() {
         var json = angular.copy($scope.formData);
@@ -797,29 +803,36 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
         if (!!json.price && typeof json.price == "string") {
           json.price = parseFloat(json.price.replace(new RegExp('[.,]'), '.')); // fix #124
         }
-        if (!!json.price) {
-          json.unit = json.unit || ($scope.useRelative ? 'UD' : 'unit');
-          if (json.unit === 'unit') {
-            json.price = json.price * 100; // remove 2 decimals in quantitative mode
-          }
+        if (!json.price) {
+          json.unit = undefined;
+          json.currency = undefined;
         }
-        else {
-          delete json.unit;
-        }
-        json.time = esHttp.date.now();
-        if (!json.currency) {
+        else if (!json.currency) {
           json.currency = $scope.currency;
         }
+        json.time = esHttp.date.now();
 
         json.picturesCount = $scope.pictures.length;
         if (json.picturesCount) {
-          json.pictures = $scope.pictures.reduce(function(res, pic) {
-            // TODO: resize image
-            return res.concat({file: esHttp.image.toAttachment(pic)});
-          }, []);
-          return UIUtils.image.resizeSrc($scope.pictures[0].src, true) // resize thumbnail
-            .then(function(imageSrc) {
-              json.thumbnail = esHttp.image.toAttachment({src: imageSrc});
+
+          return $q.all(
+              // resize all pictures
+              $scope.pictures.reduce(function(res, pic) {
+                return res.concat(UIUtils.image.resizeSrc(pic.src, false));
+              },
+              // First: resize thumbnail
+              [UIUtils.image.resizeSrc($scope.pictures[0].src, true)]
+          ))
+            .then(function(imagesSrc) {
+              // First image = the thumbnail
+              json.thumbnail = esHttp.image.toAttachment({src: imagesSrc.splice(0,1)});
+              // Then = all pictures
+              json.pictures = imagesSrc.reduce(function(res, imagesSrc) {
+                return res.concat({
+                  file: esHttp.image.toAttachment({src: imagesSrc})
+                });
+              }, []);
+
               return json;
             });
         }
@@ -850,7 +863,7 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
 
       // Redirect to record view
       .then(function(id) {
-        $scope.id= $scope.id || id;
+        $scope.id = $scope.id || id;
         $scope.saving = false;
         $ionicHistory.clearCache($ionicHistory.currentView().stateId); // clear current view
         $ionicHistory.nextViewOptions({historyRoot: true});

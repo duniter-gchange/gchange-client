@@ -109,7 +109,7 @@ angular.module('cesium.utils.services', ['ngResource'])
     }
   }
 
-  function showLoading() {
+  function showLoading(options) {
     if (!loadingTextCache) {
       return $translate('COMMON.LOADING')
         .then(function(translation){
@@ -117,10 +117,10 @@ angular.module('cesium.utils.services', ['ngResource'])
           return showLoading();
         });
     }
+    options = options || {};
+    options.template = options.template||loadingTextCache;
 
-    return $ionicLoading.show({
-      template: loadingTextCache
-    });
+    return $ionicLoading.show(options);
   }
 
   function showToast(message, duration, position) {
