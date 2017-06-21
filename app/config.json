@@ -25,6 +25,9 @@
         "enable": true,
         "defaultCurrency": "€",
         "homeMessage": "<i class=\"icon ion-location\"></i> Vide-grenier de Villiers-charlemagne",
+        "defaultAdminPubkeys": [
+          "CohjkoP5YnqzTV2wwdCFND74BDDmDR7dAQEPGt4tj2Tw" // BLA
+        ],
         "defaultTags": [
           {
             "tag": "vide-grenier",

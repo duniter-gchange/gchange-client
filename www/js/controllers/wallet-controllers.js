@@ -235,7 +235,7 @@ function WalletController($scope, $rootScope, $q, $ionicPopup, $timeout, $state,
 
   // Updating wallet data
   $scope.doUpdate = function() {
-    console.debug('[wallet] TX history reloading...');
+    console.debug('[wallet] Updating wallet...');
     return UIUtils.loading.show()
       .then(function() {
         return csWallet.refreshData();

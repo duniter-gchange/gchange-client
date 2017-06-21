@@ -34,7 +34,7 @@
             <h3 class="gray" ng-if="rec.category" ng-bind-html="rec.category.name"></h3>
             <div class="badge badge-price badge-calm" ng-if="rec.price">
               <i class="cion-market-offer"></i>
-              <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency}"></span>
+              <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: false}"></span>
             </div>
             <div class="badge badge-energized badge-price" ng-if="!search.type && !rec.price && rec.type=='need'">
               <i class="cion-market-need"></i>

@@ -1,6 +1,6 @@
 angular.module('cesium.market.record.services', ['ngResource', 'cesium.services', 'cesium.es.http.services', 'cesium.es.comment.services'])
 
-.factory('esMarket', function($q, csSettings, BMA, esHttp, esComment, esUser, csCurrency) {
+.factory('esMarket', function($q, csSettings, BMA, esHttp, esComment, csWot, csCurrency) {
   'ngInject';
 
   function EsMarket(id) {
@@ -127,7 +127,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
       }
 
       if (record.price && convertPriceToUnit) {
-        if (!record.unit || record.unit==='UD') {
+        if (record.unit==='UD') {
           record.price = record.price * currentUD;
         }
       }
@@ -219,13 +219,10 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           // load categories
           exports.category.all(),
 
-          // Get last UD
-          BMA.blockchain.lastUd()
-            .then(function (currentUD) {
-              return currentUD;
-            })
+          // Get current UD
+          csCurrency.currentUD()
             .catch(function(err) {
-              console.error(err);
+              console.error('Could not get current UD', err);
               return 1;
             }),
 
@@ -239,21 +236,24 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           var currentUD = res[1];
           var hit = res[2];
 
-
           var record = readRecordFromHit(hit, categories, currentUD, options.convertPrice);
 
           // Load issuer (avatar, name, uid, etc.)
-          return esUser.profile.fillAvatars([{pubkey: record.issuer}])
-            .then(function(idties) {
+          return csWot.extend({pubkey: record.issuer})
+            .then(function(issuer) {
               var data = {
                 id: hit._id,
-                issuer: idties[0],
+                issuer: issuer,
                 record: record
               };
 
               // Make sure currency if present (fix old data)
               if (!record.currency) {
-                return csCurrency.default()
+                if (csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.defaultCurrency) {
+                  record.currency = currency.name;
+                  return data;
+                }
+                return csCurrency.get()
                   .then(function (currency) {
                     record.currency = currency.name;
                     return data;

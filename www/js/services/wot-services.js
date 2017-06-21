@@ -1,11 +1,11 @@
 
-angular.module('cesium.wot.services', ['ngResource', 'ngApi', 'cesium.bma.services', 'cesium.crypto.services', 'cesium.utils.services',
+angular.module('cesium.wot.services', ['ngApi', 'cesium.bma.services', 'cesium.crypto.services', 'cesium.utils.services',
   'cesium.settings.services'])
 
-.factory('csWot', function($q, $timeout, BMA, Api, CacheFactory, csConfig, csSettings, csCache) {
+.factory('csWot', function($q, $timeout, BMA, Api, CacheFactory, csConfig, csCurrency, csSettings, csCache) {
   'ngInject';
 
-  factory = function(id) {
+  function factory(id) {
 
     var
       api = new Api(this, "csWot-" + id),
@@ -351,7 +351,7 @@ angular.module('cesium.wot.services', ['ngResource', 'ngApi', 'cesium.bma.servic
             if (!pendingCertifications.length) return certifications; // No more pending continue
 
             // Special case for initPhase - issue #
-            if (csConfig.initPhase) {
+            if (csCurrency.data.initPhase) {
               return pendingCertifications.reduce(function(res, cert) {
                 return res.concat({
                   pubkey: cert.pubkey,
@@ -489,29 +489,6 @@ angular.module('cesium.wot.services', ['ngResource', 'ngApi', 'cesium.bma.servic
         }
       },
 
-      loadSources = function(pubkey) {
-        return BMA.tx.sources({pubkey: pubkey})
-          .then(function(res){
-            var sources = [];
-            var sourcesIndexByKey = [];
-            var balance = 0;
-            if (!!res.sources && res.sources.length > 0) {
-              _.forEach(res.sources, function(src) {
-                var srcKey = src.type+':'+src.identifier+':'+src.noffset;
-                src.consumed = false;
-                balance += (src.base > 0) ? (src.amount * Math.pow(10, src.base)) : src.amount;
-                sources.push(src);
-                sourcesIndexByKey[srcKey] = sources.length -1 ;
-              });
-            }
-            return {
-              sources: sources,
-              sourcesIndexByKey: sourcesIndexByKey,
-              balance: balance
-            };
-          });
-      },
-
       loadData = function(pubkey, withCache, uid, force) {
 
         var data;
@@ -602,14 +579,6 @@ angular.module('cesium.wot.services', ['ngResource', 'ngApi', 'cesium.bma.servic
                   data.given_cert_pending = res.pending;
                   data.given_cert_error = res.error;
                 })
-
-              // Get sources
-               // NOT NEED for now
-              /*loadSources(pubkey)
-                .then(function (sources) {
-                  data.sources = sources;
-                })
-              */
             ]);
           })
           .then(function() {
@@ -693,8 +662,28 @@ angular.module('cesium.wot.services', ['ngResource', 'ngApi', 'cesium.bma.servic
               // Add unique id (if enable)
               return options.addUniqueId ? _addUniqueIds(idties) : idties;
             }
+            var lookupResultCount = idties.length;
             // call extension point
             return api.data.raisePromise.search(text, idties, 'pubkey')
+              .then(function() {
+
+                // Make sure to add uid to new results - fix #488
+                if (idties.length > lookupResultCount) {
+                  var idtiesWithoutUid = _.filter(idties, function(idty) {
+                    return !idty.uid && idty.pubkey;
+                  });
+                  if (idtiesWithoutUid.length) {
+                    return BMA.wot.member.uids()
+                      .then(function(uids) {
+                        _.forEach(idties, function(idty) {
+                          if (!idty.uid && idty.pubkey) {
+                            idty.uid = uids[idty.pubkey];
+                          }
+                        });
+                      });
+                  }
+                }
+              })
               .then(function() {
                 // Add unique id (if enable)
                 return options.addUniqueId ? _addUniqueIds(idties) : idties;
@@ -931,6 +920,13 @@ angular.module('cesium.wot.services', ['ngResource', 'ngApi', 'cesium.bma.servic
         });
       },
 
+      extend = function(idty, pubkeyAttributeName, skipAddUid) {
+        return extendAll([idty], pubkeyAttributeName, skipAddUid)
+          .then(function(res) {
+            return res[0];
+          });
+      },
+
       extendAll = function(idties, pubkeyAttributeName, skipAddUid) {
 
         pubkeyAttributeName = pubkeyAttributeName || 'pubkey';
@@ -985,13 +981,14 @@ angular.module('cesium.wot.services', ['ngResource', 'ngApi', 'cesium.bma.servic
       newcomers: getNewcomers,
       pending: getPending,
       all: getAll,
+      extend: extend,
       extendAll: extendAll,
       // api extension
       api: api
     };
-  };
+  }
 
-  var service = factory('default');
+  var service = factory('default', BMA);
 
   service.instance = factory;
   return service;

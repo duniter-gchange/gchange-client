@@ -46,6 +46,9 @@ angular.module("cesium.config", [])
 					"name": "Vide-grenier de Villiers-charlemagne"
 				}
 			],
+			"defaultAdminPubkeys": [
+				"CohjkoP5YnqzTV2wwdCFND74BDDmDR7dAQEPGt4tj2Tw" // BLA
+			],
 			"record": {
 				"type": {
 					"show": false,

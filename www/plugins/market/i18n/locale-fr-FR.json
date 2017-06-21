@@ -8,6 +8,9 @@
       "PRICE": "Prix",
       "BTN_NEW_AD": "Je dépose une annonce"
     },
+    "PROFILE": {
+      "DEFAULT_TITLE": "Nouvel utilisateur"
+    },
     "SIMPLE_LOGIN": {
       "TITLE": "Coordonnées",
       "HELP": "Veuillez indiquer un <b>email ou numéro de téléphone</b> portable, afin que nous puissions vous contacter durant l'événement :",

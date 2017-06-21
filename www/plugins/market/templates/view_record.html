@@ -46,13 +46,12 @@
             <h4 class="hidden-xs">
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
-              <a ng-class="{'positive': issuer.uid, 'gray': !issuer.uid}"
-                 ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.name||issuer.uid})">
-                <ng-if ng-if="::issuer.name||issuer.uid">
+              <a ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.uid})">
+                <ng-if ng-if="issuer.name||issuer.uid" class="positive">
                   <i class="icon ion-person"></i>
                   {{::issuer.name||issuer.uid}}
                 </ng-if>
-                <span ng-if="::!issuer.name&&!issuer.uid">
+                <span ng-if="!issuer.name && !issuer.uid" class="gray">
                   <i class="icon ion-key"></i>
                   {{::issuer.pubkey|formatPubkey}}
                 </span>

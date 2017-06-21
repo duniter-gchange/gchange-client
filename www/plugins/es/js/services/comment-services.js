@@ -1,6 +1,7 @@
-angular.module('cesium.es.comment.services', ['ngResource', 'cesium.bma.services', 'cesium.wallet.services', 'cesium.es.http.services'])
+angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
+  'cesium.es.http.services', 'cesium.es.profile.services'])
 
-.factory('esComment', function($rootScope, $q, UIUtils, BMA, esHttp, esUser, csWallet) {
+.factory('esComment', function($rootScope, $q, UIUtils, BMA, esHttp, csWallet, csWot) {
   'ngInject';
 
   function EsComment(index) {
@@ -137,9 +138,9 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.bma.services
         .then(function() {
           if (!options.loadAvatar) return;
           if (options.loadAvatarAllParent) {
-            return esUser.profile.fillAvatars(_.values(data.mapById), 'issuer');
+            return csWot.extendAll(_.values(data.mapById), 'issuer');
           }
-          return esUser.profile.fillAvatars(data.result, 'issuer');
+          return csWot.extendAll(data.result, 'issuer');
         })
 
         // Sort (time asc)
@@ -216,7 +217,7 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.bma.services
                 exports.raw.refreshTreeLinks(data)
                   // fill avatars (and uid)
                   .then(function() {
-                    return esUser.profile.fillAvatars([comment], 'issuer');
+                    return csWot.extend(comment, 'issuer');
                   })
                   .then(function() {
                     data.result.push(comment);

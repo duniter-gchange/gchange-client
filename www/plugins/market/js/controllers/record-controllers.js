@@ -94,7 +94,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
 ;
 
-function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter,
+function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $q,
                                   UIUtils, ModalUtils, csConfig, esMarket, BMA) {
   'ngInject';
 
@@ -273,8 +273,10 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter,
     }
 
     if (!matches.length && !filters.length) {
-      $scope.doGetLastRecord();
-      return;
+      $scope.search.results = [];
+      $scope.search.hasMore = false;
+      $scope.search.loading = false;
+      return $q.when();
     }
 
     if ($scope.search.type) {
@@ -786,7 +788,7 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
         $scope.pictures = data.record.pictures || [];
         delete $scope.formData.pictures; // duplicated with $scope.pictures
         $scope.useRelative = $scope.formData.price ?
-          (!$scope.formData.unit || $scope.formData.unit == 'UD') :
+          ($scope.formData.unit === 'UD') :
           csSettings.data.useRelative;
         $scope.loading = false;
         UIUtils.loading.hide();
@@ -805,22 +807,29 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
     }
     $scope.saving = true;
 
-    return UIUtils.loading.show({
-        delay: 0
-      })
+    return UIUtils.loading.show({delay: 0})
       // Preparing json (pictures + resizing thumbnail)
       .then(function() {
         var json = angular.copy($scope.formData);
 
-        if (!!json.price && typeof json.price == "string") {
+        if (json.price && typeof json.price == "string") {
           json.price = parseFloat(json.price.replace(new RegExp('[.,]'), '.')); // fix #124
         }
-        if (!json.price) {
+        if (json.price) {
+          if (!$scope.useRelative) {
+            json.unit = 'unit';
+            json.price = json.price * 100;
+          }
+          else {
+            json.unit = 'UD';
+          }
+          if (!json.currency) {
+            json.currency = $scope.currency;
+          }
+        }
+        else {
           json.unit = undefined;
           json.currency = undefined;
-        }
-        else if (!json.currency) {
-          json.currency = $scope.currency;
         }
         json.time = esHttp.date.now();
 
@@ -877,9 +886,10 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
       .then(function(id) {
         $scope.id = $scope.id || id;
         $scope.saving = false;
+        $scope.dirty = false;
         $ionicHistory.clearCache($ionicHistory.currentView().stateId); // clear current view
         $ionicHistory.nextViewOptions({historyRoot: true});
-        $state.go('app.market_view_record', {id: $scope.id, refresh: true});
+        return $state.go('app.market_view_record', {id: $scope.id, refresh: true});
       })
 
       .catch(function(err) {
@@ -899,8 +909,43 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
   };
 
   $scope.cancel = function() {
+    $scope.dirty = false; // force not saved
     $ionicHistory.goBack();
   };
+
+  $scope.$on('$stateChangeStart', function (event, next, nextParams, fromState) {
+    if (!$scope.dirty || $scope.saving) return;
+
+    // stop the change state action
+    event.preventDefault();
+
+    if ($scope.loading) return;
+
+    return UIUtils.alert.confirm('CONFIRM.SAVE_BEFORE_LEAVE',
+      'CONFIRM.SAVE_BEFORE_LEAVE_TITLE', {
+        cancelText: 'COMMON.BTN_NO',
+        okText: 'COMMON.BTN_YES_SAVE'
+      })
+      .then(function(confirmSave) {
+        if (confirmSave) {
+          return $scope.save();
+        }
+      })
+      .then(function() {
+        $scope.dirty = false;
+        $ionicHistory.nextViewOptions({
+          historyRoot: true
+        });
+        $state.go(next.name, nextParams);
+        UIUtils.loading.hide();
+      });
+  });
+
+  $scope.onFormDataChanged = function() {
+    if ($scope.loading) return;
+    $scope.dirty = true;
+  };
+  $scope.$watch('formData', $scope.onFormDataChanged, true);
 
   /* -- modals -- */
   $scope.showRecordTypeModal = function() {

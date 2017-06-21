@@ -5,6 +5,8 @@ angular.module('cesium.es.services', [
     'cesium.es.comment.services',
     'cesium.es.social.services',
     'cesium.es.settings.services',
+    'cesium.es.crypto.services',
+    'cesium.es.profile.services',
     'cesium.es.user.services',
     'cesium.es.notification.services',
     'cesium.es.message.services',

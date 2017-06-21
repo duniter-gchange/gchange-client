@@ -10,7 +10,6 @@
 <!-- About me -->
 <div class="item" ng-if="formData.profile.description">
   <span class="gray" translate>PROFILE.DESCRIPTION</span>
-  <!--<h3 class=" text-keep-lines" trust-as-html="formData.profile.description"></h3>-->
   <h3 class=" text-keep-lines" ng-bind-html="formData.profile.description"></h3>
 </div>
 
@@ -33,8 +32,12 @@
               class="item-icon-left item-text-wrap no-padding-bottom ink"
               ng-click="open($event, social)">
       <i class="icon ion-social-{{social.type}}"
-         ng-class="{'ion-bookmark': social.type == 'other', 'ion-link': social.type == 'web', 'ion-email': social.type == 'email'}"></i>
-      <p ng-if="social.type && social.type != 'web'">{{social.type}}</p>
+         ng-class="{'ion-bookmark': social.type == 'other',
+         'ion-link': social.type == 'web',
+         'ion-email': social.type == 'email',
+         'ion-locked': social.type == 'curve25519'}"></i>
+      <p ng-if="social.type != 'web' && social.type != 'curve25519'">{{social.type}}</p>
+      <p ng-if="social.type == 'curve25519'" translate>Encrypté</p>
       <h4>
         <a>{{::social.url}}</a>
       </h4>

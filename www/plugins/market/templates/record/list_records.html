@@ -38,7 +38,7 @@
           <div class="card-footer" style="height: 45px">
             &nbsp;
             <div class="badge badge-price badge-calm" ng-if="rec.type=='offer' && rec.price">
-              <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency}"></span>
+              <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: false}"></span>
             </div>
             <div class="badge badge-calm" ng-if="rec.type=='offer' && !rec.price && options.type.show">
               <i class="cion-market-offer"></i>

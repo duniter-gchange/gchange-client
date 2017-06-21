@@ -75,5 +75,8 @@ function MarketWalletRecordsController($scope, $controller, UIUtils) {
     });
 
     // Redirection to full text search
-    $scope.doGetLastRecord = $scope.doSearch;
+    var defaultFinishEnter = $scope.finishEnter;
+    $scope.finishEnter = function(hasOptions) {
+        defaultFinishEnter(true/*force to execute a standard serach*/);
+    };
 }
