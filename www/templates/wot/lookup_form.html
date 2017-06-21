@@ -1,0 +1,159 @@
+<div class="lookupForm">
+
+  <div class="item no-padding">
+
+    <div class="double-padding-x padding-top-xs item-text-wrap" ng-if="::allowMultiple"
+        style="height: 36px;">
+
+      <div class="gray padding-top"
+           ng-if="!selection.length && parameters.help">{{::parameters.help|translate}}</div>
+
+      <div ng-repeat="identity in selection track by identity.id"
+           class="button button-small button-text button-stable button-icon-event ink"
+           ng-class="{'button-text-positive': identity.selected}">
+        <span ng-bind-html="identity.name||identity.uid||(identity.pubkey|formatPubkey)"></span>
+        <i class="icon ion-close" ng-click="removeSelection(identity, $event)">&nbsp;&nbsp;</i>
+      </div>
+
+    </div>
+
+    <div class="item-input ">
+      <i class="icon ion-search placeholder-icon"></i>
+
+      <input type="text"
+             class="visible-xs visible-sm"
+             placeholder="{{'WOT.SEARCH_HELP'|translate}}"
+             ng-model="search.text"
+             ng-model-options="{ debounce: 650 }"
+             ng-change="doSearch()">
+      <input type="text"
+             class="hidden-xs hidden-sm"
+             id="{{wotSearchTextId}}" placeholder="{{'WOT.SEARCH_HELP'|translate}}"
+             ng-model="search.text"
+             on-return="doSearchText()">
+      <div class="helptip-anchor-center">
+        <a id="helptip-wot-search-text"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="padding-top padding-xs" style="display: block; height: 60px;"
+    ng-class="::{'hidden-xs': !showResultLabel}">
+    <div class="pull-left" ng-if="!search.loading && showResultLabel">
+      <h4
+        ng-if="search.type=='newcomers'" translate>
+        WOT.LOOKUP.NEWCOMERS
+      </h4>
+      <h4
+        ng-if="search.type=='pending'" translate>
+        WOT.LOOKUP.PENDING
+      </h4>
+      <h4
+        ng-if="search.type=='text'" translate>
+        COMMON.RESULTS_LIST
+      </h4>
+    </div>
+
+    <div class=" pull-right hidden-xs hidden-sm">
+      <a ng-if="enableFilter"
+         class="button button-text button-small ink"
+         ng-class="{'button-text-positive': search.type=='newcomers'}"
+         ng-click="doGetNewcomers()">
+        <i class="icon ion-person-stalker"></i>
+        {{'WOT.LOOKUP.BTN_NEWCOMERS' | translate}}
+      </a>
+      &nbsp;
+      <a ng-if="enableFilter"
+         class="button button-text button-small"
+         ng-class="{'button-text-positive': search.type=='pending'}"
+         ng-click="doGetPending()" class="badge-balanced">
+        <i class="icon ion-clock"></i>
+        {{'WOT.LOOKUP.BTN_PENDING' | translate}}
+      </a>
+      &nbsp;
+      <button class="button button-small button-stable ink"
+              ng-click="doSearch()">
+        {{'COMMON.BTN_SEARCH' | translate}}
+      </button>
+
+      <button class="button button-small button-positive {{parameters.okType}} ink"
+              ng-if="::allowMultiple"
+              ng-disabled="!selection.length"
+              ng-click="next()">
+        {{parameters.okText||'COMMON.BTN_NEXT' | translate}}
+      </button>
+    </div>
+  </div>
+
+  <div class="text-center" ng-if="search.loading">
+    <p class="gray" ng-if="::$root.currency.initPhase" translate>WOT.SEARCH_INIT_PHASE_WARNING</p>
+    <ion-spinner icon="android"></ion-spinner>
+  </div>
+
+  <ng-if ng-if="!search.loading">
+    <div class="assertive padding" ng-if="!search.results.length">
+      <span ng-if="search.type=='text'" translate>COMMON.SEARCH_NO_RESULT</span>
+      <span ng-if="search.type=='newcomers'" translate>WOT.LOOKUP.NO_NEWCOMERS</span>
+    </div>
+
+    <!-- simple selection + device -->
+    <!--removeIf(no-device)-->
+    <ion-list
+      ng-if="!allowMultiple && $root.device.enable"
+      class="{{::motion.ionListClass}}"
+      can-swipe="true">
+
+      <ion-item
+        ng-repeat="identity in search.results track by identity.id"
+        id="helptip-wot-search-result-{{$index}}"
+        class="item item-border-large item-avatar item-icon-right ink" ng-click="::select(identity)">
+
+        <ng-include src="'templates/wot/identity.html'"></ng-include>
+
+        <i class="icon ion-ios-arrow-right "></i>
+      </ion-item>
+
+    </ion-list>
+    <!--endRemoveIf(no-device)-->
+
+    <!-- simple selection + no device -->
+    <!--removeIf(device)-->
+    <div
+      ng-if="!allowMultiple"
+      class="list {{::motion.ionListClass}}">
+
+      <div
+        ng-repeat="identity in search.results track by identity.id"
+        id="helptip-wot-search-result-{{$index}}"
+        class="item item-border-large item-avatar item-icon-right ink" ng-click="::select(identity)">
+
+        <ng-include src="'templates/wot/identity.html'"></ng-include>
+
+        <i class="icon ion-ios-arrow-right "></i>
+      </div>
+    </div>
+    <!--endRemoveIf(device)-->
+
+    <!-- multi selection -->
+    <div
+      ng-if="::allowMultiple"
+      class="list {{::motion.ionListClass}}">
+
+      <ion-checkbox
+        ng-repeat="identity in search.results track by identity.id"
+        ng-model="identity.checked"
+        class="item item-border-large item-avatar ink"
+        ng-click="toggleCheck($index, $event)">
+        <ng-include src="'templates/wot/identity.html'"></ng-include>
+      </ion-checkbox>
+    </div>
+
+    <ion-infinite-scroll
+      ng-if="search.hasMore"
+      spinner="android"
+      on-infinite="showMore()"
+      distance="2%">
+    </ion-infinite-scroll>
+
+  </ng-if>
+</div>

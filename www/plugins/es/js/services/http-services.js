@@ -3,17 +3,21 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 /**
  * Elastic Search Http
  */
-.factory('esHttp', function($q, $timeout, $rootScope, $state, $sce, CryptoUtils, csHttp, csConfig, csSettings, BMA, csWallet, Api) {
+.factory('esHttp', function($q, $timeout, $rootScope, $state, $sce, CryptoUtils, csHttp, csConfig, csSettings, BMA, csWallet, csPlatform, Api) {
   'ngInject';
 
   function Factory(host, port, wsPort, useSsl) {
 
     var
       that = this,
-      regex = {
+      constants = {
+        ES_USER_API_ENDPOINT: 'ES_USER_API( ([a-z_][a-z0-9-_.]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))'
+      },
+      regexp = {
         IMAGE_SRC: exact('data:([A-Za-z//]+);base64,(.+)'),
         HASH_TAG: match('#([\\wḡĞğàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)'),
-        USER_TAG: match('@('+BMA.constants.regexp.USER_ID+')')
+        USER_TAG: match('@('+BMA.constants.regexp.USER_ID+')'),
+        ES_USER_API_ENDPOINT: exact(constants.ES_USER_API_ENDPOINT)
       };
 
     that.cache = _emptyCache();
@@ -119,8 +123,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
     that.start = function() {
 
-      return csSettings.ready()
-        .then(service.init)
+      return csPlatform.ready()
+        .then(that.init)
         .then(function() {
           console.debug('[ES] [http] Starting on [{0}]...'.format(that.server));
           var now = new Date().getTime();
@@ -148,14 +152,12 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
     that.restart = function() {
       that.stop();
-      return $timeout(function() {
-        that.start();
-      }, 200);
+      return $timeout(that.start, 200);
     };
 
     function parseTagsFromText(value, prefix) {
       prefix = prefix || '#';
-      var reg = prefix === '@' ? regex.USER_TAG : regex.HASH_TAG;
+      var reg = prefix === '@' ? regexp.USER_TAG : regexp.HASH_TAG;
       var matches = value && reg.exec(value);
       var tags;
       while(matches) {
@@ -300,7 +302,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
     function imageToAttachment(image) {
       if (!image || !image.src) return null;
-      var match = regex.IMAGE_SRC.exec(image.src);
+      var match = regexp.IMAGE_SRC.exec(image.src);
       if (!match) return null;
       var attachment = {
         _content_type: match[1],
@@ -392,6 +394,17 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         $http.defaults.headers.common.Authorization = 'Basic ';*/
     }
 
+    function parseEndPoint(endpoint) {
+      var matches = regexp.ES_USER_API_ENDPOINT.exec(endpoint);
+      if (!matches) return;
+      return {
+        "dns": matches[2] || '',
+        "ipv4": matches[4] || '',
+        "ipv6": matches[6] || '',
+        "port": matches[8] || 80
+      };
+    }
+
     function emptyHit() {
       return {
          _id: null,
@@ -408,7 +421,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     var exports = {
       getServer: csHttp.getServer,
       node: {
-        summary: that.get('/node/summary')
+        summary: that.get('/node/summary'),
+        parseEndPoint: parseEndPoint
       },
       record: {
         post: postRecord,
@@ -429,10 +443,9 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         parseTags: parseTagsFromText,
         trustAsHtml: trustAsHtml
       },
-      constants: {
-        regexp: regex
-      }
+      constants: constants
     };
+    exports.constants.regexp = regexp;
     angular.merge(that, exports);
   }
 

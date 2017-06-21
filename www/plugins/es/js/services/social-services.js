@@ -104,13 +104,13 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
         };
       }
 
-      function openArray(socials) {
+      function openArray(socials, keypair) {
 
         // Waiting to load crypto libs
         if (!CryptoUtils.isLoaded()) {
           console.debug('[socials] Waiting crypto lib loading...');
           return $timeout(function() {
-            return openArray(socials);
+            return openArray(socials, keypair);
           }, 100);
         }
 
@@ -124,18 +124,18 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
         });
         if (!encryptedSocials.length) return $q.when(reduceArray(socials));
 
-        return esCrypto.box.open(encryptedSocials, undefined/*=wallet keypair*/, 'recipient', 'url')
+        return esCrypto.box.open(encryptedSocials, keypair, 'recipient', 'url')
           .then(function() {
             return reduceArray(socials);
           });
       }
 
-      function packArray(socials) {
+      function packArray(socials, keypair) {
         // Waiting to load crypto libs
         if (!CryptoUtils.isLoaded()) {
           console.debug('[socials] Waiting crypto lib loading...');
           return $timeout(function() {
-            return packArray(socials);
+            return packArray(socials, keypair);
           }, 100);
         }
 
@@ -147,7 +147,7 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
         return CryptoUtils.util.random_nonce()
             .then(function(nonce) {
               return $q.all(socialsToEncrypt.reduce(function(res, social) {
-                return res.concat(esCrypto.box.pack(social, undefined/*=wallet keypair*/, 'recipient', 'url', nonce));
+                return res.concat(esCrypto.box.pack(social, keypair, 'recipient', 'url', nonce));
               }, []));
             })
             .then(function(res){

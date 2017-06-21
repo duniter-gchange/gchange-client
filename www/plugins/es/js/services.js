@@ -7,7 +7,6 @@ angular.module('cesium.es.services', [
     'cesium.es.settings.services',
     'cesium.es.crypto.services',
     'cesium.es.profile.services',
-    'cesium.es.user.services',
     'cesium.es.notification.services',
     'cesium.es.message.services',
     'cesium.es.modal.services',

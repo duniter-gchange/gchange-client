@@ -58,11 +58,14 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
           return deferred.promise;
         }
 
-        return $q.all([
-            $translate('MARKET.PROFILE.DEFAULT_TITLE'),
-            // Get a unique nonce
-            SocialUtils.pack(angular.copy(data.profile.socials))
-          ])
+        return esWallet.box.getKeypair()
+          .then(function(keypair) {
+            return $q.all([
+              $translate('MARKET.PROFILE.DEFAULT_TITLE'),
+              // Get a unique nonce
+              SocialUtils.pack(angular.copy(data.profile.socials), keypair)
+            ])
+          })
           .then(function(res) {
             var title = res[0];
             var encryptedSocials = res[1];

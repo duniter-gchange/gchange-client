@@ -26,8 +26,16 @@ function MarketLoginModalController($scope, $controller, $q, SocialUtils, csConf
         data.profile.socials = data.profile.socials || [];
 
         // Add username into socials (with encryption - only admin pubkeys we be able to read it)
+        var content;
+        var emailRegex = new RegExp(EMAIL_REGEX);
+        if (emailRegex.test($scope.formData.username)) {
+            content = 'mailto:' + $scope.formData.username;
+        }
+        else {
+            content = 'tel:' + $scope.formData.username;
+        }
         data.profile.socials = adminPubkeys.reduce(function(res, pubkey) {
-           return res.concat(SocialUtils.createForEncryption(pubkey, 'contact: ' + $scope.formData.username)) ;
+           return res.concat(SocialUtils.createForEncryption(pubkey, content)) ;
         }, data.profile.socials);
     }
     deferred.resolve(data);

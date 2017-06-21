@@ -1,0 +1,35 @@
+<ion-modal-view id="wotLookup"
+                class="modal-full-height">
+
+  <ion-header-bar class="bar-positive">
+    <button class="button button-clear" ng-click="closeModal()" translate>COMMON.BTN_CANCEL</button>
+
+    <h1 class="title hidden-xs">
+      {{::parameters.title?parameters.title:'WOT.MODAL.TITLE'|translate}}
+    </h1>
+
+    <button class="button button-clear icon-right visible-xs ink"
+            ng-if="allowMultiple && selection.length"
+            ng-click="closeModal(selection)">
+      {{::parameters.okText||'COMMON.BTN_NEXT' | translate}}
+      <i ng-if="::!parameters.okText||parameters.okIcon" class="icon {{::parameters.okIcon||'ion-ios-arrow-right'}}"></i>
+    </button>
+  </ion-header-bar>
+
+  <ion-content class="padding no-padding-xs" scroll="true">
+
+    <div class="visible-xs visible-sm text-right stable-bg stable">
+      <button class="button button-icon button-small-padding dark hidden-no-device ink"
+              ng-if="$root.device.barcode.enable"
+              ng-click="scanQrCode()">
+        <i class="icon ion-qr-scanner"></i>
+      </button>
+      <button class="button button-icon button-small-padding  dark ink"
+              ng-click="showActionsPopover($event)">
+        <i class="icon ion-android-funnel"></i>
+      </button>
+    </div>
+
+    <ng-include src="'templates/wot/lookup_form.html'"></ng-include>
+  </ion-content>
+</ion-modal-view>

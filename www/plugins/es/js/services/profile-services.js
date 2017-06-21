@@ -10,7 +10,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
 
   })
 
-.factory('esProfile', function($rootScope, $q, esHttp, SocialUtils, csWot, csPlatform) {
+.factory('esProfile', function($rootScope, $q, esHttp, SocialUtils, csWot, csWallet, csPlatform) {
   'ngInject';
 
   var
@@ -79,7 +79,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
           }
 
           // decrypt socials, and remove duplicated url
-          return SocialUtils.open(profile.source.socials)
+          return SocialUtils.open(profile.source.socials, csWallet.data.keypair)
             .then(function(){
               return profile;
             });
@@ -247,6 +247,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
           if (profile) {
             data.name = profile.name;
             data.avatar = profile.avatar;
+            data.description = profile.description;
             data.profile = profile.source;
           }
           deferred.resolve(data);
@@ -308,7 +309,5 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     avatar: esHttp.get('/user/profile/:id?_source=avatar'),
     fillAvatars: fillAvatars
   };
-
-  return that;
 })
 ;

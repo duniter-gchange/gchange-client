@@ -11,6 +11,7 @@ angular.module('cesium.es.wallet.services', ['ngResource', 'cesium.platform', 'c
     data.avatar = null;
     data.profile = null;
     data.name = null;
+    csWallet.events.cleanByContext('esWallet');
     if (data.keypair) {
       delete data.keypair.boxSk;
       delete data.keypair.boxPk;
@@ -59,11 +60,11 @@ angular.module('cesium.es.wallet.services', ['ngResource', 'cesium.platform', 'c
     deferred = deferred || $q.defer();
 
     // Reset events
-    csWallet.events.cleanByContext('esUser');
+    csWallet.events.cleanByContext('esWallet');
 
     // If membership pending, but not enough certifications: suggest to fill user profile
     if (!data.name && data.requirements.pendingMembership && data.requirements.needCertificationCount > 0) {
-      csWallet.events.add({type:'info', message: 'ACCOUNT.EVENT.MEMBER_WITHOUT_PROFILE', context: 'esUser'});
+      csWallet.events.add({type:'info', message: 'ACCOUNT.EVENT.MEMBER_WITHOUT_PROFILE', context: 'esWallet'});
     }
 
     console.debug('[ES] [wallet] Loading full user profile...');
