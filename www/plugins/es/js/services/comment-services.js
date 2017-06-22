@@ -7,7 +7,6 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
   function EsComment(index) {
 
     var
-      that = this,
       DEFAULT_SIZE = 20,
       fields = {
         commons: ["issuer", "time", "message", "reply_to"],
