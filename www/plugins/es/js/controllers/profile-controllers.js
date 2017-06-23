@@ -137,11 +137,10 @@ function ESViewEditProfileController($scope, $rootScope, $timeout, $state, $focu
   $scope.$watch('formData', $scope.onFormDataChanged, true);
 
   $scope.save = function(silent) {
-    console.debug('saving');
     if(!$scope.form.$valid || !$rootScope.walletData) {
       return;
     }
-
+    console.debug('[ES] [profile] Saving...');
     $scope.saving = true;
 
     var onError = function(message) {

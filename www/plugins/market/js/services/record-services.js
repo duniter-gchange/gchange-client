@@ -1,6 +1,6 @@
 angular.module('cesium.market.record.services', ['ngResource', 'cesium.services', 'cesium.es.http.services', 'cesium.es.comment.services'])
 
-.factory('mkRecord', function($q, csSettings, BMA, esHttp, esComment, csWot, csCurrency) {
+.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, csWot, csCurrency) {
   'ngInject';
 
   function EsMarket(id) {
@@ -309,9 +309,9 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
               };
 
               // Make sure currency if present (fix old data)
-              if (!record.currency) {
+              if (record.price && !record.currency) {
                 if (csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.defaultCurrency) {
-                  record.currency = currency.name;
+                  record.currency = csConfig.plugins.market.defaultCurrency;
                   return data;
                 }
                 return csCurrency.get()

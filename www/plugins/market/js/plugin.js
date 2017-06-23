@@ -5,7 +5,9 @@ angular.module('cesium.market.plugin', [
     'cesium.market.record.controllers',
     'cesium.market.wallet.controllers',
     'cesium.market.category.controllers',
+    'cesium.market.wot.controllers',
     'cesium.market.record.services',
     'cesium.market.wallet.services'
+
   ])
 ;

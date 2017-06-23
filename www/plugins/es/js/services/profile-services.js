@@ -76,13 +76,26 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
             profile.source.socials = _.uniq(profile.source.socials, false, function (social) {
               return social.url;
             });
+
+            if (!csWallet.isLogin()) {
+              // Exclude crypted socials
+              profile.source.socials = _.filter(profile.source.socials, function(social) {
+                return social.type != 'curve25519';
+              });
+            }
+            else {
+              // decrypt socials (if login)
+              return SocialUtils.open(profile.source.socials, pubkey, csWallet.data.keypair, csWallet.data.pubkey)
+                  .then(function(){
+                    //console.log(profile.source.socials);
+                    // Exclude invalid decrypted socials
+                    //profile.source.socials = _.where(profile.source.socials, {valid: true});
+                    return profile;
+                  });
+            }
           }
 
-          // decrypt socials, and remove duplicated url
-          return SocialUtils.open(profile.source.socials, csWallet.data.keypair)
-            .then(function(){
-              return profile;
-            });
+          return profile;
         })
         .catch(function(err){
           // no profile defined

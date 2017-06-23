@@ -9,6 +9,7 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
       regexp = {
         URI: "([a-zA−Z0-9]+)://[ a-zA-Z0-9-_:/;*?!^\\+=@&~#|<>%.]+",
         EMAIL: "[a-zA-Z0-9-_.]+@[a-zA-Z0-9_.-]+?\\.[a-zA-Z]{2,3}",
+        PHONE: "[+]?[0-9]{9,10}",
         socials: {
           facebook: "https?://((fb.me)|((www.)?facebook.com))",
           twitter: "https?://(www.)?twitter.com",
@@ -32,8 +33,10 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
       function exact(regexpContent) {
         return new RegExp("^" + regexpContent + "$");
       }
+
       regexp.URI = exact(regexp.URI);
       regexp.EMAIL = exact(regexp.EMAIL);
+      regexp.PHONE = exact(regexp.PHONE);
       _.keys(regexp.socials).forEach(function(key){
         regexp.socials[key] = exact(regexp.socials[key]);
       });
@@ -63,6 +66,9 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
         else if (regexp.EMAIL.test(url)) {
           type = 'email';
         }
+        else if (regexp.PHONE.test(url)) {
+          type = 'phone';
+        }
         if (!type) {
             console.log("match type: " + type);
         }
@@ -87,7 +93,16 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
         if (!socials || !socials.length) return [];
         var map = {};
         socials.forEach(function(social) {
-          social = social.type == 'curve25519' ? social : getFromUrl(social.url);
+          if (social.type == 'curve25519') {
+            delete social.issuer;
+            if (social.valid) {
+              angular.merge(social, getFromUrl(social.url));
+            }
+          }
+          else {
+            // Retrieve object from URL, to get the right type (e.g. if new regexp)
+            social = getFromUrl(social.url);
+          }
           if (social) {
             var id = $filter('formatSlug')(social.url);
             map[id] = social;
@@ -104,7 +119,9 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
         };
       }
 
-      function openArray(socials, keypair) {
+      function openArray(socials, issuer, keypair, recipient) {
+
+        recipient = recipient || CryptoUtils.util.encode_base58(keypair.signPk);
 
         // Waiting to load crypto libs
         if (!CryptoUtils.isLoaded()) {
@@ -114,18 +131,21 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
           }, 100);
         }
 
-        var encryptedSocials = _.filter(socials||[], function(social){
+        var socialsToEncrypt = _.filter(socials||[], function(social){
           var matches = social.url && social.type == 'curve25519' && regexp.socials.curve25519.exec(social.url);
           if (!matches) return false;
           social.recipient = matches[1];
           social.nonce = matches[2];
           social.url = matches[3];
-          return true;
+          social.issuer = issuer;
+          social.valid = (social.recipient === recipient);
+          return social.valid;
         });
-        if (!encryptedSocials.length) return $q.when(reduceArray(socials));
+        if (!socialsToEncrypt.length) return $q.when(reduceArray(socials));
 
-        return esCrypto.box.open(encryptedSocials, keypair, 'recipient', 'url')
+        return esCrypto.box.open(socialsToEncrypt, keypair, 'issuer', 'url')
           .then(function() {
+            // return all socials (encrypted or not)
             return reduceArray(socials);
           });
       }
@@ -140,7 +160,7 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
         }
 
         var socialsToEncrypt = _.filter(socials||[], function(social){
-          return social.type == 'curve25519' && social.url && social.recipient;
+          return social.url && social.recipient;
         });
         if (!socialsToEncrypt.length) return $q.when(socials);
 
@@ -157,8 +177,7 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
                   url: 'curve25519://{0}:{1}@{2}'.format(social.recipient, social.nonce, social.url)
                 });
               }, []);
-            })
-            ;
+            });
       }
 
       return {

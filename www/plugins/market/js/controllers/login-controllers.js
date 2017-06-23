@@ -4,7 +4,7 @@ angular.module('cesium.market.login.controllers', ['cesium.services'])
   .controller('MarketLoginModalCtrl', MarketLoginModalController)
 ;
 
-function MarketLoginModalController($scope, $controller, $q, SocialUtils, csConfig, csWallet) {
+function MarketLoginModalController($scope, $controller, $q, SocialUtils, csConfig, csWallet, mkWallet) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -22,21 +22,27 @@ function MarketLoginModalController($scope, $controller, $q, SocialUtils, csConf
     var adminPubkeys = csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.defaultAdminPubkeys;
     if (adminPubkeys.length) {
         console.error("[market] [login] Storing username into user profile socials");
-        data.profile = data.profile || {};
-        data.profile.socials = data.profile.socials || [];
+
+        var isEmail = new RegExp(EMAIL_REGEX).test($scope.formData.username);
 
         // Add username into socials (with encryption - only admin pubkeys we be able to read it)
-        var content;
-        var emailRegex = new RegExp(EMAIL_REGEX);
-        if (emailRegex.test($scope.formData.username)) {
-            content = 'mailto:' + $scope.formData.username;
-        }
-        else {
-            content = 'tel:' + $scope.formData.username;
-        }
-        data.profile.socials = adminPubkeys.reduce(function(res, pubkey) {
-           return res.concat(SocialUtils.createForEncryption(pubkey, content)) ;
-        }, data.profile.socials);
+        var social = {
+            url: $scope.formData.username,
+            type: isEmail ? 'email' : 'phone'
+        };
+
+        // Add social for the user itself
+        var socials = [angular.merge({recipient: data.pubkey}, social)];
+
+        // Add social for admins
+        var socials = (adminPubkeys||[]).reduce(function(res, pubkey) {
+            return res.concat(angular.merge({recipient: pubkey}, social)) ;
+        }, socials);
+
+        // Fill a default profile
+        mkWallet.setDefaultProfile({
+            socials: socials
+        });
     }
     deferred.resolve(data);
     return deferred.promise;

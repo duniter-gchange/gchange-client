@@ -84,6 +84,8 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
     });
   })
 
+ .controller('MkLookupAbstractCtrl', MkLookupAbstractController)
+
  .controller('MkLookupCtrl', MkLookupController)
 
  .controller('MkRecordViewCtrl', MkRecordViewController)
@@ -94,7 +96,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
 ;
 
-function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
+function MkLookupAbstractController($scope, $rootScope, $state, $focus, $filter, $q,
                                   UIUtils, ModalUtils, csConfig, mkRecord, BMA) {
   'ngInject';
 
@@ -109,9 +111,7 @@ function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
     category: null,
     location: null,
     options: null,
-    loadingMore: false,
-    focusElementId: 'marketSearchText',
-    fabAddNewRecordId: 'fab-add-market-record'
+    loadingMore: false
   };
 
   // Screen options
@@ -130,8 +130,6 @@ function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
         prefix : undefined
       }
     }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
-
-  //console.debug("[market] Screen options: ", $scope.options);
 
   $scope.enter = function(e, state) {
 
@@ -169,28 +167,19 @@ function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
 
   };
 
-  $scope.$on('$ionicView.enter', function(e, state) {
-    if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
-      $scope.enter(e, state);
-    }
-  });
 
   $scope.finishEnter = function(isAdvanced) {
     $scope.search.advanced = isAdvanced ? true : $scope.search.advanced; // keep null if first call
     if (isAdvanced || $scope.search.category) {
       $scope.doSearch()
           .then(function() {
-            if ($scope.search.fabAddNewRecordId) {
-              $scope.showFab($scope.search.fabAddNewRecordId);
-            }
+            $scope.showFab('fab-add-market-record');
           });
     }
     else { // By default : get last record
       $scope.doGetLastRecord()
           .then(function() {
-            if ($scope.search.fabAddNewRecordId) {
-              $scope.showFab($scope.search.fabAddNewRecordId);
-            }
+            $scope.showFab('fab-add-market-record');
           });
     }
     // removeIf(device)
@@ -383,35 +372,6 @@ function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
     });
   };
 
-  /* -- manage events -- */
-
-  $scope.onToggleAdvanced = function() {
-    if ($scope.entered) {
-      // Options will be hide: reset options value
-      if (!$scope.search.advanced) {
-        $scope.search.location = null;
-        $scope.search.type = null;
-      }
-      $scope.doSearch();
-    }
-  };
-  $scope.$watch('search.advanced', $scope.onToggleAdvanced, true);
-
-  $scope.onCategoryClick = function(cat) {
-    if (cat && cat.parent) {
-      $scope.search.category = cat;
-      $scope.options.category.show = true;
-      $scope.doSearch();
-    }
-  };
-
-  $scope.removeCategory = function() {
-    $scope.search.category = null;
-    $scope.category = null;
-    $scope.doSearch();
-  };
-
-
   /* -- modals -- */
 
   $scope.showCategoryModal = function() {
@@ -448,7 +408,6 @@ function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
       });
   };
 
-
   $scope.showRecord = function(event, index) {
     if (event.defaultPrevented) return;
     var item = $scope.search.results[index];
@@ -460,18 +419,108 @@ function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
     }
   };
 
-  $scope.showRecordPictures = function(event, index) {
-    var item = $scope.search.results[index];
-    if (item && item.thumbnail) {
-      event.preventDefault();
-      $rootScope.picture = item.thumbnail;
-      $state.go('app.market_view_picture', {
-        id: item.id,
-        title: item.title
-      });
+}
+
+
+function MkLookupController($scope, $controller, $rootScope, $state, $focus, $filter, $q,
+                            UIUtils, ModalUtils, csConfig, mkRecord, BMA) {
+  'ngInject';
+
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('MkLookupAbstractCtrl', {$scope: $scope}));
+
+  $scope.enter = function(e, state) {
+    if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
+      var showAdvanced = false;
+
+      // Search by text
+      if (state.stateParams && state.stateParams.q) { // Query parameter
+        $scope.search.text = state.stateParams.q;
+      }
+
+      // Search on type
+      if (state.stateParams && state.stateParams.type) {
+        $scope.search.type = state.stateParams.type;
+        showAdvanced = true;
+      }
+
+      // Search on location
+      if (state.stateParams && state.stateParams.location) {
+        $scope.search.location = state.stateParams.location;
+        showAdvanced = true;
+      }
+
+      // Search on category
+      if (state.stateParams && state.stateParams.category) {
+        mkRecord.category.get({id: state.stateParams.category})
+            .then(function (cat) {
+              $scope.search.category = cat;
+              $scope.finishEnter(showAdvanced);
+            });
+      }
+      else {
+        $scope.finishEnter(showAdvanced);
+      }
     }
   };
+  $scope.$on('$ionicView.enter', $scope.enter);
+
+  $scope.finishEnter = function(isAdvanced) {
+    $scope.search.advanced = isAdvanced ? true : $scope.search.advanced; // keep null if first call
+    if (isAdvanced || $scope.search.category) {
+      $scope.doSearch()
+          .then(function() {
+            if ($scope.search.fabAddNewRecordId) {
+              $scope.showFab($scope.search.fabAddNewRecordId);
+            }
+          });
+    }
+    else { // By default : get last record
+      $scope.doGetLastRecord()
+          .then(function() {
+            if ($scope.search.fabAddNewRecordId) {
+              $scope.showFab($scope.search.fabAddNewRecordId);
+            }
+          });
+    }
+    // removeIf(device)
+    // Focus on search text (only if NOT device, to avoid keyboard opening)
+    $focus('marketSearchText');
+
+    // endRemoveIf(device)
+    $scope.entered = true;
+  };
+
+  /* -- manage events -- */
+
+  $scope.onToggleAdvanced = function() {
+    if ($scope.entered) {
+      // Options will be hide: reset options value
+      if (!$scope.search.advanced) {
+        $scope.search.location = null;
+        $scope.search.type = null;
+      }
+      $scope.doSearch();
+    }
+  };
+  $scope.$watch('search.advanced', $scope.onToggleAdvanced, true);
+
+  $scope.onCategoryClick = function(cat) {
+    if (cat && cat.parent) {
+      $scope.search.category = cat;
+      $scope.options.category.show = true;
+      $scope.doSearch();
+    }
+  };
+
+  $scope.removeCategory = function() {
+    $scope.search.category = null;
+    $scope.category = null;
+    $scope.doSearch();
+  };
+
 }
+
 
 function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q,
                                       $timeout, $filter, Modals, csConfig,

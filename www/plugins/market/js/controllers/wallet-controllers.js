@@ -49,20 +49,23 @@ function MarketWalletViewController($scope, esSettings) {
 function MarketWalletRecordsController($scope, $controller, UIUtils) {
 
     // Initialize the super class and extend it.
-    angular.extend(this, $controller('MkLookupCtrl', {$scope: $scope}));
+    angular.extend(this, $controller('MkLookupAbstractCtrl', {$scope: $scope}));
 
     $scope.search.focusElementId = undefined;
     $scope.search.fabAddNewRecordId = 'fab-wallet-add-market-record';
     $scope.smallscreen = UIUtils.screen.isSmall();
 
-    $scope.$on('$ionicView.enter', function(e, state) {
+    $scope.enter = function(e, state) {
         $scope.loadWallet()
             .then(function(walletData) {
                 $scope.search.text = walletData.pubkey;
                 $scope.search.lastRecords=false;
 
                 if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
-                    $scope.enter(e, state);
+                    $scope.doSearch()
+                        .then(function() {
+                            $scope.showFab('fab-wallet-add-market-record');
+                        });
                 }
 
             })
@@ -72,11 +75,7 @@ function MarketWalletRecordsController($scope, $controller, UIUtils) {
                 }
                 console.error(err);
             });
-    });
-
-    // Redirection to full text search
-    var defaultFinishEnter = $scope.finishEnter;
-    $scope.finishEnter = function(hasOptions) {
-        defaultFinishEnter(true/*force to execute a standard serach*/);
+        $scope.entered = true;
     };
+    $scope.$on('$ionicView.enter', $scope.enter);
 }

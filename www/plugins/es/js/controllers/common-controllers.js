@@ -295,9 +295,7 @@ function ESSocialsEditController($scope, $focus, $filter, UIUtils, SocialUtils) 
     if (!$scope.socialData.url || $scope.socialData.url.trim().length === 0) {
       return;
     }
-    if (!$scope.formData.socials) {
-      $scope.formData.socials = [];
-    }
+    $scope.formData.socials = $scope.formData.socials || [];
     var url = $scope.socialData.url.trim();
 
     var exists = _.findWhere($scope.formData.socials, {url: url});
@@ -328,6 +326,10 @@ function ESSocialsEditController($scope, $focus, $filter, UIUtils, SocialUtils) 
     $scope.socialData.url = social.url;
     $focus('socialUrl');
   };
+
+  $scope.filterFn = function(social) {
+    return !social.recipient || social.valid;
+  };
 }
 
 function ESSocialsViewController($scope, $window, Device, UIUtils)  {
@@ -335,17 +337,22 @@ function ESSocialsViewController($scope, $window, Device, UIUtils)  {
 
   $scope.open = function(event, social) {
     if (!social) return;
-    var url = (social.type == 'email')  ? ('mailto:' + social.url) : social.url;
 
     // If email, do not try to open, but copy value
-    if (!Device.enable && social.type == 'email') {
+    if (!Device.enable && (social.type == 'email' || social.type == 'phone')) {
       UIUtils.popover.copy(event, social.url);
       return;
     }
 
     // Open the url
     // Note: If device is enable, this will use InAppBrowser cordova plugin
+    var url = (social.type == 'email')  ? ('mailto:' + social.url) :
+        ((social.type == 'phone')  ? ('tel:' + social.url) : social.url);
     $window.open(url, '_system', 'location=yes');
+  };
+
+  $scope.filterFn = function(social) {
+    return !social.recipient || social.valid;
   };
 
 }

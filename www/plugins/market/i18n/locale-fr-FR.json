@@ -76,6 +76,11 @@
       "RECORD_PRICE_HELP": "Prix (optionnel)",
       "RECORD_CURRENCY": "Monnaie"
     },
+    "WOT": {
+      "VIEW": {
+        "BTN_RECORDS": "Annonces"
+      }
+    },
     "ERROR": {
       "FAILED_SAVE_RECORD": "Erreur lors de l'enregistrement de l'annonce",
       "FAILED_UPDATE_RECORD": "Erreur lors de la mise à jour de l'annonce",

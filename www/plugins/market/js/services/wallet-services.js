@@ -14,12 +14,14 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
                             esSettings, SocialUtils, CryptoUtils, UIUtils, csWallet, esWallet, csWot, BMA, Device, esProfile) {
   'ngInject';
   var
+    defaultProfile = {},
     that = this,
     listeners;
 
   function onWalletReset(data) {
     data.profile = undefined;
     data.name = undefined;
+    defaultProfile = {};
   }
 
   function onWalletLogin(data, deferred) {
@@ -51,19 +53,22 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
         }
 
         // Profile not exists: make sure a default profile has been created (see login controller)
-        if (!data.profile || !data.profile.socials) {
-          console.error("[market] no default socials found. This is need for profile creation. Will logout !");
+        if (!defaultProfile || !defaultProfile.socials) {
+          console.error("[market] no default profile found. This should never append!");
           $timeout(csWallet.logout, 500);
           deferred.resolve(data);
           return deferred.promise;
         }
+        // Fill default profile
+        data.profile = data.profile || {};
+        angular.merge(data.profile, defaultProfile);
 
         return esWallet.box.getKeypair()
           .then(function(keypair) {
             return $q.all([
               $translate('MARKET.PROFILE.DEFAULT_TITLE'),
-              // Get a unique nonce
-              SocialUtils.pack(angular.copy(data.profile.socials), keypair)
+              // Encrypt socials
+              SocialUtils.pack(angular.copy(data.profile.socials||[]), keypair)
             ])
           })
           .then(function(res) {
@@ -74,10 +79,10 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
             data.profile.title = title;
             data.profile.issuer = data.pubkey;
 
-            var profileWithEncryptedSocials = angular.copy(data.profile);
-            profileWithEncryptedSocials.socials = encryptedSocials;
-
-            return esProfile.add(profileWithEncryptedSocials);
+            // Add encrypted socials into a profile copy, then save it
+            var copiedProfile = angular.copy(data.profile);
+            copiedProfile.socials = encryptedSocials;
+            return esProfile.add(copiedProfile);
           })
           .catch(function(err) {
             console.error('[market] [user] Error while saving new profile', err);
@@ -147,6 +152,10 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
     esHttp.api.node.on.stop($rootScope, refreshState, this);
     return refreshState();
   });
+
+  that.setDefaultProfile = function(profile) {
+    defaultProfile = angular.copy(profile);
+  };
 
   return that;
 })
