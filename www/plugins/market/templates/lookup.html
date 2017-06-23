@@ -25,13 +25,22 @@
       <ng-include src="'plugins/market/templates/lookup_options.html'"></ng-include>
     </form>
 
+    <div ng-if="!search.loading && !search.advanced && options.category.show"
+         class="padding-right" style="display: block; height: 35px;">
+      <a class="button button-text button-small button-text-positive pull-right ink"
+         ui-sref="app.market_categories">
+        <i class="icon ion-android-funnel"></i>
+        {{'MARKET.SEARCH.BTN_SHOW_CATEGORIES' | translate}}
+      </a>
+    </div>
+
     <div class="padding" style="display: block; height: 45px;">
       <h4
         ng-if="!search.loading && search.lastRecords && search.results.length" translate>
         MARKET.SEARCH.LAST_RECORDS
       </h4>
       <h4
-        ng-if="!search.loading && !search.lastRecords && (search.text.length || search.options != null)" translate>
+        ng-if="!search.loading && !search.lastRecords && (search.text.length || search.advanced != null)" translate>
         COMMON.RESULTS_LIST
       </h4>
     </div>

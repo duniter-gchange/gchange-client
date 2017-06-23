@@ -1,0 +1,36 @@
+<ion-view left-buttons="leftButtons" class="market view-record">
+  <ion-nav-title>
+    <!--<span translate>MARKET.VIEW.TITLE</span>-->
+  </ion-nav-title>
+
+  <ion-nav-buttons side="secondary">
+
+    <button class="button button-icon button-clear icon ion-loop visible-xs visible-sm" ng-click="refresh()">
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+
+    <div class="center padding" ng-if="loading">
+      <ion-spinner icon="android"></ion-spinner>
+    </div>
+
+    <div class="list {{::motion.ionListClass}}" ng-if="!loading">
+      <ng-repeat ng-repeat="cat in categories track by cat.id">
+        <div class="item item-divider" ng-class="{'bold': cat.count}">
+          <span ng-bind-html="cat.name"></span> <ng-if ng-if="cat.count">({{cat.count}})</ng-if>
+        </div>
+
+        <!-- children categories-->
+        <a ng-repeat="cat in cat.children track by cat.id"
+           class="item item-border item-icon-left item-icon-right"
+           ng-class="{'bold': cat.count}"
+           ng-click="onCategoryClick(cat)">
+          <span ng-bind-html="cat.name"></span><span ng-if="cat.count"> ({{cat.count}})</span>
+          <i class="icon ion-ios-arrow-right"></i>
+        </a>
+      </ng-repeat>
+    </div>
+
+  </ion-content>
+</ion-view>

@@ -1,6 +1,6 @@
 angular.module('cesium.market.record.services', ['ngResource', 'cesium.services', 'cesium.es.http.services', 'cesium.es.comment.services'])
 
-.factory('esMarket', function($q, csSettings, BMA, esHttp, esComment, csWot, csCurrency) {
+.factory('mkRecord', function($q, csSettings, BMA, esHttp, esComment, csWot, csCurrency) {
   'ngInject';
 
   function EsMarket(id) {
@@ -32,9 +32,13 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           }
       };
 
+    exports._internal.record= {
+      postSearch: esHttp.post('/market/record/_search')
+    };
     exports._internal.category= {
         get: esHttp.get('/market/category/:id'),
-        all: esHttp.get('/market/category/_search?sort=order&size=1000&_source=name,parent')
+        all: esHttp.get('/market/category/_search?sort=order&size=1000&_source=name,parent'),
+        search: esHttp.post('/market/category/_search')
       };
 
 
@@ -91,8 +95,6 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
                 var categories = res.hits.hits.reduce(function(result, hit) {
                     var cat = hit._source;
                     cat.id = hit._id;
-                    var parentExclude = cat.parent && isExclude(cat.parent);
-                    if (parentExclude) console.log('will exclude: ', cat);
                     return (isExclude &&
                         ((cat.parent && isExclude(cat.parent)) || isExclude(cat.id))) ?
                         result :
@@ -118,6 +120,65 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         });
     }
 
+    function getCategoriesStats(options) {
+
+        var request = {
+            size: 0,
+            aggs: {
+                category: {
+                    nested: {
+                        path: 'category'
+                    },
+                    aggs: {
+                        by_id: {
+                            terms: {
+                                field: 'category.id'
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+      return $q.all([
+          getFilteredCategories(options),
+          exports._internal.record.postSearch(request)
+      ]).then(function(res) {
+          var categories = res[0];
+          res = res[1];
+
+          var buckets = (res.aggregations.category && res.aggregations.category.by_id && res.aggregations.category.by_id.buckets || [])
+          var countById = {};
+          buckets.forEach(function(bucket){
+            var cat = categories[bucket.key];
+            if (cat){
+              countById[bucket.key] = bucket.doc_count;
+              if (cat.parent) {
+                countById[cat.parent] = (countById[cat.parent] || 0) + bucket.doc_count;
+              }
+            }
+          });
+
+          return categories.reduce(function(res, cat) {
+            return res.concat(angular.merge({
+              count: countById[cat.id] || 0
+            }, cat))
+          }, []);
+        })
+          .then(function(res) {
+
+            //var parents = _.filter(res, function(cat) {return !cat.parent;});
+            var catByParent = _.groupBy(res, function(cat) {return cat.parent || 'roots';});
+            _.forEach(catByParent.roots, function(parent) {
+                parent.children = catByParent[parent.id];
+            });
+            // group by parent category
+            return catByParent.roots;
+          })
+          .catch(function(err) {
+             console.error(err);
+          });
+    }
 
     function readRecordFromHit(hit, categories, currentUD, convertPriceToUnit) {
 
@@ -271,6 +332,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         get: getCategory,
         searchText: esHttp.get('/market/category/_search?q=:search'),
         search: esHttp.post('/market/category/_search'),
+        stats: getCategoriesStats
       };
     exports.record = {
         search: search,

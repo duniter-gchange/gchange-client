@@ -10,7 +10,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/lookup.html",
-          controller: 'ESMarketLookupCtrl'
+          controller: 'MkLookupCtrl'
         }
       },
       data: {
@@ -23,7 +23,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/lookup_lg.html",
-          controller: 'ESMarketLookupCtrl'
+          controller: 'MkLookupCtrl'
         }
       }
     })
@@ -33,7 +33,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/view_record.html",
-          controller: 'ESMarketRecordViewCtrl'
+          controller: 'MkRecordViewCtrl'
         }
       }
     })
@@ -43,7 +43,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/view_record.html",
-          controller: 'ESMarketRecordViewCtrl'
+          controller: 'MkRecordViewCtrl'
         }
       }
     })
@@ -54,7 +54,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/edit_record.html",
-          controller: 'ESMarketRecordEditCtrl'
+          controller: 'MkRecordEditCtrl'
         }
       }
 
@@ -67,7 +67,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/edit_record.html",
-          controller: 'ESMarketRecordEditCtrl'
+          controller: 'MkRecordEditCtrl'
         }
       }
     })
@@ -78,24 +78,24 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
       views: {
         'menuContent': {
           templateUrl: "plugins/es/templates/common/view_pictures_slider.html",
-          controller: 'ESMarketViewPicturesCtrl'
+          controller: 'MkViewPicturesCtrl'
         }
       }
     });
   })
 
- .controller('ESMarketLookupCtrl', ESMarketLookupController)
+ .controller('MkLookupCtrl', MkLookupController)
 
- .controller('ESMarketRecordViewCtrl', ESMarketRecordViewController)
+ .controller('MkRecordViewCtrl', MkRecordViewController)
 
- .controller('ESMarketRecordEditCtrl', ESMarketRecordEditController)
+ .controller('MkRecordEditCtrl', MkRecordEditController)
 
- .controller('ESMarketViewPicturesCtrl', ESMarketViewPicturesController)
+ .controller('MkViewPicturesCtrl', MkViewPicturesController)
 
 ;
 
-function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $q,
-                                  UIUtils, ModalUtils, csConfig, esMarket, BMA) {
+function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
+                                  UIUtils, ModalUtils, csConfig, mkRecord, BMA) {
   'ngInject';
 
   var defaultSearchLimit = 10;
@@ -135,36 +135,36 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $
 
   $scope.enter = function(e, state) {
 
-    var hasOptions = false;
+    var isAdvanced = false;
 
     // Search by text
     if (state.stateParams && state.stateParams.q) { // Query parameter
       $scope.search.text=state.stateParams.q;
-      hasOptions = true;
+      isAdvanced = true;
     }
 
     // Search on type
     if (state.stateParams && state.stateParams.type) {
       $scope.search.type = state.stateParams.type;
-      hasOptions = true;
+      isAdvanced = true;
     }
 
     // Search on location
     if (state.stateParams && state.stateParams.location) {
       $scope.search.location = state.stateParams.location;
-      hasOptions = true;
+      isAdvanced = true;
     }
 
     // Search on category
     if (state.stateParams && state.stateParams.category) {
-      esMarket.category.get({id: state.stateParams.category})
+      mkRecord.category.get({id: state.stateParams.category})
         .then(function(cat) {
           $scope.search.category = cat;
           $scope.finishEnter(true);
         });
     }
     else {
-      $scope.finishEnter(hasOptions);
+      $scope.finishEnter(isAdvanced);
     }
 
   };
@@ -175,9 +175,9 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $
     }
   });
 
-  $scope.finishEnter = function(hasOptions) {
-    $scope.search.options = hasOptions ? true : $scope.search.options; // keep null if first call
-    if (hasOptions) {
+  $scope.finishEnter = function(isAdvanced) {
+    $scope.search.advanced = isAdvanced ? true : $scope.search.advanced; // keep null if first call
+    if (isAdvanced || $scope.search.category) {
       $scope.doSearch()
           .then(function() {
             if ($scope.search.fabAddNewRecordId) {
@@ -217,8 +217,8 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $
   $scope.doSearch = function(from) {
     $scope.search.loading = !from;
     $scope.search.lastRecords = false;
-    if (!$scope.search.options) {
-      $scope.search.options = false;
+    if (!$scope.search.advanced) {
+      $scope.search.advanced = false;
     }
 
     var text = $scope.search.text.trim();
@@ -254,7 +254,7 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $
          });
       }
     }
-    if ($scope.search.options && $scope.search.category) {
+    if ($scope.search.category) {
       filters.push({
         nested: {
           path: "category",
@@ -268,7 +268,7 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $
         }
       });
     }
-    if ($scope.search.options && $scope.search.location && $scope.search.location.length > 0) {
+    if ($scope.search.advanced && $scope.search.location && $scope.search.location.length > 0) {
       filters.push({match_phrase: { location: $scope.search.location}});
     }
 
@@ -341,7 +341,7 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $
     if (options.size < defaultSearchLimit) options.size = defaultSearchLimit;
     $scope.search.loading = (options.from === 0);
 
-    return  esMarket.record.search(options)
+    return  mkRecord.record.search(options)
     .then(function(records){
       if (!records && !records.length) {
         $scope.search.results = (options.from > 0) ? $scope.search.results : [];
@@ -383,20 +383,35 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $
     });
   };
 
-  /* -- options -- */
+  /* -- manage events -- */
 
-  $scope.onToggleOptions = function() {
-    if ($scope.search.entered) {
+  $scope.onToggleAdvanced = function() {
+    if ($scope.entered) {
+      // Options will be hide: reset options value
+      if (!$scope.search.advanced) {
+        $scope.search.category = null;
+        $scope.category = null;
+        $scope.search.location = null;
+        $scope.search.type = null;
+      }
       $scope.doSearch();
     }
   };
-  $scope.$watch('search.options', $scope.onToggleOptions, true);
+  $scope.$watch('search.advanced', $scope.onToggleAdvanced, true);
+
+  $scope.onCategoryClick = function(cat) {
+    if (cat && cat.parent) {
+      $scope.search.category = cat;
+      $scope.options.category.show = true;
+      $scope.doSearch();
+    }
+  };
 
   /* -- modals -- */
 
   $scope.showCategoryModal = function() {
     // load categories
-    return esMarket.category.all()
+    return mkRecord.category.all()
       .then(function(categories){
         return ModalUtils.show('plugins/es/templates/common/modal_category.html', 'ESCategoryModalCtrl as ctrl',
           {categories : categories},
@@ -453,9 +468,9 @@ function ESMarketLookupController($scope, $rootScope, $state, $focus, $filter, $
   };
 }
 
-function ESMarketRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q,
+function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q,
                                       $timeout, $filter, Modals, csConfig,
-                                      csWallet, esMarket, UIUtils, esHttp) {
+                                      csWallet, mkRecord, UIUtils, esHttp) {
   'ngInject';
 
   $scope.formData = {};
@@ -504,7 +519,7 @@ function ESMarketRecordViewController($scope, $rootScope, $anchorScroll, $ionicP
 
   $scope.load = function (id, anchor) {
     $scope.loading = true;
-    esMarket.record.load(id, {
+    mkRecord.record.load(id, {
       fetchPictures: false,// lazy load for pictures
       convertPrice: true // convert to user unit
     })
@@ -544,7 +559,7 @@ function ESMarketRecordViewController($scope, $rootScope, $anchorScroll, $ionicP
     $timeout(function () {
 
       // Load pictures
-      esMarket.record.picture.all({id: id})
+      mkRecord.record.picture.all({id: id})
         .then(function (hit) {
           if (hit._source.pictures) {
             $scope.pictures = hit._source.pictures.reduce(function (res, pic) {
@@ -564,7 +579,7 @@ function ESMarketRecordViewController($scope, $rootScope, $anchorScroll, $ionicP
         });
 
       // Load other data (from child controller)
-      $scope.$broadcast('$recordView.load', id, esMarket.record.comment);
+      $scope.$broadcast('$recordView.load', id, mkRecord.record.comment);
 
       // scroll (if comment anchor)
       if (anchor) $timeout(function () {
@@ -589,7 +604,7 @@ function ESMarketRecordViewController($scope, $rootScope, $anchorScroll, $ionicP
     UIUtils.alert.confirm('MARKET.VIEW.REMOVE_CONFIRMATION')
       .then(function (confirm) {
         if (confirm) {
-          esMarket.record.remove($scope.id)
+          mkRecord.record.remove($scope.id)
             .then(function () {
               $ionicHistory.nextViewOptions({
                 historyRoot: true
@@ -668,7 +683,7 @@ function ESMarketRecordViewController($scope, $rootScope, $anchorScroll, $ionicP
   };
 }
 
-function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarket, $ionicHistory, $focus,
+function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $ionicHistory, $focus,
                                       UIUtils, ModalUtils, csConfig, esHttp, csSettings, csCurrency) {
   'ngInject';
 
@@ -775,7 +790,7 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
   };
 
   $scope.load = function(id) {
-    return esMarket.record.load(id, {
+    return mkRecord.record.load(id, {
         fetchPictures: true,
         convertPrice: false // keep original price
       })
@@ -875,10 +890,10 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
       .then(function(json) {
         if (!$scope.id) {
           json.creationTime = esHttp.date.now();
-          return esMarket.record.add(json);
+          return mkRecord.record.add(json);
         }
         else {
-          return esMarket.record.update(json, {id: $scope.id});
+          return mkRecord.record.update(json, {id: $scope.id});
         }
       })
 
@@ -962,10 +977,10 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
     var getCategories;
     console.log("getting categories");
     if ($scope.options && $scope.options.category && $scope.options.category.filter) {
-      getCategories = esMarket.category.filtered({filter: $scope.options.category.filter});
+      getCategories = mkRecord.category.filtered({filter: $scope.options.category.filter});
     }
     else {
-      getCategories = esMarket.category.all();
+      getCategories = mkRecord.category.all();
     }
 
     getCategories
@@ -983,8 +998,8 @@ function ESMarketRecordEditController($scope, $q, $state, $ionicPopover, esMarke
   };
 }
 
-function ESMarketViewPicturesController($scope, $rootScope) {
-  console.log("enter ESMarketViewPicturesController", $rootScope);
+function MkViewPicturesController($scope, $rootScope) {
+  console.log("enter MkViewPicturesController", $rootScope);
 
   $scope.formData = {
     picture: $rootScope.picture

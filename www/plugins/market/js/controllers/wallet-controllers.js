@@ -23,7 +23,7 @@ angular.module('cesium.market.wallet.controllers', ['cesium.es.services'])
               views: {
                   'menuContent': {
                       templateUrl: "plugins/market/templates/wallet/view_wallet_records.html",
-                      controller: 'ESMarketWalletRecordsCtrl'
+                      controller: 'MkWalletRecordsCtrl'
                   }
               }
           })
@@ -31,7 +31,7 @@ angular.module('cesium.market.wallet.controllers', ['cesium.es.services'])
 
  .controller('MarketWalletViewCtrl', MarketWalletViewController)
 
-  .controller('ESMarketWalletRecordsCtrl', MarketWalletRecordsController)
+  .controller('MkWalletRecordsCtrl', MarketWalletRecordsController)
 
 ;
 
@@ -49,7 +49,7 @@ function MarketWalletViewController($scope, esSettings) {
 function MarketWalletRecordsController($scope, $controller, UIUtils) {
 
     // Initialize the super class and extend it.
-    angular.extend(this, $controller('ESMarketLookupCtrl', {$scope: $scope}));
+    angular.extend(this, $controller('MkLookupCtrl', {$scope: $scope}));
 
     $scope.search.focusElementId = undefined;
     $scope.search.fabAddNewRecordId = 'fab-wallet-add-market-record';

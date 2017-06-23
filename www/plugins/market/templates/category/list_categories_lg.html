@@ -1,0 +1,12 @@
+
+    <div class="list half {{::motion.ionListClass}}">
+      <ng-repeat ng-repeat="cat in categories  track by cat.id" ng-if="$index % 2 == 0"
+        ng-include="'plugins/market/templates/category/card_category_lg.html'">
+      </ng-repeat>
+    </div>
+
+    <div class="list half {{::motion.ionListClass}} ">
+      <ng-repeat ng-repeat="cat in categories  track by cat.id" ng-if="$index % 2 == 1"
+                 ng-include="'plugins/market/templates/category/card_category_lg.html'">
+      </ng-repeat>
+    </div>

@@ -12,6 +12,8 @@
       {{'MARKET.COMMON.BTN_NEW_AD' | translate}}
     </button>
 
+
+
     <form ng-submit="doSearch()">
       <label class="item item-input">
         <i class="icon ion-search placeholder-icon"></i>
@@ -33,19 +35,28 @@
       <ng-include src="'plugins/market/templates/lookup_options.html'"></ng-include>
     </form>
 
+
     <div class="padding-top padding-xs" style="display: block; height: 60px;">
-      <div class="pull-left" ng-if="!search.loading">
-        <h4
-          ng-if="search.lastRecords && search.results.length" translate>
-          MARKET.SEARCH.LAST_RECORDS
-        </h4>
-        <h4
-          ng-if="!search.lastRecords && (search.text.length || search.options != null)" translate>
-          COMMON.RESULTS_LIST
-        </h4>
+      <div class="hidden-xs hidden-sm pull-left" >
+        <a class="button button-text button-small pull-left ink"
+           ng-if="options.category.show"
+           ng-class="{'button-text-positive': search.showCategories, 'button-text-stable': !search.showCategories}"
+           ng-click="search.showCategories=!search.showCategories;">
+          {{'MARKET.SEARCH.BTN_SHOW_CATEGORIES' | translate}}
+          <i class="icon" ng-class="{'ion-arrow-down-b': !search.showCategories, 'ion-arrow-up-b': search.showCategories}"></i>
+        </a>
+        &nbsp;
+
+        <a class="button button-text button-small ink"
+           ng-class="{'button-text-positive': search.advanced, 'button-text-stable': !search.advanced}"
+           ng-click="search.advanced=!search.advanced">
+          <i class="icon ion-wrench"></i>
+          {{'MARKET.SEARCH.BTN_OPTIONS' | translate}}
+        </a>
       </div>
 
       <div class="hidden-xs hidden-sm pull-right" >
+
         <a class="button button-text button-small ink icon ion-clock"
            ng-if="!options.type.show"
            ng-class="{'button-text-positive': search.type=='last'}"
@@ -71,6 +82,28 @@
                 ng-click="doSearch()">
           {{'COMMON.BTN_SEARCH' | translate}}
         </button>
+      </div>
+    </div>
+
+    <ng-if ng-if="search.showCategories"
+           ng-controller="MkListCategoriesCtrl"
+           ng-init="motion={}; load();">
+      <ion-spinner ng-if="loading" class="pull-right ion-spinner-small" icon="android"></ion-spinner>
+      <div class="item no-border no-padding" ng-show="!loading"
+           ng-include="'plugins/market/templates/category/list_categories_lg.html'">
+      </div>
+    </ng-if>
+
+    <div class="padding-xs" style="display: block; height: 60px;">
+      <div class="pull-left" ng-if="!search.loading">
+        <h4
+                ng-if="search.lastRecords && search.results.length" translate>
+          MARKET.SEARCH.LAST_RECORDS
+        </h4>
+        <h4
+                ng-if="!search.lastRecords && (search.text.length || search.advanced != null)" translate>
+          COMMON.RESULTS_LIST
+        </h4>
       </div>
     </div>
 
