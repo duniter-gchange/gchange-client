@@ -11,7 +11,7 @@ angular.module('cesium.utils.services', ['ngResource'])
   var
     loadingTextCache=null,
     CONST = {
-      MAX_HEIGHT: 400,
+      MAX_HEIGHT: 600,
       MAX_WIDTH: 400,
       THUMB_MAX_HEIGHT: 100,
       THUMB_MAX_WIDTH: 100

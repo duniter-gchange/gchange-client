@@ -1,0 +1,31 @@
+<ion-view left-buttons="leftButtons" class="market view-record">
+    <ion-nav-title>
+        <span translate>MARKET.GALLERY.TITLE</span>
+    </ion-nav-title>
+
+    <ion-nav-buttons side="secondary">
+        <!--<button class="button button-bar button-icon button-clear visible-xs visible-sm" ng-click="edit()" ng-if="canEdit">
+            <i class="icon ion-android-create"></i>
+        </button>
+        <button class="button button-bar button-icon button-clear icon ion-android-more-vertical visible-xs visible-sm"
+                ng-click="showActionsPopover($event)">
+        </button>-->
+    </ion-nav-buttons>
+
+    <ion-content class="has-header padding">
+
+        <ng-repeat ng-repeat="cat in categories | filter:notEmptyCategory track by cat.id">
+            <div class="item item-divider">
+                <i class="ion-images"></i>
+                <span ng-bind-html="cat.name"></span> ({{cat.count}})
+            </div>
+
+            <a class="item item-list-detail">
+                <ion-scroll direction="x">
+                    <img ng-repeat="picture in cat.pictures track by picture.id" ng-src="{{picture.src}}" ng-click="showPicturesModal($index)" class="image-list-thumb"/>
+                </ion-scroll>
+            </a>
+        </ng-repeat>
+
+    </ion-content>
+</ion-view>

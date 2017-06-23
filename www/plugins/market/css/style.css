@@ -99,3 +99,10 @@
     font-family: "Ionicons";
     content: "\f27c";
 }
+
+/* -- Gallery -- */
+
+.image-list-thumb {
+    padding: 2px 2px 2px 2px;
+    height: 150px;
+}

@@ -42,10 +42,16 @@ angular.module('cesium.es.modal.services', ['cesium.modal.services', 'cesium.es.
       parameters);
   }
 
+  function showPictures(parameters, options) {
+    return ModalUtils.show('plugins/es/templates/common/modal_pictures_slider.html', 'ESPicturesSliderModalCtrl',
+        parameters, options);
+  }
+
   return {
     showMessageCompose: showMessageCompose,
     showNotifications: showNotificationsPopover,
-    showNewInvitation: showNewInvitation
+    showNewInvitation: showNewInvitation,
+    showPictures: showPictures
   };
 
 });

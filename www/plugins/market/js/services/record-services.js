@@ -326,6 +326,75 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         });
     }
 
+    function searchPictures(options) {
+        options = options || {};
+
+        var request = {
+            from: options.from||0,
+            size: options.size||20,
+            _source: options._source || ["category", "title", "price", "unit", "currency", "pictures"]
+            /*query: {
+                filter
+            }*/
+        };
+
+        var matches = [];
+        var filters = [];
+        if (options.category) {
+            filters.push({
+                nested: {
+                    path: "category",
+                        query: {
+                        bool: {
+                            filter: {
+                                term: { "category.id": options.category}
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        if (options.categories) {
+            filters.push({
+                nested: {
+                    path: "category",
+                    query: {
+                        bool: {
+                            filter: {
+                                terms: { "category.id": options.categories}
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        if (matches.length || filters.length) {
+            request.query = {bool: {}};
+            if (matches.length) {
+                request.query.bool.should =  matches;
+            }
+            if (filters.length) {
+                request.query.bool.filter =  filters;
+            }
+        }
+        //request.highlight = false;
+
+        return exports.record.search(request)
+            .then(function(res) {
+                // Filter, to keep only record with pictures
+                return res.reduce(function(res, record) {
+                    if (!record.pictures || !record.pictures.length) return res;
+
+                    // Replace thumbnail with the first picture (full quality)
+                    angular.merge(record, record.pictures[0]);
+                    delete record.pictures;
+                    delete record.thumbnail;
+
+                    return res.concat(record);
+                }, []);
+            });
+    }
+
     exports.category = {
         all: getCategories,
         filtered: getFilteredCategories,
@@ -337,6 +406,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
     exports.record = {
         search: search,
         load: loadData,
+        pictures: searchPictures,
         add: esHttp.record.post('/market/record'),
         update: esHttp.record.post('/market/record/:id/_update'),
         remove: esHttp.record.remove('market', 'record'),

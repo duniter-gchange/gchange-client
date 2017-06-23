@@ -70,7 +70,7 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
           type = 'phone';
         }
         if (!type) {
-            console.log("match type: " + type);
+            console.warn("[ES] [social] Unable to detect type of social URL: " + url);
         }
         return type;
       }

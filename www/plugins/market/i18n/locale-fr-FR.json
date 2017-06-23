@@ -46,6 +46,9 @@
       "BTN_OFFERS": "Offres",
       "BTN_NEEDS": "Demandes"
     },
+    "GALLERY": {
+      "TITLE": "Gallerie"
+    },
     "VIEW": {
       "TITLE": "Annonce",
       "MENU_TITLE": "Options",
