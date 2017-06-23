@@ -53,9 +53,8 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
         }
 
         // Profile not exists: make sure a default profile has been created (see login controller)
-        if (!defaultProfile || !defaultProfile.socials) {
-          console.error("[market] no default profile found. This should never append!");
-          $timeout(csWallet.logout, 500);
+        if (!defaultProfile) {
+          console.error("[market] No default profile defined. This should never append!");
           deferred.resolve(data);
           return deferred.promise;
         }
@@ -66,7 +65,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
         return esWallet.box.getKeypair()
           .then(function(keypair) {
             return $q.all([
-              $translate('MARKET.PROFILE.DEFAULT_TITLE'),
+              $translate('MARKET.PROFILE.DEFAULT_TITLE', {pubkey: data.pubkey}),
               // Encrypt socials
               SocialUtils.pack(angular.copy(data.profile.socials||[]), keypair)
             ])
@@ -84,7 +83,14 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
             copiedProfile.socials = encryptedSocials;
             return esProfile.add(copiedProfile);
           })
+          .then(function() {
+            // clean default profile
+            defaultProfile = {};
+          })
           .catch(function(err) {
+            // clean default profile
+            defaultProfile = {};
+
             console.error('[market] [user] Error while saving new profile', err);
             deferred.reject(err);
           });

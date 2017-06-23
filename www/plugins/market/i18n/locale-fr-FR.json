@@ -9,7 +9,7 @@
       "BTN_NEW_AD": "Je dépose une annonce"
     },
     "PROFILE": {
-      "DEFAULT_TITLE": "Nouvel utilisateur"
+      "DEFAULT_TITLE": "Utilisateur {{pubkey|formatPubkey}}"
     },
     "SIMPLE_LOGIN": {
       "TITLE": "Coordonnées",
