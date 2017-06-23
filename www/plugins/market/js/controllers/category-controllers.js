@@ -50,15 +50,17 @@ function MkListCategoriesController($scope, UIUtils, csConfig, mkRecord) {
   }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
 
-  $scope.load = function() {
+  $scope.load = function(options) {
 
-    var options = {
-      filter: $scope.options && $scope.options.category && $scope.options.category.filter
-    };
+    options = options || {};
+    options.filter = options.filter || ($scope.options && $scope.options.category && $scope.options.category.filter);
 
     return mkRecord.category.stats(options)
       .then(function(res) {
         $scope.categories = res;
+        $scope.totalCount = $scope.categories.reduce(function(res, cat) {
+         return res + cat.count;
+        }, 0);
         $scope.loading = false;
       });
   };
@@ -80,7 +82,7 @@ function MkViewCategoriesController($scope, $controller, $state) {
     'ngInject';
 
     // Initialize the super class and extend it.
-    angular.extend(this, $controller('MkListCategoriesController', {$scope: $scope}));
+    angular.extend(this, $controller('MkListCategoriesCtrl', {$scope: $scope}));
 
     // When view enter: load data
     $scope.enter = function(e, state) {
@@ -99,6 +101,6 @@ function MkViewCategoriesController($scope, $controller, $state) {
     $scope.$on('$ionicView.enter',$scope.enter);
 
     $scope.onCategoryClick = function(cat) {
-        return $state.go('app.market_lookup', {category: cat.id});
+        return $state.go('app.market_lookup', {category: cat && cat.id});
     }
 }

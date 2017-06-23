@@ -25,8 +25,12 @@
       "BTN_NEW_AD": "Déposer une annonce",
       "BTN_SHOW_MARKET_OFFER": "Voir les annonces"
     },
+    "CATEGORY": {
+      "ALL": "Toutes les catégories"
+    },
     "SEARCH": {
       "TITLE": "Annonces",
+      "CATEGORY": "Catégorie: ",
       "SEARCH_HELP": "Recherche (vélo, rollers...)",
       "BTN_ADD": "Nouveau",
       "BTN_OPTIONS": "Recherche avancée",

@@ -1,6 +1,7 @@
 <ion-view left-buttons="leftButtons" class="market">
   <ion-nav-title>
-    <span translate>MARKET.SEARCH.TITLE</span>
+    <span ng-if="entered && !search.category" translate>MARKET.SEARCH.TITLE</span>
+    <span ng-if="search.category" ng-bind-html="search.category.name"></span>
   </ion-nav-title>
 
   <ion-nav-buttons side="secondary">
@@ -12,6 +13,7 @@
                bind-notifier="{ rebind:$root.settings.useRelative }">
 
     <form ng-submit="doSearch()">
+
       <label class="item item-input">
         <i class="icon ion-search placeholder-icon"></i>
         <input type="text"
@@ -20,12 +22,9 @@
                ng-model-options="{ debounce: 650 }"
                ng-change="doSearch()">
       </label>
-
-      <!-- options -->
-      <ng-include src="'plugins/market/templates/lookup_options.html'"></ng-include>
     </form>
 
-    <div ng-if="!search.loading && !search.advanced && options.category.show"
+    <div ng-if="!search.loading && !search.category && options.category.show"
          class="padding-right" style="display: block; height: 35px;">
       <a class="button button-text button-small button-text-positive pull-right ink"
          ui-sref="app.market_categories">

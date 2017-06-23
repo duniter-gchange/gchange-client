@@ -15,21 +15,44 @@
 
 
     <form ng-submit="doSearch()">
-      <label class="item item-input">
-        <i class="icon ion-search placeholder-icon"></i>
-        <input type="text"
-               class="visible-xs visible-sm"
-               placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
-               ng-model="search.text"
-               ng-model-options="{ debounce: 650 }"
-               ng-change="doSearch()">
-        <input type="text"
-               class="hidden-xs hidden-sm"
-               placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
-               id="marketSearchText"
-               ng-model="search.text"
-               on-return="doSearch()">
-      </label>
+
+      <div class="item no-padding">
+
+        <!--<div ng-if="search.category.name"
+             class="double-padding-x padding-top-xs item-text-wrap"
+             style="height: 36px;">
+
+          <div class="button button-small button-text button-stable button-icon-event ink">
+            {{'MARKET.SEARCH.CATEGORY'|translate}}
+            <span ng-bind-html="search.category.name"></span>
+            <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
+          </div>
+        </div>-->
+
+        <div class="item-input ">
+          <div ng-if="search.category.name"
+               class="button button-small button-text button-stable button-icon-event ink stable-900-bg"
+               style="margin-right: 10px;">
+            &nbsp;{{'MARKET.SEARCH.CATEGORY'|translate}}
+            <span ng-bind-html="search.category.name"></span>
+            <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
+          </div>
+
+          <i class="icon ion-search placeholder-icon"></i>
+          <input type="text"
+                 class="visible-xs visible-sm"
+                 placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+                 ng-model="search.text"
+                 ng-model-options="{ debounce: 650 }"
+                 ng-change="doSearch()">
+          <input type="text"
+                 class="hidden-xs hidden-sm"
+                 placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+                 id="marketSearchText"
+                 ng-model="search.text"
+                 on-return="doSearch()">
+        </div>
+      </div>
 
       <!-- options -->
       <ng-include src="'plugins/market/templates/lookup_options.html'"></ng-include>

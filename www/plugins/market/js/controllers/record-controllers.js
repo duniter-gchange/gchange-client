@@ -389,8 +389,6 @@ function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
     if ($scope.entered) {
       // Options will be hide: reset options value
       if (!$scope.search.advanced) {
-        $scope.search.category = null;
-        $scope.category = null;
         $scope.search.location = null;
         $scope.search.type = null;
       }
@@ -406,6 +404,13 @@ function MkLookupController($scope, $rootScope, $state, $focus, $filter, $q,
       $scope.doSearch();
     }
   };
+
+  $scope.removeCategory = function() {
+    $scope.search.category = null;
+    $scope.category = null;
+    $scope.doSearch();
+  };
+
 
   /* -- modals -- */
 
