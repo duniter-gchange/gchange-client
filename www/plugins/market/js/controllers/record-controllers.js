@@ -111,7 +111,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q,
     category: null,
     location: null,
     options: null,
-    loadingMore: false
+    loadingMore: false,
+    showClosed: false
   };
 
   // Screen options
@@ -131,6 +132,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q,
       }
     }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
+  $scope.$watch('search.showClosed', function() {
+    $scope.options.showClosed = $scope.search.showClosed;
+  }, true);
 
   $scope.setAdType = function(type) {
     if (type != $scope.search.type) {

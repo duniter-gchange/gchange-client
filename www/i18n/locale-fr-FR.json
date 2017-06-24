@@ -141,6 +141,8 @@
     "EXPERT_MODE": "Activer le mode expert",
     "EXPERT_MODE_HELP": "Permet un affichage plus détaillé",
     "POPUP_PEER": {
+      "HELP" : "Adresse : serveur:port",
+      "BTN_SHOW_LIST_HELP": "",
       "TITLE" : "Nœud Duniter",
       "HOST" : "Adresse",
       "HOST_HELP": "Adresse : serveur:port",

@@ -46,14 +46,15 @@ function MkListCategoriesController($scope, UIUtils, csConfig, mkRecord) {
   $scope.options = $scope.options || angular.merge({
     category: {
       filter: undefined
-    }
+    },
+    showClosed: false
   }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
-
 
   $scope.load = function(options) {
 
     options = options || {};
     options.filter = options.filter || ($scope.options && $scope.options.category && $scope.options.category.filter);
+    options.withStock = (!$scope.options || !$scope.options.showClosed);
 
     return mkRecord.category.stats(options)
       .then(function(res) {
@@ -71,10 +72,12 @@ function MkListCategoriesController($scope, UIUtils, csConfig, mkRecord) {
     $scope.load()
       .then(function() {
         $scope.loading = false;
-        $scope.motion.show();
+        $scope.motion.show && $scope.motion.show();
         $scope.entered = true;
       });
   };
+
+  $scope.$watch('options.showClosed', $scope.refresh, true);
 
 }
 

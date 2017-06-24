@@ -110,7 +110,7 @@
 
     <ng-if ng-if="search.showCategories"
            ng-controller="MkListCategoriesCtrl"
-           ng-init="motion={}; load();">
+           ng-init="load();">
       <ion-spinner ng-if="loading" class="pull-right ion-spinner-small" icon="android"></ion-spinner>
       <div class="item no-border no-padding" ng-show="!loading"
            ng-include="'plugins/market/templates/category/list_categories_lg.html'">

@@ -51,8 +51,7 @@ function MarketWalletRecordsController($scope, $controller, UIUtils) {
     // Initialize the super class and extend it.
     angular.extend(this, $controller('MkLookupAbstractCtrl', {$scope: $scope}));
 
-    $scope.search.focusElementId = undefined;
-    $scope.search.fabAddNewRecordId = 'fab-wallet-add-market-record';
+    $scope.search.showClosed = true;
     $scope.smallscreen = UIUtils.screen.isSmall();
 
     $scope.enter = function(e, state) {
