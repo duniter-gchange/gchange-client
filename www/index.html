@@ -7,9 +7,9 @@
   <title>ğchange</title>
   <link rel="icon" href="./img/favicon.ico">
   <link rel="apple-touch-icon" href="./img/logo_128px.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="./img/logo_180px.png">
+  <!--link rel="apple-touch-icon" sizes="180x180" href="./img/logo_180px.png">
   <link rel="apple-touch-icon" sizes="152x152" href="./img/logo_152px.png">
-  <link rel="apple-touch-icon" sizes="167x167" href="./img/logo_167px.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="./img/logo_167px.png">-->
   <link rel="manifest" href="/manifest.json">
   <!-- build:css dist_css/cesium.css -->
   <link href="css/ionic.app.css" rel="stylesheet">
@@ -27,7 +27,7 @@
   <!-- endbuild -->
 
 </head>
-<body ng-app="cesium" id="cesium" ng-strict-di="" ng-class="{'nobackdrop': $root.tour}">
+<body ng-app="cesium" id="cesium" ng-strict-di="">
   <ion-nav-view>
     <h3 style="text-align: center; margin-top: 44px;">
       ğ<b>change</b>
@@ -53,7 +53,6 @@
 
   <!-- ionic/angularjs js -->
   <script src="lib/ionic/js/ionic.bundle.js"></script>
-  <script src="lib/ionic/js/ionic.cloud.min.js"></script><!-- Ionic I/O-->
   <script src="lib/ionic/js/ionic.material.js"></script>
   <script src="lib/ionic/js/angular/angular-resource.js"></script>
   <script src="lib/ionic/js/angular/angular-translate.js"></script>
@@ -67,6 +66,14 @@
   <script src="lib/ionic/js/angular/angular-idle.js"></script>
 
   <script src="js/vendor/base58.js" async></script>
+
+  <!--removeIf(no-device)-->
+  <script src="js/vendor/sha256.min.js" async></script>
+  <script src="js/vendor/ng-cordova.min.js"></script>
+  <!--endRemoveIf(no-device)-->
+  <!-- endbuild -->
+
+  <!-- build:js dist_js/crypto.js -->
   <!--removeIf(android)-->
   <!--removeIf(ios)-->
   <script src="js/vendor/nacl_factory.js" async></script>
@@ -74,10 +81,6 @@
   <script src="js/vendor/base64.js" async></script>
   <!--endRemoveIf(ios)-->
   <!--endRemoveIf(android)-->
-  <!--removeIf(no-device)-->
-  <script src="js/vendor/sha256.min.js" async></script>
-  <script src="js/vendor/ng-cordova.min.js"></script>
-  <!--endRemoveIf(no-device)-->
   <!-- endbuild -->
 
   <!--removeIf(no-device)-->

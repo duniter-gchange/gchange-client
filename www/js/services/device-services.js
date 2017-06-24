@@ -17,8 +17,10 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
   .factory('Device',
     function($translate, $ionicPopup, $q,
       // removeIf(no-device)
-      $cordovaClipboard, $cordovaBarcodeScanner, $cordovaCamera,
+      // removeIf(android)
+      //FIXME $cordovaClipboard, $cordovaBarcodeScanner, $cordovaCamera,
       // endRemoveIf(no-device)
+      // endRemoveIf(android)
       ionicReady, csSettings) {
       'ngInject';
 
@@ -29,7 +31,8 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
         },
         exports = {
           // workaround to quickly no is device or not (even before the ready() event)
-          enable: true
+          //enable: true  TODO: android build
+          enable: false
         };
 
       // removeIf(device)
@@ -86,7 +89,7 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
         options.encodingType = options.encodingType || navigator.camera.EncodingType.PNG;
         options.targetWidth = options.targetWidth || CONST.MAX_WIDTH;
         options.targetHeight = options.targetHeight || CONST.MAX_HEIGHT;
-        return $cordovaCamera.getPicture(options);
+        //FIXME return $cordovaCamera.getPicture(options);
       }
 
       function scan(n) {
@@ -115,7 +118,7 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
           return $q.reject('Device disabled');
         }
         var deferred = $q.defer();
-        $cordovaClipboard
+        /*$cordovaClipboard
           .copy(text)
           .then(function () {
             // success
@@ -126,7 +129,7 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
           }, function () {
             // error
             deferred.reject({message: 'ERROR.COPY_CLIPBOARD'});
-          });
+          });*/
         return deferred.promise;
       }
 

@@ -6,14 +6,11 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht.translate',
   'ngApi', 'angular-cache', 'angular.screenmatch', 'angular.bind.notifier', 'ImageCropper', 'ngFileSaver', 'ngIdle',
-  //'ui-leaflet',
   // removeIf(no-device)
-  'ngCordova',
-  'ionic.cloud',
+  //FIXME android build
+  // 'ngCordova',
   // endRemoveIf(no-device)
-  // removeIf(no-plugin)
   'cesium.plugins',
-  // endRemoveIf(no-plugin)
   'cesium.filters', 'cesium.config', 'cesium.platform', 'cesium.controllers', 'cesium.templates', 'cesium.translations'
   ])
 
@@ -95,14 +92,14 @@ angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht
       else console.error(exception);
     };
   })
-
+/*
   .config(function($ionicCloudProvider) {
     $ionicCloudProvider.init({
       "core": {
         "app_id": "23c2212f"
       }
     });
-  })
+  })*/
 
 .run(function($rootScope, $translate, $state, $window, ionicReady, Device, UIUtils, $ionicConfig, PluginService,
               csPlatform, csCurrency, csWallet, csSettings, csConfig) {

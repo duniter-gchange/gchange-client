@@ -5,6 +5,8 @@
     "cacheTimeMs": 60000,
     "useLocalStorage": true,
     "rememberMe": true,
+    "useRelative": false,
+    "decimalCount": 2,
     "helptip": {
       "enable": false
     },
@@ -25,18 +27,19 @@
         "enable": true,
         "defaultCurrency": "€",
         "homeMessage": "<i class=\"icon ion-location\"></i> Vide-grenier de Villiers-charlemagne",
-        "defaultAdminPubkeys": [
-          "CohjkoP5YnqzTV2wwdCFND74BDDmDR7dAQEPGt4tj2Tw" // BLA
-        ],
         "defaultTags": [
           {
-            "tag": "vide-grenier",
+            "tag": "VideGrenier",
             "name":  "Vide-grenier"
           },
           {
-            "tag": "villers-charlemagne-2017",
+            "tag": "VillersCharlemagne2017",
             "name":  "Vide-grenier de Villiers-charlemagne"
           }
+        ],
+        "defaultAdminPubkeys": [
+          "CohjkoP5YnqzTV2wwdCFND74BDDmDR7dAQEPGt4tj2Tw",
+          "GWAKPVoMdQw1LYqcWW8jckzox9VwNXGt6cQ1L5gNt3E9"
         ],
         "record": {
           "type": {

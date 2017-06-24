@@ -64,8 +64,8 @@ angular.module('cesium.filters', ['cesium.config', 'cesium.platform', 'pascalpre
   })
 
   .filter('formatAmount', function(csConfig, csSettings, csCurrency, $filter) {
-    var minValue = 1 / Math.pow(10, csConfig.decimalCount || 4);
-    var format = '0,0.0' + Array(csConfig.decimalCount || 4).join('0');
+    var minValue = 1 / Math.pow(10, csConfig.decimalCount || 2);
+    var format = '0,0.0' + Array(csConfig.decimalCount || 2).join('0');
     var currencySymbol = $filter('currencySymbol');
 
     function formatRelative(input, options) {
@@ -104,8 +104,8 @@ angular.module('cesium.filters', ['cesium.config', 'cesium.platform', 'pascalpre
   })
 
   .filter('formatAmountNoHtml', function(csConfig, csSettings, csCurrency, $filter) {
-    var minValue = 1 / Math.pow(10, csConfig.decimalCount || 4);
-    var format = '0,0.0' + Array(csConfig.decimalCount || 4).join('0');
+    var minValue = 1 / Math.pow(10, csConfig.decimalCount || 2);
+    var format = '0,0.0' + Array(csConfig.decimalCount || 2).join('0');
     var currencySymbol = $filter('currencySymbolNoHtml');
 
     function formatRelative(input, options) {
@@ -164,8 +164,8 @@ angular.module('cesium.filters', ['cesium.config', 'cesium.platform', 'pascalpre
 
 
   .filter('formatDecimal', function(csConfig, csCurrency) {
-    var minValue = 1 / Math.pow(10, csConfig.decimalCount || 4);
-    var format = '0,0.0' + Array(csConfig.decimalCount || 4).join('0');
+    var minValue = 1 / Math.pow(10, csConfig.decimalCount || 2);
+    var format = '0,0.0' + Array(csConfig.decimalCount || 2).join('0');
 
     return function(input) {
       if (input === undefined) return '0';

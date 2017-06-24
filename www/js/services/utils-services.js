@@ -2,7 +2,7 @@ angular.module('cesium.utils.services', ['ngResource'])
 
 .factory('UIUtils', function($ionicLoading, $ionicPopup, $ionicConfig, $translate, $q, ionicMaterialInk, ionicMaterialMotion, $window, $timeout,
                              // removeIf(no-device)
-                             $cordovaToast,
+                             //FIXME $cordovaToast,
                              // endRemoveIf(no-device)
                              $ionicPopover, $state, $rootScope, screenmatch, csSettings) {
   'ngInject';
@@ -132,10 +132,10 @@ angular.module('cesium.utils.services', ['ngResource'])
 
         // removeIf(no-device)
         // Use the Cordova Toast plugin
-        if (!!window.cordova) {
+        /*FIXME if (!!window.cordova) {
           $cordovaToast.show(translations[message], duration, position);
           return;
-        }
+        }*/
         // endRemoveIf(no-device)
 
         // removeIf(device)

@@ -678,33 +678,41 @@ $screen-menu:                     845px;
   display: inline-block;
 }
 
+// FIXME: same confg here to min size of CSS
+#home .logo {
+  height: 70px;
+  background-image: url('../img/logo_64px.png');
+  background-size: 64px 64px;
+}
+
 @media screen and (max-width: $screen-xs-max) {
-  #home .logo {
+
+  /*#home .logo {
     height: 70px;
     background-image: url('../img/logo_64px.png');
     background-size: 64px 64px;
-  }
+  } */
   #home .footer {
     display:none;
   }
 }
 @media screen and (min-width: $screen-sm) and (max-width: $screen-sm-max) {
-  #home .logo {
+  /*#home .logo {
     height: 144px;
     background-image: url('../img/logo_128px.png');
     background-size: 128px 128px;
-  }
+  }*/
   #home .button {
     max-width: 350px;
     margin-top: 20px;
   }
 }
 @media screen and (min-width: $screen-md) {
-  #home .logo {
+  /*#home .logo {
     height: 200px;
     background-image: url('../img/logo.svg');
-    background-size: 200px 200px;
-  }
+    background-size: 200px 200px;*
+  }*/
 
   #home .button {
     max-width: 350px;

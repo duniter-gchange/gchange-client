@@ -14,6 +14,8 @@ angular.module("cesium.config", [])
 	"cacheTimeMs": 60000,
 	"useLocalStorage": true,
 	"rememberMe": true,
+	"useRelative": false,
+	"decimalCount": 2,
 	"helptip": {
 		"enable": false
 	},
@@ -75,7 +77,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.4.2",
-	"build": "2017-06-24T17:38:14.139Z",
+	"build": "2017-06-24T18:29:51.430Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
