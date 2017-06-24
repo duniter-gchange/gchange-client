@@ -206,6 +206,10 @@ function MkLookupAbstractController($scope, $state, $filter, $q,
       return $scope.doGetLastRecord();
     }
 
+    if (!$scope.search.showClosed) {
+      filters.push({range: {stock: {gt: 0}}});
+    }
+
     if ($scope.search.type) {
       filters.push({term: {type: $scope.search.type}});
     }
@@ -232,8 +236,16 @@ function MkLookupAbstractController($scope, $state, $filter, $q,
       from: from
     };
 
+    var filters = [];
+    if (!$scope.search.showClosed) {
+      filters.push({range: {stock: {gt: 0}}});
+    }
     if ($scope.search.type) {
-      options.query = {bool: {filter: {term: {type: $scope.search.type}}}};
+      filters.push({term: {type: $scope.search.type}});
+    }
+    if (filters.length) {
+      options.query = {bool: {}};
+      options.query.bool.filter =  filters;
     }
 
     return $scope.doRequest(options);
@@ -439,8 +451,9 @@ function MkLookupController($scope, $controller, $focus, mkRecord) {
       if (!$scope.search.advanced) {
         $scope.search.location = null;
         $scope.search.type = null;
+        $scope.search.showClosed = false;
       }
-      $scope.doSearch();
+      $scope.doRefresh();
     }
   };
   $scope.$watch('search.advanced', $scope.onToggleAdvanced, true);
@@ -1063,7 +1076,8 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
         category: {
           filter: undefined
         },
-        slideDuration: 5000 // 5 sec
+        slideDuration: 5000, // 5 sec
+        showClosed: false
       }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
   $scope.slideDurationLabels = {
@@ -1107,6 +1121,7 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
 
     options = options || {};
     options.filter = options.filter || ($scope.options && $scope.options.category && $scope.options.category.filter);
+    options.withStock = (!$scope.options || !$scope.options.showClosed);
 
     $scope.stop();
 
@@ -1217,7 +1232,7 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
 
     var started = started || !!$scope.interval;
 
-    // Make sur sure to stop slideshow
+    // Make sure sure to stop slideshow
     if (started && $scope.modal.isShown()) {
       return $scope.hidePictureModal()
         .then(function(){
@@ -1243,7 +1258,8 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
     // Load pictures
     return mkRecord.record.pictures({
         categories:  _.pluck(category.children, 'id'),
-        size: 1000
+        size: 1000,
+        withStock: (!$scope.options || !$scope.options.showClosed)
       })
       .then(function(pictures) {
         category.pictures = pictures;

@@ -45,7 +45,8 @@
       "BTN_LAST_RECORDS": "Dernières annonces",
       "BTN_SHOW_CATEGORIES": "Parcourir les catégories",
       "BTN_OFFERS": "Offres",
-      "BTN_NEEDS": "Demandes"
+      "BTN_NEEDS": "Demandes",
+      "SHOW_CLOSED_RECORD": "Afficher les annonces clôturées ?"
     },
     "GALLERY": {
       "TITLE": "Diaporama",

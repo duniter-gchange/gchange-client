@@ -140,6 +140,22 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             }
         };
 
+        var filters = [];
+        var matches = [];
+        if (options.withStock) {
+            filters.push({range: {stock: {gt: 0}}});
+        }
+        // Add query to request
+        if (matches.length || filters.length) {
+            request.query = {bool: {}};
+            if (matches.length) {
+                request.query.bool.should =  matches;
+            }
+            if (filters.length) {
+                request.query.bool.filter =  filters;
+            }
+        }
+
       return $q.all([
           getFilteredCategories(options),
           exports._internal.record.postSearch(request)
@@ -344,9 +360,6 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             from: options.from||0,
             size: options.size||20,
             _source: options._source || ["category", "title", "price", "unit", "currency", "location", "pictures", "stock"]
-            /*query: {
-                filter
-            }*/
         };
 
         var matches = [];
@@ -379,6 +392,11 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
                 }
             });
         }
+        if (options.withStock) {
+            filters.push({range: {stock: {gt: 0}}});
+        }
+
+        // Add query to request
         if (matches.length || filters.length) {
             request.query = {bool: {}};
             if (matches.length) {
@@ -388,7 +406,6 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
                 request.query.bool.filter =  filters;
             }
         }
-        //request.highlight = false;
 
         return exports.record.search(request)
             .then(function(res) {

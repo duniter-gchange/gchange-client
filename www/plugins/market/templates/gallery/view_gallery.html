@@ -15,16 +15,14 @@
     <ion-content class="has-header ">
 
         <div class="row responsive-sm">
-            <div class="col col-15">
-                <button class="button button-block button-raised icon icon-left ion-play ink"
+            <div class="col col-20 list">
+                <button class="item button button-block button-raised icon icon-left ion-play ink"
                         title="{{!activeCategory ? 'MARKET.GALLERY.BTN_START' : 'MARKET.GALLERY.BTN_CONTINUE' | translate}}"
                 ng-click="startSlideShow()">
                     {{!activeCategory ? 'MARKET.GALLERY.BTN_START' : 'MARKET.GALLERY.BTN_CONTINUE' | translate}}
                 </button>
-            </div>
 
-            <div class="col col-15">
-                <button class="button button-block button-raised icon icon-left ion-stop ink"
+                <button class="item  button button-block button-raised icon icon-left ion-stop ink"
                         title="{{'MARKET.GALLERY.BTN_STOP' | translate}}"
                         ng-disabled="!activeCategory"
                         ng-click="resetSlideShow()">
@@ -40,6 +38,17 @@
                     <select ng-model="options.slideDuration"
                             ng-options="i as (slideDurationLabels[i].labelKey | translate:slideDurationLabels[i].labelParams ) for i in slideDurations track by i">
                     </select>
+                </div>
+                <div class="item item-toggle dark">
+                    <div class="input-label">
+                        {{'MARKET.SEARCH.SHOW_CLOSED_RECORD' | translate}}
+                    </div>
+                    <label class="toggle toggle-royal">
+                        <input type="checkbox" ng-model="options.showClosed">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>

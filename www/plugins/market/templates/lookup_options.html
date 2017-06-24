@@ -15,8 +15,19 @@
         <label class="item-input-wrapper">
           <input type="text" placeholder="{{(options.location.help||'MARKET.SEARCH.LOCATION_HELP')|translate}}"
                  ng-model="search.location"
-                 ng-model-options="{ debounce: 350 }"
-                 ng-change="doSearch()"/>
+                 ng-model-options="{ debounce: 350 }"/>
         </label>
       </div>
     </span>
+
+    <div class="item item-toggle dark" ng-if="search.advanced">
+        <div class="input-label">
+            {{'MARKET.SEARCH.SHOW_CLOSED_RECORD' | translate}}
+        </div>
+        <label class="toggle toggle-royal">
+            <input type="checkbox" ng-model="search.showClosed">
+            <div class="track">
+                <div class="handle"></div>
+            </div>
+        </label>
+    </div>

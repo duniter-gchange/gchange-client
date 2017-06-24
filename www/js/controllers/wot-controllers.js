@@ -924,12 +924,12 @@ function WotIdentityViewController($scope, $rootScope, $controller, $timeout, UI
     $scope.motion.show({selector: '.view-identity .list .item'});
 
     // Transfer button
-    $scope.showFab('fab-transfer');
+    //$scope.showFab('fab-transfer');
 
     // Certify button
-    if (($scope.canCertify && !$scope.alreadyCertified) || $rootScope.tour) {
-      $scope.showFab('fab-certify-' + $scope.formData.uid);
-    }
+    //if (($scope.canCertify && !$scope.alreadyCertified) || $rootScope.tour) {
+    //  $scope.showFab('fab-certify-' + $scope.formData.uid);
+    //}
   };
 
 

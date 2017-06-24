@@ -39,7 +39,7 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   gulp config --env default
 
   # Build assets for mobile device
-  #ionic build android --release
+  ionic build android --release
   #ionic build firefoxos --release
 
   # Update config file

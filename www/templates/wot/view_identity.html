@@ -30,14 +30,14 @@
         <ion-spinner icon="android"></ion-spinner>
       </h4>
 
-      <div class="visible-xs visible-sm">
+     <!-- <div class="visible-xs visible-sm">
         <button id="fab-certify-{{:rebind:formData.uid}}"
                 class="button button-fab button-fab-top-left button-fab-hero button-calm spin"
                 ng-if=":rebind:(canCertify && !alreadyCertified)"
                 ng-click="certify()">
           <i class="icon ion-ribbon-b"></i>
         </button>
-      </div>
+      </div>-->
     </div>
 
     <!-- button bar-->
@@ -153,11 +153,11 @@
 
   </ion-content>
 
-  <!-- fab button -->
+  <!-- fab button
   <div class="visible-xs visible-sm" ng-hide="loading">
     <button id="fab-transfer" class="button button-fab button-fab-bottom-right button-assertive drop"
             ng-click="showTransferModal({pubkey:formData.pubkey, uid: formData.uid})">
       <i class="icon ion-android-send"></i>
     </button>
-  </div>
+  </div>-->
 </ion-view>
