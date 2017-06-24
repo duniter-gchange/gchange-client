@@ -119,12 +119,10 @@
 
     <div class="padding-xs" style="display: block; height: 60px;">
       <div class="pull-left" ng-if="!search.loading">
-        <h4
-                ng-if="search.lastRecords && search.results.length" translate>
+        <h4 ng-if="search.lastRecords && search.results.length" translate>
           MARKET.SEARCH.LAST_RECORDS
         </h4>
-        <h4
-                ng-if="!search.lastRecords && (search.text.length || search.advanced != null)" translate>
+        <h4 ng-if="!search.lastRecords && (search.text.length || search.advanced != null)" translate>
           COMMON.RESULTS_LIST
         </h4>
       </div>

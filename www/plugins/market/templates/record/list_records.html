@@ -33,7 +33,8 @@
             <div  ng-if="rec.picturesCount > 1"
                    class="badge badge-balanced badge-picture-count">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i>
             </div>
-
+            <div ng-if="rec.stock===0" class="badge badge-assertive" translate>MARKET.COMMON.SOLD</div>
+            <div ng-if="rec.stock>1" class="badge badge-balanced">{{::rec.stock}}</div>
           </div>
           <div class="card-footer" style="height: 45px">
             &nbsp;

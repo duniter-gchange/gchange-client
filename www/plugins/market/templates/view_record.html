@@ -112,11 +112,23 @@
             <button class="button button-stable button-small-padding icon ion-android-share-alt"
                     ng-click="showSharePopover($event)">
             </button>
-            <button class="button button-stable icon-left ink-dark"
+            <!--<button class="button button-stable icon-left ink-dark"
                     ng-if="canEdit"
                     ng-click="delete()">
               <i class="icon ion-trash-a assertive"></i>
               <span class="assertive"> {{'COMMON.BTN_DELETE' | translate}}</span>
+            </button>-->
+            <button class="button button-stable icon-left ink-dark"
+                    ng-if="canSold"
+                    ng-click="sold()">
+              <i class="icon ion-card"></i>
+              {{'MARKET.VIEW.BTN_SOLD' | translate}}
+            </button>
+            <button class="button button-stable icon-left ink-dark"
+                    ng-if="canReopen"
+                    ng-click="reopen()">
+              <i class="icon ion-unlocked"></i>
+              {{'MARKET.VIEW.BTN_REOPEN' | translate}}
             </button>
             <button class="button button-calm icon-left ion-android-create ink"
                     ng-if="canEdit"

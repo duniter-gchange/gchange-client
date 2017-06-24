@@ -11,11 +11,25 @@
         {{'COMMON.BTN_SHARE' | translate}}
       </a>
 
-      <a class="item item-icon-left assertive ink "
+      <!--<a class="item item-icon-left assertive ink "
          ng-if="canEdit"
          ng-click="delete()">
         <i class="icon ion-trash-a"></i>
         {{'COMMON.BTN_DELETE' | translate}}
+      </a>-->
+
+      <a class="item item-icon-left ink "
+         ng-if="canSold"
+         ng-click="sold()">
+        <i class="icon ion-card"></i>
+        {{'MARKET.VIEW.BTN_SOLD' | translate}}
+      </a>
+
+      <a class="item item-icon-left ink "
+         ng-if="canReopen"
+         ng-click="reopen()">
+        <i class="icon ion-unlocked"></i>
+        {{'MARKET.VIEW.BTN_REOPEN' | translate}}
       </a>
     </div>
   </ion-content>

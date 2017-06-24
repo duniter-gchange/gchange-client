@@ -6,7 +6,8 @@
   "MARKET": {
     "COMMON": {
       "PRICE": "Prix",
-      "BTN_NEW_AD": "Je dépose une annonce"
+      "BTN_NEW_AD": "Je dépose une annonce",
+      "SOLD": "Annonce clôturée"
     },
     "PROFILE": {
       "DEFAULT_TITLE": "Utilisateur {{pubkey|formatPubkey}}"
@@ -57,9 +58,13 @@
     },
     "VIEW": {
       "TITLE": "Annonce",
+      "BTN_SOLD": "Clôturer l'annonce",
+      "BTN_REOPEN": "Réouvrir l'annonce",
       "MENU_TITLE": "Options",
       "POPOVER_SHARE_TITLE": "Annonce {{title}}",
-      "REMOVE_CONFIRMATION" : "Êtes-vous sûr de vouloir supprimer cette annonce ?<br/><br/>Cette opération est irréversible."
+      "REMOVE_CONFIRMATION" : "Êtes-vous sûr de vouloir supprimer cette annonce ?<br/><br/>Cette opération est irréversible.",
+      "SOLD_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir clôturer cette annonce ?",
+      "REOPEN_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir réouvrir cette annonce ?"
     },
     "TYPE": {
       "TITLE": "Nouvelle annonce",
@@ -97,12 +102,16 @@
       "LOOKUP_RECORDS_FAILED": "Erreur lors de l'execution de la recherche.",
       "LOAD_RECORD_FAILED": "Erreur lors du chargement de l'annonce.",
       "REMOVE_RECORD_FAILED": "Erreur de la suppression de l'annonce",
+      "SOLD_RECORD_FAILED": "Erreur lors de la clôture de l'annonce",
+      "REOPEN_RECORD_FAILED": "Erreur lors de la réouverture de l'annonce",
       "FAILED_SAVE_COMMENT": "Erreur lors de la sauvegarde du commentaire",
       "FAILED_REMOVE_COMMENT": "Erreur lors de la suppression du commentaire",
       "RECORD_NOT_EXISTS": "Annonce inexistante"
     },
     "INFO": {
-      "RECORD_REMOVED" : "Annonce supprimée"
+      "RECORD_REMOVED" : "Annonce supprimée",
+      "RECORD_SOLD" : "Annonce clôturée",
+      "RECORD_REOPEN" : "Annonce réouverte"
     }
   },
   "EVENT": {

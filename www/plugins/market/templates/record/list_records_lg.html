@@ -43,6 +43,8 @@
           </div>
           <div class="col hidden-sm hidden-xs">
               <h3 class="gray text-wrap" ng-bind-html="rec.description | truncText:500" ng-if="rec.description"></h3>
+              <div ng-if="!rec.stock" class="badge badge-assertive"  translate>MARKET.COMMON.SOLD</div>
+              <div ng-if="rec.stock>1" class="badge badge-balanced">{{::rec.stock}}</div>
           </div>
         </div>
       </a>

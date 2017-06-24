@@ -7,7 +7,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 
     var
       fields = {
-        commons: ["category", "title", "description", "issuer", "time", "location", "price", "unit", "currency", "thumbnail._content_type", "picturesCount", "type"]
+        commons: ["category", "title", "description", "issuer", "time", "location", "price", "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock"]
       },
       exports = {
         id: id,
@@ -326,6 +326,17 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         });
     }
 
+    function setStockToRecord(id, stock) {
+          return exports._internal.get({id: id})
+              .then(function(res) {
+                  if (!res || !res._source) return;
+                  var record = res._source;
+                  record.stock = stock||0;
+                  record.id = id;
+                  return exports.record.update(record, {id: id});
+              });
+    }
+
     function searchPictures(options) {
         options = options || {};
 
@@ -406,6 +417,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
     exports.record = {
         search: search,
         load: loadData,
+        setStock: setStockToRecord,
         pictures: searchPictures,
         add: esHttp.record.post('/market/record'),
         update: esHttp.record.post('/market/record/:id/_update'),

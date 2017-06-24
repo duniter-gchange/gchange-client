@@ -96,7 +96,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
 ;
 
-function MkLookupAbstractController($scope, $state, $focus, $filter, $q,
+function MkLookupAbstractController($scope, $state, $filter, $q,
                                   UIUtils, ModalUtils, csConfig, mkRecord, BMA) {
   'ngInject';
 
@@ -203,10 +203,7 @@ function MkLookupAbstractController($scope, $state, $focus, $filter, $q,
     }
 
     if (!matches.length && !filters.length) {
-      $scope.search.results = [];
-      $scope.search.hasMore = false;
-      $scope.search.loading = false;
-      return $q.when();
+      return $scope.doGetLastRecord();
     }
 
     if ($scope.search.type) {
@@ -240,6 +237,13 @@ function MkLookupAbstractController($scope, $state, $focus, $filter, $q,
     }
 
     return $scope.doRequest(options);
+  };
+
+  $scope.doRefresh = function() {
+    var searchFunction = ($scope.search.lastRecords) ?
+        $scope.doGetLastRecord :
+        $scope.doSearch;
+    return searchFunction();
   };
 
   $scope.showMore = function() {
@@ -518,6 +522,11 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         $scope.id = data.id;
         $scope.issuer = data.issuer;
         $scope.canEdit = $scope.formData && csWallet.isUserPubkey($scope.formData.issuer);
+        $scope.canSold = $scope.canEdit && $scope.formData.stock > 0;
+        $scope.canReopen = $scope.canEdit && $scope.formData.stock === 0;
+        if ($scope.canReopen) {
+          $scope.canEdit = false;
+        }
         UIUtils.loading.hide();
         $scope.loading = false;
         // Set Motion (only direct children, to exclude .lazy-load children)
@@ -605,6 +614,57 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
             .catch(UIUtils.onError('MARKET.ERROR.REMOVE_RECORD_FAILED'));
         }
       });
+  };
+
+  $scope.sold = function () {
+    $scope.hideActionsPopover();
+
+    UIUtils.alert.confirm('MARKET.VIEW.SOLD_CONFIRMATION')
+        .then(function (confirm) {
+          if (confirm) {
+            UIUtils.loading.show();
+            return mkRecord.record.setStock($scope.id, 0)
+              .then(function () {
+                // Update some fields (if view still in cache)
+                $scope.canSold = false;
+                $scope.canReopen = true;
+                $scope.canEdit = false;
+                $ionicHistory.nextViewOptions({
+                  historyRoot: true
+                });
+                return $state.go('app.market_lookup');
+              })
+              .then(function() {
+                UIUtils.toast.show('MARKET.INFO.RECORD_SOLD');
+              })
+              .catch(UIUtils.onError('MARKET.ERROR.SOLD_RECORD_FAILED'));
+          }
+        });
+  };
+
+  $scope.reopen = function () {
+    $scope.hideActionsPopover();
+
+    UIUtils.alert.confirm('MARKET.VIEW.REOPEN_CONFIRMATION')
+        .then(function (confirm) {
+          if (confirm) {
+            return UIUtils.loading.show()
+                .then(function() {
+                  return mkRecord.record.setStock($scope.id, 1)
+                      .then(function () {
+                        // Update some fields (if view still in cache)
+                        $scope.canSold = true;
+                        $scope.canReopen = false;
+                        $scope.canEdit = true;
+                        return UIUtils.loading.hide();
+                      })
+                      .then(function() {
+                        UIUtils.toast.show('MARKET.INFO.RECORD_REOPEN');
+                      })
+                      .catch(UIUtils.onError('MARKET.ERROR.REOPEN_RECORD_FAILED'));
+                });
+          }
+        });
   };
 
   /* -- modals & popover -- */
@@ -795,6 +855,7 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
         $scope.useRelative = $scope.formData.price ?
           ($scope.formData.unit === 'UD') :
           csSettings.data.useRelative;
+        $scope.dirty = false;
         $scope.loading = false;
         UIUtils.loading.hide();
         $scope.motion.show({
@@ -874,6 +935,10 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
       .then(function(json) {
         if (!$scope.id) {
           json.creationTime = esHttp.date.now();
+
+          // By default: stock always > 1 when created
+          json.stock = json.stock || 1;
+
           return mkRecord.record.add(json);
         }
         else {
