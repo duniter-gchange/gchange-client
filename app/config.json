@@ -11,7 +11,7 @@
       "enable": false
     },
     "node": {
-      "host": "g1.duniter.org",
+      "host": "g1.duniter.fr",
       "port": "443"
     },
     "login": {
@@ -80,11 +80,12 @@
       "enable": false
     },
     "node": {
-      "host": "g1.duniter.org",
+      "host": "g1.duniter.fr",
       "port": "443"
     },
     "login": {
-      "templateUrl": "plugins/market/templates/login/modal_simple_login.html"
+      "templateUrl": "plugins/market/templates/login/modal_simple_login.html",
+      "controller": "MarketLoginModalCtrl"
     },
     "plugins":{
       "es": {
