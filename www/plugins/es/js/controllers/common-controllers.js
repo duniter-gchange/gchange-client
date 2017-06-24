@@ -44,14 +44,13 @@ function ESPicturesEditController($scope, UIUtils, $q, Device) {
     return $q(function(resolve, reject) {
       var file = event.target.files[0];
       UIUtils.image.resizeFile(file)
-      .then(function(imageData) {
-        $scope.pictures.push({
-          src: imageData,
-          isnew: true // use to prevent visibility hidden (if animation)
-        });
-        UIUtils.loading.hide(100);
-        //$scope.$apply();
-        resolve();
+        .then(function(imageData) {
+          $scope.pictures.push({
+            src: imageData,
+            isnew: true // use to prevent visibility hidden (if animation)
+          });
+          UIUtils.loading.hide(100);
+          resolve();
       });
     });
   };
@@ -66,6 +65,14 @@ function ESPicturesEditController($scope, UIUtils, $q, Device) {
       $scope.pictures.splice(index, 1);
       $scope.pictures.splice(0, 0, item);
     }
+  };
+
+  $scope.rotatePicture = function(index){
+    var item = $scope.pictures[index];
+    UIUtils.image.rotateSrc(item.src)
+      .then(function(dataURL){
+        item.src = dataURL;
+      });
   };
 }
 

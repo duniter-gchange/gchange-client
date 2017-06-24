@@ -275,15 +275,63 @@ angular.module('cesium.utils.services', ['ngResource'])
   function resizeImageFromSrc(imageSrc, thumbnail) {
     var img = document.createElement("img");
     return $q(function(resolve, reject) {
-      img.onload = imageOnLoadResize(resolve, reject, thumbnail);
-      img.src = imageSrc;
-    })
-    .then(function(data){
-      img.remove();
-      return data;
-    });
+        img.onload = imageOnLoadResize(resolve, reject, thumbnail);
+        img.src = imageSrc;
+      })
+      .then(function(data){
+        img.remove();
+        return data;
+      });
   }
 
+  function imageOnLoadRotate(resolve, reject) {
+    var deg = Math.PI / 180;
+    var angle = 90 * deg;
+    return function(event) {
+      var width = event.target.width;
+      var height = event.target.height;
+      var maxWidth = CONST.MAX_WIDTH;
+      var maxHeight = CONST.MAX_HEIGHT;
+
+      if (width > height) {
+        if (width > maxWidth) {
+          height *= maxWidth / width;
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width *= maxHeight / height;
+          height = maxHeight;
+        }
+      }
+
+      var canvas = document.createElement("canvas");
+      canvas.width = height;
+      canvas.height = width;
+
+      var ctx = canvas.getContext("2d");
+      ctx.rotate(angle);
+      ctx.drawImage(event.target, 0, (-1) * canvas.width);
+
+      var dataurl = canvas.toDataURL();
+
+      canvas.remove();
+
+      resolve(dataurl);
+    };
+  }
+
+  function rotateFromSrc(imageSrc, angle) {
+    var img = document.createElement("img");
+    return $q(function(resolve, reject) {
+        img.onload = imageOnLoadRotate(resolve, reject, angle);
+        img.src = imageSrc;
+      })
+      .then(function(data){
+        img.remove();
+        return data;
+      });
+  }
 
   function showPopover(event, options) {
 
@@ -700,7 +748,8 @@ angular.module('cesium.utils.services', ['ngResource'])
     },
     image: {
       resizeFile: resizeImageFromFile,
-      resizeSrc: resizeImageFromSrc
+      resizeSrc: resizeImageFromSrc,
+      rotateSrc: rotateFromSrc
     },
     raw: raw
   };

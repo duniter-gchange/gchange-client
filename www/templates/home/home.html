@@ -66,12 +66,11 @@
         </div>-->
 
         <!-- disconnect link -->
-        <div class="text-center no-padding" ng-show="login">
-          <br class="visible-xs visible-sm"/>
+        <div class="text-center no-padding hidden-xs hidden-sm" ng-show="login">
           <span ng-bind-html="'HOME.NOT_YOUR_ACCOUNT_QUESTION'|translate:$root.walletData"></span>
           <br/>
           <b>
-            <a class="assertive hidden-xs hidden-sm" ng-click="logout()" translate>
+            <a class="assertive" ng-click="logout()" translate>
               HOME.BTN_CHANGE_ACCOUNT
             </a>
           </b>

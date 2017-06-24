@@ -131,65 +131,6 @@ function MkLookupAbstractController($scope, $state, $focus, $filter, $q,
       }
     }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
-  $scope.enter = function(e, state) {
-
-    var isAdvanced = false;
-
-    // Search by text
-    if (state.stateParams && state.stateParams.q) { // Query parameter
-      $scope.search.text=state.stateParams.q;
-      isAdvanced = true;
-    }
-
-    // Search on type
-    if (state.stateParams && state.stateParams.type) {
-      $scope.search.type = state.stateParams.type;
-      isAdvanced = true;
-    }
-
-    // Search on location
-    if (state.stateParams && state.stateParams.location) {
-      $scope.search.location = state.stateParams.location;
-      isAdvanced = true;
-    }
-
-    // Search on category
-    if (state.stateParams && state.stateParams.category) {
-      mkRecord.category.get({id: state.stateParams.category})
-        .then(function(cat) {
-          $scope.search.category = cat;
-          $scope.finishEnter(true);
-        });
-    }
-    else {
-      $scope.finishEnter(isAdvanced);
-    }
-
-  };
-
-
-  $scope.finishEnter = function(isAdvanced) {
-    $scope.search.advanced = isAdvanced ? true : $scope.search.advanced; // keep null if first call
-    if (isAdvanced || $scope.search.category) {
-      $scope.doSearch()
-          .then(function() {
-            $scope.showFab('fab-add-market-record');
-          });
-    }
-    else { // By default : get last record
-      $scope.doGetLastRecord()
-          .then(function() {
-            $scope.showFab('fab-add-market-record');
-          });
-    }
-    // removeIf(device)
-    // Focus on search text (only if NOT device, to avoid keyboard opening)
-    if($scope.search.focusElementId) {
-      $focus('marketSearchText');
-    }
-    // endRemoveIf(device)
-    $scope.entered = true;
-  };
 
   $scope.setAdType = function(type) {
     if (type != $scope.search.type) {
@@ -422,8 +363,7 @@ function MkLookupAbstractController($scope, $state, $focus, $filter, $q,
 }
 
 
-function MkLookupController($scope, $controller, $rootScope, $state, $focus, $filter, $q,
-                            UIUtils, ModalUtils, csConfig, mkRecord, BMA) {
+function MkLookupController($scope, $controller, $focus, mkRecord) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -470,17 +410,13 @@ function MkLookupController($scope, $controller, $rootScope, $state, $focus, $fi
     if (isAdvanced || $scope.search.category) {
       $scope.doSearch()
           .then(function() {
-            if ($scope.search.fabAddNewRecordId) {
-              $scope.showFab($scope.search.fabAddNewRecordId);
-            }
+            $scope.showFab('fab-add-market-record');
           });
     }
     else { // By default : get last record
       $scope.doGetLastRecord()
           .then(function() {
-            if ($scope.search.fabAddNewRecordId) {
-              $scope.showFab($scope.search.fabAddNewRecordId);
-            }
+            $scope.showFab('fab-add-market-record');
           });
     }
     // removeIf(device)
@@ -905,21 +841,15 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
         json.picturesCount = $scope.pictures.length;
         if (json.picturesCount) {
 
-          return $q.all(
-              // resize all pictures
-              $scope.pictures.reduce(function(res, pic) {
-                return res.concat(UIUtils.image.resizeSrc(pic.src, false));
-              },
-              // First: resize thumbnail
-              [UIUtils.image.resizeSrc($scope.pictures[0].src, true)]
-          ))
-            .then(function(imagesSrc) {
+          // Resize thumbnail
+          return UIUtils.image.resizeSrc($scope.pictures[0].src, true)
+            .then(function(thumbnailSrc) {
               // First image = the thumbnail
-              json.thumbnail = esHttp.image.toAttachment({src: imagesSrc.splice(0,1)});
+              json.thumbnail = esHttp.image.toAttachment({src: thumbnailSrc});
               // Then = all pictures
-              json.pictures = imagesSrc.reduce(function(res, imagesSrc) {
+              json.pictures = $scope.pictures.reduce(function(res, picture) {
                 return res.concat({
-                  file: esHttp.image.toAttachment({src: imagesSrc})
+                  file: esHttp.image.toAttachment({src: picture.src})
                 });
               }, []);
 
