@@ -28,11 +28,15 @@
                     <h1>
                         {{picture.title}}
                     </h1>
-                    <span class="badge badge-stable badge-price dark">
+                    <span class="badge badge-stable badge-price dark"
+                        ng-class="{'sold': !picture.stock}">
                     {{picture.price|formatAmount:picture }}
                     </span>
-                    <span class="badge badge-secondary" ng-if="picture.location" >
+                    <span class="badge badge-secondary" ng-if="picture.location && picture.stock" >
                         {{options.location.prefix|translate}} {{picture.location}}
+                    </span>
+                    <span class="badge badge-assertive badge-secondary" ng-if="!picture.stock" translate>
+                        MARKET.COMMON.SOLD
                     </span>
                 </div>
             </div>

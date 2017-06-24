@@ -343,7 +343,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         var request = {
             from: options.from||0,
             size: options.size||20,
-            _source: options._source || ["category", "title", "price", "unit", "currency", "location", "pictures"]
+            _source: options._source || ["category", "title", "price", "unit", "currency", "location", "pictures", "stock"]
             /*query: {
                 filter
             }*/

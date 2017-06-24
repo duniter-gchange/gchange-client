@@ -238,6 +238,12 @@
     padding: 12px !important;
   }
 
+  .modal-pictures .badge-price.sold  {
+    text-decoration-color: #ef473a;
+    text-decoration-line: line-through;
+    text-decoration-style: solid;
+  }
+
   .modal-pictures .badge.badge-secondary {
     font-size: 20px;
     font-style: italic;
