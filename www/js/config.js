@@ -10,7 +10,7 @@ angular.module("cesium.config", [])
 
 .constant("csConfig", {
 	"defaultLanguage": "fr-FR",
-	"timeout": 6000,
+	"timeout": 4000,
 	"cacheTimeMs": 60000,
 	"useLocalStorage": true,
 	"rememberMe": true,
@@ -22,15 +22,13 @@ angular.module("cesium.config", [])
 		"port": "443"
 	},
 	"login": {
-		"templateUrl": "plugins/market/templates/login/modal_simple_login.html",
-		"controller": "MarketLoginModalCtrl"
+		"templateUrl": "plugins/market/templates/login/modal_simple_login.html"
 	},
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "localhost",
-			"port": "9200",
-			"wsPort": "9400"
+			"host": "data.gchange.fr",
+			"port": "443"
 		},
 		"market": {
 			"enable": true,
@@ -38,16 +36,17 @@ angular.module("cesium.config", [])
 			"homeMessage": "<i class=\"icon ion-location\"></i> Vide-grenier de Villiers-charlemagne",
 			"defaultTags": [
 				{
-					"tag": "vide-grenier",
+					"tag": "VideGrenier",
 					"name": "Vide-grenier"
 				},
 				{
-					"tag": "villers-charlemagne-2017",
+					"tag": "VillersCharlemagne2017",
 					"name": "Vide-grenier de Villiers-charlemagne"
 				}
 			],
 			"defaultAdminPubkeys": [
-				"CohjkoP5YnqzTV2wwdCFND74BDDmDR7dAQEPGt4tj2Tw" // BLA
+				"CohjkoP5YnqzTV2wwdCFND74BDDmDR7dAQEPGt4tj2Tw",
+				"GWAKPVoMdQw1LYqcWW8jckzox9VwNXGt6cQ1L5gNt3E9"
 			],
 			"record": {
 				"type": {
@@ -75,8 +74,8 @@ angular.module("cesium.config", [])
 			}
 		}
 	},
-	"version": "0.4.1",
-	"build": "2017-06-20T08:45:18.099Z",
+	"version": "0.4.2",
+	"build": "2017-06-24T16:06:40.587Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
