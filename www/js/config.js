@@ -20,11 +20,12 @@ angular.module("cesium.config", [])
 		"enable": false
 	},
 	"node": {
-		"host": "g1.duniter.org",
+		"host": "g1.duniter.fr",
 		"port": "443"
 	},
 	"login": {
-		"templateUrl": "plugins/market/templates/login/modal_simple_login.html"
+		"templateUrl": "plugins/market/templates/login/modal_simple_login.html",
+		"controller": "MarketLoginModalCtrl"
 	},
 	"plugins": {
 		"es": {
@@ -76,8 +77,8 @@ angular.module("cesium.config", [])
 			}
 		}
 	},
-	"version": "0.4.3",
-	"build": "2017-06-24T21:01:32.995Z",
+	"version": "0.4.4",
+	"build": "2017-06-24T21:59:14.549Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
