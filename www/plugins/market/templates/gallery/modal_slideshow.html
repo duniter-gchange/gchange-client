@@ -1,0 +1,45 @@
+<ion-modal-view class="modal modal-pictures" on-swipe-down="closeModal()">
+
+    <ion-header-bar class="transparent">
+        <!-- start/stop buttons -->
+        <a class="button button-icon button-small-padding pull-left icon ion-play hidden-xs hidden-sm ink"
+           ng-class="{'light': !interval, 'gray': interval}"
+           title="{{'MARKET.GALLERY.BTN_START'|translate}}"
+           ng-click="start()">
+        </a>
+        <a class="button button-icon button-small-padding pull-left icon ion-pause hidden-xs hidden-sm ink"
+           ng-class="{'light': interval, 'gray': !interval}"
+           title="{{'MARKET.GALLERY.BTN_PAUSE'|translate}}"
+           ng-click="stop()">
+        </a>
+
+        <h1 class="title balanced" ng-bind-html="activeCategory.name"></h1>
+
+        <a class="button button-icon pbutton-small-padding pull-right  light hidden-xs hidden-sm ink"
+           ng-click="closeModal()">
+            <i class="icon ion-close"></i>
+        </a>
+    </ion-header-bar>
+
+    <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="activeSlide" class="has-header">
+        <ion-slide ng-repeat="picture in activeCategory.pictures">
+            <div class="row light no-padding">
+                <div class="col item no-border text-center">
+                    <h1>
+                        {{picture.title}}
+                    </h1>
+                    <span class="badge badge-stable badge-price dark">
+                    {{picture.price|formatAmount:picture }}
+                    </span>
+                    <span class="badge badge-secondary" ng-if="picture.location" >
+                        {{options.location.prefix|translate}} {{picture.location}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="image" style="background-image: url( {{picture.src}} )"></div>
+
+
+        </ion-slide>
+    </ion-slide-box>
+</ion-modal-view>

@@ -73,8 +73,8 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
     })
 
     .state('app.market_gallery', {
-      cache: false,
-      url: "/market/gallery",
+      cache: true,
+      url: "/gallery/market",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/gallery/view_gallery.html",
@@ -982,7 +982,7 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
   };
 }
 
-function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $ionicSlideBoxDelegate, ModalUtils, $timeout, $interval, mkRecord) {
+function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $ionicSlideBoxDelegate, $ionicModal, $timeout, $interval, mkRecord) {
 
 
   // Initialize the super class and extend it.
@@ -992,62 +992,137 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
   $scope.activeSlide = 0;
   $scope.activeCategory = null;
   $scope.activeCategoryIndex = 0;
+  $scope.started = false;
 
   $scope.options = $scope.options || angular.merge({
         category: {
           filter: undefined
         },
-        slideDuration: 3000
+        slideDuration: 5000 // 5 sec
       }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
-  $scope.enter = function(e, state) {
-    $scope.load();
+  $scope.slideDurationLabels = {
+    3000: {
+      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
+      labelParams: {value: 3}
+    },
+    5000: {
+      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
+      labelParams: {value: 5}
+    },
+    10000: {
+      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
+      labelParams: {value: 10}
+    },
+    15000: {
+      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
+      labelParams: {value: 15}
+    },
+    20000: {
+      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
+      labelParams: {value: 20}
+    }
   };
-  $scope.$on('$ionicView.enter', $scope.enter);
+  $scope.slideDurations = _.keys($scope.slideDurationLabels);
 
-  $scope.load = function(options) {
+  $scope.resetSlideShow = function() {
+    delete $scope.activeCategory;
+    delete $scope.activeCategoryIndex;
+    delete $scope.activeSlide;
+    delete $scope.categories;
+  };
+
+  $scope.startSlideShow = function(options) {
+
+
+    // Already load: continue
+    if ($scope.activeCategory && $scope.activeCategory.pictures && $scope.activeCategory.pictures.length) {
+      return $scope.showPicturesModal($scope.activeCategoryIndex,$scope.activeSlide);
+    }
+
     options = options || {};
     options.filter = options.filter || ($scope.options && $scope.options.category && $scope.options.category.filter);
 
+    $scope.stop();
+
     $scope.loading = true;
+
+    delete $scope.activeCategory;
+    delete $scope.activeCategoryIndex;
+    delete $scope.activeSlide;
+
     return mkRecord.category.stats(options)
-      .then(function(res) {
-        // Exclude empty categories
-        $scope.categories = _.filter(res, function(cat) {
-          return cat.count > 0 && cat.children && cat.children.length;
+        .then(function(res) {
+          // Exclude empty categories
+          $scope.categories = _.filter(res, function(cat) {
+            return cat.count > 0 && cat.children && cat.children.length;
+          });
+
+          // Increment category
+          return $scope.nextCategory();
+        })
+        .then(function() {
+          $scope.loading = false;
+        })
+        .catch(function(err) {
+          console.error(err);
+          $scope.loading = false;
+        })
+      .then(function() {
+        if ($scope.categories && $scope.categories.length) {
+          return $scope.showPicturesModal(0,0);
+        }
+      });
+  };
+
+  $scope.showPicturesModal = function(catIndex, picIndex, pause) {
+    $scope.activeCategoryIndex = catIndex;
+    $scope.activeSlide = picIndex;
+
+    $scope.activeCategory = $scope.categories[catIndex];
+
+    if ($scope.modal) {
+      $ionicSlideBoxDelegate.slide(picIndex);
+      $ionicSlideBoxDelegate.update();
+      return $scope.modal.show()
+        .then(function() {
+          if (!pause) {
+            $scope.start();
+          }
+        });
+    }
+
+    return $ionicModal.fromTemplateUrl('plugins/market/templates/gallery/modal_slideshow.html',
+        {
+        scope: $scope
+      })
+      .then(function(modal) {
+        $scope.modal = modal;
+        $scope.modal.scope.closeModal = $scope.hidePictureModal;
+        // Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function() {
+          if ($scope.modal) {
+            $scope.modal.remove();
+            delete $scope.modal;
+          }
         });
 
-        // Increment category
-        return $scope.nextCategory();
-      })
-      .then(function() {
-        $scope.loading = false;
-      })
-      .catch(function(err) {
-        console.error(err);
+        return $scope.modal.show()
+          .then(function() {
+            if (!pause) {
+              $scope.start();
+            }
+          });
       });
 
   };
 
-  $scope.showPicturesModal = function(index) {
-    $scope.activeSlide = index;
-
-
-    ModalUtils.show('plugins/market/templates/gallery/modal_pictures_slider.html',
-        undefined,
-        undefined,
-        {
-          scope: $scope
-        })
-        .then(function() {
-          // Modal closed
-          $scope.stop();
-        });
-
-    $timeout(function() {
-      $scope.start();
-      //$scope.nextSlide();
-    }, $scope.options.slideDuration);
+  $scope.hidePictureModal = function() {
+    $scope.stop();
+    if ($scope.modal && $scope.modal.isShown()) {
+      return $scope.modal.hide();
+    }
+    return $q.when();
   };
 
   $scope.start = function() {
@@ -1055,45 +1130,49 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
       $interval.cancel($scope.interval);
     }
 
+    console.debug('[market] [gallery] Start slideshow');
     $scope.interval = $interval(function() {
       $scope.nextSlide();
     }, $scope.options.slideDuration);
+
   };
 
   $scope.stop = function() {
     if ($scope.interval) {
+      console.debug('[market] [gallery] Stop slideshow');
       $interval.cancel($scope.interval);
+      delete $scope.interval;
     }
   };
 
   /* -- manage slide box slider-- */
 
-  $scope.nextCategory = function(activeCategoryIndex) {
-    if (!$scope.categories || !$scope.categories.length) return;
+  $scope.nextCategory = function(started) {
+    if (!$scope.categories || !$scope.categories.length) return $q.when();
 
-    // End of slideshow: reload all
-    if ($scope.activeCategoryIndex == $scope.categories.length-1) {
-      var started = !!$scope.interval;
+    var started = started || !!$scope.interval;
 
-      // Make sur sure to stop slideshow
-      if (started) $scope.stop();
-
-      // Do not try try to reloop: no data
-      if ($scope.loading) return $q.when();
-
-      // Reload root categories
-      $scope.activeCategoryIndex = 0;
-      return $scope.load()
-
-        // Then restart if need
-        .then(function() {
-          if (started) {
-            $scope.start();
-          }
+    // Make sur sure to stop slideshow
+    if (started && $scope.modal.isShown()) {
+      return $scope.hidePictureModal()
+        .then(function(){
+          return $scope.nextCategory(started);
         });
     }
 
     $scope.activeCategoryIndex = $scope.loading ? 0 : $scope.activeCategoryIndex+1;
+
+    // End of slideshow: restart (reload all)
+    if ($scope.activeCategoryIndex == $scope.categories.length) {
+
+      $scope.resetSlideShow();
+
+      if (started) {
+        return $scope.startSlideShow();
+      }
+      return $q.when()
+    }
+
     var category = $scope.categories[$scope.activeCategoryIndex];
 
     // Load pictures
@@ -1103,16 +1182,16 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
       })
       .then(function(pictures) {
         category.pictures = pictures;
-        $scope.activeCategory = category;
-        $scope.pictures = pictures;
-        $ionicSlideBoxDelegate.update();
-        $ionicSlideBoxDelegate.slide(0);
+        if (started) {
+          return $scope.showPicturesModal($scope.activeCategoryIndex,0);
+        }
       });
   };
 
   $scope.nextSlide = function() {
+
     // If end of category pictures
-    if (!$scope.pictures || !$scope.pictures.length || $ionicSlideBoxDelegate.currentIndex() == $scope.pictures.length-1) {
+    if (!$scope.activeCategory || !$scope.activeCategory.pictures || !$scope.activeCategory.pictures.length || $ionicSlideBoxDelegate.currentIndex() == $scope.activeCategory.pictures.length-1) {
       $scope.nextCategory();
     }
     else {
@@ -1129,13 +1208,11 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
     }
   };
 
-  $scope.slideChanged = function(index) {
-    $scope.activeSlide = index;
+  $scope.isLoadedCategory = function(cat) {
+    return cat.pictures && cat.pictures.length>0;
   };
 
-  /*$scope.$watchCollection('pictures', function() {
-    console.log("pictures change detected !");
-    $ionicSlideBoxDelegate.update();
-  }, true);*/
-
+  $scope.slideChanged = function(index) {
+    $scope.activeSlide = index;
+  }
 }

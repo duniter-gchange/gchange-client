@@ -12,20 +12,51 @@
         </button>-->
     </ion-nav-buttons>
 
-    <ion-content class="has-header padding">
+    <ion-content class="has-header ">
 
-        <ng-repeat ng-repeat="cat in categories | filter:notEmptyCategory track by cat.id">
-            <div class="item item-divider">
-                <i class="ion-images"></i>
-                <span ng-bind-html="cat.name"></span> ({{cat.count}})
+        <div class="row responsive-sm">
+            <div class="col col-15">
+                <button class="button button-block button-raised icon icon-left ion-play ink"
+                        title="{{!activeCategory ? 'MARKET.GALLERY.BTN_START' : 'MARKET.GALLERY.BTN_CONTINUE' | translate}}"
+                ng-click="startSlideShow()">
+                    {{!activeCategory ? 'MARKET.GALLERY.BTN_START' : 'MARKET.GALLERY.BTN_CONTINUE' | translate}}
+                </button>
             </div>
 
-            <a class="item item-list-detail">
-                <ion-scroll direction="x">
-                    <img ng-repeat="picture in cat.pictures track by picture.id" ng-src="{{picture.src}}" ng-click="showPicturesModal($index)" class="image-list-thumb"/>
-                </ion-scroll>
-            </a>
-        </ng-repeat>
+            <div class="col col-15">
+                <button class="button button-block button-raised icon icon-left ion-stop ink"
+                        title="{{'MARKET.GALLERY.BTN_STOP' | translate}}"
+                        ng-disabled="!activeCategory"
+                        ng-click="resetSlideShow()">
+                    {{'MARKET.GALLERY.BTN_STOP' | translate}}
+                </button>
+            </div>
 
+            <div class="col list">
+                <div class="item item-input item-select no-border">
+                    <div class="input-label">
+                        {{'MARKET.GALLERY.SLIDE_DURATION' | translate}}
+                    </div>
+                    <select ng-model="options.slideDuration"
+                            ng-options="i as (slideDurationLabels[i].labelKey | translate:slideDurationLabels[i].labelParams ) for i in slideDurations track by i">
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="list">
+            <ng-repeat ng-repeat="cat in categories | filter:isLoadedCategory track by cat.id" ng-init="catIndex=$index">
+                <div class="item item-divider">
+
+                    <span ng-bind-html="cat.name"></span> ({{cat.count}})
+                </div>
+
+                <a class="item item-list-detail">
+                    <ion-scroll direction="x">
+                        <img ng-repeat="picture in cat.pictures track by picture.id" ng-src="{{picture.src}}" ng-click="showPicturesModal(catIndex, $index, true)" class="image-list-thumb"/>
+                    </ion-scroll>
+                </a>
+            </ng-repeat>
+        </div>
     </ion-content>
 </ion-view>

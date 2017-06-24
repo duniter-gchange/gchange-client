@@ -47,7 +47,13 @@
       "BTN_NEEDS": "Demandes"
     },
     "GALLERY": {
-      "TITLE": "Gallerie"
+      "TITLE": "Diaporama",
+      "BTN_START": "Démarrer",
+      "BTN_CONTINUE": "Reprendre",
+      "BTN_PAUSE": "Pause",
+      "BTN_STOP": "Arrêter",
+      "SLIDE_DURATION": "Durée d'affichage :",
+      "SLIDE_DURATION_OPTION": "{{value}} secondes"
     },
     "VIEW": {
       "TITLE": "Annonce",
