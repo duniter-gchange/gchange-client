@@ -1,5 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="fr.gchange" version="0.4.4">
+<widget id="fr.gchange"
+        ersion="0.4.4" android:version="0.4.4"
+        android-versionCode="440"
+        xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0"
+>
     <name>ğchange</name>
     <description>
   An unhosted webapp for market with libre currency

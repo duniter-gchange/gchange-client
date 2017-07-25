@@ -1,26 +1,26 @@
-angular.module('cesium.utils.services', ['ngResource'])
+angular.module('cesium.utils.services', [])
 
 .factory('UIUtils', function($ionicLoading, $ionicPopup, $ionicConfig, $translate, $q, ionicMaterialInk, ionicMaterialMotion, $window, $timeout,
                              // removeIf(no-device)
-                             //FIXME $cordovaToast,
+                             $cordovaToast,
                              // endRemoveIf(no-device)
                              $ionicPopover, $state, $rootScope, screenmatch, csSettings) {
   'ngInject';
 
 
   var
-    loadingTextCache=null,
-    CONST = {
-      MAX_HEIGHT: 600,
-      MAX_WIDTH: 400,
-      THUMB_MAX_HEIGHT: 100,
-      THUMB_MAX_WIDTH: 100
-    },
-    data = {
-      smallscreen: screenmatch.bind('xs, sm', $rootScope)
-    },
-    exports,
-    raw = {}
+  loadingTextCache=null,
+  CONST = {
+    MAX_HEIGHT: 600,
+    MAX_WIDTH: 400,
+    THUMB_MAX_HEIGHT: 100,
+    THUMB_MAX_WIDTH: 100
+  },
+  data = {
+    smallscreen: screenmatch.bind('xs, sm', $rootScope)
+  },
+  exports,
+  raw = {}
   ;
 
   function alertError(err, subtitle) {
@@ -30,45 +30,45 @@ angular.module('cesium.utils.services', ['ngResource'])
 
     return $q(function(resolve) {
       $translate([err, subtitle, 'ERROR.POPUP_TITLE', 'ERROR.UNKNOWN_ERROR', 'COMMON.BTN_OK'])
-      .then(function (translations) {
-        var message = err.message || translations[err];
-        return $ionicPopup.show({
-          template: '<p>' + (message || translations['ERROR.UNKNOWN_ERROR']) + '</p>',
-          title: translations['ERROR.POPUP_TITLE'],
-          subTitle: translations[subtitle],
-          buttons: [
-            {
-              text: '<b>'+translations['COMMON.BTN_OK']+'</b>',
-              type: 'button-assertive',
-              onTap: function(e) {
-                resolve(e);
-              }
-            }
-          ]
-        });
-      });
+          .then(function (translations) {
+            var message = err.message || translations[err];
+            return $ionicPopup.show({
+              template: '<p>' + (message || translations['ERROR.UNKNOWN_ERROR']) + '</p>',
+              title: translations['ERROR.POPUP_TITLE'],
+              subTitle: translations[subtitle],
+              buttons: [
+                {
+                  text: '<b>'+translations['COMMON.BTN_OK']+'</b>',
+                  type: 'button-assertive',
+                  onTap: function(e) {
+                    resolve(e);
+                  }
+                }
+              ]
+            });
+          });
     });
   }
 
   function alertInfo(message, subtitle) {
     return $q(function(resolve) {
       $translate([message, subtitle, 'INFO.POPUP_TITLE', 'COMMON.BTN_OK'])
-      .then(function (translations) {
-        $ionicPopup.show({
-          template: '<p>' + translations[message] + '</p>',
-          title: translations['INFO.POPUP_TITLE'],
-          subTitle: translations[subtitle],
-          buttons: [
-            {
-              text: translations['COMMON.BTN_OK'],
-              type: 'button-positive',
-              onTap: function(e) {
-                resolve(e);
-              }
-            }
-          ]
-        });
-      });
+          .then(function (translations) {
+            $ionicPopup.show({
+              template: '<p>' + translations[message] + '</p>',
+              title: translations['INFO.POPUP_TITLE'],
+              subTitle: translations[subtitle],
+              buttons: [
+                {
+                  text: translations['COMMON.BTN_OK'],
+                  type: 'button-positive',
+                  onTap: function(e) {
+                    resolve(e);
+                  }
+                }
+              ]
+            });
+          });
     });
   }
 
@@ -85,17 +85,17 @@ angular.module('cesium.utils.services', ['ngResource'])
     options.cancelText = options.cancelText || 'COMMON.BTN_CANCEL';
 
     return $translate([message, title, options.cancelText, options.okText])
-      .then(function (translations) {
-        return $ionicPopup.confirm({
-          template: translations[message],
-          cssClass: options.cssClass,
-          title: translations[title],
-          cancelText: translations[options.cancelText],
-          cancelType: options.cancelType,
-          okText: translations[options.okText],
-          okType: options.okType,
+        .then(function (translations) {
+          return $ionicPopup.confirm({
+            template: translations[message],
+            cssClass: options.cssClass,
+            title: translations[title],
+            cancelText: translations[options.cancelText],
+            cancelType: options.cancelType,
+            okText: translations[options.okText],
+            okType: options.okType,
+          });
         });
-      });
   }
 
   function hideLoading(timeout){
@@ -112,10 +112,10 @@ angular.module('cesium.utils.services', ['ngResource'])
   function showLoading(options) {
     if (!loadingTextCache) {
       return $translate('COMMON.LOADING')
-        .then(function(translation){
-          loadingTextCache = translation;
-          return showLoading();
-        });
+          .then(function(translation){
+            loadingTextCache = translation;
+            return showLoading();
+          });
     }
     options = options || {};
     options.template = options.template||loadingTextCache;
@@ -128,30 +128,30 @@ angular.module('cesium.utils.services', ['ngResource'])
     position = position || 'bottom';
 
     return $translate([message])
-      .then(function(translations){
+        .then(function(translations){
 
-        // removeIf(no-device)
-        // Use the Cordova Toast plugin
-        /*FIXME if (!!window.cordova) {
-          $cordovaToast.show(translations[message], duration, position);
-          return;
-        }*/
-        // endRemoveIf(no-device)
+          // removeIf(no-device)
+          // Use the Cordova Toast plugin
+          if (!!window.cordova) {
+            $cordovaToast.show(translations[message], duration, position);
+            return;
+          }
+          // endRemoveIf(no-device)
 
-        // removeIf(device)
-        // Use the $ionicLoading toast.
-        // First, make sure to convert duration in number
-        if (typeof duration == 'string') {
-          if (duration == 'short') {
-            duration = 2000;
+          // removeIf(device)
+          // Use the $ionicLoading toast.
+          // First, make sure to convert duration in number
+          if (typeof duration == 'string') {
+            if (duration == 'short') {
+              duration = 2000;
+            }
+            else {
+              duration = 5000;
+            }
           }
-          else {
-            duration = 5000;
-          }
-        }
-        return $ionicLoading.show({ template: translations[message], noBackdrop: true, duration: duration });
-        // endRemoveIf(device)
-      });
+          return $ionicLoading.show({ template: translations[message], noBackdrop: true, duration: duration });
+          // endRemoveIf(device)
+        });
   }
 
   function onError(msg, reject/*optional*/) {
@@ -176,7 +176,6 @@ angular.module('cesium.utils.services', ['ngResource'])
 
       // Otherwise, log to console and display error
       else {
-        console.error(err);
         hideLoading(10); // timeout, to avoid bug on transfer (when error on reference)
         return alertError(fullMsg, subtitle);
       }
@@ -212,41 +211,41 @@ angular.module('cesium.utils.services', ['ngResource'])
   function getSelectionText(){
     var selectedText = "";
     if (window.getSelection){ // all modern browsers and IE9+
-        selectedText = $window.getSelection().toString();
+      selectedText = $window.getSelection().toString();
     }
     return selectedText;
   }
 
   function imageOnLoadResize(resolve, reject, thumbnail) {
     return function(event) {
-          var width = event.target.width;
-          var height = event.target.height;
-       var maxWidth = (thumbnail ? CONST.THUMB_MAX_WIDTH : CONST.MAX_WIDTH);
-       var maxHeight = (thumbnail ? CONST.THUMB_MAX_HEIGHT : CONST.MAX_HEIGHT);
+      var width = event.target.width;
+      var height = event.target.height;
+      var maxWidth = (thumbnail ? CONST.THUMB_MAX_WIDTH : CONST.MAX_WIDTH);
+      var maxHeight = (thumbnail ? CONST.THUMB_MAX_HEIGHT : CONST.MAX_HEIGHT);
 
-          if (width > height) {
-         if (width > maxWidth) {
-           height *= maxWidth / width;
-           width = maxWidth;
-            }
-          } else {
-         if (height > maxHeight) {
-           width *= maxHeight / height;
-           height = maxHeight;
-            }
-          }
-          var canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          var ctx = canvas.getContext("2d");
-          ctx.drawImage(event.target, 0, 0,  canvas.width, canvas.height);
+      if (width > height) {
+        if (width > maxWidth) {
+          height *= maxWidth / width;
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width *= maxHeight / height;
+          height = maxHeight;
+        }
+      }
+      var canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(event.target, 0, 0,  canvas.width, canvas.height);
 
-          var dataurl = canvas.toDataURL();
+      var dataurl = canvas.toDataURL();
 
-          canvas.remove();
+      canvas.remove();
 
-          resolve(dataurl);
-        };
+      resolve(dataurl);
+    };
   }
 
   function resizeImageFromFile(file, thumbnail) {
@@ -265,23 +264,23 @@ angular.module('cesium.utils.services', ['ngResource'])
         reject('no file to resize');
       }
     })
-    .then(function(dataurl) {
-      img.remove();
-      return dataurl;
-    })
-    ;
+        .then(function(dataurl) {
+          img.remove();
+          return dataurl;
+        })
+        ;
   }
 
   function resizeImageFromSrc(imageSrc, thumbnail) {
     var img = document.createElement("img");
     return $q(function(resolve, reject) {
-        img.onload = imageOnLoadResize(resolve, reject, thumbnail);
-        img.src = imageSrc;
-      })
-      .then(function(data){
-        img.remove();
-        return data;
-      });
+      img.onload = imageOnLoadResize(resolve, reject, thumbnail);
+      img.src = imageSrc;
+    })
+        .then(function(data){
+          img.remove();
+          return data;
+        });
   }
 
   function imageOnLoadRotate(resolve, reject) {
@@ -324,13 +323,13 @@ angular.module('cesium.utils.services', ['ngResource'])
   function rotateFromSrc(imageSrc, angle) {
     var img = document.createElement("img");
     return $q(function(resolve, reject) {
-        img.onload = imageOnLoadRotate(resolve, reject, angle);
-        img.src = imageSrc;
-      })
-      .then(function(data){
-        img.remove();
-        return data;
-      });
+      img.onload = imageOnLoadRotate(resolve, reject, angle);
+      img.src = imageSrc;
+    })
+        .then(function(data){
+          img.remove();
+          return data;
+        });
   }
 
   function showPopover(event, options) {
@@ -356,34 +355,34 @@ angular.module('cesium.utils.services', ['ngResource'])
       angular.merge(popover.scope, options.bindings);
       $timeout(function() { // This is need for Firefox
         popover.show(event)
-        .then(function() {
-          var element;
-          // Auto select text
-          if (options.autoselect) {
-            element = document.querySelectorAll(options.autoselect)[0];
-            if (element) {
-              if ($window.getSelection && !$window.getSelection().toString()) {
-                element.setSelectionRange(0, element.value.length);
-                element.focus();
+            .then(function() {
+              var element;
+              // Auto select text
+              if (options.autoselect) {
+                element = document.querySelectorAll(options.autoselect)[0];
+                if (element) {
+                  if ($window.getSelection && !$window.getSelection().toString()) {
+                    element.setSelectionRange(0, element.value.length);
+                    element.focus();
+                  }
+                  else {
+                    element.focus();
+                  }
+                }
               }
               else {
-                element.focus();
+                // Auto focus on a element
+                if (options.autofocus) {
+                  element = document.querySelectorAll(options.autofocus)[0];
+                  if (element) element.focus();
+                }
               }
-            }
-          }
-          else {
-            // Auto focus on a element
-            if (options.autofocus) {
-              element = document.querySelectorAll(options.autofocus)[0];
-              if (element) element.focus();
-            }
-          }
 
-          popover.scope.$parent.$emit('popover.shown');
+              popover.scope.$parent.$emit('popover.shown');
 
-          // Callback 'afterShow'
-          if (options.afterShow) options.afterShow(popover);
-        });
+              // Callback 'afterShow'
+              if (options.afterShow) options.afterShow(popover);
+            });
       });
     };
 
@@ -393,13 +392,13 @@ angular.module('cesium.utils.services', ['ngResource'])
         delete options.scope.popovers[options.templateUrl];
         // Remove the popover
         popover.remove()
-          // Workaround for issue #244
-          // See also https://github.com/driftyco/ionic-v1/issues/71
-          // and https://github.com/driftyco/ionic/issues/9069
-          .then(function() {
-            var bodyEl = angular.element($window.document.querySelectorAll('body')[0]);
-            bodyEl.removeClass('popover-open');
-          });
+        // Workaround for issue #244
+        // See also https://github.com/driftyco/ionic-v1/issues/71
+        // and https://github.com/driftyco/ionic/issues/9069
+            .then(function() {
+              var bodyEl = angular.element($window.document.querySelectorAll('body')[0]);
+              bodyEl.removeClass('popover-open');
+            });
       }
     };
 
@@ -410,46 +409,46 @@ angular.module('cesium.utils.services', ['ngResource'])
         scope: options.scope,
         backdropClickToClose: options.backdropClickToClose
       })
-        .then(function (popover) {
-          popover.isResolved = false;
+          .then(function (popover) {
+            popover.isResolved = false;
 
-          popover.scope.closePopover = function(result) {
-            var autoremove = popover.options.autoremove;
-            delete popover.options.autoremove; // remove to avoid to trigger 'popover.hidden'
-            popover.hide()
-              .then(function() {
-                if (autoremove) {
-                  return _cleanup(popover);
-                }
-              })
-              .then(function() {
-                popover.deferred.resolve(result);
-                delete popover.deferred;
-                delete popover.options;
-              });
-          };
+            popover.scope.closePopover = function(result) {
+              var autoremove = popover.options.autoremove;
+              delete popover.options.autoremove; // remove to avoid to trigger 'popover.hidden'
+              popover.hide()
+                  .then(function() {
+                    if (autoremove) {
+                      return _cleanup(popover);
+                    }
+                  })
+                  .then(function() {
+                    popover.deferred.resolve(result);
+                    delete popover.deferred;
+                    delete popover.options;
+                  });
+            };
 
-          // Execute action on hidden popover
-          popover.scope.$on('popover.hidden', function() {
-            if (popover.options && popover.options.afterHidden) {
-              popover.options.afterHidden();
-            }
-            if (popover.options && popover.options.autoremove) {
-              _cleanup(popover);
-            }
+            // Execute action on hidden popover
+            popover.scope.$on('popover.hidden', function() {
+              if (popover.options && popover.options.afterHidden) {
+                popover.options.afterHidden();
+              }
+              if (popover.options && popover.options.autoremove) {
+                _cleanup(popover);
+              }
+            });
+
+            // Cleanup the popover when hidden
+            options.scope.$on('$remove', function() {
+              if (popover.deferred) {
+                popover.deferred.resolve();
+              }
+              _cleanup();
+            });
+
+            options.scope.popovers[options.templateUrl] = popover;
+            _show(popover);
           });
-
-          // Cleanup the popover when hidden
-          options.scope.$on('$remove', function() {
-            if (popover.deferred) {
-              popover.deferred.resolve();
-            }
-            _cleanup();
-          });
-
-          options.scope.popovers[options.templateUrl] = popover;
-          _show(popover);
-        });
     }
     else {
       _show(popover);
@@ -460,7 +459,7 @@ angular.module('cesium.utils.services', ['ngResource'])
 
   function showCopyPopover(event, value) {
     var rows = value && value.indexOf('\n') >= 0 ? value.split('\n').length : 1;
-    showPopover(event, {
+    return showPopover(event, {
       templateUrl: 'templates/common/popover_copy.html',
       bindings: {
         value: value,
@@ -476,11 +475,11 @@ angular.module('cesium.utils.services', ['ngResource'])
     options.autoselect = options.autoselect || '.popover-share input';
     options.bindings = options.bindings || {};
     options.bindings.value = options.bindings.value || options.bindings.url ||
-      $state.href($state.current, $state.params, {absolute: true});
+        $state.href($state.current, $state.params, {absolute: true});
     options.bindings.postUrl = options.bindings.postUrl || options.bindings.value;
     options.bindings.postMessage = options.bindings.postMessage || '';
     options.bindings.titleKey = options.bindings.titleKey || 'COMMON.POPOVER_SHARE.TITLE';
-    showPopover(event, options);
+    return showPopover(event, options);
   }
 
   function showHelptip(id, options) {
@@ -499,22 +498,22 @@ angular.module('cesium.utils.services', ['ngResource'])
       options.bindings.icon = options.bindings.icon || {};
       options.bindings.icon.position = options.bindings.icon.position || false;
       options.bindings.icon.glyph = options.bindings.icon.glyph ||
-        (options.bindings.icon.position && options.bindings.icon.position.startsWith('bottom-') ? 'ion-arrow-down-c' :'ion-arrow-up-c');
+          (options.bindings.icon.position && options.bindings.icon.position.startsWith('bottom-') ? 'ion-arrow-down-c' :'ion-arrow-up-c');
       options.bindings.icon.class = options.bindings.icon.class || 'calm icon ' + options.bindings.icon.glyph;
       options.bindings.tour = angular.isDefined(options.bindings.tour) ? options.bindings.tour : false;
       showPopover(element, options)
-        .then(function(result){
-          if (options.postAction) {
-            element[options.postAction]();
-          }
-          deferred.resolve(result);
-        })
-        .catch(function(err){
-          if (options.postAction) {
-            element[options.postAction]();
-          }
-          deferred.reject(err);
-        });
+          .then(function(result){
+            if (options.postAction) {
+              element[options.postAction]();
+            }
+            deferred.resolve(result);
+          })
+          .catch(function(err){
+            if (options.postAction) {
+              element[options.postAction]();
+            }
+            deferred.reject(err);
+          });
     }
     else {
 
@@ -592,7 +591,7 @@ angular.module('cesium.utils.services', ['ngResource'])
   function motionDelegate(delegate, ionListClass) {
     var motionTimeout = isSmallScreen() ? 100 : 10;
     var defaultSelector = '.list.{0} .item, .list .{0} .item'.format(ionListClass, ionListClass);
-      return {
+    return {
       ionListClass: ionListClass,
       show: function(options) {
         options = options || {};
@@ -652,8 +651,8 @@ angular.module('cesium.utils.services', ['ngResource'])
     ripple: motionDelegate(ionicMaterialMotion.ripple, 'animate-ripple'),
     slideUp: motionDelegate(ionicMaterialMotion.slideUp, 'slide-up'),
     fadeIn: motionDelegate(function(options) {
-        toggleOn(options);
-      }, 'fade-in'),
+      toggleOn(options);
+    }, 'fade-in'),
     toggleOn: toggleOn,
     toggleOff: toggleOff
   };
@@ -708,7 +707,7 @@ angular.module('cesium.utils.services', ['ngResource'])
   }
 
   csSettings.api.data.on.changed($rootScope, function(data) {
-   setEffects(data.uiEffects);
+    setEffects(data.uiEffects);
   });
 
   exports = {

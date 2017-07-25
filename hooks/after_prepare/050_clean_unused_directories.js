@@ -31,8 +31,10 @@ if (rootdir && !skip) {
       wwwPath = path.join(rootdir, 'platforms', platform, 'www');
     }
 
+    // Log
+    //console.log('['+process.mainModule.filename+'] Cleaning unused directories');
+
     // Clean unused directories
-    console.log('Cleaning dir ' + path.join(wwwPath, 'lib', '**'));
     del([
       path.join(wwwPath, 'i18n'),
       path.join(wwwPath, 'js'),
@@ -47,7 +49,24 @@ if (rootdir && !skip) {
       '!'+path.join(wwwPath, 'lib'),
       '!'+path.join(wwwPath, 'lib', 'ionic'),
       '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts'),
-      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', '*.*')
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', '**'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Black'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Black', '**'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Bold'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Bold', '**'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'BoldItalic'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'BoldItalic', '**'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Italic'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Italic', '**'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Light'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Light', '**'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Medium'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Medium', '**'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Regular'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Regular', '**'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Thin'),
+      '!'+path.join(wwwPath, 'lib', 'ionic', 'fonts', 'robotdraft', 'Thin', '**')
     ]);
   }
 }
