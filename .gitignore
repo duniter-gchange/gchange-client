@@ -1,3 +1,6 @@
+# Specifies intentionally untracked files to ignore when using Git
+# http://git-scm.com/docs/gitignore
+
 /www/lib/ionic-material
 /www/lib/robotodraft
 # Specifies intentionally untracked files to ignore when using Git
@@ -7,16 +10,22 @@
 /platforms/
 /plugins/
 .idea/
-/cesium.iml
-/pom.xml
-/www/css/ionic.app.css
-/www/css/ionic.app.min.css
+/*.iml
 
 /www/lib/*
 !/www/lib/ionic
-/www/js/config.js
 /www/dist
 /hooks/playstore-config.json
 
 .directory
-www/js/config.js
+/www/js/config.js
+
+# Generated CSS
+/www/css/ionic.app.css
+/www/css/ionic.app.min.css
+
+# Leaflet generated files
+/www/css/leaflet.app.css
+/www/css/leaflet.app.min.css
+/www/img/layers*.png
+/www/img/marker*.png

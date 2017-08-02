@@ -151,13 +151,15 @@
             </h2>
           </ion-item>
 
-          <span class="item item-icon-left item-button-right hidden-xs" ng-if="formData.price">
-            <i class="calm icon ion-pricetag"></i>
-            <h1 class="calm" ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></h1>
+          <span class="item item-icon-left item-button-right hidden-xs" ng-if="formData.price||formData.fees">
+            <ng-if ng-if="formData.price">
+              <i class="calm icon ion-pricetag"></i>
+              <h1 class="calm" ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></h1>
+            </ng-if>
             <h3>
               <ng-if ng-if="formData.fees">
                 <span class="dark">
-                  <i class="ion-plus"></i>
+                  <i class="ion-plus" ng-if="formData.price"></i>
                   <ng-bind-html ng-bind-html="formData.fees | formatAmount:{currency: (formData.feesCurrency||formData.currency)}"></ng-bind-html>
                 </span>
                  <span class="gray">{{'MARKET.VIEW.RECORD_FEES_PARENTHESIS'|translate}} | </span>
@@ -168,7 +170,6 @@
                 <ng-if ng-if="formData.stock"><span class="dark">{{formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
                 <ng-if ng-if="!formData.stock"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
               </span>
-
             </h3>
           </span>
 

@@ -501,7 +501,7 @@ function MkLookupController($scope, $controller, $focus, mkRecord) {
 
 
 function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q,
-                                      $timeout, $filter, Modals, csConfig,
+                                      $timeout, $filter, $translate, Modals, csConfig, esModals,
                                       csWallet, mkRecord, UIUtils, esHttp) {
   'ngInject';
 
@@ -746,6 +746,25 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         postImage: $scope.pictures.length > 0 ? $scope.pictures[0] : null
       }
     });
+  };
+
+  $scope.showNewMessageModal = function() {
+    return $q.all([
+        $translate('MARKET.VIEW.NEW_MESSAGE_TITLE', $scope.formData),
+        $scope.loadWallet({minData: true})
+      ])
+      .then(function(res) {
+        var title = res[0];
+        UIUtils.loading.hide();
+        return esModals.showMessageCompose({
+          title: title,
+          destPub: $scope.issuer.pubkey,
+          destUid: $scope.issuer.name || $scope.issuer.uid,
+        });
+      })
+      .then(function() {
+        UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
+      });
   };
 
   $scope.buy = function () {
