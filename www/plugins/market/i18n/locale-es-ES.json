@@ -1,0 +1,75 @@
+{
+  "MENU": {
+    "MARKET": "Anuncios",
+    "MY_RECORDS": "Mes annonces"
+  },
+  "MARKET": {
+    "COMMON": {
+      "PRICE": "Precio",
+      "BTN_NEW_AD": "Presento un anuncio"
+    },
+    "SEARCH": {
+      "TITLE": "Anuncios",
+      "SEARCH_HELP": "Búsqueda (coche, libro...)",
+      "BTN_ADD": "Nuevo",
+      "BTN_OPTIONS": "Búsqueda avanzada",
+      "BTN_AROUND_ME": "Alrededor de yo",
+      "SHOW_MORE": "Visualizar más",
+      "SHOW_MORE_COUNT": "(límite actual a {{limit}})",
+      "LOCATION": "localización",
+      "LOCATION_HELP": "Ciudad",
+      "LAST_RECORDS": "últimos anuncios :",
+      "RESULTS": "Resultados :",
+      "BTN_OFFERS": "Ofrecimientos",
+      "BTN_NEEDS": "Demandas"
+    },
+    "VIEW": {
+      "TITLE": "Anuncio",
+      "MENU_TITLE": "Opciónes",
+      "POPOVER_SHARE_TITLE": "Anuncio {{title}}",
+      "REMOVE_CONFIRMATION" : "Está usted segura/o querer suprimir este anuncio ?<br/><br/>Esta operación es ireversible."
+    },
+    "TYPE": {
+      "TITLE": "Nuevo anuncio",
+      "SELECT_TYPE": "Tipo de anuncio :",
+      "OFFER": "Ofrecimiento, Venta",
+      "NEED": "Demanda, Búsqueda"
+    },
+    "EDIT": {
+      "TITLE": "Edición",
+      "TITLE_NEW": "Nuevo anuncio",
+      "RECORD_TITLE": "Título",
+      "RECORD_TITLE_HELP": "Título",
+      "RECORD_DESCRIPTION": "Descripción",
+      "RECORD_DESCRIPTION_HELP": "Descripción",
+      "RECORD_LOCATION": "Ciudad",
+      "RECORD_LOCATION_HELP": "Dirección, Ciudad",
+      "RECORD_PRICE": "Precio",
+      "RECORD_PRICE_HELP": "Precio (opcional)",
+      "RECORD_CURRENCY": "Moneda"
+    },
+    "ERROR": {
+      "FAILED_SAVE_RECORD": "Fracaso durante el registro de el anuncio",
+      "FAILED_UPDATE_RECORD": "Fracaso durante la actualización de el anuncio",
+      "LOAD_CATEGORY_FAILED": "Erreur de actualización de las categorías",
+      "LOOKUP_RECORDS_FAILED": "Fracaso durante la ejecución de la búsqueda.",
+      "LOAD_RECORD_FAILED": "Fracaso durante la carga de el anuncio.",
+      "REMOVE_RECORD_FAILED": "Erreur de la supresión de el anuncio",
+      "FAILED_SAVE_COMMENT": "Fracaso durante el respaldo del comentario",
+      "FAILED_REMOVE_COMMENT": "Fracaso durante la supresión del comentario",
+      "RECORD_NOT_EXISTS": "Anuncio inexistente"
+    },
+    "INFO": {
+      "RECORD_REMOVED" : "Anuncio suprimido"
+    }
+  },
+  "EVENT": {
+    "MARKET": {
+      "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha comentado su anuncio : <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado su comentario sobre su anuncio : <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha contestado a su comentario sobre el anuncio : <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado la repuesta a su comentario sobre el anuncio : <b>{{params[2]}}</b>"
+    }
+  }
+
+}

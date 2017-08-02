@@ -1,0 +1,147 @@
+{
+  "MENU": {
+    "MARKET": "Ads",
+    "MY_RECORDS": "My ads"
+  },
+  "MARKET": {
+    "COMMON": {
+      "PRICE": "Price",
+      "BTN_NEW_AD": "New ad",
+      "SOLD": "Close ad"
+    },
+    "JOIN": {
+      "PROFILE": {
+        "WARNING": "You now have to complete your user profile.<br/><br/>This is <b>public information</b>, accessible to everyone.",
+        "TITLE": "Lastname, Firstname",
+        "TITLE_HELP": "Lastname, Firstname or pseudonym",
+        "DESCRIPTION": "Abut me",
+        "DESCRIPTION_HELP": "Say something about you..."
+      },
+      "LAST_SLIDE_CONGRATULATION": "You have entered all necessary information: Congratulations!<br/>You can now <b>send the creation request </b>.<br/><br/>For information, the public key below will identify your future account:",
+      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Warning:</b> The secret identifier and the password can not be changed.<br/><br/>You should <b>always remember it!</b><br/><br/><b>Are you sure</b> you want to continue with these credentials?"
+    },
+    "PROFILE": {
+      "DEFAULT_TITLE": "User {{pubkey|formatPubkey}}"
+    },
+    "SIMPLE_LOGIN": {
+      "TITLE": "Contact information",
+      "HELP": "Please indicate a <b>email or phone number</b>, so that we can contact you during the event:",
+      "EMAIL_OR_PHONE": "Email or phone number",
+      "EMAIL_OR_PHONE_HELP": "Email or phone number",
+      "REMEMBER_ME": "Remember me?",
+      "ERROR": {
+        "INVALID_USERNAME": "Email or phone number invalid"
+      }
+    },
+    "HOME": {
+      "BTN_NEW_AD": "Déposer une annonce",
+      "BTN_SHOW_MARKET_OFFER": "Voir les annonces"
+    },
+    "CATEGORY": {
+      "ALL": "Toutes les catégories"
+    },
+    "SEARCH": {
+      "TITLE": "Market",
+      "CATEGORY": "Category: ",
+      "SEARCH_HELP": "What, Where: car, Columbia city, ...",
+      "BTN_ADD": "New",
+      "BTN_OPTIONS": "Advanced search",
+      "BTN_AROUND_ME": "Around me",
+      "SHOW_MORE": "Show more",
+      "SHOW_MORE_COUNT": "(current limit to {{limit}})",
+      "LOCATION": "Location",
+      "LOCATION_HELP": "City",
+      "LAST_RECORDS": "Last records:",
+      "RESULTS": "Results:",
+      "BTN_LAST_RECORDS": "Last ads",
+      "BTN_SHOW_CATEGORIES": "Show categories",
+      "BTN_OFFERS": "Offers",
+      "BTN_NEEDS": "Needs",
+      "SHOW_CLOSED_RECORD": "Display closed ads?"
+    },
+    "GALLERY": {
+      "TITLE": "Slideshow",
+      "BTN_START": "Start",
+      "BTN_CONTINUE": "Resume",
+      "BTN_PAUSE": "Pause",
+      "BTN_STOP": "Stop",
+      "SLIDE_DURATION": "Display time:",
+      "SLIDE_DURATION_OPTION": "{{value}} seconds"
+    },
+    "VIEW": {
+      "TITLE": "Ad",
+      "BTN_SOLD_AD": "Close the ad",
+      "BTN_SOLD": "Close",
+      "BTN_REOPEN": "Reopen the ad",
+      "BTN_WRITE_OFFER": "Write to the seller",
+      "BTN_WRITE_NEED": "Write to the applicant",
+      "MENU_TITLE": "Options",
+      "RECORD_FEES_PARENTHESIS": "(fees)",
+      "RECORD_STOCK": "Available stock:",
+      "POPOVER_SHARE_TITLE": "Ad {{title}}",
+      "REMOVE_CONFIRMATION": "Are you sure you want to delete this ad?<br/><br/> This is irreversible.",
+      "SOLD_CONFIRMATION" : "<b>Are you sure</b> you want to close this ad?",
+      "REOPEN_CONFIRMATION" : "<b>Are you sure</b> you want to repoen this ad?",
+      "NEW_MESSAGE_TITLE": "About your ad \"{{title}}\"..."
+    },
+    "TYPE": {
+      "TITLE": "New ad",
+      "SELECT_TYPE": "Kind of ad:",
+      "OFFER": "Offer",
+      "NEED": "Need"
+    },
+    "LOCAL_SALE": {
+      "LOCATION": "Stand number",
+      "LOCATION_HELP": "Stand number: 1, 2, ...",
+      "LOCATION_PREFIX": "Stand #"
+    },
+    "EDIT": {
+      "TITLE": "Edit",
+      "TITLE_NEW": "New ad",
+      "RECORD_TITLE": "Title",
+      "RECORD_TITLE_HELP": "Title",
+      "RECORD_DESCRIPTION": "Description",
+      "RECORD_DESCRIPTION_HELP": "Description",
+      "RECORD_LOCATION": "Address",
+      "RECORD_LOCATION_HELP": "City, Country",
+      "RECORD_PRICE": "Price",
+      "RECORD_PRICE_HELP": "Price (optional)",
+      "RECORD_CURRENCY": "Currency",
+      "RECORD_FEES": "Fees",
+      "RECORD_FEES_HELP": "Fees (optional)",
+      "RECORD_STOCK": "Available stock",
+      "RECORD_STOCK_HELP": "Available stock"
+    },
+    "WOT": {
+      "VIEW": {
+        "BTN_RECORDS": "Ads"
+      }
+    },
+    "ERROR": {
+      "FAILED_SAVE_RECORD": "Saving ad failed",
+      "FAILED_UPDATE_RECORD": "Updating Ad failed",
+      "LOAD_CATEGORY_FAILED": "Loading categories failed",
+      "LOOKUP_RECORDS_FAILED": "Error while loading records.",
+      "LOAD_RECORD_FAILED": "Loading ad failed",
+      "REMOVE_RECORD_FAILED": "Deleting ad failed",
+      "SOLD_RECORD_FAILED": "Error while closing the ad",
+      "REOPEN_RECORD_FAILED": "Error while reopening the ad",
+      "FAILED_SAVE_COMMENT": "Saving comment failed",
+      "FAILED_REMOVE_COMMENT": "Deleting comment failed",
+      "RECORD_NOT_EXISTS": "Ad not found"
+    },
+    "INFO": {
+      "RECORD_REMOVED": "Ad successfully deleted",
+      "RECORD_SOLD" : "Ad closed",
+      "RECORD_REOPEN" : "Ad reopen"
+    }
+  },
+  "EVENT": {
+    "MARKET": {
+      "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has commented on your ad: <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his/her comment on your ad: <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has replied to your comment on the ad: <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his/her answer to your comment on the ad: <b>{{params[2]}}</b>"
+    }
+  }
+}
