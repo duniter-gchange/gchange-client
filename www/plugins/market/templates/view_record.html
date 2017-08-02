@@ -112,6 +112,12 @@
             <button class="button button-stable button-small-padding icon ion-android-share-alt"
                     ng-click="showSharePopover($event)">
             </button>
+            <button class="button button-stable button-small-padding icon ion-compose"
+                    ng-if="!canEdit"
+                    ng-click="showNewMessageModal()"
+                    title="{{'MARKET.VIEW.BTN_WRITE_'+formData.type |upper|translate}}">
+            </button>
+
             <!--<button class="button button-stable icon-left ink-dark"
                     ng-if="canEdit"
                     ng-click="delete()">
@@ -120,6 +126,7 @@
             </button>-->
             <button class="button button-stable icon-left ink-dark"
                     ng-if="canSold"
+                    title="{{'MARKET.VIEW.BTN_SOLD_AD' | translate}}"
                     ng-click="sold()">
               <i class="icon ion-minus-circled"></i>
               {{'MARKET.VIEW.BTN_SOLD' | translate}}
@@ -135,6 +142,7 @@
                     ng-click="edit()">
               {{'COMMON.BTN_EDIT' | translate}}
             </button>
+
           </div>
 
           <ion-item ng-if="options.description.show">
@@ -144,8 +152,24 @@
           </ion-item>
 
           <span class="item item-icon-left item-button-right hidden-xs" ng-if="formData.price">
-              <i class="calm icon ion-pricetag"></i>
-              <h1 class="calm" ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></h1>
+            <i class="calm icon ion-pricetag"></i>
+            <h1 class="calm" ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></h1>
+            <h3>
+              <ng-if ng-if="formData.fees">
+                <span class="dark">
+                  <i class="ion-plus"></i>
+                  <ng-bind-html ng-bind-html="formData.fees | formatAmount:{currency: (formData.feesCurrency||formData.currency)}"></ng-bind-html>
+                </span>
+                 <span class="gray">{{'MARKET.VIEW.RECORD_FEES_PARENTHESIS'|translate}} | </span>
+              </ng-if>
+              <span class="gray">
+                <i class="ion-pie-graph"></i>
+                {{'MARKET.VIEW.RECORD_STOCK'|translate}}
+                <ng-if ng-if="formData.stock"><span class="dark">{{formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
+                <ng-if ng-if="!formData.stock"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
+              </span>
+
+            </h3>
           </span>
 
           <div class="lazy-load">

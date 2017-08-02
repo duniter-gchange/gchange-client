@@ -1,4 +1,4 @@
-angular.module('cesium.market.app.controllers', ['ngResource', 'cesium.es.services'])
+angular.module('cesium.market.app.controllers', ['ngResource', 'cesium.es.services', 'cesium.market.modal.services'])
 
   // Configure menu items
   .config(function(PluginServiceProvider, csConfig) {
@@ -56,7 +56,7 @@ function MarketMenuExtendController($scope, esSettings, PluginService) {
 /**
  * Control home extension
  */
-function MarketHomeExtendController($scope, $state, ModalUtils, UIUtils, esSettings, csWallet) {
+function MarketHomeExtendController($scope, $state, ModalUtils, UIUtils, esSettings, csWallet, mkModals) {
     'ngInject';
     $scope.enable = esSettings.isEnable();
 
@@ -82,4 +82,8 @@ function MarketHomeExtendController($scope, $state, ModalUtils, UIUtils, esSetti
                 });
         }
     };
+
+    // Override default join modal (in the parent scope)
+    $scope.$parent.showJoinModal = mkModals.showJoin;
+    $scope.$parent.showHelpModal = mkModals.showHelp;
 }

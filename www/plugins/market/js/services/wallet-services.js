@@ -74,8 +74,8 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
             var title = res[0];
             var encryptedSocials = res[1];
 
-            data.name = title;
-            data.profile.title = title;
+            data.name = data.profile.title || title;
+            data.profile.title = data.name;
             data.profile.issuer = data.pubkey;
 
             // Add encrypted socials into a profile copy, then save it

@@ -18,6 +18,13 @@
           <button class="button button-positive button-large button-clear flat icon ion-camera visible-xs visible-sm"
                   style="display: inline-block;"
                   ng-click="showAvatarModal()"></button>
+          <button ng-if="avatar.src"
+                  class="button button-positive button-large button-clear flat  visible-xs visible-sm"
+                  style="display: inline-block; left: 85px; bottom:15px;"
+                  ng-click="rotateAvatar()">
+            <i class="icon-secondary ion-image" style="left: 24px; top: 3px; font-size: 24px;"></i>
+            <i class="icon-secondary ion-forward" style="left: 26px; top: -13px;"></i>
+          </button>
           <button class="button button-positive button-large button-clear icon ion-camera hidden-xs hidden-sm"
                   ng-click="showAvatarModal()"></button>
         </i>
@@ -102,8 +109,64 @@
               <span class="input-label" translate>PROFILE.CITY</span>
               <input type="text" placeholder="{{'PROFILE.CITY_HELP'|translate}}"
                      ng-model="formData.city"
-                     ng-model-options="{ debounce: 350 }">
+                     ng-model-options="{ updateOn: 'blur' }"
+                     ng-change="onCityChanged()">
             </div>
+
+            <!-- Position (lat/lon) -->
+            <div class="row responsive-md responsive-sm no-padding">
+
+              <!-- lat -->
+              <div class="col no-padding">
+                <label class="item item-input item-floating-label">
+                  <span class="input-label" translate>PROFILE.LATITUDE</span>
+                  <input class="no-padding-right" type="number" placeholder="{{'PROFILE.LATITUDE_HELP'|translate}}"
+                         ng-model="formData.geoPoint.lat"
+                         ng-model-options="{ debounce: 350 }"
+                         ng-change="onGeoPointChanged()">
+                </label>
+              </div>
+
+              <div class="col-10 no-padding hidden-xs">
+                &nbsp;
+              </div>
+
+              <!-- lon -->
+              <div class="col no-padding">
+                <label class="item item-input item-floating-label">
+                  <span class="input-label" translate>PROFILE.LONGITUDE</span>
+                  <input class="no-padding-right" type="number" placeholder="{{'PROFILE.LONGITUDE_HELP'|translate}}"
+                         ng-model="formData.geoPoint.lon"
+                         ng-model-options="{ debounce: 350 }"
+                         ng-change="onGeoPointChanged()">
+                </label>
+              </div>
+
+              <div class="col col-40 no-padding">
+                <div class="item no-padding text-center">
+                  <span class="input-label"></span>
+
+                  <a class="button  button-stable button-small-padding icon ion-refresh"
+                     title="{{'PROFILE.BTN_GEOLOC_ADDRESS'|translate}}"
+                     ng-disabled="!formData.city"
+                     ng-click="localizeByAddress()">
+                  </a>
+
+                  <a class="button button-stable button-small-padding icon ion-android-locate"
+                     title="{{'PROFILE.BTN_GEOLOC_ME'|translate}}"
+                     ng-click="localizeMe()">
+                  </a>
+
+                  <a class="button button-stable button-small-padding icon ion-close"
+                     title="{{'PROFILE.BTN_REMOVE_GEOLOC'|translate}}"
+                     ng-disabled="!formData.geoPoint || (!formData.geoPoint.lat && !formData.geoPoint.lon)"
+                     ng-click="removeLocalisation()">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <cs-extension-point name="after-position"></cs-extension-point>
 
             <!-- social networks -->
             <ng-include src="'plugins/es/templates/common/edit_socials.html'"></ng-include>

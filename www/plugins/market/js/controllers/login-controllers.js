@@ -4,7 +4,7 @@ angular.module('cesium.market.login.controllers', ['cesium.services'])
   .controller('MarketLoginModalCtrl', MarketLoginModalController)
 ;
 
-function MarketLoginModalController($scope, $controller, $q, SocialUtils, csConfig, csWallet, mkWallet) {
+function MarketLoginModalController($scope, $controller, $q, csConfig, csWallet, mkWallet) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -20,7 +20,7 @@ function MarketLoginModalController($scope, $controller, $q, SocialUtils, csConf
     // to store it inside the user profile
 
     var adminPubkeys = csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.defaultAdminPubkeys;
-    if (adminPubkeys.length) {
+    if (adminPubkeys && adminPubkeys.length) {
         console.error("[market] [login] Storing username into user profile socials");
 
         var isEmail = new RegExp(EMAIL_REGEX).test($scope.formData.username);

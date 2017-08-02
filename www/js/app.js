@@ -7,8 +7,7 @@
 angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht.translate',
   'ngApi', 'angular-cache', 'angular.screenmatch', 'angular.bind.notifier', 'ImageCropper', 'ngFileSaver', 'ngIdle',
   // removeIf(no-device)
-  //FIXME android build
-  // 'ngCordova',
+  'ngCordova',
   // endRemoveIf(no-device)
   'cesium.plugins',
   'cesium.filters', 'cesium.config', 'cesium.platform', 'cesium.controllers', 'cesium.templates', 'cesium.translations'
@@ -84,6 +83,15 @@ angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht
     IdleProvider.timeout(csConfig.logoutTimeout||15); // display warning during 15s
   })
 
+
+  // Override the automatic sync between location URL and state
+  // (see watch event $locationChangeSuccess in the run() function bellow)
+  .config(function ($urlRouterProvider) {
+    'ngInject';
+
+    $urlRouterProvider.deferIntercept();
+  })
+
   .factory('$exceptionHandler', function() {
     'ngInject';
 
@@ -92,16 +100,8 @@ angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht
       else console.error(exception);
     };
   })
-/*
-  .config(function($ionicCloudProvider) {
-    $ionicCloudProvider.init({
-      "core": {
-        "app_id": "23c2212f"
-      }
-    });
-  })*/
 
-.run(function($rootScope, $translate, $state, $window, ionicReady, Device, UIUtils, $ionicConfig, PluginService,
+.run(function($rootScope, $translate, $state, $window, ionicReady, $urlRouter, Device, UIUtils, $ionicConfig, PluginService,
               csPlatform, csCurrency, csWallet, csSettings, csConfig) {
   'ngInject';
 
@@ -151,6 +151,19 @@ angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht
   // endRemoveIf(ios)
   // endRemoveIf(android)
 
+  // Prevent $urlRouter's default handler from firing (don't sync ui router)
+  $rootScope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
+    if ($state.current.data && $state.current.data.silentLocationChange === true) {
+      console.debug('[app] Skipping state sync (silent location change)');
+      e.preventDefault();
+    }
+    else {
+      $urlRouter.sync();
+    }
+  });
+  // Configures $urlRouter's listener *after* the previous listener
+  $urlRouter.listen();
+
   // Start plugins eager services
   PluginService.start();
 
@@ -193,6 +206,16 @@ if (typeof String.prototype.startsWith !== 'function') {
   console.debug("Adding String.prototype.startsWith() -> was missing on this platform");
   String.prototype.startsWith = function(prefix) {
       return this.indexOf(prefix) === 0;
+  };
+}
+
+// Workaround to add "".startsWith() if not present
+if (typeof String.prototype.trim !== 'function') {
+  console.debug("Adding String.prototype.trim() -> was missing on this platform");
+  // Make sure we trim BOM and NBSP
+  var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+  String.prototype.trim = function() {
+    return this.replace(rtrim, '');
   };
 }
 

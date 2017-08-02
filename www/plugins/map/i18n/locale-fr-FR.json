@@ -1,0 +1,41 @@
+{
+  "MAP": {
+    "COMMON": {
+      "SEARCH_DOTS": "Rechercher...",
+    },
+    "NETWORK": {
+      "LOOKUP": {
+        "BTN_MAP": "Carte",
+        "BTN_MAP_HELP": "Ouvrir la carte des noeuds"
+      },
+      "VIEW": {
+        "TITLE": "Carte des noeuds",
+        "LAYER": {
+          "MEMBER": "Nœuds membre",
+          "MIRROR": "Nœuds mirroir",
+          "OFFLINE": "Nœuds hors ligne"
+        }
+      }
+    },
+    "WOT": {
+      "LOOKUP": {
+        "BTN_MAP": "Carte",
+        "BTN_MAP_HELP": "Ouvrir la carte des membres"
+      },
+      "VIEW": {
+        "TITLE": "Carte des membres",
+        "LAYER": {
+          "MEMBER": "Membres",
+          "PENDING": "Inscriptions en attente",
+          "WALLET": "Simples portefeuilles"
+        }
+      }
+    },
+    "PROFILE": {
+      "MARKER_HELP": "<b>Glissez-déposez</b> ce marqueur pour <b>mettre<br/>à jour votre position</b>, ou utilisez les boutons<br/>au dessus de la carte."
+    },
+    "ERROR": {
+      "LOCALIZE_ME_FAILED": "Impossible de récupérer votre position actuelle"
+    }
+  }
+}

@@ -9,6 +9,19 @@
       "BTN_NEW_AD": "Je dépose une annonce",
       "SOLD": "Annonce clôturée"
     },
+    "JOIN": {
+      "PROFILE": {
+        "WARNING": "Il vous reste maintenant à compléter votre profile utilisateur.<br/><br/>Il s'agit <b>d'informations publiques</b>, accessible par tous.",
+        "TITLE": "Nom, Prénom",
+        "TITLE_HELP": "Nom, Prénom ou pseudonyme",
+        "DESCRIPTION": "A propos de moi",
+        "DESCRIPTION_HELP": "Dites quelques chose à propos de vous...",
+        "PUBLIC_KEY": "Clé publique de réception des paiements",
+        "PUBLIC_KEY_HELP": "Clé publique {{currency|currencySymbol}}",
+      },
+      "LAST_SLIDE_CONGRATULATION": "Vous avez saisi toutes les informations nécessaires : Bravo !<br/>Vous pouvez maintenant <b>envoyer la demande de création</b> de compte.</b><br/><br/>Pour information, la clé publique ci-dessous identifiera votre futur compte :",
+      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant secret et le mot de passe ne pourront plus être modifiés.<br/><br/><b>Assurez-vous de toujours vous en rappeller !</b><br/><br/><b>Etes-vous sûr</b> de vouloir continuer avec ces identifiants ?",
+    },
     "PROFILE": {
       "DEFAULT_TITLE": "Utilisateur {{pubkey|formatPubkey}}"
     },
@@ -59,9 +72,14 @@
     },
     "VIEW": {
       "TITLE": "Annonce",
-      "BTN_SOLD": "Clôturer l'annonce",
+      "BTN_SOLD_AD": "Clôturer l'annonce",
+      "BTN_SOLD": "Clôturer",
       "BTN_REOPEN": "Réouvrir l'annonce",
+      "BTN_WRITE_OFFER": "Ecrire au vendeur",
+      "BTN_WRITE_NEED": "Ecrire au demandeur",
       "MENU_TITLE": "Options",
+      "RECORD_FEES_PARENTHESIS": "(frais)",
+      "RECORD_STOCK": "Stock disponible :",
       "POPOVER_SHARE_TITLE": "Annonce {{title}}",
       "REMOVE_CONFIRMATION" : "Êtes-vous sûr de vouloir supprimer cette annonce ?<br/><br/>Cette opération est irréversible.",
       "SOLD_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir clôturer cette annonce ?",
@@ -89,7 +107,11 @@
       "RECORD_LOCATION_HELP": "Adresse, Ville",
       "RECORD_PRICE": "Prix",
       "RECORD_PRICE_HELP": "Prix (optionnel)",
-      "RECORD_CURRENCY": "Monnaie"
+      "RECORD_CURRENCY": "Monnaie",
+      "RECORD_FEES": "Frais d'envoi",
+      "RECORD_FEES_HELP": "Frais (optionnel)",
+      "RECORD_STOCK": "Stock disponible",
+      "RECORD_STOCK_HELP": "Stock disponible",
     },
     "WOT": {
       "VIEW": {

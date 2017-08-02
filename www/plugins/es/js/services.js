@@ -10,6 +10,7 @@ angular.module('cesium.es.services', [
     'cesium.es.notification.services',
     'cesium.es.message.services',
     'cesium.es.modal.services',
-    'cesium.es.wallet.services'
+    'cesium.es.wallet.services',
+    'cesium.es.geo.services'
   ])
 ;

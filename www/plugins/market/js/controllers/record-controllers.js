@@ -6,7 +6,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
     $stateProvider
 
     .state('app.market_lookup', {
-      url: "/market?q&category&location&reload&type",
+      url: "/market?q&category&location&reload&type&hash",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/lookup.html",
@@ -19,7 +19,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
     })
 
     .state('app.market_lookup_lg', {
-      url: "/market/lg?q&category&location&reload&type",
+      url: "/market/lg?q&category&location&reload&type&hash",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/lookup_lg.html",
@@ -96,8 +96,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
 ;
 
-function MkLookupAbstractController($scope, $state, $filter, $q,
-                                  UIUtils, ModalUtils, csConfig, mkRecord, BMA) {
+function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, ModalUtils, csConfig, mkRecord, BMA) {
   'ngInject';
 
   var defaultSearchLimit = 10;
@@ -129,6 +128,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q,
       location: {
         show: true,
         prefix : undefined
+      },
+      fees: {
+        show: true
       }
     }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
@@ -158,6 +160,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q,
     var text = $scope.search.text.trim();
     var matches = [];
     var filters = [];
+    var tags = text ? esHttp.util.parseTags(text) : undefined;
     if (text.length > 1) {
       // pubkey : use a special 'term', because of 'non indexed' field
       if (BMA.regexp.PUBKEY.test(text /*case sensitive*/)) {
@@ -171,9 +174,10 @@ function MkLookupAbstractController($scope, $state, $filter, $q,
           fields: matchFields,
           type: "phrase_prefix"
         }});
-        matches.push({match: { title: text}});
-        matches.push({match: { description: text}});
-        matches.push({prefix: { location: text}});
+        matches.push({match: {title: {query: text, boost: 2}}});
+        matches.push({prefix: {title: text}});
+        matches.push({match: {description: text}});
+        matches.push({prefix: {location: text}});
         matches.push({
            nested: {
              path: "category",
@@ -206,6 +210,10 @@ function MkLookupAbstractController($scope, $state, $filter, $q,
       filters.push({match_phrase: { location: $scope.search.location}});
     }
 
+    if (tags) {
+      filters.push({terms: {tags: tags}});
+    }
+
     if (!matches.length && !filters.length) {
       return $scope.doGetLastRecord();
     }
@@ -217,6 +225,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q,
     if ($scope.search.type) {
       filters.push({term: {type: $scope.search.type}});
     }
+
+
 
     var query = {bool: {}};
     if (matches.length > 0) {
@@ -410,6 +420,16 @@ function MkLookupController($scope, $controller, $focus, mkRecord) {
         showAdvanced = true;
       }
 
+      // Search on hash tag
+      if (state.stateParams && state.stateParams.hash) {
+        if ($scope.search.text) {
+          $scope.search.text = '#' + state.stateParams.hash + ' ' + $scope.search.text;
+        }
+        else {
+          $scope.search.text = '#' + state.stateParams.hash;
+        }
+      }
+
       // Search on category
       if (state.stateParams && state.stateParams.category) {
         mkRecord.category.get({id: state.stateParams.category})
@@ -466,6 +486,7 @@ function MkLookupController($scope, $controller, $focus, mkRecord) {
     if (cat && cat.parent) {
       $scope.search.category = cat;
       $scope.options.category.show = true;
+      $scope.search.showCategories=false; // hide categories
       $scope.doSearch();
     }
   };
@@ -796,11 +817,26 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
   };
 
   $scope.$on('$ionicView.enter', function(e, state) {
-    // Load wallet
-    $scope.loadWallet({
-      minData: true
-    })
-    .then(function() {
+    // Define get currency function
+    var getCurrency;
+    if (csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.defaultCurrency) {
+      getCurrency = $q.when({name: csConfig.plugins.market.defaultCurrency});
+    }
+    else {
+      getCurrency = csCurrency.default();
+    }
+
+    return $q.all([
+      getCurrency,
+      // Load wallet
+      $scope.loadWallet({
+        minData: true
+      })
+    ])
+    .then(function(res) {
+      var currency = res[0];
+      $scope.currency = currency.name;
+
       $scope.useRelative = csSettings.data.useRelative;
       if (state.stateParams && state.stateParams.id) { // Load by id
         $scope.load(state.stateParams.id);
@@ -811,21 +847,11 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
           $scope.formData.type = state.stateParams.type;
         }
         $scope.formData.type = $scope.formData.type || ($scope.options.type && $scope.options.type.default) || 'offer'; // default: offer
+        $scope.formData.currency = currency.name;
 
-        // Get the default currency
-        var getCurrency;
-        if (csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.defaultCurrency) {
-          getCurrency = $q.when({name: csConfig.plugins.market.defaultCurrency});
-        }
-        else {
-          getCurrency = csCurrency.default();
-        }
-        getCurrency.then(function(currency){
-            $scope.formData.currency = currency.name;
-            $scope.loading = false;
-            UIUtils.loading.hide();
-            $scope.motion.show();
-          });
+        $scope.loading = false;
+        UIUtils.loading.hide();
+        $scope.motion.show();
       }
 
       // Focus on title
@@ -864,7 +890,12 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
       .then(function(data) {
         $scope.formData = data.record;
         if (data.record.unit === 'unit') {
-          $scope.formData.price = $scope.formData.price / 100; // add 2 decimals in quantitative mode
+          $scope.formData.price = $scope.formData.price && $scope.formData.price / 100; // add 2 decimals in quantitative mode
+          $scope.formData.fees = $scope.formData.fees / 100; // add 2 decimals in quantitative mode
+        }
+        // Set default currency (need by HELP texts)
+        if (!$scope.formData.currency) {
+          $scope.formData.currency = $scope.currency;
         }
         $scope.id = data.id;
         $scope.pictures = data.record.pictures || [];
@@ -895,16 +926,15 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
       .then(function() {
         var json = angular.copy($scope.formData);
 
-        if (json.price && typeof json.price == "string") {
-          json.price = parseFloat(json.price.replace(new RegExp('[.,]'), '.')); // fix #124
-        }
+        var unit = !$scope.useRelative ? 'unit' : 'UD';
+        // prepare price
         if (json.price) {
-          if (!$scope.useRelative) {
-            json.unit = 'unit';
-            json.price = json.price * 100;
+          if (typeof json.price == "string") {
+            json.price = parseFloat(json.price.replace(new RegExp('[.,]'), '.')); // fix #124
           }
-          else {
-            json.unit = 'UD';
+          json.unit = unit;
+          if (!$scope.useRelative) {
+            json.price = json.price * 100;
           }
           if (!json.currency) {
             json.currency = $scope.currency;
@@ -913,6 +943,21 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
         else {
           json.unit = undefined;
           json.currency = undefined;
+        }
+
+        // prepare fees
+
+        if (json.fees) {
+          if (typeof json.fees == "string") {
+            json.fees = parseFloat(json.fees.replace(new RegExp('[.,]'), '.')); // fix #124
+          }
+          if (!$scope.useRelative) {
+            json.fees = json.fees * 100;
+          }
+          if (!json.feesCurrency) {
+            json.feesCurrency = json.currency || $scope.currency;
+          }
+          json.unit = json.unit || unit; // force unit to be set
         }
         json.time = esHttp.date.now();
 
@@ -954,7 +999,7 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
           json.creationTime = esHttp.date.now();
 
           // By default: stock always > 1 when created
-          json.stock = json.stock || 1;
+          json.stock = angular.isDefined(json.stock) ? json.stock : 1;
 
           return mkRecord.record.add(json);
         }

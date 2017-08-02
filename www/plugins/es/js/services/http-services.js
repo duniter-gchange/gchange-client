@@ -177,14 +177,17 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    function trustAsHtml(text) {
+    function trustAsHtml(text, options) {
+
       var content = text ? escape(text.trim()).replace(/\n/g,'<br>') : undefined;
       if (content) {
+        options = options || {};
+        options.tagState = options.tagState || 'app.wot_lookup';
 
         // Replace hashtags in description
         var hashTags = parseTagsFromText(content);
         _.forEach(hashTags, function(tag){
-          var href = $state.href('app.wot_lookup', {hash: tag});
+          var href = $state.href(options.tagState, {hash: tag});
           var link = '<a href=\"{0}">{1}</a>'.format(href, '#'+tag);
           content = content.replace('#'+tag, link);
         });

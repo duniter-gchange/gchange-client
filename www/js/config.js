@@ -10,8 +10,8 @@ angular.module("cesium.config", [])
 
 .constant("csConfig", {
 	"defaultLanguage": "fr-FR",
-	"timeout": 4000,
-	"cacheTimeMs": 60000,
+	"timeout": 300000,
+	"cacheTimeMs": 300000,
 	"useLocalStorage": true,
 	"rememberMe": true,
 	"useRelative": false,
@@ -23,10 +23,6 @@ angular.module("cesium.config", [])
 		"host": "g1.duniter.fr",
 		"port": "443"
 	},
-	"login": {
-		"templateUrl": "plugins/market/templates/login/modal_simple_login.html",
-		"controller": "MarketLoginModalCtrl"
-	},
 	"plugins": {
 		"es": {
 			"enable": true,
@@ -35,41 +31,16 @@ angular.module("cesium.config", [])
 		},
 		"market": {
 			"enable": true,
-			"defaultCurrency": "€",
-			"homeMessage": "<i class=\"icon ion-location\"></i> Vide-grenier de Villiers-charlemagne",
 			"defaultTags": [
 				{
-					"tag": "VideGrenier",
-					"name": "Vide-grenier"
-				},
-				{
-					"tag": "VillersCharlemagne2017",
-					"name": "Vide-grenier de Villiers-charlemagne"
+					"tag": "Sou",
+					"name": "Sou"
 				}
 			],
-			"defaultAdminPubkeys": [
-				"CohjkoP5YnqzTV2wwdCFND74BDDmDR7dAQEPGt4tj2Tw",
-				"GWAKPVoMdQw1LYqcWW8jckzox9VwNXGt6cQ1L5gNt3E9"
-			],
 			"record": {
-				"type": {
-					"show": false,
-					"default": "offer",
-					"canEdit": false
-				},
-				"category": {
-					"show": true,
-					"filter": "localSale"
-				},
-				"description": {
-					"show": false
-				},
 				"location": {
 					"show": true,
-					"required": true,
-					"label": "MARKET.LOCAL_SALE.LOCATION",
-					"help": "MARKET.LOCAL_SALE.LOCATION_HELP",
-					"prefix": "MARKET.LOCAL_SALE.LOCATION_PREFIX"
+					"required": false
 				},
 				"unit": {
 					"canEdit": false
@@ -78,7 +49,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.4.4",
-	"build": "2017-06-24T21:59:14.549Z",
+	"build": "2017-08-01T17:01:07.925Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

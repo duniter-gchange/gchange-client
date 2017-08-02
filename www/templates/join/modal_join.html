@@ -11,13 +11,13 @@
             ng-if="slides.slider.activeIndex">
     </button>
     <button class="button button-icon button-clear icon ion-ios-help-outline visible-xs"
-            ng-if="slides.slider.activeIndex > 1 && !isLastSlide"
+            ng-if="!isLastSlide"
             ng-click="showHelpModal()"></button>
 
     <h1 class="title" translate>ACCOUNT.NEW.TITLE</h1>
 
     <button class="button button-clear icon-right visible-xs"
-            ng-if="!isLastSlide && slides.slider.activeIndex > 1"
+            ng-if="!isLastSlide"
             ng-click="doNext()">
       <span translate>COMMON.BTN_NEXT</span>
       <i class="icon ion-ios-arrow-right"></i>
@@ -32,66 +32,7 @@
 
     <ion-slides options="slides.options" slider="slides.slider">
 
-      <!-- STEP 1: currency -->
-      <ion-slide-page>
-        <ion-content class="has-header padding">
-          <h3 translate>ACCOUNT.NEW.SLIDE_1_TITLE</h3>
-          <div class="list">
-            <div ng-repeat="currency in knownCurrencies"
-               class="item card item-icon-right stable-bg padding ink"
-               ng-class="{ selected: selectedCurrency == currency }"
-               ng-click="selectCurrency(currency.name, true)">
-              <h2>{{::currency.name}}</h2>
-              <h4 class="gray">{{::currency.peer.server}}</h4>
-              <i class="icon dark ion-ios-arrow-right"></i>
-            </div>
-          </div>
-
-          <div class="padding hidden-xs text-right">
-            <button class="button button-clear button-dark ink" ng-click="closeModal()" type="button" translate>COMMON.BTN_CANCEL
-            </button>
-          </div>
-        </ion-content>
-      </ion-slide-page>
-
-      <!-- STEP 2: account type -->
-      <ion-slide-page>
-        <ion-content class="has-header padding">
-          <h3 translate>ACCOUNT.NEW.SLIDE_2_TITLE</h3>
-          <div class="list">
-            <!-- member account -->
-            <div class="item item-complex card stable-bg item-icon-left item-icon-right ink"
-               ng-click="selectAccountType('member')">
-              <div class="item-content item-text-wrap">
-                <i class="item-image icon dark ion-person"></i>
-                <h2 translate>ACCOUNT.NEW.MEMBER_ACCOUNT</h2>
-                <h4 class="gray" translate>ACCOUNT.NEW.MEMBER_ACCOUNT_HELP</h4>
-                <i class="icon dark ion-ios-arrow-right"></i>
-              </div>
-            </div>
-
-            <!-- Allow extension here -->
-            <cs-extension-point name="select-account-type"></cs-extension-point>
-
-            <!-- simple wallet -->
-            <div class="item item-complex card stable-bg item-icon-left item-icon-right ink"
-                 ng-click="selectAccountType('anonymous')">
-              <div class="item-content item-text-wrap">
-                <i class="item-image icon dark ion-card"></i>
-                <h2 translate>ACCOUNT.NEW.WALLET_ACCOUNT</h2>
-                <h4 class="gray" translate>ACCOUNT.NEW.WALLET_ACCOUNT_HELP</h4>
-                <i class="icon dark ion-ios-arrow-right"></i>
-              </div>
-            </div>
-          </div>
-          <div class="padding hidden-xs text-right">
-            <button class="button button-clear button-dark ink" ng-click="closeModal()" type="button" translate>COMMON.BTN_CANCEL
-            </button>
-          </div>
-        </ion-content>
-      </ion-slide-page>
-
-      <!-- STEP 3: salt -->
+      <!-- STEP: salt -->
       <ion-slide-page>
         <ion-content class="has-header" scroll="false">
           <form name="saltForm" novalidate="" ng-submit="doNext('saltForm')">
@@ -112,13 +53,13 @@
                        name="username" type="password" placeholder="{{'LOGIN.SALT_HELP' | translate}}"
                        ng-change="formDataChanged()"
                        ng-model="formData.username"
-                       ng-minlength="8"
+                       ng-minlength="4"
                        required>
                 <input ng-if="showUsername"
                        name="username" type="text" placeholder="{{'LOGIN.SALT_HELP' | translate}}"
                        ng-change="formDataChanged()"
                        ng-model="formData.username"
-                       ng-minlength="8"
+                       ng-minlength="4"
                        required>
               </div>
               <div class="form-errors"
@@ -179,7 +120,7 @@
         </ion-content>
       </ion-slide-page>
 
-      <!-- STEP 4: password-->
+      <!-- STEP: password-->
       <ion-slide-page>
         <ion-content class="has-header" scroll="false">
           <form name="passwordForm" novalidate="" ng-submit="doNext('passwordForm')">
@@ -200,13 +141,13 @@
                        name="password" type="password" placeholder="{{'LOGIN.PASSWORD_HELP' | translate}}"
                        ng-model="formData.password"
                        ng-change="formDataChanged()"
-                       ng-minlength="8"
+                       ng-minlength="6"
                        required>
                 <input ng-if="showPassword"
                        name="text" type="text" placeholder="{{'LOGIN.PASSWORD_HELP' | translate}}"
                        ng-model="formData.password"
                        ng-change="formDataChanged()"
-                       ng-minlength="8"
+                       ng-minlength="6"
                        required>
               </div>
               <div class="form-errors"
@@ -270,13 +211,12 @@
       </ion-slide-page>
 
       <!-- STEP 5: pseudo-->
-      <ion-slide-page  ng-if="formData.isMember">
+      <ion-slide-page>
         <ion-content class="has-header" scroll="false">
           <form name="pseudoForm" novalidate="" ng-submit="doNext('pseudoForm')">
 
             <div class="item item-text-wrap text-center padding hidden-xs" >
-              <a class="pull-right icon-help" ng-click="showHelpModal('join-pseudo')"></a>
-              <span translate>ACCOUNT.NEW.PSEUDO_WARNING</span>
+              <span translate>PROFILE.JOIN.TITLE_WARNING</span>
             </div>
 
             <div class="list"
@@ -284,18 +224,15 @@
 
               <!-- pseudo -->
               <div class="item item-input"
-                   ng-if="formData.isMember"
                    ng-class="{'item-input-error': pseudoForm.$submitted && pseudoForm.pseudo.$invalid}">
-                <span class="input-label" translate>ACCOUNT.NEW.PSEUDO</span>
-                <input name="pseudo" type="text" placeholder="{{'ACCOUNT.NEW.PSEUDO_HELP' | translate}}"
+                <span class="input-label" translate>PROFILE.TITLE</span>
+                <input name="pseudo" type="text" placeholder="{{'PROFILE.TITLE_HELP' | translate}}"
                        ng-model="formData.pseudo"
-                       ng-minlength="3"
+                       ng-minlength="4"
                        ng-maxlength="100"
-                       ng-pattern="userIdPattern"
                        required>
               </div>
               <div class="form-errors"
-                   ng-if="formData.isMember"
                    ng-show="pseudoForm.$submitted && pseudoForm.pseudo.$error"
                    ng-messages="pseudoForm.pseudo.$error">
                 <div class="form-error" ng-message="minlength">
@@ -306,9 +243,6 @@
                 </div>
                 <div class="form-error" ng-message="required">
                   <span translate="ERROR.FIELD_REQUIRED"></span>
-                </div>
-                <div class="form-error" ng-message="pattern">
-                  <span translate="ERROR.INVALID_USER_ID"></span>
                 </div>
               </div>
 
@@ -330,7 +264,7 @@
       <ion-slide-page>
         <ion-content class="has-header" scroll="false">
 
-          <div class="padding text-center" translate>ACCOUNT.NEW.LAST_SLIDE_CONGRATULATION</div>
+          <div class="padding text-center" translate>PROFILE.JOIN.LAST_SLIDE_CONGRATULATION</div>
 
           <div class="list">
 

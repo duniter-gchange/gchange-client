@@ -7,7 +7,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 
     var
       fields = {
-        commons: ["category", "title", "description", "issuer", "time", "location", "price", "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock"]
+        commons: ["category", "title", "description", "issuer", "time", "location", "price", "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency"]
       },
       exports = {
         id: id,
@@ -222,6 +222,12 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           record.category.name = hit.highlight["category.name"][0];
         }
       }
+      else {
+          // description
+          record.description = esHttp.util.trustAsHtml(record.description, {
+              tagState: 'app.market_lookup'
+          });
+      }
 
       // thumbnail
       record.thumbnail = esHttp.image.fromHit(hit, 'thumbnail');
@@ -250,7 +256,8 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         fields : {
           title : {},
           description : {},
-          "category.name" : {}
+          "category.name" : {},
+          tags: {}
         }
       };
 

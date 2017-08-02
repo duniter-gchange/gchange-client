@@ -198,7 +198,9 @@
       "LOOKUP_RECORDS_FAILED": "Erreur lors de l'execution de la recherche.",
       "REMOVE_RECORD_FAILED": "Erreur de la suppression de la page",
       "SAVE_RECORD_FAILED": "Erreur lors de la sauvegarde",
-      "RECORD_NOT_EXISTS": "Page inexistante"
+      "RECORD_NOT_EXISTS": "Page inexistante",
+      "FAILED_SAVE_COMMENT": "Erreur lors de la sauvegarde du commentaire",
+      "FAILED_REMOVE_COMMENT": "Erreur lors de la suppression du commentaire"
     },
     "INFO": {
       "RECORD_REMOVED" : "Page supprimée"
@@ -209,6 +211,9 @@
     "NO_PROFILE_DEFINED": "Aucun profil saisi",
     "BTN_ADD": "Saisir mon profil",
     "BTN_EDIT": "Editer mon profil",
+    "BTN_GEOLOC_ADDRESS": "Mettre à jour à partir de l'adresse",
+    "BTN_GEOLOC_ME": "Me localiser",
+    "BTN_REMOVE_GEOLOC": "Supprimer la position",
     "UID": "Pseudonyme",
     "TITLE": "Nom, Prénom",
     "TITLE_HELP": "Nom, Prénom",
@@ -222,6 +227,10 @@
     "GENERAL_DIVIDER": "Informations générales",
     "LOCATION_DIVIDER": "Adresse",
     "SOCIAL_NETWORKS_DIVIDER": "Réseaux sociaux, sites web",
+    "LATITUDE": "Latitude",
+    "LATITUDE_HELP": "Latitude",
+    "LONGITUDE": "Longitude",
+    "LONGITUDE_HELP": "Longitude",
     "TECHNICAL_DIVIDER": "Informations techniques",
     "MODAL_AVATAR": {
       "TITLE": "Photo de profil",
@@ -230,11 +239,17 @@
       "RESIZE_HELP": "<b>Recadrez l'image</b>, si besoin. Un clic maintenu sur l'image permet de la déplacer. Cliquez sur la zone en bas à gauche pour zoomer.",
       "RESULT_HELP": "<b>Voici le résultat</b> tel que visible sur votre profil :"
     },
+    "MODAL_LOCATIONS": {
+      "TITLE": "Validation de l'addresse",
+      "RESULT_DIVIDER": "Résultat(s) pour <b>{{address}}</b> :"
+    },
     "ERROR": {
       "LOAD_PROFILE_FAILED": "Erreur de chargement du profil utilisateur.",
       "SAVE_PROFILE_FAILED": "Erreur lors de la sauvegarde",
       "INVALID_SOCIAL_NETWORK_FORMAT": "Format non pris en compte : veuillez indiquer une adresse valide.<br/><br/>Exemples :<ul><li>- Une page Facebook (https://www.facebook.com/user)</li><li>- Une page web (http://www.monsite.fr)</li><li>- Une adresse email (joe@dalton.com)</li></ul>",
-      "IMAGE_RESIZE_FAILED": "Erreur lors du redimensionnement de l'image"
+      "IMAGE_RESIZE_FAILED": "Erreur lors du redimensionnement de l'image",
+      "GEO_LOCATION_FAILED": "Impossible de récupérer votre position actuelle",
+      "ADDRESS_LOCATION_FAILED": "Impossible de récupérer la position à partir de l'adresse"
     },
     "INFO": {
       "PROFILE_SAVED": "Profil sauvegardé"
@@ -257,10 +272,10 @@
     "NOTIFICATIONS": {
       "DIVIDER": "Notifications",
       "HELP_TEXT": "Activez les types de notifications que vous souhaitez recevoir :",
-      "ENABLE_TX_SENT": "Notifier la validation des <b>paiement émis</b> ?",
-      "ENABLE_TX_RECEIVED": "Notifier la validation des <b>paiement reçus</b> ?",
-      "ENABLE_CERT_SENT": "Notifier la validation des <b>certifications émises</b> ?",
-      "ENABLE_CERT_RECEIVED": "Notifier la validation des <b>certifications reçues</b> ?"
+      "ENABLE_TX_SENT": "Notifier les <b>paiement émis</b> ?",
+      "ENABLE_TX_RECEIVED": "Notifier les <b>paiements reçus</b> ?",
+      "ENABLE_CERT_SENT": "Notifier les <b>certifications émises</b> ?",
+      "ENABLE_CERT_RECEIVED": "Notifier les <b>certifications reçues</b> ?"
     },
     "CONFIRM": {
       "ASK_ENABLE_TITLE": "Nouvelles fonctionnalités",
@@ -278,6 +293,8 @@
     "NODE_BMA_UP": "Le noeud <b>{{params[0]}}:{{params[1]}}</b> est à nouveau accessible.",
     "MEMBER_JOIN": "Vous êtes maintenant <b>membre</b> de la monnaie <b>{{params[0]}}</b> !",
     "MEMBER_LEAVE": "Vous n'êtes <b>plus membre</b> de la monnaie <b>{{params[0]}}</b>!",
+    "MEMBER_EXCLUDE": "Vous n'êtes <b>plus membre</b> de la monnaie <b>{{params[0]}}</b>, faute de non renouvellement ou par manque de certifications.",
+    "MEMBER_REVOKE": "La révocation de votre compte a été effectuée. Il ne pourra plus être un compte membre de la monnaie <b>{{params[0]}}</b>.",
     "MEMBER_ACTIVE": "Votre renouvellement d'adhésion à la monnaie <b>{{params[0]}}</b> a été <b>pris en compte</b>.",
     "TX_SENT": "Votre <b>paiement</b> à <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a été effectué.",
     "TX_SENT_MULTI": "Votre <b>paiement</b> à <b>{{params[1]}}</b> a été effectué.",

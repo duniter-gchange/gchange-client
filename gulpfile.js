@@ -2,7 +2,6 @@
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var bower = require('bower');
 var concat = require('gulp-concat');
 var path = require("path");
 var sass = require('gulp-sass');
@@ -33,6 +32,7 @@ var clean = require('gulp-clean');
 var htmlmin = require('gulp-htmlmin');
 var jshint = require('gulp-jshint');
 var sourcemaps = require('gulp-sourcemaps');
+var concatCss = require('gulp-concat-css');
 
 var paths = {
   sass: ['./scss/**/*.scss'],
@@ -51,22 +51,55 @@ gulp.task('default', ['sass', 'config', 'templatecache', 'ng_translate', 'ng_ann
   'templatecache_plugin', 'ng_translate_plugin', 'ng_annotate_plugin', 'css_plugin'
 ]);
 
-gulp.task('sass', function(done) {
-  gulp.src('./scss/ionic.app.scss')
-    .pipe(sass()).on('error', sass.logError)
-    .pipe(base64({
-                    baseDir: "./www/css",
-                    extensions: ['svg', 'png', /\.jpg#datauri$/i],
-                    maxSize: 14 * 1024
-                }))
-    .pipe(gulp.dest('./www/css/'))
-    .pipe(cleanCss({
-      keepSpecialComments: 0
-     }))
-    .pipe(sourcemaps.write())
-    .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest('./www/css/'))
-    .on('end', done);
+gulp.task('sass-images', function (done) {
+    gulp.src('./scss/leaflet/images/**/*.*')
+        .pipe(gulp.dest('./www/img/'))
+        .on('end', done);
+});
+
+gulp.task('sass', ['sass-images'], function(done) {
+
+  es.concat(
+    // Default App style
+    gulp.src('./scss/ionic.app.scss')
+      .pipe(sass()).on('error', sass.logError)
+      .pipe(base64({
+              baseDir: "./www/css",
+              extensions: ['svg', 'png', 'gif', /\.jpg#datauri$/i],
+              maxImageSize: 14 * 1024
+            }))
+      .pipe(gulp.dest('./www/css/'))
+      .pipe(cleanCss({
+        keepSpecialComments: 0
+       }))
+      .pipe(sourcemaps.write())
+      .pipe(rename({ extname: '.min.css' }))
+      .pipe(gulp.dest('./www/css/')),
+
+    // Leaflet App style
+    gulp.src('./scss/leaflet.app.scss')
+      .pipe(sass()).on('error', sass.logError)
+      // Fix bad images path
+      .pipe(replace("url('../images/", "url('../img/"))
+      .pipe(replace("url(\"../images/", "url(\"../img/"))
+      .pipe(replace("url('images/", "url('../img/"))
+      .pipe(replace("url(\"images/", "url(\"../img/"))
+      .pipe(replace("url(images/", "url(../img/"))
+      .pipe(base64({
+        baseDir: "./www/css/",
+        extensions: ['png', 'gif', /\.jpg#datauri$/i],
+        maxImageSize: 14 * 1024,
+        deleteAfterEncoding: true
+      }))
+      .pipe(gulp.dest('./www/css/'))
+      .pipe(cleanCss({
+        keepSpecialComments: 0
+      }))
+      .pipe(sourcemaps.write())
+      .pipe(rename({ extname: '.min.css' }))
+      .pipe(gulp.dest('./www/css/'))
+  )
+  .on('end', done);
 });
 
 gulp.task('watch', function() {
@@ -81,12 +114,6 @@ gulp.task('watch', function() {
   gulp.watch(paths.css_plugin, ['css_plugin']);
 });
 
-gulp.task('install', ['git-check'], function() {
-  return bower.commands.install()
-    .on('log', function(data) {
-      gutil.log('bower', gutil.colors.cyan(data.id), data.message);
-    });
-});
 
 gulp.task('git-check', function(done) {
   if (!sh.which('git')) {

@@ -1,0 +1,87 @@
+.legend {
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: rgba(255,255,255, 0.9);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  padding: 6px 8px;
+  width: 180px;
+  line-height: 18px;
+  color: #555;
+}
+
+.legend .outline {
+  border: 0;
+}
+
+.legend i {
+  width: 16px;
+  height: 16px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+.search-tip {
+  white-space: nowrap;
+}
+
+/**********
+   Map network: Peer items
+**********/
+
+.leaflet-popup .item-peer {
+  padding-top: 9px;
+  padding-bottom: 3px;
+}
+
+.leaflet-popup .item.item-icon-left > i.avatar:first-child {
+  left: 9px;
+  top: 0;
+}
+
+.leaflet-popup .item-peer .badge {
+  top: inherit;
+  bottom: 0px;
+  right: 5px;
+  font-size: 12px;
+}
+
+.leaflet-popup .item-peer .badge.badge-secondary,
+.leaflet-popup .item-peer .badge .badge-secondary {
+  top: inherit;
+  bottom: -16px;
+  right: 5px;
+  font-size: 9px;
+  padding-right: 0px;
+}
+
+.leaflet-popup .item-peer {
+  padding-top: 0px;
+}
+
+.view-map-network .leaflet-popup-content{
+  max-height: 250px
+}
+.view-map-network .leaflet-popup-content .item-peer .row {
+  display: block;
+}
+.view-map-network .leaflet-popup-content .item-peer .col.col-15 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 15%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 15%;
+  -ms-flex: 0 0 15%;
+  flex: 0 0 15%;
+  max-width: 70px;
+  text-align: start !important;
+}
+.view-map-network .leaflet-popup-content .item-peer .col.col-20 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 20%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 20%;
+  -ms-flex: 0 0 20%;
+  flex: 0 0 20%;
+  max-width: 70px;
+  text-align: start !important;
+}
