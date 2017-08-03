@@ -20,7 +20,7 @@ function ESPicturesEditController($scope, UIUtils, $q, Device) {
 
   $scope.selectNewPicture = function(inputSelector) {
     if (Device.enable){
-      openPicturePopup();
+      $scope.openPicturePopup();
     }
     else {
       var fileInput = angular.element(document.querySelector(inputSelector||'#pictureFile'));
