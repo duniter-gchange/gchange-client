@@ -41,7 +41,7 @@ install_from_github() {
 
   local RELEASE=`curl -XGET -i $(api_release_url)`
   local GCHANGE_URL=`echo "$RELEASE" | grep -P "\"browser_download_url\": \"[^\"]+" | grep -oP "https://[a-zA-Z0-9/.-]+-web.zip"`
-  local GCHANGE_ARCHIVE=$GCHANGE_DIR/cesium.zip
+  local GCHANGE_ARCHIVE=$GCHANGE_DIR/gchange.zip
   if [ -d "$GCHANGE_DIR" ]; then
     if [ -f "$GCHANGE_ARCHIVE" ]; then
       echo "WARNING: Deleting existing archive [$GCHANGE_ARCHIVE]"
