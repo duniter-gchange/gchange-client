@@ -25,7 +25,7 @@ if (rootdir) {
       gulp.src(ionicConfigFile)
 
         // change App ID into 'duniter-cesium'
-        .pipe(replace(/id="fr.gchange"/g, 'id="cesium"'))
+        .pipe(replace(/id="fr.gchange"/g, 'id="gchange"'))
 
         .pipe(gulp.dest(platformPath));
 
