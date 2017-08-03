@@ -19,7 +19,7 @@ latest_version() {
 }
 
 api_release_url() {
-  echo "https://api.github.com/repos/duniter-change/duniter-client/releases/tags/$(latest_version)"
+  echo "https://api.github.com/repos/duniter-gchange/gchange-client/releases/tags/$(latest_version)"
 }
 
 download() {

@@ -48,10 +48,9 @@ case "$1" in
 
       echo "Creating new release..."
       result=`curl -i https://api.github.com/repos/duniter-gchange/gchange-client/releases -u $2 -d '{"tag_name": "v'"$current"'","target_commitish": "master","name": "'"$current"'","body": "'"$3"'","draft": false,"prerelease": '"$prerelease"'}'`
-      upload_url=`echo "$result" | grep -P "\"upload_url\": \"[^\"]+"  | grep -oP "https://[a-z0-9/.]+"`
-
+      upload_url=`echo "$result" | grep -P "\"upload_url\": \"[^\"]+"  | grep -oP "https://[a-z0-9/.-]+"`
       ###  Sending files
-      echo "Uploading files to GitHub..."
+      echo "Uploading files to GitHub... to $upload_url"
       dirname=`pwd`
       curl -i -u $2 -H 'Content-Type: application/zip' -T $dirname/platforms/web/build/gchange-web-$current.zip $upload_url?name=gchange-v$current-web.zip
       #curl -i -u $2 -H 'Content-Type: application/zip' -T $dirname/platforms/firefoxos/build/package.zip $upload_url?name=gchange-v$current-firefoxos.zip
