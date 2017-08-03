@@ -67,13 +67,6 @@
   <script src="lib/ionic/js/angular/ui-leaflet.js"></script>
 
   <script src="js/vendor/base58.js" async></script>
-  <!--removeIf(android)-->
-  <!--removeIf(ios)-->
-  <script src="js/vendor/nacl_factory.js" async></script>
-  <script src="js/vendor/scrypt-em.js" async></script>
-  <script src="js/vendor/base64.js" async></script>
-  <!--endRemoveIf(ios)-->
-  <!--endRemoveIf(android)-->
   <!--removeIf(no-device)-->
   <script src="js/vendor/sha256.min.js" async></script>
   <script src="js/vendor/ng-cordova.min.js"></script>
@@ -191,6 +184,17 @@
   <script src="dist/dist_js/app/filters.js"></script>
   <script src="dist/dist_js/app/platform.js"></script>
   <!-- endbuild -->
+
+  <!--removeIf(android)-->
+  <!--removeIf(ios)-->
+  <!-- build:js dist_js/crypto.js -->
+  <script src="js/vendor/nacl_factory.js" async></script>
+  <script src="js/vendor/scrypt-em.js" async></script>
+  <script src="js/vendor/base64.js" async></script>
+  <!-- endbuild -->
+  <!--endRemoveIf(ios)-->
+  <!--endRemoveIf(android)-->
+
 
   <!-- build:js config.js -->
   <!-- config  -->
