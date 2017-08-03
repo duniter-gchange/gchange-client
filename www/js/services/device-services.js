@@ -17,10 +17,8 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
   .factory('Device',
     function($translate, $ionicPopup, $q,
       // removeIf(no-device)
-      // removeIf(android)
-      //FIXME $cordovaClipboard, $cordovaBarcodeScanner, $cordovaCamera,
+      $cordovaClipboard, $cordovaBarcodeScanner, $cordovaCamera,
       // endRemoveIf(no-device)
-      // endRemoveIf(android)
       ionicReady, csSettings) {
       'ngInject';
 
@@ -118,7 +116,7 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
           return $q.reject('Device disabled');
         }
         var deferred = $q.defer();
-        /*$cordovaClipboard
+        $cordovaClipboard
           .copy(text)
           .then(function () {
             // success
@@ -129,7 +127,7 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
           }, function () {
             // error
             deferred.reject({message: 'ERROR.COPY_CLIPBOARD'});
-          });*/
+          });
         return deferred.promise;
       }
 

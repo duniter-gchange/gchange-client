@@ -794,17 +794,30 @@ angular.module('cesium.crypto.services', ['cesium.utils.services'])
       var service = new CryptoAbstractService();
 
       var isDevice = true;
-      // removeIf(device)
+      // removeIf(android)
+      // removeIf(ios)
       isDevice = false;
-      // endRemoveIf(device)
+      // endRemoveIf(ios)
+      // endRemoveIf(android)
 
       console.debug("[crypto] Created CryptotUtils service. device=" + isDevice);
+
 
       ionicReady().then(function() {
         console.debug('[crypto] Starting...');
         var now = new Date().getTime();
 
         var serviceImpl;
+
+        if (isDevice) {
+          console.debug("[crypto] > window.plugins = " + !!window.plugins);
+          if (window.plugins) {
+            console.debug("[crypto] > window.plugins.MiniSodium = " + !!window.plugins && !!window.plugins.MiniSodium);
+          }
+          console.debug("[crypto] > crypto.getRandomValues= " + !!crypto.getRandomValues);
+          console.debug("[crypto] > window.cordova && cordova && cordova.plugins = " + !!(window.cordova && cordova && cordova.plugins && cordova.plugins.MiniSodium));
+
+        }
 
         // Use Cordova plugin implementation, when exists
         if (isDevice && window.plugins && window.plugins.MiniSodium && crypto && crypto.getRandomValues) {
