@@ -458,7 +458,7 @@
       "LOCKED_AMOUNT": "Conditions pour le montant :"
     },
     "NEW": {
-      "TITLE": "Création de compte",
+      "TITLE": "Inscription",
       "INTRO_WARNING_TIME": "La création d'un compte sur {{name|capitalize}} est très simple. Veuillez néanmoins prendre suffisament de temps pour faire correctement cette formalité (pour ne pas oublier les identifiants, mots de passe, etc.).",
       "INTRO_WARNING_SECURITY": "Vérifier que le matériel que vous utilisez actuellement (ordinateur, tablette, téléphone) <b>est sécurisé et digne de confiance</b>.",
       "INTRO_WARNING_SECURITY_HELP": "Anti-virus à jour, pare-feu activé, session protégée par mot de passe ou code pin, etc.",
