@@ -9,6 +9,7 @@
 angular.module("cesium.config", [])
 
 .constant("csConfig", {
+	"fallbackLanguage": "fr-FR",
 	"defaultLanguage": "fr-FR",
 	"timeout": 300000,
 	"cacheTimeMs": 300000,
@@ -34,7 +35,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.5.0",
-	"build": "2017-08-02T18:00:41.194Z",
+	"build": "2017-08-03T16:46:38.839Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

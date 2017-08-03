@@ -1,5 +1,6 @@
 {
   "default": {
+    "fallbackLanguage": "fr-FR",
     "defaultLanguage": "fr-FR",
     "timeout": 300000,
     "cacheTimeMs": 300000,
@@ -21,25 +22,7 @@
         "port": "443"
       },
       "market": {
-        "enable": true,
-        "defaultTags": [
-          {
-            "tag": "Sou",
-            "name":  "Sou"
-          }
-        ],
-        "record": {
-          "location": {
-            "show": true,
-            "required": true,
-            "label": "MARKET.LOCAL_SALE.LOCATION",
-            "help": "MARKET.LOCAL_SALE.LOCATION_HELP",
-            "prefix": "MARKET.LOCAL_SALE.LOCATION_PREFIX"
-          },
-          "unit": {
-            "canEdit": false
-          }
-        }
+        "enable": true
       }
     }
   },
