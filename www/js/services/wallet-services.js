@@ -180,27 +180,9 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
           if (!dataStr) return;
           return fromJson(dataStr, false)
             .then(function(storedData){
-              // FIXME: #372
-              /*if (storedData && storedData.pubkey) {
-                data.pubkey = storedData.pubkey;
-                data.uid = storedData.uid;
-                data.loaded = false;
-
-                return $q.all([
-                  // Call extend api
-                  api.data.raisePromise.login(data),
-
-                  // Load currency (e.g parameters)
-                  // This prevent timeout error, when loading a market record after a browser refresh (e.g. F5)
-                  loadCurrency()
-                ]);
-              }
-              else */if (storedData && storedData.keypair && storedData.pubkey) {
+              if (storedData && storedData.keypair && storedData.pubkey) {
                 data.keypair = storedData.keypair;
                 data.pubkey = storedData.pubkey;
-
-                // FOR DEV ONLY - on crosschain
-                // console.error('TODO REMOVE this code - dev only'); data.pubkey = '36j6pCNzKDPo92m7UXJLFpgDbcLFAZBgThD2TCwTwGrd';
                 data.loaded = false;
 
                 return $q.all([

@@ -1,16 +1,16 @@
 angular.module('cesium.es.common.controllers', ['ngResource', 'cesium.es.services'])
 
- .controller('ESPicturesEditCtrl', ESPicturesEditController)
+    .controller('ESPicturesEditCtrl', ESPicturesEditController)
 
- .controller('ESPicturesEditCtrl', ESPicturesEditController)
+    .controller('ESPicturesEditCtrl', ESPicturesEditController)
 
- .controller('ESSocialsEditCtrl', ESSocialsEditController)
+    .controller('ESSocialsEditCtrl', ESSocialsEditController)
 
- .controller('ESSocialsViewCtrl', ESSocialsViewController)
+    .controller('ESSocialsViewCtrl', ESSocialsViewController)
 
- .controller('ESCommentsCtrl', ESCommentsController)
+    .controller('ESCommentsCtrl', ESCommentsController)
 
- .controller('ESCategoryModalCtrl', ESCategoryModalController)
+    .controller('ESCategoryModalCtrl', ESCategoryModalController)
 
 ;
 
@@ -18,12 +18,12 @@ angular.module('cesium.es.common.controllers', ['ngResource', 'cesium.es.service
 function ESPicturesEditController($scope, UIUtils, $q, Device) {
   'ngInject';
 
-  $scope.selectNewPicture = function() {
+  $scope.selectNewPicture = function(inputSelector) {
     if (Device.enable){
       openPicturePopup();
     }
     else {
-      var fileInput = angular.element(document.querySelector('#pictureFile'));
+      var fileInput = angular.element(document.querySelector(inputSelector||'#pictureFile'));
       if (fileInput && fileInput.length > 0) {
         fileInput[0].click();
       }
@@ -32,11 +32,14 @@ function ESPicturesEditController($scope, UIUtils, $q, Device) {
 
   $scope.openPicturePopup = function() {
     Device.camera.getPicture()
-    .then(function(imageData) {
-      $scope.pictures.push({src: "data:image/png;base64," + imageData});
-      $scope.$apply();
-    })
-    .catch(UIUtils.onError('ERROR.TAKE_PICTURE_FAILED'));
+        .then(function(imageData) {
+          $scope.pictures.push({
+            src: "data:image/png;base64," + imageData,
+            isnew: true // use to prevent visibility hidden (if animation)
+          });
+          $scope.$apply();
+        })
+        .catch(UIUtils.onError('ERROR.TAKE_PICTURE_FAILED'));
   };
 
   $scope.fileChanged = function(event) {
@@ -44,14 +47,14 @@ function ESPicturesEditController($scope, UIUtils, $q, Device) {
     return $q(function(resolve, reject) {
       var file = event.target.files[0];
       UIUtils.image.resizeFile(file)
-        .then(function(imageData) {
-          $scope.pictures.push({
-            src: imageData,
-            isnew: true // use to prevent visibility hidden (if animation)
+          .then(function(imageData) {
+            $scope.pictures.push({
+              src: imageData,
+              isnew: true // use to prevent visibility hidden (if animation)
+            });
+            UIUtils.loading.hide(100);
+            resolve();
           });
-          UIUtils.loading.hide(100);
-          resolve();
-      });
     });
   };
 
@@ -70,9 +73,9 @@ function ESPicturesEditController($scope, UIUtils, $q, Device) {
   $scope.rotatePicture = function(index){
     var item = $scope.pictures[index];
     UIUtils.image.rotateSrc(item.src)
-      .then(function(dataURL){
-        item.src = dataURL;
-      });
+        .then(function(dataURL){
+          item.src = dataURL;
+        });
   };
 }
 
@@ -84,6 +87,9 @@ function ESCategoryModalController($scope, UIUtils, $timeout, parameters) {
   $scope.allCategories = [];
   $scope.categories = [];
   this.searchText = '';
+
+  // modal title
+  this.title = parameters && parameters.title;
 
   $scope.afterLoad = function(result) {
     $scope.categories = result;
@@ -100,7 +106,7 @@ function ESCategoryModalController($scope, UIUtils, $timeout, parameters) {
       $scope.loading = true;
       $scope.categories = $scope.allCategories.reduce(function(result, cat) {
         if (cat.parent && cat.name.toLowerCase().search(searchText) != -1) {
-            return result.concat(cat);
+          return result.concat(cat);
         }
         return result;
       }, []);
@@ -118,9 +124,9 @@ function ESCategoryModalController($scope, UIUtils, $timeout, parameters) {
   }
   else if (parameters && parameters.load) {
     parameters.load()
-    .then(function(res){
-      $scope.afterLoad(res);
-    });
+        .then(function(res){
+          $scope.afterLoad(res);
+        });
   }
 
 }
@@ -145,7 +151,7 @@ function ESCommentsController($scope, $timeout, $filter, $state, $focus, UIUtils
   $scope.$on('$recordView.load', function(event, id, service) {
     $scope.id = id || $scope.id;
     $scope.service = service || $scope.service;
-    console.debug("[ES] [comment] Initialized service in index: " + service.index);
+    console.debug("[ES] [comment] Initialized service with: " + service.id);
     if ($scope.id) {
       $scope.load($scope.id);
     }
@@ -159,25 +165,25 @@ function ESCommentsController($scope, $timeout, $filter, $state, $focus, UIUtils
     options.loadAvatarAllParent = angular.isDefined(options.loadAvatarAllParent) ? options.loadAvatarAllParent : true;
     $scope.loading = true;
     return $scope.service.load(id, options)
-      .then(function(data) {
-        if (!options.animate && data.result.length) {
-          _.forEach(data.result, function(cmt) {
-            cmt.isnew = true;
-          });
-        }
-        $scope.comments = data;
-        $scope.comments.hasMore = (data.total > data.result.length);
-        $scope.loading = false;
-        $scope.service.changes.start(id, data);
+        .then(function(data) {
+          if (!options.animate && data.result.length) {
+            _.forEach(data.result, function(cmt) {
+              cmt.isnew = true;
+            });
+          }
+          $scope.comments = data;
+          $scope.comments.hasMore = (data.total > data.result.length);
+          $scope.loading = false;
+          $scope.service.changes.start(id, data);
 
-        // Set Motion
-        $timeout(function() {
-          $scope.motion.show({
-            selector: '.comments .item',
-            ink: false
+          // Set Motion
+          $timeout(function() {
+            $scope.motion.show({
+              selector: '.comments .item',
+              ink: false
+            });
           });
         });
-      });
   };
 
   $scope.$on('$recordView.beforeLeave', function(){
@@ -190,26 +196,26 @@ function ESCommentsController($scope, $timeout, $filter, $state, $focus, UIUtils
     var from = 0;
     var size = -1;
     $scope.load($scope.id, {from: from, size: size, loadAvatarAllParent: false})
-    .then(function() {
-      // Set Motion
-      $scope.motion.show({
-        selector: '.card-avatar'
-      });
-    });
+        .then(function() {
+          // Set Motion
+          $scope.motion.show({
+            selector: '.card-avatar'
+          });
+        });
   };
 
   $scope.save = function() {
     if (!$scope.formData.message || !$scope.formData.message.length) return;
 
     $scope.loadWallet({minData: true})
-      .then(function() {
-        UIUtils.loading.hide();
-        var comment = $scope.formData;
-        $scope.formData = {};
-        $scope.focusNewComment();
-        return $scope.service.save($scope.id, $scope.comments, comment);
-      })
-      .catch(UIUtils.onError('MARKET.ERROR.FAILED_SAVE_COMMENT'));
+        .then(function() {
+          UIUtils.loading.hide();
+          var comment = $scope.formData;
+          $scope.formData = {};
+          $scope.focusNewComment();
+          return $scope.service.save($scope.id, $scope.comments, comment);
+        })
+        .catch(UIUtils.onError('MARKET.ERROR.FAILED_SAVE_COMMENT'));
   };
 
   $scope.share = function(event, comment) {

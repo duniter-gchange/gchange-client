@@ -36,20 +36,11 @@ angular.module("cesium.config", [])
 					"tag": "Sou",
 					"name": "Sou"
 				}
-			],
-			"record": {
-				"location": {
-					"show": true,
-					"required": false
-				},
-				"unit": {
-					"canEdit": false
-				}
-			}
+			]
 		}
 	},
-	"version": "0.4.4",
-	"build": "2017-08-01T17:01:07.925Z",
+	"version": "0.5.0",
+	"build": "2017-08-02T18:00:41.194Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

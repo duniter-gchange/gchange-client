@@ -73,7 +73,7 @@
         <a class="button button-text button-small ink"
            ng-class="{'button-text-positive': search.advanced, 'button-text-stable': !search.advanced}"
            ng-click="search.advanced=!search.advanced">
-          <i class="icon ion-wrench"></i>
+          <i class="icon" ng-class="{'ion-ios-gear-outline': !search.advanced, 'ion-ios-gear': search.advanced}"></i>
           {{'MARKET.SEARCH.BTN_OPTIONS' | translate}}
         </a>
       </div>

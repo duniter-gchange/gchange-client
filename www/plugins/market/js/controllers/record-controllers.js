@@ -57,8 +57,6 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
           controller: 'MkRecordEditCtrl'
         }
       }
-
-
     })
 
     .state('app.market_edit_record', {
@@ -96,7 +94,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
 ;
 
-function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, ModalUtils, csConfig, mkRecord, BMA) {
+function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, ModalUtils, csConfig, mkRecord, BMA, mkSettings) {
   'ngInject';
 
   var defaultSearchLimit = 10;
@@ -137,6 +135,12 @@ function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, Mo
   $scope.$watch('search.showClosed', function() {
     $scope.options.showClosed = $scope.search.showClosed;
   }, true);
+
+  $scope.init = function() {
+    return mkSettings.currencies().then(function(currencies) {
+      $scope.currencies = currencies;
+    });
+  };
 
   $scope.setAdType = function(type) {
     if (type != $scope.search.type) {
@@ -226,7 +230,18 @@ function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, Mo
       filters.push({term: {type: $scope.search.type}});
     }
 
-
+    // filter on currency
+    if ($scope.currencies) {
+      filters.push({terms: {currency: $scope.currencies}});
+    }
+    /*if ($scope.currency) {
+      filters.push({bool:
+          should: [
+            {term: {currency: $scope.currency}},
+            {exists: {field: 'currency'}}
+          ]
+        });
+    }*/
 
     var query = {bool: {}};
     if (matches.length > 0) {
@@ -254,8 +269,13 @@ function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, Mo
     if (!$scope.search.showClosed) {
       filters.push({range: {stock: {gt: 0}}});
     }
+    // filter on type
     if ($scope.search.type) {
       filters.push({term: {type: $scope.search.type}});
+    }
+    // filter on currencies
+    if ($scope.currencies) {
+      filters.push({terms: {currency: $scope.currencies}});
     }
     if (filters.length) {
       options.query = {bool: {}};
@@ -435,11 +455,17 @@ function MkLookupController($scope, $controller, $focus, mkRecord) {
         mkRecord.category.get({id: state.stateParams.category})
             .then(function (cat) {
               $scope.search.category = cat;
-              $scope.finishEnter(showAdvanced);
+              return $scope.init();
+            })
+            .then(function() {
+              return $scope.finishEnter(showAdvanced);
             });
       }
       else {
-        $scope.finishEnter(showAdvanced);
+        $scope.init()
+          .then(function() {
+            return $scope.finishEnter(showAdvanced);
+          });
       }
     }
   };
@@ -531,7 +557,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     }
   }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
-  $scope.$on('$ionicView.enter', function (e, state) {
+  $scope.enter = function (e, state) {
     if (state.stateParams && state.stateParams.id) { // Load by id
       if ($scope.loading || state.stateParams.refresh) { // prevent reload if same id (if not force)
         $scope.load(state.stateParams.id, state.stateParams.anchor);
@@ -543,7 +569,8 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     else {
       $state.go('app.market_lookup');
     }
-  });
+  };
+  $scope.$on('$ionicView.enter', $scope.enter);
 
   $scope.$on('$ionicView.beforeLeave', function (event, args) {
     $scope.$broadcast('$recordView.beforeLeave', args);
@@ -559,12 +586,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         $scope.formData = data.record;
         $scope.id = data.id;
         $scope.issuer = data.issuer;
-        $scope.canEdit = $scope.formData && csWallet.isUserPubkey($scope.formData.issuer);
-        $scope.canSold = $scope.canEdit && $scope.formData.stock > 0;
-        $scope.canReopen = $scope.canEdit && $scope.formData.stock === 0;
-        if ($scope.canReopen) {
-          $scope.canEdit = false;
-        }
+        $scope.updateButtons();
         UIUtils.loading.hide();
         $scope.loading = false;
         // Set Motion (only direct children, to exclude .lazy-load children)
@@ -624,6 +646,15 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       }, 1000);
     });
 
+  };
+
+  $scope.updateButtons = function() {
+    $scope.canEdit = $scope.formData && csWallet.isUserPubkey($scope.formData.issuer);
+    $scope.canSold = $scope.canEdit && $scope.formData.stock > 0;
+    $scope.canReopen = $scope.canEdit && $scope.formData.stock === 0;
+    if ($scope.canReopen) {
+      $scope.canEdit = false;
+    }
   };
 
   $scope.refreshConvertedPrice = function () {
@@ -788,10 +819,22 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         }
       });
   };
+
+  /* -- context aware-- */
+
+  // When wallet login/logout -> update buttons
+  function onWalletChange(data, deferred) {
+    deferred = deferred || $q.defer();
+    $scope.updateButtons();
+    deferred.resolve();
+    return deferred.promise;
+  }
+  csWallet.api.data.on.login($scope, onWalletChange, this);
+  csWallet.api.data.on.logout($scope, onWalletChange, this);
 }
 
 function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $ionicHistory, $focus,
-                                      UIUtils, ModalUtils, csConfig, esHttp, csSettings, csCurrency) {
+                                      UIUtils, ModalUtils, csConfig, esHttp, csSettings, mkSettings) {
   'ngInject';
 
   $scope.formData = {
@@ -836,25 +879,16 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
   };
 
   $scope.$on('$ionicView.enter', function(e, state) {
-    // Define get currency function
-    var getCurrency;
-    if (csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.defaultCurrency) {
-      getCurrency = $q.when({name: csConfig.plugins.market.defaultCurrency});
-    }
-    else {
-      getCurrency = csCurrency.default();
-    }
 
     return $q.all([
-      getCurrency,
+      mkSettings.currencies(),
       // Load wallet
       $scope.loadWallet({
         minData: true
       })
     ])
     .then(function(res) {
-      var currency = res[0];
-      $scope.currency = currency.name;
+      $scope.currencies = res[0];
 
       $scope.useRelative = csSettings.data.useRelative;
       if (state.stateParams && state.stateParams.id) { // Load by id
@@ -866,7 +900,7 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
           $scope.formData.type = state.stateParams.type;
         }
         $scope.formData.type = $scope.formData.type || ($scope.options.type && $scope.options.type.default) || 'offer'; // default: offer
-        $scope.formData.currency = currency.name;
+        $scope.formData.currency = $scope.currencies && $scope.currencies[0]; // use the first one, if any
 
         $scope.loading = false;
         UIUtils.loading.hide();
@@ -946,8 +980,9 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
         var json = angular.copy($scope.formData);
 
         var unit = !$scope.useRelative ? 'unit' : 'UD';
+
         // prepare price
-        if (json.price) {
+        if (angular.isDefined(json.price)) { // warn: could be =0
           if (typeof json.price == "string") {
             json.price = parseFloat(json.price.replace(new RegExp('[.,]'), '.')); // fix #124
           }
@@ -961,11 +996,13 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
         }
         else {
           json.unit = undefined;
-          json.currency = undefined;
+          // for now, allow set the currency, to make sure search request get Ad without price
+          if (!json.currency) {
+            json.currency = $scope.currency;
+          }
         }
 
         // prepare fees
-
         if (json.fees) {
           if (typeof json.fees == "string") {
             json.fees = parseFloat(json.fees.replace(new RegExp('[.,]'), '.')); // fix #124
@@ -978,6 +1015,11 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
           }
           json.unit = json.unit || unit; // force unit to be set
         }
+        else {
+          json.fees = undefined;
+          json.feesCurrency = undefined;
+        }
+
         json.time = esHttp.date.now();
 
         json.picturesCount = $scope.pictures.length;

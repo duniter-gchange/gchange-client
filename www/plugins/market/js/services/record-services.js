@@ -1,6 +1,6 @@
-angular.module('cesium.market.record.services', ['ngResource', 'cesium.services', 'cesium.es.http.services', 'cesium.es.comment.services'])
+angular.module('cesium.market.record.services', ['ngResource', 'cesium.services', 'cesium.es.services', 'cesium.market.settings.services'])
 
-.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, csWot, csCurrency) {
+.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, csWot, csCurrency, mkSettings) {
   'ngInject';
 
   function EsMarket(id) {
@@ -121,6 +121,17 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
     }
 
     function getCategoriesStats(options) {
+        options = options || {};
+
+        // Make sure to have currency
+        if (!options.currencies) {
+            return mkSettings.currencies()
+                .then(function (currencies) {
+                    options.currencies = currencies;
+                    return getCategoriesStats(options); // loop
+                });
+        }
+
 
         var request = {
             size: 0,
@@ -144,6 +155,9 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         var matches = [];
         if (options.withStock) {
             filters.push({range: {stock: {gt: 0}}});
+        }
+        if (options.currencies && options.currencies.length) {
+            filters.push({terms: {currency: options.currencies}});
         }
         // Add query to request
         if (matches.length || filters.length) {
@@ -265,8 +279,8 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         // load categories
         exports.category.all(),
 
-        // Get last UD
-        BMA.blockchain.lastUd()
+        // Get current UD
+        csCurrency.currentUD()
           .then(function (currentUD) {
             return currentUD;
           })
