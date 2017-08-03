@@ -89,10 +89,9 @@ function MkViewCategoriesController($scope, $controller, $state) {
 
     // When view enter: load data
     $scope.enter = function(e, state) {
-        // Read stateParams if need
 
         // Load data
-        $scope.load()
+        return $scope.load()
             .then(function() {
                 $scope.loading = false;
                 if (!$scope.entered) {
