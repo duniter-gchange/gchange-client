@@ -30,13 +30,7 @@ angular.module("cesium.config", [])
 			"port": "443"
 		},
 		"market": {
-			"enable": true,
-			"defaultTags": [
-				{
-					"tag": "Sou",
-					"name": "Sou"
-				}
-			]
+			"enable": true
 		}
 	},
 	"version": "0.5.0",

@@ -14,8 +14,10 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
       removeChangeStateListener;
 
     function disableChangeState() {
+      if (removeChangeStateListener) return; // make sure to call this once
+
       var remove = $rootScope.$on('$stateChangeStart', function (event, next, nextParams, fromState) {
-        if (next.name !== 'app.home' && next.name !== 'app.settings') {
+        if (!event.defaultPrevented && next.name !== 'app.home' && next.name !== 'app.settings') {
           event.preventDefault();
           if (startPromise) {
             startPromise.then(function() {
@@ -46,7 +48,7 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
 
       var fallbackNode = csSettings.data.fallbackNodes && fallbackNodeIndex < csSettings.data.fallbackNodes.length && csSettings.data.fallbackNodes[fallbackNodeIndex++];
       if (!fallbackNode) {
-        throw 'ERROR.CHECK_NETWORK_CONNECTION';
+        throw 'PEER_CONNECTION_ERROR';
       }
       var newServer = fallbackNode.host + ((!fallbackNode.port && fallbackNode.port != 80 && fallbackNode.port != 443) ? (':' + fallbackNode.port) : '');
       return $translate('CONFIRM.USE_FALLBACK_NODE', {old: BMA.server, new: newServer})
@@ -98,7 +100,6 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
     }
 
     function start() {
-      enableChangeState();
 
       // Avoid change state
       disableChangeState();
@@ -158,12 +159,8 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
         }, 500);
     }
 
-    // default action
-    start();
-
-
-
     return  {
+      disableChangeState: disableChangeState,
       isStarted: isStarted,
       ready: ready,
       restart: restart,

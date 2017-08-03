@@ -17,7 +17,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
   var
     SETTINGS_SAVE_SPEC = {
       includes: ['locale', 'useLocalStorage', 'expertMode', 'logoutIdle'],
-      excludes: ['time'],
+      excludes: ['newIssueVersion', 'timeout', 'cacheTimeMs', 'time', 'login', 'build'],
       plugins: {
         es: {
           excludes: ['enable', 'host', 'port', 'wsPort']
@@ -61,6 +61,12 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
       csSettings.data.plugins.es &&
       csSettings.data.plugins.es.enable &&
       !!csSettings.data.plugins.es.host;
+  };
+
+  that.setPluginSaveSpecs = function(pluginName, saveSpecs) {
+    if (pluginName && saveSpecs) {
+      SETTINGS_SAVE_SPEC.plugins[pluginName] = angular.copy(saveSpecs);
+    }
   };
 
   function copyUsingSpec(data, copySpec) {

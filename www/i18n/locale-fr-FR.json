@@ -113,7 +113,7 @@
     "REPORT_ISSUE": "anomalie",
     "NOT_YOUR_ACCOUNT_QUESTION" : "Vous n'êtes pas propriétaire du compte <b>{{name|| (pubkey|formatPubkey) }}</b> ?",
     "BTN_CHANGE_ACCOUNT": "Déconnecter ce compte",
-    "CONNECTION_ERROR": "Nœud <b>{{server}}</b> injoignable ou adresse invalide.<br/><br/>Vérifez votre connection Internet, ou changer de nœud <a class=\"positive\" ng-click=\"doQuickFix('settings')\">dans les paramètres</a>."
+    "CONNECTION_ERROR": "Nœud <b>{{server}}</b> d'accès à la monnaie injoignable ou adresse invalide.<br/><br/>Vérifez votre connection Internet, ou changer de nœud <a class=\"positive\" ng-click=\"doQuickFix('settings')\">dans les paramètres</a>."
   },
   "SETTINGS": {
     "TITLE": "Paramètres",

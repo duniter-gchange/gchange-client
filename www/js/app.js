@@ -119,7 +119,8 @@ angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht
 
   // removeIf(device)
   // -- Automatic redirection to HTTPS
-  if ((csConfig.httpsMode == true || csConfig.httpsMode === 'force') && $window.location.protocol != 'https:') {
+  if ((csConfig.httpsMode === true || csConfig.httpsMode == 'true' ||csConfig.httpsMode === 'force') &&
+    $window.location.protocol != 'https:') {
     $rootScope.$on('$stateChangeStart', function (event, next, nextParams, fromState) {
       var path = 'https' + $rootScope.rootPath.substr(4) + $state.href(next, nextParams);
       if (csConfig.httpsModeDebug) {
@@ -133,6 +134,9 @@ angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht
     });
   }
   // endRemoveIf(device)
+
+  // Must be done before any other $stateChangeStart listeners
+  csPlatform.disableChangeState();
 
   // removeIf(android)
   // removeIf(ios)
@@ -152,7 +156,7 @@ angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht
   // endRemoveIf(android)
 
   // Prevent $urlRouter's default handler from firing (don't sync ui router)
-  $rootScope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
+  $rootScope.$on('$locationChangeSuccess', function(event, newUrl, oldUrl) {
     if ($state.current.data && $state.current.data.silentLocationChange === true) {
       // Skipping propagation, because same URL, and state configured with 'silentLocationChange' options
       var sameUrl = oldUrl && (oldUrl.split('?')[0] === newUrl.split('?')[0]);

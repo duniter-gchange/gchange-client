@@ -448,7 +448,7 @@ function HomeController($scope, $state, $timeout, $ionicHistory, csPlatform, csC
   $scope.enter = function(e, state) {
     if (state && state.stateParams && state.stateParams.error) { // Query parameter
       $scope.error = state.stateParams.error;
-      $scope.node =  csCurrency.data.node;
+      $scope.node = csCurrency.data.node;
       $scope.loading = false;
       $ionicHistory.nextViewOptions({
         disableAnimate: true,

@@ -28,6 +28,12 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
     ignoreSettingsChanged = false
   ;
 
+  // Define settings to save remotely
+  esSettings.setPluginSaveSpecs('market', {
+    includes: [], // during active devlpment, ddo not store any market settings
+    excludes: ['enable', 'homeMessage', 'defaultTags', 'defaultAdminPubkeys', 'record']
+  });
+
   that.raw = {
     currencies: undefined
   };
@@ -81,9 +87,44 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
     return deferred.promise;
   }
 
+  function _compareVersion(version1, version2) {
+
+    var parts = version1 && version1.split('.');
+    var version1 = parts && parts.length == 3 ? {
+      major: parseInt(parts[0]),
+      minor: parseInt(parts[1]),
+      build: parseInt(parts[2])
+    }: {};
+    parts = version2 && version2.split('.');
+    var version2 = parts && parts.length == 3 ? {
+      major: parseInt(parts[0]),
+      minor: parseInt(parts[1]),
+      build: parseInt(parts[2])
+    } : {};
+
+    // check major
+    if (version1.major != version2.major) {
+      return version1.major < version2.major ? -1 : 1;
+    }
+    // check minor
+    if (version1.minor != version2.minor) {
+      return version1.minor < version2.minor ? -1 : 1;
+    }
+    // check build
+    if (version1.build != version2.build) {
+      return version1.build < version2.build ? -1 : 1;
+    }
+    return 0; // equals
+  }
+
   function onSettingsReset(data, deferred) {
     deferred = deferred || $q.defer();
+    data.plugins = data.plugins || {};
+
+    // reset plugin settings, then restore defaults
+    data.plugins.market = {};
     angular.merge(data, defaultSettings);
+
     deferred.resolve(data);
     return deferred.promise;
   }
@@ -91,8 +132,18 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
   // Listen for settings changed
   function onSettingsChanged(data) {
 
+    // Workaround (version < 0.5.0) : remove older settings
+    var isVersionPrevious_0_5_0 = _compareVersion(data.version, '0.5.0') <= 0;
+    if (isVersionPrevious_0_5_0 && data.plugins && data.plugins.market) {
+      console.info('[market] [settings] Detected version previous <= 0.5.0 - restoring default settings...');
+      delete data.login;
+      data.plugins.market = angular.copy(defaultSettings.plugins.market);
+    }
+
     // Init currencies
     _initCurrencies(data);
+
+
   }
 
   function removeListeners() {
