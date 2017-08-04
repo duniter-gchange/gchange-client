@@ -76,8 +76,12 @@ function ESWotIdentityViewController($scope, $ionicPopover, $q, UIUtils, Modals,
         return esModals.showMessageCompose({
           destPub: $scope.formData.pubkey,
           destUid: $scope.formData.name||$scope.formData.uid
+        })
+        .then(function(sent) {
+          if (sent) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
         });
-      });
+      })
+
   };
 
   /* -- Popover -- */
