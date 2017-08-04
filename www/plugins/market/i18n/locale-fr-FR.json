@@ -61,7 +61,8 @@
       "BTN_SHOW_CATEGORIES": "Parcourir les catégories",
       "BTN_OFFERS": "Offres",
       "BTN_NEEDS": "Demandes",
-      "SHOW_CLOSED_RECORD": "Afficher les annonces clôturées ?"
+      "SHOW_CLOSED_RECORD": "Afficher les annonces clôturées ?",
+      "RECORD_STOCK": "Stock :",
     },
     "GALLERY": {
       "TITLE": "Diaporama",

@@ -19,10 +19,13 @@ angular.module('cesium.market.plugin', [
     'cesium.market.services'
   ])
 
-  .run(function(Modals, mkModals) {
+  .run(function(csConfig, Modals, mkModals) {
+
+    if (csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.enable) {
 
       console.log("[plugin] [market] Override login and join modals");
       Modals.showLogin = mkModals.showLogin;
       Modals.showJoin = mkModals.showJoin;
+    }
   });
 

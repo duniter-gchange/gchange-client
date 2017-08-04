@@ -8,7 +8,8 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
       var
       regexp = {
         URI: "([a-zA−Z0-9]+)://[ a-zA-Z0-9-_:/;*?!^\\+=@&~#|<>%.]+",
-        EMAIL: "[a-zA-Z0-9-_.]+@[a-zA-Z0-9_.-]+?\\.[a-zA-Z]{2,3}",
+        //EMAIL: "[a-zA-Z0-9-_.]+@[a-zA-Z0-9_.-]+?\\.[a-zA-Z]{2,3}",
+        EMAIL: "[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$",
         PHONE: "[+]?[0-9]{9,10}",
         socials: {
           facebook: "https?://((fb.me)|((www.)?facebook.com))",

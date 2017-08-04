@@ -48,13 +48,6 @@
   top: inherit !important;
 }
 
-.card-record .badge-price {
-  font-size: 12px;
-  position: absolute !important;
-  bottom: 10px !important;
-  right: 10px;
-  top: inherit !important;
-}
 
 .card-record .item-thumbnail-left {
   padding-left: 150px;
@@ -69,13 +62,6 @@
   background-repeat: no-repeat;
 }
 
-
-.row-record .badge-price {
-  position: absolute !important;
-  bottom: 15px !important;
-  right: inherit !important;
-  top: inherit !important;
-}
 
 .row-record .col-text-wrap {
     padding: 0;
@@ -232,17 +218,6 @@
     top: 80px;
   }
 
-  .modal-pictures .badge-price  {
-    font-size: 45px !important;
-    line-height: 45px;
-    padding: 12px !important;
-  }
-
-  .modal-pictures .badge-price.sold  {
-    text-decoration-color: #ef473a;
-    text-decoration-line: line-through;
-    text-decoration-style: solid;
-  }
 
   .modal-pictures .badge.badge-secondary {
     font-size: 20px;

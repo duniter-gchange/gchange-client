@@ -1,0 +1,1891 @@
+/*
+To customize the look and feel of Ionic, you can override the variables
+in ionic's _variables.scss file.
+
+For example, you might change some of the default colors:
+
+$light:                           #fff !default;
+$stable:                          #f8f8f8 !default;
+$positive:                        #387ef5 !default;
+$calm:                            #11c1f3 !default;
+$balanced:                        #33cd5f !default;
+$energized:                       #ffc900 !default;
+$assertive:                       #ef473a !default;
+$royal:                           #886aea !default;
+$dark:                            #444 !default;
+*/
+
+//$royal:                           #030055 !default;
+//$assertive:                       #ff7a00 !default;
+//$balanced:                        #33cd5f !default;
+
+//$dark:                              #030055 !default; // bleu foncé uCoin App
+//$assertive:                       #94c11f !default;
+//$balanced:                        #94c11f !default;
+
+$active: #b2e0ff !default;
+$stable-900-bg: #e0e0e0 !default;
+$positive-900-bg: #1A237E !default;
+$dark-100-bg: #555 !default;
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+
+// Include all of Ionic
+@import "www/lib/ionic/scss/ionic";
+
+// Add robotodraft fonts (need for ionic material)
+$RobotoDraftFontPath: "../lib/ionic/fonts/robotdraft";
+$RobotoDraftFontName: "RobotoDraft";
+$RobotoDraftFontVersion: "1.1.0";
+
+@import "www/lib/robotodraft/sass/robotodraft";
+
+// Include all of Ionic-Material
+@import "www/lib/ionic-material/src/scss/index";
+
+// Cesium icons
+// The path for Cesiumicons font files, relative to the built CSS in www/css
+$cesiumicons-font-path: "../fonts" !default;
+@import "./icons/cesiumicons";
+
+
+// --------------------------------------------------
+// Responsive: Utility classes
+// --------------------------------------------------
+$screen-xxs-max:                  400px;
+$screen-xs:                       401px;
+$screen-xs-max:                   767px;
+$screen-sm:                       768px;
+$screen-sm-max:                   991px;
+$screen-md:                       992px;
+$screen-md-max:                   1199px;
+$screen-lg:                       1200px;
+
+
+// IE10 on Windows Phone 8
+// IE10 on WP8 doesn't report CSS pixels, but actual device pixels. In
+// other words, say on a Lumia, you'll get 768px as the device width,
+// meaning users will see the tablet styles and not phone styles.
+//
+// Alternatively you can override this with JS (see source below), but
+// we won't be doing that here given our limited scope.
+//
+// Source: http://timkadlec.com/2013/01/windows-phone-8-and-device-width/
+//
+// >>Autre doc http://getbootstrap.com/css/#responsive-utilities-classes
+//
+@media screen and (max-width: $screen-xxs-max) {
+  @-ms-viewport{
+    width: 320px;
+  }
+
+  .item .badge {
+    right: 16px;
+  }
+}
+
+// Extra small device: Phones (<767px)
+@media screen and (max-width: $screen-xs-max) {
+  .hidden-xs {
+      display: none !important;
+      visibility: hidden !important;
+  }
+  .badge {
+    text-overflow: ellipsis !important;
+    white-space: nowrap;
+    overflow: hidden !important;
+    max-width: 300px !important;
+    display: block !important;
+  }
+  .badge:empty {
+    display: none !important;
+  }
+  .item .badge {
+    right: 16px;
+  }
+
+  .padding-top-xs {
+    padding-top: 10px;
+  }
+}
+@media screen and (min-width: $screen-sm) {
+    .hidden-xs {
+        display: inherit;
+        visibility: visible;
+    }
+    .row.hidden-xs {
+      display: flex !important;
+    }
+    .button.hidden-xs {
+      display: inline-block;
+    }
+  .item-toggle .toggle {
+      right: 32px;
+    }
+}
+@media screen and (max-width: $screen-xs-max) {
+    .visible-xs {
+        display: inherit !important;
+        visibility: visible !important;
+    }
+}
+@media screen and (min-width: $screen-sm) {
+    .visible-xs {
+        display: none !important;
+        visibility: hidden !important;
+    }
+}
+@media screen and (max-width: $screen-xs-max) {
+    .padding-xs {
+        padding: 16px !important;
+    }
+}
+@media screen and (min-width: $screen-sm) {
+    .padding-xs {
+        padding: inherit;
+    }
+}
+@media screen and (max-width: $screen-xs-max) {
+    .no-padding-xs {
+        padding: 0px !important;
+    }
+}
+@media screen and (min-width: $screen-sm) {
+    .no-padding-xs {
+        padding: inherit;
+    }
+}
+@media screen and (max-width: $screen-xs-max) {
+    .no-margin-xs {
+        margin: 0px !important;
+    }
+}
+@media screen and (min-width: $screen-sm) {
+    .no-margin-xs {
+        margin: inherit;
+    }
+}
+// Small devices: Tablets (≥768px)
+@media screen and (max-width: $screen-sm-max) and (min-width: $screen-sm){
+    .hidden-sm, .row-header.hidden-sm {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    .badge {
+      text-overflow: ellipsis !important;
+      white-space: nowrap;
+      overflow: hidden !important;
+      max-width: 400px !important;
+      display: block !important;
+    }
+    .badge:empty {
+      display: none !important;
+    }
+  }
+@media screen and (min-width: $screen-md) {
+    .hidden-sm {
+        display: inherit;
+        visibility: visible;
+    }
+    .row.hidden-sm {
+      display: flex !important;
+    }
+    .button.hidden-sm {
+      display: inline-block;
+    }
+}
+@media screen and (max-width: $screen-xs-max) {
+    .hidden-sm {
+        display: inherit;
+        visibility: visible;
+    }
+}
+@media screen and (max-width: $screen-sm-max) {
+    .visible-sm {
+        display: inherit !important;
+        visibility: visible !important;
+    }
+}
+@media screen and (min-width: $screen-md) {
+    .visible-sm {
+        display: none;
+        visibility: hidden;
+    }
+}
+@media screen and (max-width: $screen-xs-max) {
+    .visible-sm {
+        display: none;
+        visibility: hidden;
+    }
+}
+@media screen and (max-width: $screen-sm-max) {
+  body {
+      cursor: url('http://ionicframework.com/img/finger.png'), auto;
+  }
+}
+@media screen and (min-width: $screen-md) {
+  body {
+      cursor: inherit;
+  }
+
+}
+
+// Medium devices: Desktops (≥992px)
+@media screen and (min-width: $screen-md) and (max-width: $screen-md-max) {
+  .hidden-md {
+      display: none !important;
+      visibility: hidden !important;
+  }
+  .badge {
+    text-overflow: ellipsis !important;
+    white-space: nowrap;
+    overflow: hidden !important;
+    max-width: 400px !important;
+    display: block !important;
+  }
+  .badge:empty {
+    display: none !important;
+  }
+}
+@media screen and (min-width: $screen-lg) {
+  .hidden-md {
+      display: inherit;
+      visibility: visible;
+  }
+}
+@media screen and (max-width: $screen-sm-max) {
+  .hidden-md {
+      display: inherit;
+      visibility: visible;
+  }
+}
+@media screen and (min-width: $screen-md) and (max-width: $screen-md-max) {
+  .visible-md {
+      display: inherit !important;
+      visibility: visible !important;
+  }
+}
+@media screen and (min-width: $screen-lg) {
+  .visible-md {
+      display: none;
+      visibility: hidden;
+  }
+}
+@media screen and (max-width: $screen-sm-max) {
+  .visible-md {
+      display: none;
+      visibility: hidden;
+  }
+}
+
+
+// Large devices: Desktops (≥1200px)
+@media screen and (min-width: $screen-lg) {
+  .hidden-lg {
+      display: none !important;
+      visibility: hidden !important;
+  }
+  .visible-lg {
+      display: inherit !important;
+      visibility: visible !important;
+  }
+  .badge {
+    text-overflow: ellipsis !important;
+    white-space: nowrap;
+    overflow: hidden !important;
+    max-width: 450px !important;
+    display: block !important;
+  }
+  .badge:empty {
+    display: none !important;
+  }
+}
+@media screen and (max-width: $screen-md-max) {
+    .hidden-lg {
+        display: inherit;
+        visibility: visible;
+    }
+}
+@media screen and (max-width: $screen-md-max) {
+    .visible-lg {
+        display: none;
+        visibility: hidden;
+    }
+}
+
+@media screen and (max-width: $screen-sm) {
+    .no-padding-xs {
+        padding: inherit;
+    }
+}
+@media screen and (max-width: $screen-xs-max) {
+    .no-margin-xs {
+        margin: 0px !important;
+    }
+}
+
+@media screen and (min-width: $screen-md) {
+  html, body, .scroll, .disable-user-behavior {
+    -webkit-user-selectuser-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    user-select: auto !important;
+  }
+}
+
+/* ============
+ Left menu
+=============== */
+
+// Resolution for left menu show/hide
+$screen-nomenu-max:               844px;
+$screen-menu:                     845px;
+
+// Screen without left menu
+@media screen and (max-width: $screen-nomenu-max) {
+    .hidden-nomenu {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    .visible-nomenu {
+        display: inherit !important;
+        visibility: visible !important;
+    }
+}
+@media screen and (min-width: $screen-menu) {
+    .hidden-nomenu {
+        display: inherit;
+        visibility: visible;
+    }
+    .visible-nomenu {
+        display: none !important;
+        visibility: hidden !important;
+    }
+}
+
+// Screen WITH left menu
+@media screen and (min-width: $screen-menu) {
+    .hidden-menu {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    .visible-menu {
+        display: inherit !important;
+        visibility: visible !important;
+    }
+}
+@media screen and (max-width: $screen-nomenu-max) {
+    .hidden-menu {
+        display: inherit;
+        visibility: visible;
+    }
+    .visible-menu {
+        display: none;
+        visibility: hidden;
+    }
+}
+
+#unitPopover .item.selected {
+  background-color: $stable;
+}
+
+/**********
+   Share popover
+**********/
+
+@media (max-width: $screen-xs-max) {
+  .popover-share {
+    width: auto;
+  }
+}
+
+.popover-share {
+  height: 110px;
+
+  .bar {
+    box-shadow: none !important;
+  }
+  .bar-header {
+    height: 20px;
+    .title {
+      font-size: 12px;
+      font-weight: bold;
+      height: 20px;
+      line-height: 19px;
+      max-width: 260px;
+      margin: 0px 5px;
+      text-align: left;
+    }
+    span {
+      @extend .gray;
+      font-size: 10px;
+      margin: 5px;
+      height: 20px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 0px 5px;
+      display: block;
+    }
+  }
+  .has-header {
+    top: 20px;
+  }
+  .has-footer {
+    bottom: 40px;
+  }
+  .bar-footer {
+    color: $positive;
+    height: 40px;
+
+    .button-icon {
+      padding: 0 5px;
+    }
+
+    .button-close {
+      @extend .gray;
+      @extend .padding-right;
+      @extend .padding-bottom;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+
+  .item {
+    padding: 5px;
+
+    input {
+      border: 1px solid grey;
+      border-radius: 3px;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.3);
+    }
+
+    input:focus {
+      border-color: $positive;
+      outline: 0;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.3),0 0 8px #08c;
+    }
+  }
+
+  .list .item {
+    border-bottom: 0px !important;
+  }
+}
+
+
+/**********
+   Notifications popover
+**********/
+
+
+.popover-notification {
+  min-width: 280px;
+
+  .bar-header, .bar-footer {
+    height: 30px;
+
+    .title {
+      color: black;
+      text-align: left;
+      left: 0px !important;
+      font-size: 14px;
+      line-height: 30px;
+    }
+    .pull-right {
+      margin-right: 10px;
+    }
+    .pull-left {
+      margin-left: 10px;
+    }
+    a {
+      font-size: 14px;
+      text-decoration: none;
+      line-height: 30px;
+    }
+  }
+
+  .has-footer {
+    bottom: 28px;
+  }
+
+  .has-header {
+    top: 30px;
+  }
+
+  .item.unread {
+    background-color: rgb(236, 240, 247) !important;
+    border-color: rgb(221, 223, 226) !important;
+  }
+
+  .item-avatar {
+    padding-top: 12px;
+    padding-bottom: 8px;
+    padding-left: 76px;
+    padding-right: 10px;
+    min-height: 80px !important;
+
+    h4 {
+      i.icon {
+        font-size: 18px !important;
+        line-height: 12px !important;
+        vertical-align: middle !important;
+      }
+    }
+  }
+
+  .item-avatar > img:first-child,
+  .item-avatar .item-image,
+  .item-avatar .item-content > img:first-child,
+  .item-avatar .item-content .item-image {
+    top: 12px;
+    left: 10px;
+  }
+
+  /* use for invitation buttons */
+  .button.button-small {
+    height: 30px;
+    font-size: 12px;
+    padding: 0px 5px !important;
+    line-height: 30px;
+  }
+}
+
+
+/**********
+   Unit popover
+**********/
+
+.popover-unit {
+  height: 108px;
+  max-width: 115px;
+}
+
+/**********
+   Notifications view
+**********/
+
+.view-notification {
+
+  .item.unread {
+    background-color: rgb(236, 240, 247) !important;
+    border-color: rgb(221, 223, 226) !important;
+  }
+
+  ion-item {
+    h4 {
+      i.icon {
+        font-size: 18px !important;
+        line-height: 12px !important;
+        vertical-align: middle !important;
+      }
+    }
+  }
+}
+
+
+
+/* ============
+ Buttons
+=============== */
+.bar.bar-header {
+  // Special case for "more options" icon
+  .button.button-clear.button-icon.ion-android-more-vertical,
+  .button.button-clear.button-icon i.ion-android-more-vertical {
+    padding-left: 8px;
+  }
+
+  .buttons .secondary-buttons >
+  .button.button-clear.button-icon.ion-android-more-vertical:first-child {
+    padding-left: 0px !important;
+  }
+}
+
+// Avoid to have not align button on bar-header
+.bar .buttons.pull-right, .bar .title+.button:last-child, .bar .title+.buttons, .bar>.button+.button:last-child, .bar>.button.pull-right {
+  top: 0px !important;
+}
+
+// Avoid different between home view and other view (space between last button and left border)
+.bar.bar-header {
+  padding-right: 5px !important;
+
+  .buttons-right span {
+    margin-left: 0px !important;
+  }
+}
+
+.bar .title + .buttons.buttons-right {
+  right: 5px;
+}
+
+
+
+.button-icon {
+  border-color: transparent;
+  box-shadow: none !important;
+}
+
+.button-small-padding {
+  padding: 0 7px !important;
+}
+
+
+.button-text {
+  @extend .button-clear;
+  @extend .button-positive;
+
+  color: grey !important;
+  font-size: 12px;
+}
+.button-text.button-small {
+  @extend .button-small;
+  padding: 5px 2px;
+  font-size: 12px !important;
+}
+
+.button-text-positive {
+  color: $positive !important;
+}
+.button-text-stable {
+  color: #b2b2b2 !important;
+}
+.popup-buttons .button.icon-right,
+.popup-buttons .button.icon-left {
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+  line-height: 42px;
+}
+/* ============
+ Home page
+=============== */
+
+#home .logo {
+  margin-top: 15px;
+  width: 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+#home .center {
+  float: none;
+  text-align: center;
+  display: inline-block;
+}
+#home .center .button {
+  display: inline-block;
+}
+
+// FIXME: same confg here to min size of CSS
+#home .logo {
+  height: 70px;
+  background-image: url('../img/logo_64px.png');
+  background-size: 64px 64px;
+}
+
+@media screen and (max-width: $screen-xs-max) {
+
+  /*#home .logo {
+    height: 70px;
+    background-image: url('../img/logo_64px.png');
+    background-size: 64px 64px;
+  } */
+  #home .footer {
+    display:none;
+  }
+}
+@media screen and (min-width: $screen-sm) and (max-width: $screen-sm-max) {
+  /*#home .logo {
+    height: 144px;
+    background-image: url('../img/logo_128px.png');
+    background-size: 128px 128px;
+  }*/
+  #home .button {
+    max-width: 350px;
+    margin-top: 20px;
+  }
+}
+@media screen and (min-width: $screen-md) {
+  /*#home .logo {
+    height: 200px;
+    background-image: url('../img/logo.svg');
+    background-size: 200px 200px;*
+  }*/
+
+  #home .button {
+    max-width: 350px;
+    margin-top: 20px;
+  }
+}
+
+
+
+@media screen and (min-width: $screen-md) {
+
+  .menu.menu-left {
+    height: 100%;
+
+    .item.active {
+      background-color: $active !important;
+
+      .item-content {
+        background-color: transparent;
+        opacity: 1;
+        color: black;
+      }
+    }
+
+    .item {
+      opacity: 0.75;
+      color: black;
+
+      .item-content {
+        background-color: transparent;
+        opacity: 1;
+      }
+    }
+
+    .item-menu-disable {
+      color: $dark !important;
+    }
+  }
+}
+
+.gray {
+  color: grey !important;
+
+  b {
+    color: grey !important;
+  }
+}
+
+.gray, .positive{
+  a {
+    color: inherit;
+  }
+
+  a:hover {
+    color: inherit;
+  }
+  a:visited {
+    color: inherit;
+  }
+}
+.item a {
+  text-decoration: none;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
+
+.avatar-member {
+  background-image: url('../img/person.png');
+}
+
+.avatar.disable {
+  opacity: 0.7;
+}
+
+.avatar-wallet {
+  background-image: url('../img/card.png');
+}
+
+.item.item-icon-left > i.avatar:first-child {
+  position: absolute;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  font-size: 16px;
+  left: 16px;
+  top: 8px;
+  max-height: 32px;
+  max-width: 32px;
+}
+
+.item.item-checkbox.item-avatar > i.avatar:first-child,
+.item.item-checkbox.item-avatar > i.item-image:first-child,
+.item.item-checkbox.item-avatar .item-content > i.avatar:first-child,
+.item.item-checkbox.item-avatar .item-content > i.item-image:first-child,
+.item.item-checkbox.item-avatar * > i.avatar:first-child,
+.item.item-checkbox.item-avatar * > i.item-image:first-child,
+.item.item-checkbox.item-avatar * .item-content > i.avatar:first-child,
+.item.item-checkbox.item-avatar * .item-content > i.item-image:first-child {
+  left: 65px;
+}
+
+.item.item-checkbox.item-avatar .item-content,
+.item.item-checkbox .item-content .item-avatar {
+  padding-left: 65px;
+}
+
+/* ----
+    Popup alert
+   ---- */
+
+.popup-container.warning,
+.popup-container.confirm {
+  .popup {
+    min-width: 250px !important;
+    width: 350px !important;
+  }
+  .popup-head {
+    h1, h2, h3, h5, h6, p {
+      color: white;
+    }
+  }
+}
+.popup-container.warning {
+  .popup-head {
+    background-color: $assertive;
+  }
+}
+.popup-container.confirm {
+  .popup-head {
+    background-color: $positive;
+  }
+}
+
+/******
+* Wallet view
+*******/
+#wallet {
+  .qrcode {
+    position: absolute;
+    top: 30px;
+    padding: 3px;
+    background: #fff;
+    width: 90px;
+    max-width: 30%;
+    right: -170px;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    -webkit-transition: all 0.5s ease-out !important;
+    transition: all 0.5s ease-out !important;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .qrcode.on {
+    right: 30px;
+  }
+
+  .qrcode.active {
+    top: 0px !important;
+    right: 0px !important;
+    padding: 10px;
+    width: 200px;
+    max-width: 50%;
+  }
+
+  .item-text-wrap {
+    white-space: normal !important;
+  }
+
+  .item .comment{
+    font-style: italic !important;
+  }
+
+  .item h3 .gray{
+    font-size: 11px ! important;
+  }
+
+  .list .item span {
+    display: inline;
+  }
+
+  .item-divider .badge {
+    top:16px !important;
+  }
+
+  .item.item-wallet-event {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-height: 30px;
+    max-height: auto;
+    height: auto;
+  }
+
+  .item.item-wallet-event:last-child {
+    min-height: 48px;
+  }
+
+  .item.item-icon-left.item-wallet-event .icon {
+    font-size: 15px;
+  }
+
+}
+
+.popover-wallet-actions {
+  height: 400px;
+}
+
+@media screen and (max-width: $screen-sm-max) {
+  #wallet {
+    .qrcode {
+      top: 8px;
+      width: 60px;
+      max-width: 30%;
+    }
+
+    .qrcode.on {
+      right: 8px;
+    }
+
+    .hero.hero-qrcode-active {
+      h1,h2,h3,h4,h5,i {
+        margin-right:200px;
+      }
+    }
+  }
+}
+
+/******
+* Wallet TX view
+*******/
+.view-wallet-tx {
+  .hero {
+    height: 100px;
+  }
+
+  .item-text-wrap {
+    white-space: normal !important;
+  }
+
+  .item .comment{
+    font-style: italic !important;
+  }
+
+  .item h3 .gray{
+    font-size: 11px ! important;
+  }
+
+  .list .item span {
+    display: inline;
+  }
+
+  .item-divider .badge {
+    top:16px !important;
+  }
+}
+
+.card .card-header,
+.card .card-header{
+  font-size: 90%;
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+.card.stable-900-bg,
+.card .stable-900-bg,
+.item.stable-900-bg,
+.item .stable-900-bg,
+.item-complex .item-content .stable-900-bg,
+.item-radio .item-content .stable-900-bg{
+  background-color: $stable-900-bg !important;
+}
+.card .item {
+  background: inherit;
+}
+
+.card.stable-bg,
+.card .stable-bg,
+.item.stable-bg,
+.item .stable-bg,
+.item-complex .item-content .stable-bg,
+.item-radio .item-content .stable-bg{
+  background-color: $stable !important;
+}
+
+.card .card-header {
+  padding-top: 5px !important;
+  padding-bottom: 0px !important;
+  min-height: 25px;
+}
+
+.card .item .card-footer {
+  margin-bottom: 5px;
+}
+
+.card .card-avatar,
+.card.card-avatar {
+  .avatar {
+    box-shadow: 0px 3px 4px 0 rgba(0, 0, 0, 0.26);
+    top: 7px;
+    background-color: #D9D9D9;
+  }
+
+  img.avatar {
+    border: 0;
+    min-height: 54px;
+    min-width: 54px;
+  }
+
+  .item.item-avatar {
+    padding-top: 10px;
+    padding-bottom: 2px;
+    min-height: 45px !important;
+
+  }
+  .card-footer {
+    padding-left: 88px;
+    overflow: hidden;
+
+    .pull-right {
+      a {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+a.underline:focus,
+.underline a:focus,
+.a.underline:active,
+.underline a:active,
+a.underline:hover,
+.underline a:hover {
+  outline: 1px !important;
+  text-decoration: underline !important;
+}
+
+.animate-fade-slide-in .expanded .item,
+.animate-fade-slide-in .expanded.item,
+.animate-fade-slide-in-right .expanded .item,
+.animate-fade-slide-in-right .expanded.item,
+.animate-ripple .expanded .item,
+.animate-ripple .expanded.item
+.card-avatar-small.expanded .item
+.card-avatar-small .expanded .item
+.card-avatar-small.expanded .card.card-comment
+.card-avatar-small .expanded .card.card-comment
+{
+  @extend .done;
+  @extend .in;
+}
+
+.card-avatar-small.card,
+.card-avatar-small .card,
+.card-avatar-small .card.card-avatar,
+.card-avatar-small .card .card-avatar {
+
+  min-height: 45px;
+
+  .avatar,
+  .item-avatar .avatar {
+    box-shadow: 0px 2px 2px 0 rgba(0, 0, 0, 0.26);
+    height: 30px !important;
+    width: 30px !important;
+    left: 5px !important;
+  }
+
+  .item.item-avatar {
+    min-height: 25px !important;
+    padding-left: 42px !important;
+  }
+  .card-footer {
+    padding-top: 0px;
+    padding-left: 42px !important;
+  }
+}
+
+
+.gallery .card-gallery,
+.gallery .card.card-gallery{
+  margin-bottom: 15px !important;
+  float: left;
+  display: block;
+
+  img {
+    max-height: 150px;
+  }
+}
+
+.gallery .card-gallery-new {
+  max-height: 199px;
+}
+
+
+.list .item.text-left {
+  text-align: left !important;
+}
+
+.list .item.text-center {
+  text-align: center !important;
+}
+
+.list .item.text-right {
+  text-align: right !important;
+}
+
+.list .item-divider.item-divider-top-border {
+  border-top: solid 1px rgba(0, 0, 0, 0.12);
+}
+
+
+.lookupForm .list {
+  .item.item-avatar {
+    min-height: 80px !important;
+
+    .item-content {
+      min-height: 46px;
+    }
+  }
+
+  .item.item-avatar.item-checkbox .item-content {
+    padding-left: 47px;
+  }
+}
+
+
+/************************
+   Additional motions
+*************************/
+
+.fade-in {
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transform: translate3d(-30px, 1px, 0);
+  -webkit-transition: all 1s ease-in-out;
+}
+
+.fade-in.on {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+/**********
+   Item > Avatar
+**********/
+
+.item-avatar {
+  min-height: 80px !important;
+}
+
+.item-avatar > i:first-child ,
+.item-avatar > img:first-child,
+.item-avatar i.item-image:first-child,
+.item-avatar img.item-image:first-child,
+.item-avatar .item-content > i:first-child,
+.item-avatar .item-content > img:first-child,
+.item-avatar .item-content i.item-image:first-child,
+.item-avatar .item-content img.item-image:first-child,
+.item-avatar-left > i:first-child,
+.item-avatar-left > img:first-child,
+.item-avatar-left i.item-image:first-child,
+.item-avatar-left img.item-image:first-child,
+.item-avatar-left .item-content > i:first-child,
+.item-avatar-left .item-content > img:first-child,
+.item-avatar-left .item-content i.item-image:first-child,
+.item-avatar-left .item-content img.item-image:first-child  {
+  color: #D9D9D9;
+  background-color: #f8f8f8;
+  border: solid 1px #D9D9D9;
+  overflow: hidden !important;
+  font-size: 45px !important;
+  /*padding-left: 0px;
+  padding-top: 0px;
+  text-align: center;
+  vertical-align: middle;*/
+  line-height: 56px;
+  width: 100% !important;
+  /*display: block !important;*/
+  max-height: 56px !important;
+  max-width: 56px !important;
+  top: 12px !important;
+  //left: 12px !important;
+}
+
+.item-avatar > .icon:first-child:before ,
+.item-avatar .icon.item-image:first-child:before,
+.item-avatar .item-content > .icon:first-child:before,
+//.item-avatar .item-content .icon.item-image:first-child:before
+//.item-avatar-left > .icon:first-child:before,
+//.item-avatar-left .icon.item-image:first-child:before,
+//.item-avatar-left .item-content > .icon:first-child:before,
+//.item-avatar-left .item-content .icon.item-image:first-child:before,
+.item-avatar.item-icon-right .icon:first-child:before,
+.item-avatar.item-icon-right .icon-help:first-child:before,
+.item-avatar.item-icon-right .icon-alert:first-child:before,
+.item-avatar.item-icon-right #menu .footer .icon-help:first-child:before,
+#menu .footer .item-avatar.item-icon-right .icon-help:first-child:before {
+  width: 56px !important;
+}
+
+
+.item-avatar.item-icon-right .icon:last-child,
+.item-avatar.item-icon-right .icon-help:last-child,
+.item-avatar.item-icon-right .icon-alert:last-child,
+.item-avatar.item-icon-right #menu .footer .icon-help:last-child,
+#menu .footer .item-avatar.item-icon-right .icon-help:last-child {
+  left: auto;
+}
+
+/**********
+   Item > Other
+**********/
+
+.item em {
+  font-weight: bold !important;
+}
+
+@media screen and (min-width: $screen-md) {
+  .list .item.item-border-large {
+    border-bottom: solid 1px #ccc !important;
+  }
+  .list.item-border-large {
+    .item {
+      border-bottom: solid 1px #ccc !important;
+      margin: 0px;
+    }
+    .item-divider {
+      border-top: 0;
+    }
+  }
+}
+.list .item.item-border {
+  border-bottom: solid 1px #ccc !important;
+}
+
+.list .item.item-small-height {
+  padding-top: 2px;
+  padding-bottom: 0px;
+  min-height: 24px;
+
+  .badge {
+    padding-top: 0px !important;
+    top: inherit;
+  }
+
+  .badge.badge-balanced,
+  .badge.badge-positive,
+  .badge.badge-assertive,
+  .badge.badge-royal,
+  .badge.badge-calm,
+  .badge.badge-energized
+  {
+    top: 1px !important;
+    padding-top: 3px !important;
+    padding-bottom: 2px !important;
+  }
+}
+
+/**********
+   Form validation
+**********/
+
+.form-errors:first-child {
+  margin: 5px 0;
+}
+
+.form-errors:last-child {
+  margin: 5px 0 0;
+}
+
+.form-error {
+  padding: 0px 16px;
+  font-size: 12px;
+  color: red;
+  vertical-align: middle;
+  text-align: end;
+  top: 0px;
+  position: relative;
+}
+
+.item-input-error {
+  border-bottom: 2px solid red !important;
+}
+
+/*
+* Badge
+*/
+
+.item.item-icon-right .badge,
+.item.item-button-right .badge
+{
+  right: 43px;
+}
+
+$ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
+
+.badge-editable:hover {
+  cursor: pointer;
+  @extend .badge-assertive;
+}
+.badge-editable:hover:before {
+  @extend .ion;
+  content: $ionicon-var-badge-editable;
+}
+
+.badge-button {
+  position: absolute !important;
+  margin: 0 !important;
+  padding: 0px 4px !important;
+  font-size: 10px;
+  top: 5px !important;
+  right: 3px !important;
+}
+
+/**********
+   Modals
+**********/
+
+.modal.modal-full-height {
+  bottom: 0px;
+}
+
+.modal.about .bar.bar-header .button + .title {
+  left: 0px !important; /* avoid title offset on large screens, if button are 'visible-xs')'*/
+}
+
+/**********
+   Item buttons
+**********/
+
+.item-button-right > .button,
+.item-button-right .item-content > .button,
+.item-button-right > .buttons,
+.item-button-right .item-content > .buttons {
+  top: 16px;
+
+}
+
+.item-button-right > .button.button-small,
+.item-button-right .item-content > .button.button-small,
+.item-button-right > .buttons .button-small,
+.item-button-right .item-content > .buttons .button-small {
+  font-size: 14px;
+}
+
+.item.large-button-bar {
+  @extend .padding;
+  @extend .text-center;
+  margin-bottom: 10px;
+}
+
+/**********
+   Item avatar
+**********/
+
+.item-avatar-left-padding {
+  padding-left: 95px;
+}
+
+/**********
+   Item thumbnail
+**********/
+
+.item-thumbnail-left-padding {
+  padding-left: 106px;
+}
+
+.item.item-thumbnail-left, .item-thumbnail-left {
+  min-height: 100px !important;
+}
+
+.item-thumbnail-left > i:first-child,
+.item-thumbnail-left i.item-image,
+.item-thumbnail-left .item-content > i:first-child,
+.item-thumbnail-left .item-content i.item-image {
+  color: $item-default-active-bg;
+  background-color: $stable;
+  overflow: hidden !important;
+  font-size: 50px !important;
+  line-height: 80px;
+  padding: 0 15px;
+  background-position: center;
+  background-size: cover;
+  display: inline-block;
+}
+
+
+@media screen and (max-width: $screen-xxs-max) {
+  .card > .item.item-thumbnail-left,
+  .item-thumbnail-left,
+  .item-thumbnail-left .item-content {
+    padding-left: 84px !important;
+  }
+
+  .item-thumbnail-left > img:first-child,
+  .item-thumbnail-left img.item-image,
+  .item-thumbnail-left .item-content > img:first-child,
+  .item-thumbnail-left .item-content img.item-image {
+    max-width: 70px;
+    max-height: 70px;
+  }
+
+  .item h2 {
+    font-size: 13px !important;
+  }
+}
+
+/**********
+   Item icons
+**********/
+
+.item-icon-left-padding {
+  padding-left: 40px;
+}
+
+.item-icon-right-padding {
+  padding-right: 40px;
+}
+
+.text-keep-lines {
+  white-space: pre-line !important;
+}
+
+.text-italic {
+  font-style: italic !important;
+}
+
+/**********
+   Screen - Left Menu
+**********/
+
+#menu .item-button-right > .button,
+.item-button-right .item-content > .button,
+.item-button-right > .buttons,
+.item-button-right .item-content > .buttons {
+  top: 8px !important;
+}
+
+// very small screens
+@media screen and (max-width: $screen-xxs-max) {
+  #menu {
+    .item.item-divider {
+      min-height: 2px;
+      height: 2px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+    }
+
+    .item,
+    .item.item-complex .item-content{
+      height: 40px;
+      min-height: 40px;
+      padding-top: 12px;
+    }
+
+    .item.item-complex{
+      padding-top: 0px;
+    }
+
+    .item.item-button-right .button {
+      height: 30px;
+      min-height: 30px;
+      top: 4px;
+    }
+
+    .item.active a {
+      background-color: $active !important;
+    }
+
+    ion-content.has-footer {
+      bottom: 0px !important; /*ignore footer*/
+    }
+  }
+
+  body.platform-android #menu .item-icon-left .icon,
+  .item-icon-right .icon:last-child {
+    top: 5px;
+  }
+
+}
+
+// other screen
+@media screen and (min-width: $screen-xs) {
+  #menu .item.active a {
+    background-color: $active !important;
+  }
+
+  #menu .item.item-divider {
+    min-height: 5px;
+    height: 5px;
+  }
+
+  #menu .footer a {
+    font-size: 14px ! important;
+    color: grey !important;
+  }
+}
+
+@media screen and (max-width: $screen-sm-max) {
+
+  #menu .bar-header {
+    background-color: $positive-900-bg;
+    color: #fff;
+    height: 175px;
+    padding-right: 0px !important;
+
+    .hero {
+      height: 175px;
+      box-shadow: none; // not need (define in bar-header)
+
+      .content {
+        bottom: 5px;
+      }
+    }
+  }
+
+  #menu .has-header {
+    top: 175px;
+  }
+}
+
+/**********
+   Screen - identity Certifications
+**********/
+
+.certifications .item-divider .badge {
+  top:16px !important;
+}
+
+.certifications-lg .avatar-large {
+  left: auto;
+  position: relative;
+  font-size: 55px !important;
+  height: 88px;
+  width: 88px;
+  color: #D9D9D9;
+  background-color: $stable-900-bg;
+  border: solid 1px #D9D9D9;
+}
+
+
+/**********
+   Help
+**********/
+.icon-help {
+  @extend .icon;
+  @extend .positive;
+  @extend .ion-ios-help-outline;
+
+  font-size: 38px;
+  vertical-align: middle;
+}
+
+.icon-alert {
+  @extend .icon;
+  @extend .assertive;
+  @extend .ion-android-alert;
+
+  font-size: 38px;
+  vertical-align: middle;
+}
+
+#menu .footer .icon-help {
+  @extend .icon;
+  @extend .calm;
+  @extend .ion-ios-help-outline;
+  font-size: 25px !important;
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  z-index: 99;
+}
+
+/**********
+   Help Tip
+**********/
+
+.popover-helptip {
+  background-color:rgba(68, 68, 68, 0.85) !important;
+  height: auto !important;
+
+  .button-close {
+    @extend .gray;
+    padding: 8px;
+    height: 25px;
+    font-size: 18.2px;
+  }
+}
+
+// Empeche les clignotement du backdrop, pendant le feature tour
+.nobackdrop .popover-backdrop.active{
+  background-color: transparent !important;
+}
+
+.helptip-anchor {
+  display:block;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+.helptip-anchor-center {
+  @extend .helptip-anchor;
+  text-align: center;
+}
+.helptip-anchor-left {
+  @extend .helptip-anchor;
+  text-align: left;
+}
+.helptip-anchor-right {
+  @extend .helptip-anchor;
+  text-align: right;
+}
+.helptip-anchor a:before,
+.helptip-anchor-left a:before,
+.helptip-anchor-right a:before {
+  content: " ";
+}
+
+
+@media (max-width: $screen-xs-max) {
+  .popover-helptip {
+    width: auto;
+  }
+}
+.popover-helptip {
+  .icon.icon-left {
+    @extend .pull-left;
+    font-size: 30px;
+    position: relative;
+    top: 8px;
+    left: 8px;
+  }
+  .icon.icon-right {
+    @extend .pull-right;
+    font-size: 30px;
+    position: relative;
+    top: 8px;
+    right: 8px;
+  }
+  .icon.icon-center {
+    @extend .pull-right;
+    font-size: 30px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    top: 8px;
+    height: 0px;
+  }
+  .icon.icon-bottom-right {
+    @extend .pull-right;
+    font-size: 30px;
+    position: relative;
+    bottom: 8px;
+    right: 8px;
+  }
+  .icon.icon-bottom-left {
+    @extend .pull-left;
+    font-size: 30px;
+    position: relative;
+    bottom: 8px;
+    left: 8px;
+  }
+  .icon.icon-bottom-center {
+    @extend .pull-right;
+    font-size: 30px;
+    position: relative;
+    width: 100%;
+    bottom: 8px;
+    text-align: center;
+    height: 0px;
+  }
+}
+
+/**********
+   Profile popover
+**********/
+
+#profile-popover {
+  height: 200px;
+  .avatar {
+    height: 90px;
+    width: 90px;
+    left: 20px;
+    top: 20px;
+  }
+  .avatar {
+    border: solid 1px #D9D9D9;
+  }
+  .bar.bar-footer {
+    height: 58px;
+
+    .col .button {
+      max-width: inherit;
+      width: 100%;
+      padding: 5px 0px;
+      margin: 0;
+    }
+  }
+
+  .bar .button-positive {
+    background-color: $positive !important;
+  }
+
+  .bar .button-stable {
+    color: $dark !important;
+  }
+}
+
+.bar-header .button-icon {
+  .avatar {
+    height: 35px;
+    width: 35px;
+    position: relative;
+    left: 0px;
+    top: 4px;
+    border: solid 1px #D9D9D9;
+  }
+
+  .avatar.active {
+    background-color: $stable-900-bg;
+  }
+
+  .avatar {
+    height: 31px;
+    width: 31px;
+    position: relative;
+    left: 0px;
+    top: 6px;
+  }
+}
+
+.badge.badge-secondary,
+.badge .badge-secondary {
+  font-size: 12px;
+  font-style: italic;
+  top: 37px !important;
+  font-weight: normal !important;
+  margin-right: 0px;
+  padding-right: 0px;
+}
+
+
+.row-header{
+  border-bottom: solid 1px #ccc !important;
+  margin: 0px;
+  min-height: 28px !important;
+}
+
+.col-header{
+  text-align: center;
+  display: block !important;
+}
+
+.col-15 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 15%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 15%;
+  -ms-flex: 0 0 15%;
+  flex: 0 0 15%;
+  max-width: 15%;
+}
+
+.col-border-left {
+  border-left: solid 1px #ccc !important;
+}
+
+.col-border-right {
+  border-right: solid 1px #ccc !important;
+}
+
+.ion-spinner-small {
+  height: 14px;
+  width: 14px;
+  line-height: 14px;
+  margin: 0;
+  padding: 0;
+  svg {
+    height: 14px;
+    width: 14px;
+  }
+}
+.icon-secondary {
+  position: absolute;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  left: 25px;
+  top: -7px;
+}
+
+div[dropzone] {
+  border: 2px dashed #bbb;
+  border-radius: 5px;
+  padding: 15px;
+  text-align: center;
+  font: 20pt bold;
+  color: #bbb;
+  margin-bottom: 20px;
+}
+
+.hero .button-fab-top-right,
+.hero .button-fab-top-left {
+  top: 170px !important;
+}
+
+.text-no-transform {
+  text-transform: inherit;
+}
+
+.item-icon-event,
+.button-icon-event {
+  text-transform: inherit;
+  pointer-events: none !important;
+
+  .icon,
+  .icon-event {
+    pointer-events: all !important;
+  }
+}
+
+/**********
+  Wot identity
+**********/
+.hero.dark-bg {
+  background-color: #555;
+}
+.hero.positive-900-bg {
+  background-color: $positive-900-bg !important;
+}
+
+.popover-locked-outputs {
+  .item .badge {
+    right: 16px;
+  }
+}
+
+/************************
+ Animation hide/show
+*************************/
+.animate-show-hide.ng-hide {
+  opacity: 0;
+}
+
+.animate-show-hide.ng-hide-add,
+.animate-show-hide.ng-hide-remove {
+  transition: all linear 0.3s;
+}
+
+/**********
+  join waizard modal
+**********/
+@media screen and (max-width: $screen-sm-max) {
+  .modal iframe.iframe-license {
+    width: 100%;
+    height: 78%;
+  }
+}
+@media screen and (min-width: $screen-md) {
+  .modal iframe.iframe-license {
+    width: 100%;
+    height: 70%;
+  }
+
+  .modal.modal-license iframe.iframe-license {
+    width: 100%;
+    height: 85% !important;
+  }
+}
+
+

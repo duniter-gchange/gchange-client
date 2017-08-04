@@ -9,14 +9,11 @@
 angular.module("cesium.config", [])
 
 .constant("csConfig", {
-	"fallbackLanguage": "fr-FR",
 	"defaultLanguage": "fr-FR",
 	"timeout": 300000,
 	"cacheTimeMs": 300000,
 	"useLocalStorage": true,
 	"rememberMe": true,
-	"useRelative": false,
-	"decimalCount": 2,
 	"helptip": {
 		"enable": false
 	},
@@ -27,15 +24,16 @@ angular.module("cesium.config", [])
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "data.gchange.fr",
-			"port": "443"
+			"host": "localhost",
+			"port": "9200",
+			"wsPort": "9400"
 		},
 		"market": {
 			"enable": true
 		}
 	},
 	"version": "0.5.2",
-	"build": "2017-08-03T21:32:25.840Z",
+	"build": "2017-08-04T14:20:14.791Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
