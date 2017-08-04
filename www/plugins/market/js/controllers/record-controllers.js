@@ -793,8 +793,8 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
           destUid: $scope.issuer.name || $scope.issuer.uid,
         });
       })
-      .then(function() {
-        UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
+      .then(function(send) {
+        if (send) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
       });
   };
 
