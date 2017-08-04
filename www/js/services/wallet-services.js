@@ -100,9 +100,19 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
 
           data.keypair = keypair;
 
-          // Call extend api
-          return api.data.raisePromise.login(data);
+          // Call login check (can stop the login process)
+          return api.data.raisePromise.loginCheck(data)
+            // reset data then stop process
+            .catch(function(err) {
+              resetData();
+              throw err;
+            })
+            // Call extend api (cannot stop login process)
+            .then(function() {
+              return api.data.raisePromise.login(data);
+            });
         })
+
         // store if need
         .then(function() {
           if (csSettings.data.useLocalStorage) {
@@ -1412,7 +1422,8 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
     // Register extension points
     api.registerEvent('data', 'ready');
     api.registerEvent('data', 'init');
-    api.registerEvent('data', 'login');
+    api.registerEvent('data', 'loginCheck'); // allow to stop the login process
+    api.registerEvent('data', 'login'); // executed after login check (cannot stop the login process)
     api.registerEvent('data', 'load');
     api.registerEvent('data', 'finishLoad');
     api.registerEvent('data', 'logout');

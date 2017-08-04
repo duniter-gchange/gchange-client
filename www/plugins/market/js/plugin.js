@@ -1,3 +1,10 @@
+angular.module('cesium.market.services', [
+    'cesium.market.modal.services',
+    'cesium.market.record.services',
+    'cesium.market.wallet.services',
+    'cesium.market.settings.services'
+]);
+
 
 angular.module('cesium.market.plugin', [
     'cesium.market.app.controllers',
@@ -10,11 +17,12 @@ angular.module('cesium.market.plugin', [
 
     // Services
     'cesium.market.services'
-  ]);
+  ])
 
-angular.module('cesium.market.services', [
-    'cesium.market.modal.services',
-    'cesium.market.record.services',
-    'cesium.market.wallet.services',
-    'cesium.market.settings.services'
-]);
+  .run(function(Modals, mkModals) {
+
+      console.log("[plugin] [market] Override login and join modals");
+      Modals.showLogin = mkModals.showLogin;
+      Modals.showJoin = mkModals.showJoin;
+  });
+

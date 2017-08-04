@@ -321,7 +321,15 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
       }
       return walletData;
     })
-    .catch(UIUtils.onError('ERROR.CRYPTO_UNKNOWN_ERROR'));
+    .catch(function(err) {
+      if (err === "RETRY") {
+        UIUtils.loading.hide();
+        return $scope.showLoginModal(options); // loop
+      }
+      else {
+        UIUtils.onError('ERROR.CRYPTO_UNKNOWN_ERROR')(err);
+      }
+    });
   };
 
   // Logout

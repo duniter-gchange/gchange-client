@@ -11,9 +11,19 @@ angular.module('cesium.market.modal.services', ['cesium.modal.services'])
     return ModalUtils.show('plugins/market/templates/help/modal_help.html', 'HelpModalCtrl', parameters);
   }
 
+  function showLoginModal(parameters) {
+    return ModalUtils.show('plugins/market/templates/login/modal_login.html', 'MarketLoginModalCtrl', parameters);
+  }
+
+  function showEventLoginModal(parameters) {
+    return ModalUtils.show('plugins/market/templates/login/modal_event_login.html', 'MarketEventLoginModalCtrl', parameters);
+  }
+
   return {
     showHelp: showHelpModal,
-    showJoin: showJoinModal
+    showJoin: showJoinModal,
+    showLogin: showLoginModal,
+    showEventLogin: showEventLoginModal
   };
 
 });

@@ -1,2 +1,5 @@
-# gchange-client
-Ğchange client (web and mobile) for Duniter crypto-currencies networks
+# ğchange
+
+ğchange is a market place application (web and mobile), compatible with [Duniter crypto-currencies](http://www.duniter.org) like [Ğ1](https://g1.duniter.fr)
+
+

@@ -56,7 +56,7 @@ function MarketMenuExtendController($scope, esSettings, PluginService) {
 /**
  * Control home extension
  */
-function MarketHomeExtendController($scope, $state, ModalUtils, UIUtils, esSettings, csWallet, mkModals) {
+function MarketHomeExtendController($scope, $state, Modals, ModalUtils, UIUtils, esSettings, csWallet, mkModals) {
     'ngInject';
     $scope.enable = esSettings.isEnable();
 
@@ -85,5 +85,6 @@ function MarketHomeExtendController($scope, $state, ModalUtils, UIUtils, esSetti
 
     // Override default join modal (in the parent scope)
     $scope.$parent.showJoinModal = mkModals.showJoin;
+    $scope.$parent.showHelpModal = mkModals.showHelp;
     $scope.$parent.showHelpModal = mkModals.showHelp;
 }

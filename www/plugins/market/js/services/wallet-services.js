@@ -14,17 +14,17 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
                             esSettings, SocialUtils, CryptoUtils, UIUtils, csWallet, esWallet, csWot, BMA, Device, esProfile) {
   'ngInject';
   var
-    defaultProfile = {},
+    defaultProfile,
     that = this,
     listeners;
 
   function onWalletReset(data) {
     data.profile = undefined;
     data.name = undefined;
-    defaultProfile = {};
+    defaultProfile = undefined;
   }
 
-  function onWalletLogin(data, deferred) {
+  function onWalletLoginCheck(data, deferred) {
     deferred = deferred || $q.defer();
     if (!data || !data.pubkey || !data.keypair) {
       deferred.resolve();
@@ -52,10 +52,11 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
           return;
         }
 
-        // Profile not exists: make sure a default profile has been created (see login controller)
+        // Invalid credentials (no user profile found)
+        // AND no default profile to create a new one
         if (!defaultProfile) {
-          console.error("[market] No default profile defined. This should never append!");
-          deferred.resolve(data);
+          UIUtils.alert.error('MARKET.ERROR.INVALID_LOGIN_CREDENTIALS');
+          deferred.reject('RETRY');
           return deferred.promise;
         }
         // Fill default profile
@@ -85,11 +86,11 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
           })
           .then(function() {
             // clean default profile
-            defaultProfile = {};
+            defaultProfile = undefined;
           })
           .catch(function(err) {
             // clean default profile
-            defaultProfile = {};
+            defaultProfile = undefined;
 
             console.error('[market] [user] Error while saving new profile', err);
             deferred.reject(err);
@@ -127,7 +128,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
   function addListeners() {
     // Extend csWallet and csWot events
     listeners = [
-      csWallet.api.data.on.login($rootScope, onWalletLogin, this),
+      csWallet.api.data.on.loginCheck($rootScope, onWalletLoginCheck, this),
       csWallet.api.data.on.finishLoad($rootScope, onWalletFinishLoad, this),
       csWallet.api.data.on.init($rootScope, onWalletReset, this),
       csWallet.api.data.on.reset($rootScope, onWalletReset, this)

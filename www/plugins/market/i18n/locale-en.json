@@ -23,7 +23,11 @@
     "PROFILE": {
       "DEFAULT_TITLE": "User {{pubkey|formatPubkey}}"
     },
-    "SIMPLE_LOGIN": {
+    "LOGIN": {
+      "HELP": "Please fill your account credentials:",
+      "REMEMBER_ME": "Remember me?"
+    },
+    "EVENT_LOGIN": {
       "TITLE": "Contact information",
       "HELP": "Please indicate a <b>email or phone number</b>, so that we can contact you during the event:",
       "EMAIL_OR_PHONE": "Email or phone number",
@@ -118,6 +122,7 @@
       }
     },
     "ERROR": {
+      "INVALID_LOGIN_CREDENTIALS": "Invalid credentials.<br/>Please try again.",
       "FAILED_SAVE_RECORD": "Saving ad failed",
       "FAILED_UPDATE_RECORD": "Updating Ad failed",
       "LOAD_CATEGORY_FAILED": "Loading categories failed",
