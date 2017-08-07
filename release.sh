@@ -36,20 +36,41 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
       ;;
   esac
 
+
+  # force nodejs version to 5
+  if [ -d "$NVM_DIR" ]; then
+    . $NVM_DIR/nvm.sh
+    nvm use 5
+  else
+    echo "nvm (Node version manager) not found (directory $NVM_DIR not found). Please install, and retry"
+    exit -1
+  fi
+
   # Update config file
   gulp config --env default
+
+  echo "----------------------------------"
+  echo "- Building Android artefact..."
+  echo "----------------------------------"
 
   # Build assets for mobile device
   ionic build android --release
   #ionic build firefoxos --release
+
+  echo "----------------------------------"
+  echo "- Building web artefact..."
+  echo "----------------------------------"
 
   # Update config file
   gulp build:web --release
 
   #ionic build ubuntu --release
   #cd platforms/ubuntu/native/gchange; debuild
+  #cd $DIRNAME
 
-  cd $DIRNAME
+  echo "----------------------------------"
+  echo "- Executing git push, with tag: v$2"
+  echo "----------------------------------"
 
   # Commit
   git reset HEAD
@@ -58,13 +79,35 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   git tag "v$2"
   git push
 
-
-  echo "**********************************"
-  echo "* Build release succeed !"
-  echo "**********************************"
-
   if [[ $4 =~ ^[a-zA-Z0-9_]+:[a-zA-Z0-9_]+$ && "_$5" != "_" ]]; then
-    ./github.sh $1 $4 "'"$5"'"
+      echo "**********************************"
+      echo "* Uploading artefacts to Github..."
+      echo "**********************************"
+
+      ./github.sh $1 $4 "'"$5"'"
+
+      echo "----------------------------------"
+      echo "- Building desktop versions..."
+      echo "----------------------------------"
+
+      git submodule update --init
+      git submodule sync
+      cd platforms/desktop
+
+      # Exclude Windows - TODO FIXME (not enough space in BL directories)
+      EXPECTED_ASSETS="gchange-desktop-v$2-linux-x64.deb
+gchange-desktop-v$2-linux-x64.tar.gz"
+
+      ./release.sh $2
+
+      # back to nodejs version 5
+      cd $DIRNAME
+      nvm use 5
+
+      echo "**********************************"
+      echo "* Build release succeed !"
+      echo "**********************************"
+
   else
     echo " WARN - missing arguments: "
     echo "       user:password 'release_description'"
