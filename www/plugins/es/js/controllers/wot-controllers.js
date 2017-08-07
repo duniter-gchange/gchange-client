@@ -80,7 +80,7 @@ function ESWotIdentityViewController($scope, $ionicPopover, $q, UIUtils, Modals,
         .then(function(sent) {
           if (sent) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
         });
-      })
+      });
 
   };
 
