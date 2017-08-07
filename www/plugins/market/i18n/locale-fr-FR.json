@@ -93,7 +93,9 @@
       "TITLE": "Nouvelle annonce",
       "SELECT_TYPE": "Type d'annonce :",
       "OFFER": "Offre, Vente",
-      "NEED": "Demande, Recherche"
+      "OFFER_SHORT": "Offre",
+      "NEED": "Demande, Recherche",
+      "NEED_SHORT": "Demande"
     },
     "LOCAL_SALE": {
       "LOCATION": "Numéro du stand",

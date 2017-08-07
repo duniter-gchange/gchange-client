@@ -36,17 +36,16 @@
 
           </div>
           <div class="card-footer" style="height: 45px">
-            &nbsp;
             <div class="badge badge-price badge-calm" ng-if="rec.type=='offer' && rec.price" >
               <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: false}"></span>
             </div>
             <div class="badge badge-calm" ng-if="rec.type=='offer' && !rec.price && options.type.show">
               <i class="cion-market-offer"></i>
-              <span translate>MARKET.TYPE.OFFER</span>
+              <span translate>MARKET.TYPE.OFFER_SHORT</span>
             </div>
-            <div class="badge badge-energized" ng-if="rec.type=='need' && options.type.show" style="top:3px; right: 3px;">
+            <div class="badge badge-energized" ng-if="rec.type=='need' && options.type.show">
               <i class="cion-market-need"></i>
-              {{'MARKET.TYPE.NEED'|translate}}
+                <span translate>MARKET.TYPE.NEED_SHORT</span>
             </div>
           </div>
         </a>

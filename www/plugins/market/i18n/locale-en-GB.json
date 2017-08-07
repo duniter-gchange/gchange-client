@@ -61,7 +61,8 @@
       "BTN_SHOW_CATEGORIES": "Show categories",
       "BTN_OFFERS": "Offers",
       "BTN_NEEDS": "Needs",
-      "SHOW_CLOSED_RECORD": "Display closed ads?"
+      "SHOW_CLOSED_RECORD": "Display closed ads?",
+      "RECORD_STOCK": "Stock:",
     },
     "GALLERY": {
       "TITLE": "Slideshow",
@@ -92,7 +93,9 @@
       "TITLE": "New ad",
       "SELECT_TYPE": "Kind of ad:",
       "OFFER": "Offer",
-      "NEED": "Need"
+      "OFFER_SHORT": "Offer",
+      "NEED": "Need",
+      "NEED_SHORT": "Need"
     },
     "LOCAL_SALE": {
       "LOCATION": "Stand number",

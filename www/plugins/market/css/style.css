@@ -42,7 +42,7 @@
 */
 
 @media screen and (max-width: 991px) {
-    .lookupForm .badge-price {
+    .card-record .badge-price {
         font-size: 28px !important;
         line-height: 28px;
         padding: 10px !important;

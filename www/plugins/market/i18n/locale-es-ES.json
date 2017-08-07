@@ -1,15 +1,24 @@
 {
   "MENU": {
     "MARKET": "Anuncios",
-    "MY_RECORDS": "Mes annonces"
+    "MY_RECORDS": "Mis anuncios"
   },
   "MARKET": {
     "COMMON": {
       "PRICE": "Precio",
-      "BTN_NEW_AD": "Presento un anuncio"
+      "BTN_NEW_AD": "Presento un anuncio",
+      "SOLD": "El anuncio cerrada"
+    },
+    "HOME": {
+      "BTN_NEW_AD": "Poner un anuncio",
+      "BTN_SHOW_MARKET_OFFER": "Consultar los anuncios"
+    },
+    "CATEGORY": {
+      "ALL": "Todas las categorías"
     },
     "SEARCH": {
       "TITLE": "Anuncios",
+      "CATEGORY": "Categorías: ",
       "SEARCH_HELP": "Búsqueda (coche, libro...)",
       "BTN_ADD": "Nuevo",
       "BTN_OPTIONS": "Búsqueda avanzada",
@@ -20,12 +29,32 @@
       "LOCATION_HELP": "Ciudad",
       "LAST_RECORDS": "últimos anuncios :",
       "RESULTS": "Resultados :",
+      "BTN_LAST_RECORDS": "últimos anuncios",
+      "BTN_SHOW_CATEGORIES": "Recorrer las categorías",
       "BTN_OFFERS": "Ofrecimientos",
-      "BTN_NEEDS": "Demandas"
+      "BTN_NEEDS": "Demandas",
+      "SHOW_CLOSED_RECORD": "Mostrar anuncios cerrados?",
+      "RECORD_STOCK": "Stock :"
+    },
+    "GALLERY": {
+      "TITLE": "Diapositivas",
+      "BTN_START": "Comienzo",
+      "BTN_CONTINUE": "Retomar",
+      "BTN_PAUSE": "Pausa",
+      "BTN_STOP": "Detener",
+      "SLIDE_DURATION": "Visualización de la hora :",
+      "SLIDE_DURATION_OPTION": "{{value}} segundo"
     },
     "VIEW": {
       "TITLE": "Anuncio",
+      "BTN_SOLD_AD": "Vendido",
+      "BTN_SOLD": "Vendido",
+      "BTN_REOPEN": "Reabierto el anuncio",
+      "BTN_WRITE_OFFER": "Escribir al vendedor",
+      "BTN_WRITE_NEED": "Escribir al solicitante",
       "MENU_TITLE": "Opciónes",
+      "RECORD_FEES_PARENTHESIS": "(gastos)",
+      "RECORD_STOCK": "Stock disponible :",
       "POPOVER_SHARE_TITLE": "Anuncio {{title}}",
       "REMOVE_CONFIRMATION" : "Está usted segura/o querer suprimir este anuncio ?<br/><br/>Esta operación es ireversible."
     },
@@ -33,7 +62,14 @@
       "TITLE": "Nuevo anuncio",
       "SELECT_TYPE": "Tipo de anuncio :",
       "OFFER": "Ofrecimiento, Venta",
-      "NEED": "Demanda, Búsqueda"
+      "OFFER_SHORT": "Ofrecimiento",
+      "NEED": "Demanda, Búsqueda",
+      "NEED_SHORT": "Demanda"
+    },
+    "LOCAL_SALE": {
+      "LOCATION": "Número de stand",
+      "LOCATION_HELP": "Número de stand : 1, 2, ...",
+      "LOCATION_PREFIX": "Stand n°"
     },
     "EDIT": {
       "TITLE": "Edición",
@@ -46,21 +82,35 @@
       "RECORD_LOCATION_HELP": "Dirección, Ciudad",
       "RECORD_PRICE": "Precio",
       "RECORD_PRICE_HELP": "Precio (opcional)",
-      "RECORD_CURRENCY": "Moneda"
+      "RECORD_CURRENCY": "Moneda",
+      "RECORD_FEES": "Gastos de envío",
+      "RECORD_FEES_HELP": "Gastos de envío (opcional)",
+      "RECORD_STOCK": "Stock disponible",
+      "RECORD_STOCK_HELP": "Stock disponible"
+    },
+    "WOT": {
+      "VIEW": {
+        "BTN_RECORDS": "Anuncios"
+      }
     },
     "ERROR": {
+      "INVALID_LOGIN_CREDENTIALS": "De usuario o contraseña no válidos.<br/>Por favor, inténtelo de nuevo.",
       "FAILED_SAVE_RECORD": "Fracaso durante el registro de el anuncio",
       "FAILED_UPDATE_RECORD": "Fracaso durante la actualización de el anuncio",
       "LOAD_CATEGORY_FAILED": "Erreur de actualización de las categorías",
       "LOOKUP_RECORDS_FAILED": "Fracaso durante la ejecución de la búsqueda.",
       "LOAD_RECORD_FAILED": "Fracaso durante la carga de el anuncio.",
       "REMOVE_RECORD_FAILED": "Erreur de la supresión de el anuncio",
+      "SOLD_RECORD_FAILED": "Erreur de la cierre de el anuncio",
+      "REOPEN_RECORD_FAILED": "Erreur de la reapertura de el anuncio",
       "FAILED_SAVE_COMMENT": "Fracaso durante el respaldo del comentario",
       "FAILED_REMOVE_COMMENT": "Fracaso durante la supresión del comentario",
       "RECORD_NOT_EXISTS": "Anuncio inexistente"
     },
     "INFO": {
-      "RECORD_REMOVED" : "Anuncio suprimido"
+      "RECORD_REMOVED" : "Anuncio suprimido",
+      "RECORD_SOLD" : "Anuncio cerrada",
+      "RECORD_REOPEN" : "Anuncio reabrió"
     }
   },
   "EVENT": {
@@ -71,5 +121,4 @@
       "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado la repuesta a su comentario sobre el anuncio : <b>{{params[2]}}</b>"
     }
   }
-
 }

@@ -15,7 +15,7 @@
          ui-sref="app.market_view_record({id: rec.id, title: rec.urlTitle})">
 
         <div class="row row-record">
-          <div class="col item-text-wrap item-thumbnail-left">
+          <div class="col item-text-wrap item-thumbnail-left" style="max-width: 480px;">
             <img ng-src="{{::rec.thumbnail.src}}" ng-if="::rec.thumbnail">
             <i class="item-image ion-speakerphone" ng-if="::!rec.thumbnail"></i>
             <h2 ng-bind-html="rec.title"></h2>
@@ -30,20 +30,20 @@
             <span  ng-if="::rec.picturesCount > 1"
                    class="badge badge-balanced badge-picture-count">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i></span>
           </div>
-          <div class="col col-20">
+          <div class="col col-20" style="max-width: 180px;">
             <h3 class="gray" ng-if="::rec.category" ng-bind-html="::rec.category.name"></h3>
-            <h5 ng-if="::rec.stock>1" class="gray"><i class="icon ion-pie-graph"></i> <span class="">{{::rec.stock}} <i class="ion-checkmark balanced"></i></span></h5>
+            <h5 ng-if="::rec.stock>1" class="gray hidden-xs hidden-sm"><i class="icon ion-pie-graph"></i> <span class="">{{::rec.stock}} <i class="ion-checkmark balanced"></i></span></h5>
             <div class="badge badge-price badge-calm" ng-if="::rec.price">
               <i class="cion-market-offer"></i>
               <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: false}"></span>
             </div>
             <div class="badge badge-energized badge-price" ng-if="::!search.type && !rec.price && rec.type=='need'">
               <i class="cion-market-need"></i>
-              {{::'MARKET.TYPE.'+rec.type|upper|translate}}
+              <span translate>MARKET.TYPE.NEED_SHORT</span>
             </div>
           </div>
           <div class="col hidden-sm hidden-xs">
-              <h3 class="gray text-wrap" ng-bind-html="::rec.description | truncText:500" ng-if="::rec.description"></h3>
+              <h4 class="gray text-wrap" ng-bind-html="::rec.description | truncText:500" ng-if="::rec.description"></h4>
               <div ng-if="::!rec.stock" class="badge badge-assertive"  translate>MARKET.COMMON.SOLD</div>
           </div>
         </div>
