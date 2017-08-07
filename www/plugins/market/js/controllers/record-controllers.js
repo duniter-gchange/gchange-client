@@ -243,12 +243,21 @@ function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, Mo
         });
     }*/
 
-    var query = {bool: {}};
+    var query = {
+        filtered: {
+            query: {
+                bool: {}
+            }
+        }
+    };
+    // var query = {bool: {}};
     if (matches.length > 0) {
-      query.bool.should =  matches;
+        query.filtered.query.bool.should = matches;
+      // query.bool.should =  matches;
     }
     if (filters.length > 0) {
-      query.bool.filter =  filters;
+        query.filtered.filter = filters;
+      // query.bool.filter =  filters;
     }
 
     return $scope.doRequest({query: query, from: from});
@@ -278,8 +287,16 @@ function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, Mo
       filters.push({terms: {currency: $scope.currencies}});
     }
     if (filters.length) {
-      options.query = {bool: {}};
-      options.query.bool.filter =  filters;
+        options.query = {
+            filtered: {
+                query: {
+                    bool: {}
+                }
+            },
+        };
+      // options.query = {bool: {}};
+      options.query.filtered.filter =  filters;
+      // options.query.bool.filter =  filters;
     }
 
     return $scope.doRequest(options);
