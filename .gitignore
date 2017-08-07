@@ -7,7 +7,8 @@
 # http://git-scm.com/docs/gitignore
 
 /node_modules/
-/platforms/
+/platforms/*
+!/platforms/desktop
 /plugins/
 .idea/
 /*.iml
