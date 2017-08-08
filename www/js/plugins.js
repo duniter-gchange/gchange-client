@@ -5,6 +5,8 @@ angular.module('cesium.plugins', [
     // ES plugin
     'cesium.es.plugin',
     // Market plugin
-    'cesium.market.plugin'
+    'cesium.market.plugin',
+    // Map plugin
+    'cesium.map.plugin'
   ])
 ;
