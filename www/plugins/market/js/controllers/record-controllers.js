@@ -614,7 +614,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     mkRecord.record.load(id, {
       fetchPictures: false,// lazy load for pictures
       convertPrice: true, // convert to user unit
-      descriptionAsHtml: true // convert description into HTML (tags, <br/> ...)
+      html: true // convert into HTML (title, description: tags, <br/> ...)
     })
       .then(function (data) {
         $scope.formData = data.record;

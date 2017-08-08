@@ -223,12 +223,17 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           record.price = record.price * currentUD;
         }
       }
-      if (hit.highlight) {
+      if (options.html && hit.highlight) {
         if (hit.highlight.title) {
           record.title = hit.highlight.title[0];
         }
-        if (options.descriptionAsHtml && hit.highlight.description) {
-          record.description = hit.highlight.description[0];
+        if (hit.highlight.description) {
+            record.description = hit.highlight.description[0];
+        }
+        else {
+            record.description = esHttp.util.trustAsHtml(record.description, {
+                tagState: 'app.market_lookup'
+            })
         }
         if (hit.highlight.location) {
           record.location = hit.highlight.location[0];
@@ -238,7 +243,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         }
       }
 
-      else if (options.descriptionAsHtml){
+      else if (options.html) {
           // description
           record.description = esHttp.util.trustAsHtml(record.description, {
               tagState: 'app.market_lookup'
@@ -303,7 +308,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             return [];
           }
           return res.hits.hits.reduce(function(result, hit) {
-            var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, descriptionAsHtml: true});
+            var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, html: true});
             record.id = hit._id;
             return result.concat(record);
           }, []);
