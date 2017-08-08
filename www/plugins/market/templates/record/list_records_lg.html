@@ -33,13 +33,17 @@
           <div class="col col-20" style="max-width: 180px;">
             <h3 class="gray" ng-if="::rec.category" ng-bind-html="::rec.category.name"></h3>
             <h5 ng-if="::rec.stock>1" class="gray hidden-xs hidden-sm"><i class="icon ion-pie-graph"></i> <span class="">{{::rec.stock}} <i class="ion-checkmark balanced"></i></span></h5>
-            <div class="badge badge-price badge-calm" ng-if="::rec.price">
-              <i class="cion-market-offer"></i>
+            <div class="badge badge-price"
+                 ng-if="::rec.price"
+                 ng-class="{'badge-calm': rec.type=='offer', 'badge-energized': rec.type=='need'}">
+              <i class="cion-market-{{rec.type}}"></i>
               <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: false}"></span>
             </div>
-            <div class="badge badge-energized badge-price" ng-if="::!search.type && !rec.price && rec.type=='need'">
-              <i class="cion-market-need"></i>
-              <span translate>MARKET.TYPE.NEED_SHORT</span>
+            <div class="badge badge-price"
+                 ng-if="::!search.type && !rec.price"
+                 ng-class="{'badge-calm': rec.type=='offer', 'badge-energized': rec.type=='need'}">
+              <i class="cion-market-{{rec.type}}"></i>
+              {{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
             </div>
           </div>
           <div class="col hidden-sm hidden-xs">

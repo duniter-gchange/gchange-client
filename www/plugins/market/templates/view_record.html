@@ -47,13 +47,13 @@
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
               <a ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.uid})">
-                <ng-if ng-if="issuer.name||issuer.uid" class="positive">
+                <span ng-if="issuer.name||issuer.uid" class="positive">
                   <i class="icon ion-person"></i>
                   {{::issuer.name||issuer.uid}}
-                </ng-if>
+                </span>
                 <span ng-if="!issuer.name && !issuer.uid" class="gray">
                   <i class="icon ion-key"></i>
-                  {{::issuer.pubkey|formatPubkey}}
+                  {{formData.issuer|formatPubkey}}
                 </span>
               </a>
               <span>
@@ -63,10 +63,12 @@
                 </span>
               </span>
             </h4>
-            <div class="badge badge-balanced" ng-if="options.type.show">
+            <div class="badge hidden-xs"
+                 ng-if="options.type.show"
+                 ng-class="{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}">
+              <i class="cion-market-{{formData.type}}"></i>
               <span>{{'MARKET.TYPE.'+formData.type|upper|translate}}</span>
             </div>
-
           </div>
 
           <div class="item visible-xs no-padding-top no-padding-bottom">
@@ -101,8 +103,11 @@
                 </span>
               </span>
             </h4>
-            <div class="badge badge-calm badge-price" ng-if="formData.price">
-              <i class="icon ion-pricetag"></i>
+            <div class="badge badge-price"
+                 ng-class="{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}"
+                 ng-if="formData.price">
+              <i class="icon "
+                 ng-class="{'cion-market-need': formData.type == 'need', 'ion-pricetag': formData.type == 'offer'}"></i>
               <span ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></span>
             </div>
           </div>

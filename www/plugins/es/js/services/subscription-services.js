@@ -16,8 +16,6 @@ angular.module('cesium.es.subscription.services', ['cesium.services', 'cesium.es
   var
     constants = {
     },
-    regexp = {
-    },
     that = this,
     listeners;
 
@@ -51,6 +49,10 @@ angular.module('cesium.es.subscription.services', ['cesium.services', 'cesium.es
         data.subscriptions = data.subscriptions || {};
         data.subscriptions.count = res && res.hits && res.hits.total;
         console.debug('[ES] [subscription] Loaded count (' + data.subscriptions.count  + ')');
+        deferred.resolve(data);
+      })
+      .catch(function(err) {
+        console.error('Error while counting subscription: ' + (err.message ? err.message : err));
         deferred.resolve(data);
       });
 
