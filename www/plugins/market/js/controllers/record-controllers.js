@@ -14,17 +14,21 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
         }
       },
       data: {
-        large: 'app.market_lookup_lg'
+        large: 'app.market_lookup_lg',
+        silentLocationChange: true
       }
     })
 
     .state('app.market_lookup_lg', {
-      url: "/market/lg?q&category&location&reload&type&hash",
+      url: "/market/lg?q&category&location&reload&type&hash&closed",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/lookup_lg.html",
           controller: 'MkLookupCtrl'
         }
+      },
+      data: {
+        silentLocationChange: true
       }
     })
 
@@ -94,7 +98,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
 ;
 
-function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, ModalUtils, csConfig, mkRecord, BMA, mkSettings) {
+function MkLookupAbstractController($scope, $state, $filter, $location, UIUtils, esHttp, ModalUtils, csConfig, mkRecord, BMA, mkSettings) {
   'ngInject';
 
   var defaultSearchLimit = 10;
@@ -142,15 +146,18 @@ function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, Mo
     });
   };
 
-  $scope.setAdType = function(type) {
-    if (type != $scope.search.type) {
+  $scope.toggleAdType = function(type) {
+    if (type === $scope.search.type) {
+      $scope.search.type = undefined;
+    }
+    else {
       $scope.search.type = type;
-      if ($scope.search.lastRecords) {
-        $scope.doGetLastRecord();
-      }
-      else {
-        $scope.doSearch();
-      }
+    }
+    if ($scope.search.lastRecords) {
+      $scope.doGetLastRecord();
+    }
+    else {
+      $scope.doSearch();
     }
   };
 
@@ -196,6 +203,9 @@ function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, Mo
          });
       }
     }
+
+
+
     if ($scope.search.category) {
       filters.push({
         nested: {
@@ -222,42 +232,51 @@ function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, Mo
       return $scope.doGetLastRecord();
     }
 
-    if (!$scope.search.showClosed) {
+    var stateParams = {};
+
+    if ($scope.search.showClosed) {
+      stateParams.closed = true;
+    }
+    else {
       filters.push({range: {stock: {gt: 0}}});
     }
 
     if ($scope.search.type) {
       filters.push({term: {type: $scope.search.type}});
+      stateParams.type = $scope.search.type;
     }
 
     // filter on currency
     if ($scope.currencies) {
       filters.push({terms: {currency: $scope.currencies}});
     }
-    /*if ($scope.currency) {
-      filters.push({bool:
-          should: [
-            {term: {currency: $scope.currency}},
-            {exists: {field: 'currency'}}
-          ]
-        });
-    }*/
+    stateParams.q = $scope.search.text;
 
-    var query = {
-        filtered: {
-            query: {
-                bool: {}
-            }
-        }
-    };
-    // var query = {bool: {}};
+    var query = {};
     if (matches.length > 0) {
-        query.filtered.query.bool.should = matches;
-      // query.bool.should =  matches;
+      query.filtered = {
+        query: {
+          bool: {
+            should: matches
+          }
+        }
+      };
+      if (filters.length > 0) {
+        query.filtered.filter = {
+          and: {
+            filters: filters
+          }
+        };
+      }
     }
-    if (filters.length > 0) {
-        query.filtered.filter = filters;
-      // query.bool.filter =  filters;
+    else if (filters.length > 0) {
+      query.bool = {};
+      query.bool.filter = filters;
+    }
+
+    // Update location href
+    if (!from) {
+      $location.search(stateParams).replace();
     }
 
     return $scope.doRequest({query: query, from: from});
@@ -287,16 +306,8 @@ function MkLookupAbstractController($scope, $state, $filter, UIUtils, esHttp, Mo
       filters.push({terms: {currency: $scope.currencies}});
     }
     if (filters.length) {
-        options.query = {
-            filtered: {
-                query: {
-                    bool: {}
-                }
-            },
-        };
-      // options.query = {bool: {}};
-      options.query.filtered.filter =  filters;
-      // options.query.bool.filter =  filters;
+      options.query = {bool: {}};
+      options.query.bool.filter =  filters;
     }
 
     return $scope.doRequest(options);
@@ -448,7 +459,6 @@ function MkLookupController($scope, $controller, $focus, mkRecord) {
       // Search on type
       if (state.stateParams && state.stateParams.type) {
         $scope.search.type = state.stateParams.type;
-        showAdvanced = true;
       }
 
       // Search on location
@@ -465,6 +475,12 @@ function MkLookupController($scope, $controller, $focus, mkRecord) {
         else {
           $scope.search.text = '#' + state.stateParams.hash;
         }
+      }
+
+      // Show closed ad
+      if (state.stateParams && state.stateParams.closed == true) {
+        $scope.search.showClosed = true;
+        showAdvanced = true;
       }
 
       // Search on category
@@ -490,7 +506,7 @@ function MkLookupController($scope, $controller, $focus, mkRecord) {
 
   $scope.finishEnter = function(isAdvanced) {
     $scope.search.advanced = isAdvanced ? true : $scope.search.advanced; // keep null if first call
-    if (isAdvanced || $scope.search.category) {
+    if (isAdvanced || $scope.search.category || $scope.search.text) {
       $scope.doSearch()
           .then(function() {
             $scope.showFab('fab-add-market-record');
@@ -513,13 +529,13 @@ function MkLookupController($scope, $controller, $focus, mkRecord) {
   /* -- manage events -- */
 
   $scope.onToggleAdvanced = function() {
-    if ($scope.entered) {
-      // Options will be hide: reset options value
-      if (!$scope.search.advanced) {
-        $scope.search.location = null;
-        $scope.search.type = null;
-        $scope.search.showClosed = false;
-      }
+    if ($scope.search.loading || !$scope.entered) return;
+
+    // Options will be hide: reset options value
+    if (!$scope.search.advanced) {
+      $scope.search.location = null;
+      $scope.search.showClosed = false;
+      // Refresh results
       $scope.doRefresh();
     }
   };

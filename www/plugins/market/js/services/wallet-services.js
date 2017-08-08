@@ -148,7 +148,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
       console.debug("[ES] [user] Enable");
       addListeners();
       if (csWallet.isLogin()) {
-        return onWalletLogin(csWallet.data);
+        return onWalletLoginCheck(csWallet.data);
       }
     }
   }
