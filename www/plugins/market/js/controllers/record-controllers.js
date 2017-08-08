@@ -613,7 +613,8 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     $scope.loading = true;
     mkRecord.record.load(id, {
       fetchPictures: false,// lazy load for pictures
-      convertPrice: true // convert to user unit
+      convertPrice: true, // convert to user unit
+      descriptionAsHtml: true // convert description into HTML (tags, <br/> ...)
     })
       .then(function (data) {
         $scope.formData = data.record;
@@ -731,15 +732,19 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
                 $scope.canSold = false;
                 $scope.canReopen = true;
                 $scope.canEdit = false;
+              })
+              .catch(UIUtils.onError('MARKET.ERROR.SOLD_RECORD_FAILED'))
+              .then(function() {
                 $ionicHistory.nextViewOptions({
+                  disableBack: true,
+                  disableAnimate: false,
                   historyRoot: true
                 });
-                return $state.go('app.market_lookup');
-              })
-              .then(function() {
-                UIUtils.toast.show('MARKET.INFO.RECORD_SOLD');
-              })
-              .catch(UIUtils.onError('MARKET.ERROR.SOLD_RECORD_FAILED'));
+                $timeout(function(){
+                  UIUtils.toast.show('MARKET.INFO.RECORD_SOLD');
+                }, 500);
+                $state.go('app.market_lookup');
+              });
           }
         });
   };
@@ -1114,6 +1119,12 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
 
       .catch(function(err) {
         $scope.saving = false;
+
+        // Replace with a specific message
+        if (err && err.message === 'ES_HTTP.ERROR.MAX_UPLOAD_BODY_SIZE') {
+          err.message = 'MARKET.ERROR.RECORD_EXCEED_UPLOAD_SIZE';
+        }
+
         UIUtils.onError('MARKET.ERROR.FAILED_SAVE_RECORD')(err);
       });
   };

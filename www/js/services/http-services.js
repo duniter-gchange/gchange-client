@@ -136,7 +136,7 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
               resolve(data);
             })
             .error(function(data, status) {
-              processError(reject, data, status);
+              processError(reject, data, url, status);
             });
         });
       });

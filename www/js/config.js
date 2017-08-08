@@ -28,7 +28,8 @@ angular.module("cesium.config", [])
 		"es": {
 			"enable": true,
 			"host": "data.gchange.fr",
-			"port": "443"
+			"port": "443",
+			"maxUploadBodySize": 2097152
 		},
 		"market": {
 			"enable": true

@@ -11,7 +11,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     var
       that = this,
       constants = {
-        ES_USER_API_ENDPOINT: 'ES_USER_API( ([a-z_][a-z0-9-_.]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))'
+        ES_USER_API_ENDPOINT: 'ES_USER_API( ([a-z_][a-z0-9-_.]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))',
+        MAX_UPLOAD_BODY_SIZE: csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.maxUploadBodySize || 2097152 /*=2M*/
       },
       regexp = {
         IMAGE_SRC: exact('data:([A-Za-z//]+);base64,(.+)'),
@@ -74,6 +75,11 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     // Get time (UTC)
     that.date = { now : csHttp.date.now };
 
+    that.byteCount = function (s) {
+      s = (typeof s == 'string') ? s : JSON.stringify(s);
+      return encodeURI(s).split(/%(?:u[0-9A-F]{2})?[0-9A-F]{2}|./).length - 1;
+    };
+
     that.getUrl  = function(path) {
       return csHttp.getUrl(that.host, that.port, path, that.useSsl);
     };
@@ -94,7 +100,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         var request = that.cache.postByPath[path];
         if (!request) {
           request =  csHttp.post(that.host, that.port, path, that.useSsl);
-        that.cache.postByPath[path] = request;
+          that.cache.postByPath[path] = request;
         }
         return request(obj, params);
       };
@@ -244,9 +250,17 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
               .then(function(signature) {
                 obj.hash = hash;
                 obj.signature = signature;
+
+
                 return postRequest(obj, params)
                   .then(function (id){
                     return id;
+                  })
+                  .catch(function(err) {
+                    var bodyLength = that.byteCount(obj);
+                    if (bodyLength > constants.MAX_UPLOAD_BODY_SIZE) {
+                      throw {message: 'ES_HTTP.ERROR.MAX_UPLOAD_BODY_SIZE', length: bodyLength};
+                    }
                   });
               });
             });

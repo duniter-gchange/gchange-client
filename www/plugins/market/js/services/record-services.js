@@ -3,14 +3,13 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 .factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, csWot, csCurrency, mkSettings) {
   'ngInject';
 
-  function EsMarket(id) {
+  function EsMarket() {
 
     var
       fields = {
         commons: ["category", "title", "description", "issuer", "time", "location", "price", "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency"]
       },
       exports = {
-        id: id,
         _internal: {}
       },
       filters = {
@@ -210,14 +209,16 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           });
     }
 
-    function readRecordFromHit(hit, categories, currentUD, convertPriceToUnit) {
+    function readRecordFromHit(hit, categories, currentUD, options) {
+
+      options = options || {};
 
       var record = hit._source;
       if (record.category && record.category.id) {
         record.category = categories[record.category.id];
       }
 
-      if (record.price && convertPriceToUnit) {
+      if (record.price && options.convertPrice && currentUD) {
         if (record.unit==='UD') {
           record.price = record.price * currentUD;
         }
@@ -226,7 +227,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         if (hit.highlight.title) {
           record.title = hit.highlight.title[0];
         }
-        if (hit.highlight.description) {
+        if (options.descriptionAsHtml && hit.highlight.description) {
           record.description = hit.highlight.description[0];
         }
         if (hit.highlight.location) {
@@ -236,7 +237,8 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           record.category.name = hit.highlight["category.name"][0];
         }
       }
-      else {
+
+      else if (options.descriptionAsHtml){
           // description
           record.description = esHttp.util.trustAsHtml(record.description, {
               tagState: 'app.market_lookup'
@@ -301,7 +303,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             return [];
           }
           return res.hits.hits.reduce(function(result, hit) {
-            var record = readRecordFromHit(hit, categories, currentUD, true);
+            var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, descriptionAsHtml: true});
             record.id = hit._id;
             return result.concat(record);
           }, []);
@@ -334,7 +336,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           var currentUD = res[1];
           var hit = res[2];
 
-          var record = readRecordFromHit(hit, categories, currentUD, options.convertPrice);
+          var record = readRecordFromHit(hit, categories, currentUD, options);
 
           // Load issuer (avatar, name, uid, etc.)
           return csWot.extend({pubkey: record.issuer})
@@ -347,13 +349,9 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 
               // Make sure currency if present (fix old data)
               if (record.price && !record.currency) {
-                if (csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.defaultCurrency) {
-                  record.currency = csConfig.plugins.market.defaultCurrency;
-                  return data;
-                }
-                return csCurrency.get()
-                  .then(function (currency) {
-                    record.currency = currency.name;
+                return mkSettings.currencies()
+                  .then(function(currencies) {
+                    record.currency = currencies && currencies[0];
                     return data;
                   });
               }
@@ -444,7 +442,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             });
     }
 
-    exports.category = {
+      exports.category = {
         all: getCategories,
         filtered: getFilteredCategories,
         get: getCategory,
@@ -471,6 +469,6 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
     return exports;
   }
 
-  return EsMarket('default');
+  return EsMarket();
 })
 ;

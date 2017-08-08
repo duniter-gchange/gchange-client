@@ -307,5 +307,10 @@
       "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has replied to your comment on the referencing: <b>{{params[2]}}</b>",
       "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his answer to your comment, on the referencing: <b>{{params[2]}}</b>"
     }
+  },
+  "ES_HTTP": {
+    "ERROR": {
+      "MAX_UPLOAD_BODY_SIZE": "The volume of data to be sent exceeds the limit set by the server.<br/><br/>Please try again after, for example, deleting photos."
+    }
   }
 }

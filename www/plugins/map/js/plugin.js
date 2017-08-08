@@ -13,8 +13,6 @@ angular.module('cesium.map.plugin', [
 
     // Define icon prefix for AwesomeMarker (a Leaflet plugin)
     L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
-
-      console.warn('MAP plugin !!!' );
   });
 
 

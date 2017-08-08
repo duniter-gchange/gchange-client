@@ -136,7 +136,8 @@
       "REOPEN_RECORD_FAILED": "Error while reopening the ad",
       "FAILED_SAVE_COMMENT": "Saving comment failed",
       "FAILED_REMOVE_COMMENT": "Deleting comment failed",
-      "RECORD_NOT_EXISTS": "Ad not found"
+      "RECORD_NOT_EXISTS": "Ad not found",
+      "RECORD_EXCEED_UPLOAD_SIZE": "It seems that your <b> ad is too big </ b> to be accepted by the data node.<br/><br/>You can delete <b>delete photos</b> again."
     },
     "INFO": {
       "RECORD_REMOVED": "Ad successfully deleted",

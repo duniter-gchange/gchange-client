@@ -136,7 +136,8 @@
       "REOPEN_RECORD_FAILED": "Erreur lors de la réouverture de l'annonce",
       "FAILED_SAVE_COMMENT": "Erreur lors de la sauvegarde du commentaire",
       "FAILED_REMOVE_COMMENT": "Erreur lors de la suppression du commentaire",
-      "RECORD_NOT_EXISTS": "Annonce inexistante"
+      "RECORD_NOT_EXISTS": "Annonce inexistante",
+      "RECORD_EXCEED_UPLOAD_SIZE": "Il semble que votre annonce <b>soit trop volumineuse</b> pour être acceptée par le noeud de données.<br/><br/>Vous pouvez supprimer par exemple <b>supprimer des photos</b>, puis essayer à nouveau."
     },
     "INFO": {
       "RECORD_REMOVED" : "Annonce supprimée",
