@@ -149,35 +149,65 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
       throw 'calling csHttp.ws without path argument';
     }
     var uri = getWsUrl(host, port, path, useSsl);
-    var sock = null;
+    var delegate = null;
     var callbacks = [];
 
     function _waitOpen() {
-      if (!sock) throw new Error('Websocket not opened');
-      if (sock.readyState == 1) {
-        return $q.when(sock);
+      if (!delegate) throw new Error('Websocket not opened');
+      if (delegate.readyState == 1) {
+        return $q.when(delegate);
       }
-      if (sock.readyState == 3) {
-        return $q.reject('Unable to connect to Websocket ['+sock.url+']');
+      if (delegate.readyState == 3) {
+        return $q.reject('Unable to connect to Websocket ['+delegate.url+']');
       }
-      return $timeout(_waitOpen, 100);
+      console.debug('[http] Waiting websocket ['+path+'] openning...');
+      return $timeout(_waitOpen, 200);
     }
 
     function _open(self, callback, params) {
-      if (!sock) {
+      if (!delegate) {
+        self.path = path;
+
+
         prepare(uri, params, {}, function(uri) {
-          console.debug('[http] Listening on websocket ['+path+']...');
-          sock = new WebSocket(uri);
-          sock.onerror = function(e) {
-            sock.readyState=3;
+          delegate = new WebSocket(uri);
+          delegate.onerror = function(e) {
+            delegate.readyState=3;
           };
-          sock.onmessage = function(e) {
+          delegate.onmessage = function(e) {
             var obj = JSON.parse(e.data);
             _.forEach(callbacks, function(callback) {
               callback(obj);
             });
           };
-          sockets.push(self);
+          delegate.onopen = function(e) {
+            console.debug('[http] Listening on websocket ['+path+']...');
+            sockets.push(self);
+            delegate.openTime = new Date().getTime();
+          };
+          delegate.onclose = function() {
+
+            // Remove from sockets arrays
+            var index = _.findIndex(sockets, function(socket){return socket.path === path;});
+            if (index >= 0) {
+              sockets.splice(index,1);
+            }
+
+            // If close event comes from Cesium
+            if (delegate.closing) {
+              delegate = null;
+            }
+
+            // If unexpected close event
+            else {
+              console.debug('[http] Unexpected close of websocket ['+path+'] (open '+ (new Date().getTime() - delegate.openTime) +'ms ago): re-opening...');
+
+              delegate = null;
+
+              // Loop, but without the already registered callback
+              _open(self, null, params);
+            }
+          };
         });
       }
       if (callback) callbacks.push(callback);
@@ -194,14 +224,14 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
       send: function(data) {
         return _waitOpen()
           .then(function(){
-            sock.send(data);
+            delegate.send(data);
           });
       },
       close: function() {
-        if (sock) {
+        if (delegate) {
+          delegate.closing = true;
           console.debug('[http] Stopping websocket ['+path+']...');
-          sock.close();
-          sock = null;
+          delegate.close();
           callbacks = [];
         }
       }
