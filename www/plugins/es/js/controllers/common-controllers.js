@@ -33,11 +33,11 @@ function ESPicturesEditController($scope, UIUtils, $q, Device) {
   $scope.openPicturePopup = function() {
     Device.camera.getPicture()
         .then(function(imageData) {
+          console.log('Received image data: ' + imageData);
           $scope.pictures.push({
             src: "data:image/png;base64," + imageData,
             isnew: true // use to prevent visibility hidden (if animation)
           });
-          //$scope.$apply();
         })
         .catch(UIUtils.onError('ERROR.TAKE_PICTURE_FAILED'));
   };

@@ -667,11 +667,10 @@ function ESRegistryRecordEditController($scope, esRegistry, UIUtils, $state, $q,
 
   $scope.openPicturePopup = function() {
     Device.camera.getPicture()
-    .then(function(imageData) {
-      $scope.pictures.push({src: "data:image/png;base64," + imageData});
-      $scope.$apply();
-    })
-    .catch(UIUtils.onError('ERROR.TAKE_PICTURE_FAILED'));
+      .then(function(imageData) {
+        $scope.pictures.push({src: "data:image/png;base64," + imageData});
+      })
+      .catch(UIUtils.onError('ERROR.TAKE_PICTURE_FAILED'));
   };
 
   $scope.fileChanged = function(event) {
