@@ -8,6 +8,7 @@
     "rememberMe": true,
     "useRelative": false,
     "decimalCount": 2,
+    "shareBaseUrl": "http://gchange.fr",
     "helptip": {
       "enable": false
     },
@@ -36,6 +37,7 @@
     "rememberMe": true,
     "useRelative": false,
     "decimalCount": 2,
+    "shareBaseUrl": "http://gchange.fr",
     "helptip": {
       "enable": false
     },

@@ -804,7 +804,8 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     $scope.hideActionsPopover();
 
     var title = $scope.formData.title;
-    var url = $rootScope.rootPath + $state.href('app.market_view_record', {title: title, id: $scope.id});
+    // Use shareBasePath (fix #21) or rootPath
+    var url = (csConfig.shareBaseUrl || $rootScope.rootPath) + $state.href('app.market_view_record', {title: title, id: $scope.id});
     UIUtils.popover.share(event, {
       bindings: {
         url: url,
