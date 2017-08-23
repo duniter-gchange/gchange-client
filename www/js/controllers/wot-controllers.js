@@ -854,6 +854,10 @@ function WotIdentityAbstractController($scope, $rootScope, $state, $translate, $
     // Use rootPath (fix #390)
     // Use shareBasePath (fix #530) or rootPath (fix #390)
     var url = (csConfig.shareBaseUrl || $rootScope.rootPath) + $state.href('app.wot_identity', {pubkey: $scope.formData.pubkey, uid: $scope.formData.uid});
+    // Override default position, is small screen - fix #25
+    if (UIUtils.screen.isSmall()) {
+      event = angular.element(document.querySelector('#wot-share-anchor-'+$scope.formData.pubkey)) || event;
+    }
     UIUtils.popover.share(event, {
       bindings: {
         url: url,

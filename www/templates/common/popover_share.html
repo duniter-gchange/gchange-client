@@ -1,8 +1,8 @@
 <ion-popover-view class="popover-share" >
   <ion-content scroll="false">
     <div class="bar bar-header">
-      <h1 class="title">{{titleKey|translate:titleValues}}</h1>
-      <span class="gray pull-right">{{time|formatDate}}</span>
+      <h1 class="title" ng-bind-html="titleKey|translate:titleValues"></h1>
+      <span class="gray pull-right hidden-xs">{{time|formatDate}}</span>
     </div>
     <div class="list no-margin no-padding has-header has-footer block">
       <div class="item item-input">

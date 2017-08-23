@@ -806,7 +806,14 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     var title = $scope.formData.title;
     // Use shareBasePath (fix #21) or rootPath
     var url = (csConfig.shareBaseUrl || $rootScope.rootPath) + $state.href('app.market_view_record', {title: title, id: $scope.id});
+
+    // Override default position, is small screen - fix #25
+    if (UIUtils.screen.isSmall()) {
+      event = angular.element(document.querySelector('#record-share-anchor-' + $scope.id)) || event;
+    }
+
     UIUtils.popover.share(event, {
+
       bindings: {
         url: url,
         titleKey: 'MARKET.VIEW.POPOVER_SHARE_TITLE',
