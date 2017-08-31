@@ -125,7 +125,7 @@
       }
     },
     "ERROR": {
-      "INVALID_LOGIN_CREDENTIALS": "Identifiant ou mot de passe invalide.<br/>Veuillez réessayer à nouveau.",
+      "INVALID_LOGIN_CREDENTIALS": "Identifiant ou mot de passe invalide.<br/><br/>Vérifiez qu'ils correspondent bien à compte <b>créé sur ğchange</b>.",
       "FAILED_SAVE_RECORD": "Erreur lors de l'enregistrement de l'annonce",
       "FAILED_UPDATE_RECORD": "Erreur lors de la mise à jour de l'annonce",
       "LOAD_CATEGORY_FAILED": "Erreur d'initialisation des catégories",

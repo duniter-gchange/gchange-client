@@ -989,8 +989,8 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
       .then(function(data) {
         $scope.formData = data.record;
         if (data.record.unit === 'unit') {
-          $scope.formData.price = $scope.formData.price && $scope.formData.price / 100; // add 2 decimals in quantitative mode
-          $scope.formData.fees = $scope.formData.fees / 100; // add 2 decimals in quantitative mode
+          $scope.formData.price = $scope.formData.price ? $scope.formData.price / 100 : undefined; // add 2 decimals in quantitative mode
+          $scope.formData.fees = $scope.formData.fees ? $scope.formData.fees / 100 : undefined; // add 2 decimals in quantitative mode
         }
         // Set default currency (need by HELP texts)
         if (!$scope.formData.currency) {
@@ -1028,7 +1028,7 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
         var unit = !$scope.useRelative ? 'unit' : 'UD';
 
         // prepare price
-        if (angular.isDefined(json.price)) { // warn: could be =0
+        if (angular.isDefined(json.price) && json.price != null) { // warn: could be =0
           if (typeof json.price == "string") {
             json.price = parseFloat(json.price.replace(new RegExp('[.,]'), '.')); // fix #124
           }
@@ -1041,7 +1041,9 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
           }
         }
         else {
-          json.unit = undefined;
+          // do not use 'undefined', but 'null' - fix #26
+          json.unit = null;
+          json.price = null;
           // for now, allow set the currency, to make sure search request get Ad without price
           if (!json.currency) {
             json.currency = $scope.currency;
@@ -1062,8 +1064,9 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
           json.unit = json.unit || unit; // force unit to be set
         }
         else {
-          json.fees = undefined;
-          json.feesCurrency = undefined;
+          // do not use 'undefined', but 'null' - fix #26
+          json.fees = null;
+          json.feesCurrency = null;
         }
 
         json.time = esHttp.date.now();
@@ -1088,9 +1091,9 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
         }
         else {
           if ($scope.formData.thumbnail) {
-            // FIXME: this is a workaround to allow content deletion
-            // Is it a bug in the ES attachment-mapper ?
-            $scope.formData.thumbnail = {
+            // Workaround to allow content deletion, because of a bug in the ES attachment-mapper:
+            // get error (in ES node) : MapperParsingException[No content is provided.] - AttachmentMapper.parse(AttachmentMapper.java:471
+            json.thumbnail = {
               _content: '',
               _content_type: ''
             };
