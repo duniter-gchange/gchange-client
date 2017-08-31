@@ -1,6 +1,6 @@
 
 .market .row-record h2 {
-    max-height: 38px;
+    height: 38px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: inline-block;
@@ -59,10 +59,10 @@
     }
 }
 
-/*  Evite le redimensionnement pour les petits écran */
+/*  Evite le redimensionnement pour les petits écrans */
 .market .lookupForm .card > .item.item-thumbnail-left,
 .market .lookupForm .item-thumbnail-left, .item-thumbnail-left .item-content {
-   padding-left: 150px !important;
+   padding-left: 115px !important;
 }
 
 
