@@ -98,7 +98,7 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
 ;
 
-function MkLookupAbstractController($scope, $state, $filter, $location, UIUtils, esHttp, ModalUtils, csConfig, mkRecord, BMA, mkSettings) {
+function MkLookupAbstractController($scope, $state, $filter, $location, UIUtils, esHttp, ModalUtils, csConfig, mkRecord, BMA, mkSettings, esProfile) {
   'ngInject';
 
   var defaultSearchLimit = 10;
@@ -350,7 +350,7 @@ function MkLookupAbstractController($scope, $state, $filter, $location, UIUtils,
     $scope.search.loading = (options.from === 0);
 
     return  mkRecord.record.search(options)
-    .then(function(records){
+    .then(function(records) {
       if (!records && !records.length) {
         $scope.search.results = (options.from > 0) ? $scope.search.results : [];
         $scope.search.hasMore = false;
@@ -360,13 +360,17 @@ function MkLookupAbstractController($scope, $state, $filter, $location, UIUtils,
 
       // Filter on type (workaround if filter on term 'type' not working)
       var formatSlug = $filter('formatSlug');
-      records.reduce(function(res, record) {
+      records.reduce(function (res, record) {
         if ($scope.search.type && $scope.search.type != record.type) {
           return res;
         }
         record.urlTitle = formatSlug(record.title);
         return res.concat(record);
       }, []);
+
+      return esProfile.fillAvatars(records, 'issuer');
+    })
+    .then(function(records) {
 
       // Replace results, or append if 'show more' clicked
       if (!options.from) {

@@ -48,6 +48,7 @@
       "TITLE": "Market",
       "CATEGORY": "Category: ",
       "SEARCH_HELP": "What, Where: car, Columbia city, ...",
+      "BY": "by",
       "BTN_ADD": "New",
       "BTN_OPTIONS": "Advanced search",
       "BTN_AROUND_ME": "Around me",
@@ -62,7 +63,7 @@
       "BTN_OFFERS": "Offers",
       "BTN_NEEDS": "Needs",
       "SHOW_CLOSED_RECORD": "Display closed ads?",
-      "RECORD_STOCK": "Stock:",
+      "RECORD_STOCK": "Stock:"
     },
     "GALLERY": {
       "TITLE": "Slideshow",

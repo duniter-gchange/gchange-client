@@ -1,4 +1,14 @@
 
+.market .row-record h2 {
+    max-height: 38px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    display: -webkit-inline-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
 
 .card-record .badge-price {
     font-size: 12px;
@@ -43,9 +53,9 @@
 
 @media screen and (max-width: 991px) {
     .card-record .badge-price {
-        font-size: 28px !important;
-        line-height: 28px;
-        padding: 10px !important;
+        font-size: 20px !important;
+        line-height: 20px;
+        padding: 7px !important;
     }
 }
 

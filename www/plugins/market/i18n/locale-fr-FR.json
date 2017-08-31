@@ -48,6 +48,7 @@
       "TITLE": "Annonces",
       "CATEGORY": "Catégorie: ",
       "SEARCH_HELP": "Recherche (vélo, rollers...)",
+      "BY": "par",
       "BTN_ADD": "Nouveau",
       "BTN_OPTIONS": "Recherche avancée",
       "BTN_AROUND_ME": "Autour de moi",
@@ -62,7 +63,7 @@
       "BTN_OFFERS": "Offres",
       "BTN_NEEDS": "Demandes",
       "SHOW_CLOSED_RECORD": "Afficher les annonces clôturées ?",
-      "RECORD_STOCK": "Stock :",
+      "RECORD_STOCK": "Stock :"
     },
     "GALLERY": {
       "TITLE": "Diaporama",

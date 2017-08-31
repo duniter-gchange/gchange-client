@@ -15,10 +15,10 @@
          ui-sref="app.market_view_record({id: rec.id, title: rec.urlTitle})">
 
         <div class="row row-record">
-          <div class="col item-text-wrap item-thumbnail-left" style="max-width: 480px;">
+          <div class="col item-text-wrap item-thumbnail-left" style="max-width: 480px; ">
             <img ng-src="{{::rec.thumbnail.src}}" ng-if="::rec.thumbnail">
             <i class="item-image ion-speakerphone" ng-if="::!rec.thumbnail"></i>
-            <h2 ng-bind-html="rec.title"></h2>
+            <h2 ng-bind-html="rec.title | truncText:80" ></h2>
             <h4 class="gray" ng-if="rec.location">
               <i class="icon ion-location"></i>
               {{::options.location.prefix|translate}}<span ng-bind-html="::rec.location"></span>
@@ -26,6 +26,8 @@
             <h4 class="gray" ng-if="rec.time">
               <i class="icon ion-clock" ></i>
               {{::rec.time | formatFromNow}}
+              {{::'MARKET.SEARCH.BY'|translate}}
+              <span class="positive"><i class="ion-person"></i>&nbsp;{{::rec.name || (rec.pubkey|formatPubkey)}}</span>
             </h4>
             <span  ng-if="::rec.picturesCount > 1"
                    class="badge badge-balanced badge-picture-count">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i></span>
