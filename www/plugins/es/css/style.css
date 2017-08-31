@@ -50,7 +50,7 @@
 
 
 .card-record .item-thumbnail-left {
-  padding-left: 150px;
+  padding-left: 150px !important;
 }
 
 .card-record .item-thumbnail-left .item-image {

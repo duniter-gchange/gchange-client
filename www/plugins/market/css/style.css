@@ -60,11 +60,10 @@
 }
 
 /*  Evite le redimensionnement pour les petits écrans */
-.market .lookupForm .card > .item.item-thumbnail-left,
-.market .lookupForm .item-thumbnail-left, .item-thumbnail-left .item-content {
-   padding-left: 115px !important;
+.market .lookupForm .row-record .item-thumbnail-left,
+.market .lookupForm .row-record .item-thumbnail-left .item-content {
+    padding-left: 115px !important;
 }
-
 
 /**
 * Market record screen
@@ -78,6 +77,7 @@
         margin-top: 0px;
         padding-top: 0px;
     }
+
 }
 
 @media screen and (min-width: 992px) {
