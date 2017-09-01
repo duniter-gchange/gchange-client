@@ -33,7 +33,7 @@
 
             <!-- location and category-->
             <h2 class="gray hidden-xs">
-              <a ng-if="formData.location" ui-sref="app.market_lookup({location:formData.location})">
+              <a class="positive" ng-if="formData.location" ui-sref="app.market_lookup({location:formData.location})">
                 <i class="icon ion-location"></i>
                 {{options.location.prefix|translate}}<span ng-bind-html="formData.location"></span>
               </a>
@@ -73,7 +73,7 @@
 
           <div class="item visible-xs no-padding-top no-padding-bottom">
             <h2 class="gray">
-              <a ng-if="formData.location" ui-sref="app.market_lookup({location:formData.location})">
+              <a class="positive" ng-if="formData.location" ui-sref="app.market_lookup({location:formData.location})">
                 <i class="icon ion-location"></i>
                 {{options.location.prefix|translate}}<span ng-bind-html="formData.location"></span>
               </a>
@@ -152,7 +152,8 @@
           </div>
 
           <ion-item ng-if="options.description.show">
-            <h2>
+            <h2 class="dark text-italic">
+              <i class="icon ion-quote"></i>
               <span class="text-keep-lines" ng-bind-html="formData.description"></span>
             </h2>
           </ion-item>

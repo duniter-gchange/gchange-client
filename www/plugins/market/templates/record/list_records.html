@@ -20,14 +20,14 @@
             <i class="item-image" ng-if="rec.thumbnail" style="background-image: url('{{::rec.thumbnail.src}}')" ></i>
             <h2 class="padding-top" ng-bind-html="rec.title | truncText:100"></h2>
             <h4 class="gray">
-              <span ng-if="rec.location">
+              <span class="positive" ng-if="rec.location">
                 <i class="icon ion-location"></i> {{options.location.prefix|translate}}<span ng-bind-html="rec.location"></span>
               </span>
               <span ng-show="rec.time">
                 <br ng-show="rec.location"/>
                 <i class="icon ion-clock"></i> {{::rec.time | formatFromNow}}
                 {{::'MARKET.SEARCH.BY'|translate}}
-                <span class="positive"><i class="ion-person"></i>&nbsp;{{::rec.name || (rec.pubkey|formatPubkey)}}</span>
+                <span class="dark">{{::rec.name || (rec.pubkey|formatPubkey)}}</span>
               </span>
               <span ng-if="rec.stock>1"><i class="icon ion-pie-graph"></i> {{::rec.stock}}</span>
             </h4>
