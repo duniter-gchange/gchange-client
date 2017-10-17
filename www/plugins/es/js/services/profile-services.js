@@ -69,7 +69,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
           profile.avatar = esHttp.image.fromHit(res, 'avatar');
 
           // description
-          profile.description = esHttp.util.trustAsHtml(profile.source.description);
+          profile.description = esHttp.util.parseAsHtml(profile.source.description);
 
           // Social url must be unique in socials links - Workaround for issue #306:
           if (profile.source.socials && profile.source.socials.length) {

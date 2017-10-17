@@ -151,11 +151,11 @@
 
           </div>
 
-          <ion-item ng-if="options.description.show">
-            <h2 class="dark text-italic">
+          <ion-item class="item-text-wrap" ng-if="options.description.show">
+            <p class="text-italic">
               <i class="icon ion-quote"></i>
-              <span class="text-keep-lines" ng-bind-html="formData.description"></span>
-            </h2>
+              <span trust-as-html="formData.description"></span>
+            </p>
           </ion-item>
 
           <span class="item item-icon-left item-button-right hidden-xs" ng-if="formData.price||formData.fees">

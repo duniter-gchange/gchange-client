@@ -1,4 +1,4 @@
-angular.module('cesium')
+angular.module('cesium', [])
 
   // Add new compare-to directive (need for form validation)
   .directive("compareTo", function() {
@@ -73,7 +73,7 @@ angular.module('cesium')
             // copy to clipboard
             Device.clipboard.copy(value)
               .then(function(){
-                UIUtils.toast.show('INFO.COPY_TO_CLIPBOARD_DONE');
+                 UIUtils.toast.show('INFO.COPY_TO_CLIPBOARD_DONE');
               })
               .catch(UIUtils.onError('ERROR.COPY_CLIPBOARD'));
           }
@@ -174,16 +174,26 @@ angular.module('cesium')
     };
   })
 
-  .directive('trustAsHtml', ['$compile', function($compile){
+  .directive('trustAsHtml', ['$sce', '$compile', '$parse', function($sce, $compile, $parse){
     return {
-      restrict: 'AE',
-      link: function(scope, element, attrs)  {
-        var value = attrs.trustAsHtml;
-        if (value) {
-          var html = scope.$eval(value);
-          element.append(html);
-          $compile(element.contents())(scope);
-        }
+      restrict: 'A',
+      compile: function (tElement, tAttrs) {
+        var ngBindHtmlGetter = $parse(tAttrs.trustAsHtml);
+        var ngBindHtmlWatch = $parse(tAttrs.trustAsHtml, function getStringValue(value) {
+          return (value || '').toString();
+        });
+        $compile.$$addBindingClass(tElement);
+
+        return function ngBindHtmlLink(scope, element, attr) {
+          $compile.$$addBindingInfo(element, attr.trustAsHtml);
+
+          scope.$watch(ngBindHtmlWatch, function ngBindHtmlWatchAction() {
+            // we re-evaluate the expr because we want a TrustedValueHolderType
+            // for $sce, not a string
+            element.html($sce.getTrustedHtml($sce.trustAsHtml(ngBindHtmlGetter(scope))) || '');
+            $compile(element.contents())(scope);
+          });
+        };
       }
     };
   }])

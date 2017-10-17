@@ -16,7 +16,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       },
       regexp = {
         IMAGE_SRC: exact('data:([A-Za-z//]+);base64,(.+)'),
-        HASH_TAG: match('#([\\wḡĞğàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)'),
+        URL: match('(www\\.|https?:\/\/(www\\.)?)[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)'),
+        HASH_TAG: match('(?:^|[\t\n\r\s ])#([\\wḡĞǦğàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)'),
         USER_TAG: match('(?:^|[\t\n\r\s ])@('+BMA.constants.regexp.USER_ID+')'),
         ES_USER_API_ENDPOINT: exact(constants.ES_USER_API_ENDPOINT)
       };
@@ -173,9 +174,24 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
           tags.push(tag);
         }
         value = value.substr(matches.index + matches[1].length + 1);
-        matches = value && reg.exec(value);
+        matches = value.length > 0 && reg.exec(value);
       }
       return tags;
+    }
+
+    function parseUrlsFromText(value) {
+      var matches = value && regexp.URL.exec(value);
+      var urls;
+      while(matches) {
+        var url = matches[0];
+        urls = urls || [];
+        if (!_.contains(urls, url)) {
+          urls.push(url);
+        }
+        value = value.substr(matches.index + matches[0].length + 1);
+        matches = value && regexp.URL.exec(value);
+      }
+      return urls;
     }
 
     function escape(text) {
@@ -183,30 +199,38 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    function trustAsHtml(text, options) {
+    function parseAsHtml(text, options) {
 
-      var content = text ? escape(text.trim()).replace(/\n/g,'<br>') : undefined;
+      var content = text ? escape(text.trim()) : undefined;
       if (content) {
         options = options || {};
         options.tagState = options.tagState || 'app.wot_lookup';
+        options.uidState = options.uidState || 'app.wot_identity_uid';
+        if (options.newLine || !angular.isDefined(options.newLine)) {
+          content = content.replace(/\n/g, '<br>\n');
+        }
 
-        // Replace hashtags in description
+        // Replace URL in description
+        var urls = parseUrlsFromText(content);
+        _.forEach(urls, function(url){
+          // Redirect URL to the function 'openLink', to open a new window if need (e.g. desktop app)
+          var link = '<a ng-click=\"openLink($event, \'{0}\')\">{1}</a>'.format(url, url);
+          content = content.replace(url, link);
+        });
+
+        // Replace hashtags
         var hashTags = parseTagsFromText(content);
         _.forEach(hashTags, function(tag){
-          var href = $state.href(options.tagState, {hash: tag});
-          var link = '<a href=\"{0}">{1}</a>'.format(href, '#'+tag);
+          var link = '<a ui-sref=\"{0}({hash: \'{1}\'})\">#{2}</a>'.format(options.tagState, tag, tag);
           content = content.replace('#'+tag, link);
         });
 
-        // Replace user tags in description
+        // Replace user tags
         var userTags = parseTagsFromText(content, '@');
-        _.forEach(userTags, function(tag){
-          var href = $state.href('app.wot_identity_uid', {uid: tag});
-          var link = '<a href=\"{0}">{1}</a>'.format(href, '@'+tag);
-          content = content.replace('@'+tag, link);
+        _.forEach(userTags, function(uid){
+          var link = '<a ui-sref=\"{0}({uid: \'{1}\'})\">@{2}</a>'.format(options.uidState, uid, uid);
+          content = content.replace('@'+uid, link);
         });
-
-        $sce.trustAsHtml(content);
       }
       return content;
     }
@@ -214,13 +238,15 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     function fillRecordTags(record, fieldNames) {
       fieldNames = fieldNames || ['title', 'description'];
 
-      _.forEach(fieldNames, function(fieldName) {
+      record.tags = fieldNames.reduce(function(res, fieldName) {
         var value = record[fieldName];
-        record.tags = parseTagsFromText(value);
-      });
+        var tags = value && parseTagsFromText(value);
+        return tags ? res.concat(tags) : res;
+      }, []);
     }
 
-    function postRecord(path) {
+    function postRecord(path, options) {
+      options = options || {};
       var postRequest = that.post(path);
       return function(record, params) {
         if (!csWallet.isLogin()) {
@@ -229,9 +255,11 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
           return deferred.promise;
         }
 
-        if (!record.time) {
-          record.time = that.date.now();
-        }
+        // Always update the time - fix Cesium #572
+        // Make sure time is always > previous (required by ES node)
+        var now = that.date.now();
+        record.time = (!record.time || record.time < now) ? now : (record.time+1);
+
         var keypair = $rootScope.walletData.keypair;
         var obj = {};
         angular.copy(record, obj);
@@ -240,7 +268,9 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         obj.issuer = $rootScope.walletData.pubkey;
 
         // Fill tags
-        fillRecordTags(obj);
+        if (options.tagFields) {
+          fillRecordTags(obj, options.tagFields);
+        }
 
         var str = JSON.stringify(obj);
 
@@ -458,7 +488,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       },
       util: {
         parseTags: parseTagsFromText,
-        trustAsHtml: trustAsHtml
+        parseAsHtml: parseAsHtml
       },
       constants: constants
     };

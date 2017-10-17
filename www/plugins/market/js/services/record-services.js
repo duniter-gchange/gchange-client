@@ -231,7 +231,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             record.description = hit.highlight.description[0];
         }
         else {
-            record.description = esHttp.util.trustAsHtml(record.description, {
+            record.description = esHttp.util.parseAsHtml(record.description, {
                 tagState: 'app.market_lookup'
             })
         }

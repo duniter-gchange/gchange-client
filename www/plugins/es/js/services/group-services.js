@@ -86,7 +86,7 @@ angular.module('cesium.es.group.services', ['cesium.platform', 'cesium.es.http.s
 
       // description
       if (html) {
-        record.description = esHttp.util.trustAsHtml(record.description);
+        record.description = esHttp.util.parseAsHtml(record.description);
       }
 
       // thumbnail

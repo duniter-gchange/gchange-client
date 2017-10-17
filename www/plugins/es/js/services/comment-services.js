@@ -9,7 +9,7 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
     var
       DEFAULT_SIZE = 20,
       fields = {
-        commons: ["issuer", "time", "message", "reply_to"],
+        commons: ["issuer", "time", "message", "reply_to"]
       },
       exports = {
         index: index,
@@ -20,8 +20,8 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
           search: esHttp.post('/'+index+'/comment/_search'),
           remove: esHttp.record.remove(index, 'comment'),
           wsChanges: esHttp.ws('/ws/_changes'),
-          add: new esHttp.record.post('/'+index+'/comment'),
-          update: new esHttp.record.post('/'+index+'/comment/:id/_update')
+          add: new esHttp.record.post('/'+index+'/comment', {creationTime: true}),
+          update: new esHttp.record.post('/'+index+'/comment/:id/_update', {creationTime: true})
         }
       };
 
@@ -62,7 +62,9 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
           }
         },
         sort : [
-          { "time" : {"order" : "desc"}}
+          // Need desc, because of size+offset (will be sort in 'asc' order later)
+          { "creationTime" : {"order" : "desc"}},
+          { "time" : {"order" : "desc"}} // for backward compatibility
         ],
         from: 0,
         size: 1000,
@@ -80,6 +82,8 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
           _.forEach(res.hits.hits, function(hit) {
             var comment = data.mapById[hit._id];
             comment.copyFromJson(hit._source);
+            // Parse URL and hashtags
+            comment.html = esHttp.util.parseAsHtml(comment.message);
             delete incompleteCommentIdByParentIds[comment.id];
           });
 
@@ -104,7 +108,9 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
           term: { record : recordId}
         },
         sort : [
-          { "time" : {"order" : "desc"}}
+          // Need desc, because of size+offset (will be sort in 'asc' order later)
+          { "creationTime" : {"order" : "desc"}},
+          { "time" : {"order" : "desc"}} // for backward compatibility
         ],
         from: options.from,
         size: options.size,
@@ -125,7 +131,10 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
           data.total = res.hits.total;
           data.result = res.hits.hits.reduce(function (result, hit) {
             var comment = new Comment(hit._id, hit._source);
-            data.mapById[comment.id] = comment; // fill map by id
+            // Parse URL and hashtags
+            comment.html = esHttp.util.parseAsHtml(comment.message);
+            // fill map by id
+            data.mapById[comment.id] = comment;
             return result.concat(comment);
           }, data.result);
 
@@ -142,10 +151,10 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
           return csWot.extendAll(data.result, 'issuer');
         })
 
-        // Sort (time asc)
+        // Sort (creationTime asc)
         .then(function() {
           data.result = data.result.sort(function(cm1, cm2) {
-            return (cm1.time - cm2.time);
+            return (cm1.creationTime - cm2.creationTime);
           });
           return data;
         });
@@ -159,7 +168,7 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
         data.result.splice(index, 1);
         delete data.mapById[comment.id];
         // Send deletion request
-        if (comment.issuer === csWallet.data.pubkey) {
+        if (csWallet.isUserPubkey(comment.issuer)) {
           exports.raw.remove(comment.id, csWallet.data.keypair)
             .catch(function(err){
               console.error(err);
@@ -169,11 +178,13 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
       };
     };
 
-    exports.raw.startListenChanges = function(recordId, data) {
+    exports.raw.startListenChanges = function(recordId, data, scope) {
       data = data || {};
       data.result = data.result || [];
       data.mapById = data.mapById || {};
       data.pendings = data.pendings || {};
+
+      scope = scope||$rootScope;
 
       // Add listener to send deletion
       var onRemoveListener = exports.raw.createOnDeleteListener(data);
@@ -197,35 +208,42 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
           console.debug("[ES] [comment] Websocket opened in {0} ms".format(new Date().getTime() - time));
           wsChanges.on(function(change) {
             if (!change) return;
-            var comment = data.mapById[change._id];
-            if (change._operation === 'DELETE') {
-              if (comment) $rootScope.$apply(comment.remove);
-            }
-            else if (change._source && change._source.record === recordId) {
-              // update
-              if (comment) {
-                comment.copyFromJson(change._source);
-                exports.raw.refreshTreeLinks(data);
+            scope.$apply(function() {
+              var comment = data.mapById[change._id];
+              if (change._operation === 'DELETE') {
+                if (comment) comment.remove();
               }
-              // create (if not in pending comment)
-              else if ((!data.pendings || !data.pendings[change._source.time]) && change._source.issuer != csWallet.data.pubkey) {
-                comment = new Comment(change._id, change._source);
-                comment.addOnRemoveListener(onRemoveListener);
-                comment.isnew = true;
-                data.mapById[change._id] = comment;
-                exports.raw.refreshTreeLinks(data)
-                  // fill avatars (and uid)
-                  .then(function() {
-                    return csWot.extend(comment, 'issuer');
-                  })
-                  .then(function() {
-                    data.result.push(comment);
-                  });
+              else if (change._source && change._source.record === recordId) {
+                // update
+                if (comment) {
+                  comment.copyFromJson(change._source);
+                  // Parse URL and hashtags
+                  comment.html = esHttp.util.parseAsHtml(comment.message);
+                  exports.raw.refreshTreeLinks(data);
+                }
+                // create (if not in pending comment)
+                else if ((!data.pendings || !data.pendings[change._source.creationTime]) && change._source.issuer != csWallet.data.pubkey) {
+                  comment = new Comment(change._id, change._source);
+                  comment.addOnRemoveListener(onRemoveListener);
+                  comment.isnew = true;
+                  // Parse URL and hashtags
+                  comment.html = esHttp.util.parseAsHtml(comment.message);
+                  // fill map by id
+                  data.mapById[change._id] = comment;
+                  exports.raw.refreshTreeLinks(data)
+                    // fill avatars (and uid)
+                    .then(function() {
+                      return csWot.extend(comment, 'issuer');
+                    })
+                    .then(function() {
+                      data.result.push(comment);
+                    });
+                }
+                else {
+                  console.debug("Skip comment received by WS (already in pending)");
+                }
               }
-              else {
-                console.debug("Skip comment received by WS (already in pending)");
-              }
-            }
+            });
           });
         });
     };
@@ -246,7 +264,7 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
       // Preparing JSON to sent
       var id = comment.id;
       var json = {
-        time: id ? comment.time : esHttp.date.now(),
+        creationTime: id ? comment.creationTime || comment.time/*for compat*/ : esHttp.date.now(),
         message: comment.message,
         record: recordId,
         issuer: csWallet.data.pubkey
@@ -279,6 +297,9 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
         entity.copy(comment);
       }
 
+      // Parse URL and hashtags
+      entity.html = esHttp.util.parseAsHtml(entity.message);
+
       // Send add request
       if (!id) {
         data.pendings = data.pendings || {};
@@ -294,7 +315,10 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
       }
       // Send update request
       else {
-        return exports.raw.update(json, {id: id});
+        return exports.raw.update(json, {id: id})
+          .then(function () {
+            return entity;
+          });
       }
     };
 
