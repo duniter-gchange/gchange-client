@@ -34,6 +34,7 @@ angular.module("cesium.config", [])
 		},
 		"market": {
 			"enable": true,
+			"geoDistance": "20km",
 			"cesiumApi": {
 				"enable": true,
 				"baseUrl": "https://g1.duniter.fr/api"

@@ -430,10 +430,12 @@ function ESPositionEditController($scope, $q, $translate,
   //$scope.formData = $scope.formData || {};
   //$scope.formData.geoPoint = $scope.formData.geoPoint || {};
 
-  $scope.localizeByAddress = function() {
+  $scope.localizeByAddress = function(query) {
 
     return UIUtils.loading.show()
-      .then($scope.searchPositions)
+      .then(function() {
+        return $scope.searchPositions(query)
+      })
       .then(function(res) {
         UIUtils.loading.hide();
 
@@ -452,9 +454,19 @@ function ESPositionEditController($scope, $q, $translate,
       })
       .then(function(res) {
         if (res && res.lat && res.lon) {
-          $scope.formData.geoPoint = $scope.formData.geoPoint || {};
-          $scope.formData.geoPoint.lat =  parseFloat(res.lat);
-          $scope.formData.geoPoint.lon =  parseFloat(res.lon);
+          // Update form (if exists)
+          if ($scope.formData) {
+            $scope.formData.geoPoint = $scope.formData.geoPoint || {};
+            $scope.formData.geoPoint.lat = parseFloat(res.lat);
+            $scope.formData.geoPoint.lon = parseFloat(res.lon);
+          }
+          else {
+            return {
+              name: res.name,
+              lat: parseFloat(res.lat),
+              lon: parseFloat(res.lon)
+            }
+          }
         }
       })
       .catch(UIUtils.onError('PROFILE.ERROR.ADDRESS_LOCATION_FAILED'));
@@ -498,9 +510,9 @@ function ESPositionEditController($scope, $q, $translate,
       }
     }
 
-    var queryString = (query.street ? query.street + ', ' : '') +
+    var queryString = query.city ? ((query.street ? query.street + ', ' : '') +
       query.city +
-      (query.country ? ', ' + query.country : '');
+      (query.country ? ', ' + query.country : '')) : query;
     // Execute the given query
     return $q.all([
       $translate('PROFILE.MODAL_LOCATIONS.RESULT_DIVIDER', {address: queryString}),

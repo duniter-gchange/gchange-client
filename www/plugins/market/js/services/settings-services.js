@@ -18,7 +18,8 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
     defaultSettings = angular.merge({
         plugins: {
           market: {
-            enable: true
+            enable: true,
+            geoDistance: "20km"
           }
         }
     }, {plugins: {market: csConfig.plugins && csConfig.plugins.market || {}}}),

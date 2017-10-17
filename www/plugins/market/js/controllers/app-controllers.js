@@ -56,35 +56,75 @@ function MarketMenuExtendController($scope, esSettings, PluginService) {
 /**
  * Control home extension
  */
-function MarketHomeExtendController($scope, $state, Modals, ModalUtils, UIUtils, esSettings, csWallet, mkModals) {
+function MarketHomeExtendController($scope, $rootScope, $state, $controller, $focus, $timeout,
+                                    ModalUtils, UIUtils, csConfig, esSettings, mkModals) {
     'ngInject';
+
+    // Initialize the super class and extend it.
+    angular.extend(this, $controller('ESPositionEditCtrl', {$scope: $scope}));
+
     $scope.enable = esSettings.isEnable();
+    $scope.search = {
+        location: undefined
+    };
+
+    // Screen options
+    $scope.options = $scope.options || angular.merge({
+        type: {
+            show: true
+        },
+        location: {
+            show: true,
+            prefix : undefined
+        }
+    }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
     esSettings.api.state.on.changed($scope, function(enable) {
         $scope.enable = enable;
     });
 
-    $scope.showNewRecordModal = function() {
-        if (!csWallet.isLogin()) {
-            $state.go('app.market_add_record', {type: 'offer'});
-        }
-        else {
-            return $scope.loadWallet({minData: true})
-                .then(function () {
-                    return UIUtils.loading.hide();
-                }).then(function () {
-                    return ModalUtils.show('plugins/market/templates/modal_record_type.html');
-                })
-                .then(function (type) {
-                    if (type) {
-                        $state.go('app.market_add_record', {type: type});
-                    }
-                });
-        }
+    $scope.doSearch = function() {
+      if ($scope.search.location) {
+        return $scope.localizeByAddress($scope.search.location)
+          .then(function(res) {
+            if (!res) return;
+            var location = res.name && res.name.split(',')[0] || $scope.search.location;
+            $rootScope.geoPoints = $rootScope.geoPoints || {};
+            $rootScope.geoPoints[location] = res;
+            $state.go('app.market_lookup', {location: location});
+          });
+      }
     };
 
-    // Override default join modal (in the parent scope)
+    $scope.showNewRecordModal = function() {
+        return $scope.loadWallet({minData: true})
+            .then(function() {
+                return UIUtils.loading.hide();
+            }).then(function() {
+                if (!$scope.options.type.show && $scope.options.type.default) {
+                    console.log($scope.options);
+                    return $scope.options.type.default;
+                }
+                return ModalUtils.show('plugins/market/templates/record/modal_record_type.html');
+            })
+            .then(function(type){
+                if (type) {
+                    $state.go('app.market_add_record', {type: type});
+                }
+            });
+    };
+
+    // Override default join and help modal (in the parent scope)
     $scope.$parent.showJoinModal = mkModals.showJoin;
+    $scope.$parent.showLoginModal = mkModals.showLogin;
     $scope.$parent.showHelpModal = mkModals.showHelp;
-    $scope.$parent.showHelpModal = mkModals.showHelp;
+
+    // removeIf(device)
+    // Focus on search text (only if NOT device, to avoid keyboard opening)
+    if (!UIUtils.screen.isSmall()) {
+      $timeout(function() {
+        $focus('searchLocationInput');
+      }, 500);
+    }
+    // endRemoveIf(device)
 }

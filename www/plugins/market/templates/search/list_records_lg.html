@@ -19,9 +19,9 @@
             <img ng-src="{{::rec.thumbnail.src}}" ng-if="::rec.thumbnail">
             <i class="item-image ion-speakerphone" ng-if="::!rec.thumbnail"></i>
             <h2 ng-bind-html="rec.title" ></h2>
-            <h4 class="positive" ng-if="rec.location">
+            <h4 class="positive" ng-if="rec.city">
               <i class="icon ion-location"></i>
-              {{::options.location.prefix|translate}}<span ng-bind-html="::rec.location"></span>
+              {{::options.location.prefix|translate}}<span ng-bind-html="::rec.city"></span>
             </h4>
             <h4 class="gray" ng-if="rec.time">
               <i class="icon ion-clock" ></i>

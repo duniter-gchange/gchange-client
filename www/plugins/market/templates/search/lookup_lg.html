@@ -12,10 +12,9 @@
       {{'MARKET.COMMON.BTN_NEW_AD' | translate}}
     </button>
 
-
-
     <form ng-submit="doSearch()">
 
+      <!-- search text -->
       <div class="item no-padding">
 
         <div class="item-input ">
@@ -25,6 +24,13 @@
             &nbsp;{{'MARKET.SEARCH.CATEGORY'|translate}}
             <span ng-bind-html="search.category.name"></span>
             <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
+          </div>
+          <div ng-if="search.geoPoint"
+               class="button button-small button-text button-stable button-icon-event ink stable-900-bg"
+               style="margin-right: 10px;">
+            <i class="icon ion-location"></i>
+            <span ng-bind-html="search.location"></span>
+            <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
           </div>
 
           <i class="icon ion-search placeholder-icon"></i>
@@ -43,14 +49,44 @@
         </div>
       </div>
 
+      <!-- location -->
+      <ng-if ng-if="!search.geoPoint && options.location.show">
+          <div class="item no-padding" >
+            <div class="item-input ">
+
+              <i class="icon ion-location placeholder-icon"></i>
+              <input type="text"
+                     class="visible-xs visible-sm"
+                     placeholder="{{(options.location.help||'MARKET.SEARCH.LOCATION_HELP')|translate}}"
+                     ng-model="search.location"
+                     ng-model-options="{ debounce: 650 }"
+                     ng-change="doSearch()">
+              <input type="text"
+                     class="hidden-xs hidden-sm"
+                     placeholder="{{(options.location.help||'MARKET.SEARCH.LOCATION_HELP')|translate}}"
+                     ng-model="search.location"
+                     on-return="doSearch()">
+            </div>
+          </div>
+
+      </ng-if>
+
       <!-- options -->
-      <ng-include src="'plugins/market/templates/lookup_options.html'"></ng-include>
+      <ng-include src="'plugins/market/templates/search/lookup_options.html'"></ng-include>
     </form>
 
 
     <div class="padding-top padding-xs" style="display: block; height: 60px;">
       <div class="hidden-xs hidden-sm pull-left" >
-        <a class="button button-text button-small pull-left ink"
+
+          <a class="button button-text button-small ink button-text-stable"
+             ng-class="{'ng-hide': search.advanced}"
+             ng-click="search.advanced=!search.advanced">
+              {{'MARKET.SEARCH.BTN_OPTIONS' | translate}}
+              <i class="icon" ng-class="{'ion-arrow-down-b': !search.advanced, 'ion-ios-gear': search.advanced}"></i>
+          </a>
+
+        <a class="button button-text button-small  ink"
            ng-if="options.category.show"
            ng-class="{'button-text-positive': search.showCategories, 'button-text-stable': !search.showCategories}"
            ng-click="search.showCategories=!search.showCategories;">
@@ -59,12 +95,6 @@
         </a>
         &nbsp;
 
-        <a class="button button-text button-small ink"
-           ng-class="{'button-text-positive': search.advanced, 'button-text-stable': !search.advanced}"
-           ng-click="search.advanced=!search.advanced">
-          <i class="icon" ng-class="{'ion-ios-gear-outline': !search.advanced, 'ion-ios-gear': search.advanced}"></i>
-          {{'MARKET.SEARCH.BTN_OPTIONS' | translate}}
-        </a>
       </div>
 
       <div class="hidden-xs hidden-sm pull-right" >
@@ -118,7 +148,7 @@
     </div>
 
     <!-- list of records -->
-    <ng-include src="'plugins/market/templates/record/list_records_lg.html'"></ng-include>
+    <ng-include src="'plugins/market/templates/search/list_records_lg.html'"></ng-include>
 
   </ion-content>
 

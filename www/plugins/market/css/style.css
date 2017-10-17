@@ -1,4 +1,12 @@
 
+/**
+* Market Home
+*/
+
+#home .item-input-search {
+    border-bottom: none;
+}
+
 .market .row-record h2 {
     height: 38px;
     overflow: hidden;

@@ -33,11 +33,11 @@
 
             <!-- location and category-->
             <h2 class="gray hidden-xs">
-              <a class="positive" ng-if="formData.location" ui-sref="app.market_lookup({location:formData.location})">
+              <a class="positive" ng-if="formData.city" ui-sref="app.market_lookup({location:formData.city})">
                 <i class="icon ion-location"></i>
-                {{options.location.prefix|translate}}<span ng-bind-html="formData.location"></span>
+                {{options.location.prefix|translate}}<span ng-bind-html="formData.city"></span>
               </a>
-              <span ng-if="formData.location && formData.category.name">&nbsp;|&nbsp;</span>
+              <span ng-if="formData.city && formData.category.name">&nbsp;|&nbsp;</span>
               <a ng-if="formData.category.name" ui-sref="app.market_lookup({category:formData.category.id})">
                 <i class="icon ion-flag"></i>
                 <span ng-bind-html="formData.category.name"></span>

@@ -7,7 +7,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 
     var
       fields = {
-        commons: ["category", "title", "description", "issuer", "time", "location", "price", "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency"]
+        commons: ["category", "title", "description", "issuer", "time", "location", "address", "city", "price", "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency"]
       },
       exports = {
         _internal: {}
@@ -239,6 +239,9 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         if (hit.highlight.location) {
           record.location = hit.highlight.location[0];
         }
+        if (hit.highlight.city) {
+          record.city = hit.highlight.city[0];
+        }
         if (record.category && hit.highlight["category.name"]) {
           record.category.name = hit.highlight["category.name"][0];
         }
@@ -259,6 +262,11 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         record.pictures = hit._source.pictures.reduce(function(res, pic) {
           return pic && pic.file ? res.concat(esHttp.image.fromAttachment(pic.file)) : res;
         }, []);
+      }
+
+      // backward compat (before gchange v0.6)
+      if (record.location && !record.city) {
+          record.city = record.location;
       }
 
       return record;
@@ -384,7 +392,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         var request = {
             from: options.from||0,
             size: options.size||20,
-            _source: options._source || ["category", "title", "price", "unit", "currency", "location", "pictures", "stock"]
+            _source: options._source || ["category", "title", "price", "unit", "currency", "location", "city", "pictures", "stock"]
         };
 
         var matches = [];

@@ -39,7 +39,8 @@
     },
     "HOME": {
       "BTN_NEW_AD": "Place an ad",
-      "BTN_SHOW_MARKET_OFFER": "Explore Ads"
+      "BTN_SHOW_MARKET_OFFER": "Explore Ads",
+      "LOCATION_HELP": "City, Country"
     },
     "CATEGORY": {
       "ALL": "All categories"
@@ -52,6 +53,8 @@
       "BTN_ADD": "New",
       "BTN_OPTIONS": "Advanced search",
       "BTN_AROUND_ME": "Around me",
+      "GEO_DISTANCE": "Maximum distance around the city",
+      "GEO_DISTANCE_OPTION": "{{value}} km",
       "SHOW_MORE": "Show more",
       "SHOW_MORE_COUNT": "(current limit to {{limit}})",
       "LOCATION": "Location",
@@ -90,6 +93,10 @@
       "REOPEN_CONFIRMATION" : "<b>Are you sure</b> you want to repoen this ad?",
       "NEW_MESSAGE_TITLE": "About your ad \"{{title}}\"..."
     },
+    "WALLET": {
+      "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
+      "DUNITER_ACCOUNT_HELP": "The public key (above) indicates the destination of the payments you will receive.",
+    },
     "TYPE": {
       "TITLE": "New ad",
       "SELECT_TYPE": "Kind of ad:",
@@ -122,7 +129,9 @@
     },
     "WOT": {
       "VIEW": {
-        "BTN_RECORDS": "Ads"
+        "BTN_RECORDS": "Ads",
+        "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
+        "DUNITER_ACCOUNT_HELP": "The public key (above) is the account to be used to pay for this user.",
       }
     },
     "ERROR": {

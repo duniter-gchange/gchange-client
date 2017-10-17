@@ -1,0 +1,31 @@
+
+    <a class="padding-top button button-text button-small ink" ng-if="search.advanced"
+       ng-class="{'button-text-positive': search.advanced, 'button-text-stable': !search.advanced}"
+       ng-click="search.advanced=!search.advanced">
+        {{'MARKET.SEARCH.BTN_OPTIONS' | translate}}
+        <i class="icon ion-arrow-up-b"></i>
+    </a>
+
+    <div class="item item-input item-select" ng-if="search.advanced && options.location.show">
+        <div class="input-label">
+            <span class="input-label" translate>MARKET.SEARCH.GEO_DISTANCE</span>
+        </div>
+
+        <label>
+            <select ng-model="search.geoDistance"
+                    ng-options="i as (geoDistanceLabels[i].labelKey | translate:geoDistanceLabels[i].labelParams ) for i in geoDistances track by i">
+            </select>
+        </label>
+    </div>
+
+    <div class="item item-toggle dark" ng-if="search.advanced">
+        <div class="input-label">
+            {{'MARKET.SEARCH.SHOW_CLOSED_RECORD' | translate}}
+        </div>
+        <label class="toggle toggle-royal">
+            <input type="checkbox" ng-model="search.showClosed">
+            <div class="track">
+                <div class="handle"></div>
+            </div>
+        </label>
+    </div>
