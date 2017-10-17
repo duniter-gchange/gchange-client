@@ -214,6 +214,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
       options = options || {};
 
       var record = hit._source;
+
       if (record.category && record.category.id) {
         record.category = categories[record.category.id];
       }
@@ -245,7 +246,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 
       else if (options.html) {
           // description
-          record.description = esHttp.util.trustAsHtml(record.description, {
+          record.description = esHttp.util.parseAsHtml(record.description, {
               tagState: 'app.market_lookup'
           });
       }

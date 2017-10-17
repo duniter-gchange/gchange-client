@@ -175,7 +175,7 @@
                 </div>
               </div>
 
-              <div class="item item-floating-label" ng-if="location.enable && options.location.show">
+              <!--<div class="item item-floating-label" ng-if="location.enable && options.location.show">
                   <span class="input-label">{{(options.location.label||'MARKET.EDIT.RECORD_LOCATION')|translate}}</span>
                   <div class="item-input-inset">
                       <label class="item-input-wrapper">
@@ -201,7 +201,10 @@
                 <div class="form-error">
                   <span translate="ERROR.FIELD_REQUIRED"></span>
                 </div>
-              </div>
+              </div>-->
+
+              <!-- position -->
+              <ng-include src="'plugins/es/templates/common/edit_position.html'" ng-controller="ESPositionEditCtrl"></ng-include>
 
               <!-- buttons -->
               <div class="item padding hidden-xs hidden-sm text-right">

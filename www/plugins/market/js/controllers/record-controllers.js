@@ -662,14 +662,15 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
             $scope.pictures = hit._source.pictures.reduce(function (res, pic) {
               return res.concat(esHttp.image.fromAttachment(pic.file));
             }, []);
+
+            if ($scope.pictures.length) {
+              // Set Motion
+              $scope.motion.show({
+                selector: '.lazy-load .item.card-gallery',
+                ink: false
+              });
+            }
           }
-        })
-        .then(function () {
-          // Set Motion
-          $scope.motion.show({
-            selector: '.lazy-load .item.card-gallery',
-            ink: false
-          });
         })
         .catch(function () {
           $scope.pictures = [];
@@ -883,9 +884,12 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   csWallet.api.data.on.logout($scope, onWalletChange, this);
 }
 
-function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $ionicHistory, $focus,
+function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $ionicHistory, $focus, $controller,
                                       UIUtils, ModalUtils, csConfig, esHttp, csSettings, mkSettings) {
   'ngInject';
+
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESPositionEditCtrl', {$scope: $scope}));
 
   $scope.formData = {
     price: null,

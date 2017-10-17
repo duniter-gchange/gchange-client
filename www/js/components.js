@@ -1,4 +1,4 @@
-angular.module('cesium')
+angular.module('cesium.components', [])
 
   .component('csAvatar', {
     bindings: {

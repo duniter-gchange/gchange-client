@@ -1,16 +1,23 @@
-<div ng-if="enable" class="visible-xs visible-sm">
+<ng-if ng-if="enable">
 
-
-  <div class="item item-divider item-divider-top-border">
-    {{'MENU.MARKET' | translate}}
+  <div class="item item-icon-left item-text-wrap">
+    <i class="icon ion-ios-help-outline positive"></i>
+    <span ng-bind-html="'MARKET.WALLET.DUNITER_ACCOUNT'|translate:{currency:$root.currency.name}"></span>
+    <h4 class="gray" translate>MARKET.WALLET.DUNITER_ACCOUNT_HELP</h4>
   </div>
 
-  <!-- market records -->
-  <a class="item item-icon-left item-icon-right"
-       ui-sref="app.market_wallet_records">
-    <i class="icon ion-speakerphone"></i>
-    {{'MENU.MY_RECORDS' | translate}}
-    <i class="icon ion-ios-arrow-right"></i>
-  </a>
+  <div class="visible-xs visible-sm">
+    <div class="item item-divider item-divider-top-border">
+      {{'MENU.MARKET' | translate}}
+    </div>
 
-</div>
+    <!-- market records -->
+    <a class="item item-icon-left item-icon-right"
+         ui-sref="app.market_wallet_records">
+      <i class="icon ion-speakerphone"></i>
+      {{'MENU.MY_RECORDS' | translate}}
+      <i class="icon ion-ios-arrow-right"></i>
+    </a>
+  </div>
+
+</ng-if>

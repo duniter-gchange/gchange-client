@@ -136,7 +136,7 @@ function ESCategoryModalController($scope, UIUtils, $timeout, parameters) {
 
 
 
-function ESCommentsController($scope, $timeout, $filter, $state, $focus, UIUtils) {
+function ESCommentsController($scope, $filter, $state, $focus, UIUtils) {
   'ngInject';
 
   $scope.loading = true;
@@ -330,7 +330,7 @@ function ESSocialsEditController($scope, $focus, $filter, UIUtils, SocialUtils) 
 
     // Set Motion
     $scope.motion.show({
-      selector: '#social-' + $filter('formatSlug')(url),
+      selector: '#social-' + $filter('formatSlug')(social.url),
       startVelocity: 10000
     });
   };

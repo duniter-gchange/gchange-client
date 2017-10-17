@@ -10,7 +10,7 @@ angular.module('cesium', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht
   'ngCordova',
   // endRemoveIf(no-device)
   'cesium.plugins',
-  'cesium.filters', 'cesium.config', 'cesium.platform', 'cesium.controllers', 'cesium.templates', 'cesium.translations'
+  'cesium.filters', 'cesium.config', 'cesium.platform', 'cesium.controllers', 'cesium.templates', 'cesium.translations', 'cesium.components', 'cesium.directives'
   ])
 
   // Translation i18n

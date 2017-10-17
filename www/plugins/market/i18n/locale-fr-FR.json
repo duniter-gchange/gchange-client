@@ -90,6 +90,11 @@
       "REOPEN_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir réouvrir cette annonce ?",
       "NEW_MESSAGE_TITLE": "Au sujet de l'annonce \"{{title}}\"..."
     },
+    "WALLET": {
+      "DUNITER_ACCOUNT": "Réception des paiements en {{currency|currencySymbol}}",
+      "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) indique la destination des paiements que vous recevrez.",
+      "DUNITER_ACCOUNT_HELP_2": "La clef publique (ci-dessus) indique la destination des paiements que vous recevrez. Vous pouvez cependant choisir une autre clef de destination en éditant votre profil."
+    },
     "TYPE": {
       "TITLE": "Nouvelle annonce",
       "SELECT_TYPE": "Type d'annonce :",
@@ -122,7 +127,9 @@
     },
     "WOT": {
       "VIEW": {
-        "BTN_RECORDS": "Annonces"
+        "BTN_RECORDS": "Annonces",
+        "DUNITER_ACCOUNT": "Réception des paiements en {{currency|currencySymbol}}",
+        "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) correspond au compte à utiliser pour payer cet utilisateur.",
       }
     },
     "ERROR": {

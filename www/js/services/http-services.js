@@ -1,6 +1,6 @@
-angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
+angular.module('cesium.http.services', ['cesium.cache.services'])
 
-.factory('csHttp', function($http, $q, csSettings, csCache, $timeout) {
+.factory('csHttp', function($http, $q, $timeout, $window, csSettings, csCache, Device) {
   'ngInject';
 
   var timeout = csSettings.data.timeout;
@@ -63,6 +63,10 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
   }
 
   function getResource(host, port, path, useSsl, forcedTimeout) {
+    // Make sure host is defined - fix #537
+    if (!host) {
+      return $q.reject('[http] invalid URL from host: ' + host);
+    }
     var url = getUrl(host, port, path, useSsl);
     return function(params) {
       return $q(function(resolve, reject) {
@@ -158,16 +162,15 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
         return $q.when(delegate);
       }
       if (delegate.readyState == 3) {
-        return $q.reject('Unable to connect to Websocket ['+delegate.url+']');
+        return $q.reject('Unable to connect to websocket ['+delegate.url+']');
       }
-      console.debug('[http] Waiting websocket ['+path+'] openning...');
+      console.debug('[http] Waiting websocket ['+path+'] opening...');
       return $timeout(_waitOpen, 200);
     }
 
     function _open(self, callback, params) {
       if (!delegate) {
         self.path = path;
-
 
         prepare(uri, params, {}, function(uri) {
           delegate = new WebSocket(uri);
@@ -198,7 +201,7 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
               delegate = null;
             }
 
-            // If unexpected close event
+            // If unexpected close event, reopen the socket (fix #535)
             else {
               console.debug('[http] Unexpected close of websocket ['+path+'] (open '+ (new Date().getTime() - delegate.openTime) +'ms ago): re-opening...');
 
@@ -230,7 +233,7 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
       close: function() {
         if (delegate) {
           delegate.closing = true;
-          console.debug('[http] Stopping websocket ['+path+']...');
+          console.debug('[http] Closing websocket ['+path+']...');
           delegate.close();
           callbacks = [];
         }
@@ -264,7 +267,7 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
       pathname = pathname.substring(1);
     }
 
-    result = {
+    var result = {
       protocol: protocol ? protocol : parser.protocol,
       hostname: parser.hostname,
       host: parser.host,
@@ -279,11 +282,43 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
     return result;
   }
 
+  /**
+   * Open a URI (url, email, phone, ...)
+   * @param event
+   * @param link
+   * @param type
+   */
+  function openUri(uri, options) {
+    options = options || {};
+
+    if (!uri.startsWith('http://') && !uri.startsWith('https://')) {
+      var parts = parseUri(uri);
+
+      if (!parts.protocol && options.type) {
+        parts.protocol = (options.type == 'email')  ? 'mailto:' :
+          ((options.type == 'phone') ? 'tel:' : '');
+        uri = parts.protocol + uri;
+      }
+
+      // Check if device is enable, on spcial tel: or mailto: protocole
+      var validProtocol = (parts.protocol == 'mailto:' || parts.protocol == 'tel:') && Device.enable;
+      if (!validProtocol) {
+        if (options.onError && typeof options.onError == 'function') {
+          options.onError(uri);
+        }
+        return;
+      }
+    }
+    // Note: If device is enable, this will use InAppBrowser cordova plugin (=_system)
+    $window.open(uri,
+        (options.target || (Device.enable ? '_system' : '_blank')),
+        'location=yes');
+  }
+
   // Get time (UTC)
   function getDateNow() {
     return Math.floor(moment().utc().valueOf() / 1000);
   }
-
 
   function isVersionCompatible(minVersion, actualVersion) {
     // TODO: add implementation
@@ -306,7 +341,8 @@ angular.module('cesium.http.services', ['ngResource', 'cesium.cache.services'])
     getUrl : getUrl,
     getServer: getServer,
     uri: {
-      parse: parseUri
+      parse: parseUri,
+      open: openUri
     },
     date: {
       now: getDateNow

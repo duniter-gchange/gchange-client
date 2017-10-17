@@ -51,8 +51,6 @@ angular.module('cesium.app.controllers', ['cesium.services'])
 
   .controller('EmptyModalCtrl', EmptyModalController)
 
-  .controller('AboutCtrl', AboutController)
-
 ;
 
 
@@ -74,9 +72,9 @@ function PluginExtensionPointController($scope, PluginService) {
 /**
  * Abstract controller (inherited by other controllers)
  */
-function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $timeout, $ionicPopover,
+function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $timeout,
                        $ionicHistory, $controller, $window, csPlatform,
-                       UIUtils, BMA, csWallet, csCurrency, Device, Modals, csSettings, csConfig
+                       UIUtils, BMA, csWallet, Device, Modals, csSettings, csConfig, csHttp
   ) {
   'ngInject';
 
@@ -194,24 +192,6 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   // Load wallet data (after login)
   $scope.loadWalletData = function(options) {
     return csWallet.loadData(options)
-      /*.catch(UIUtils.onError('ERROR.LOAD_WALLET_DATA_ERROR'))*/
-
-      /* Warn if wallet has been never used - see #167
-      .then(function(walletData) {
-        var showAlert = !csConfig.initPhase && csWallet.isNeverUsed() && (!csSettings.data.wallet || csSettings.data.wallet.alertIfUnusedWallet);
-        if (!showAlert) return walletData;
-        return UIUtils.loading.hide()
-          .then(function(){
-            return UIUtils.alert.confirm('CONFIRM.LOGIN_UNUSED_WALLET', 'CONFIRM.LOGIN_UNUSED_WALLET_TITLE',
-              {
-                okText: 'COMMON.BTN_CONTINUE'
-              });
-          })
-          .then(function(confirm) {
-            if (confirm) return walletData;
-            return csWallet.logout();
-          });
-      })*/
 
       .then(function(walletData) {
         if (walletData) {
@@ -227,13 +207,15 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   // Login and load wallet
   $scope.loadWallet = function(options) {
 
-    // Make the platform is ready
+    // Make sure the platform is ready
     if (!csPlatform.isStarted()) {
       return csPlatform.ready().then(function(){
         return $scope.loadWallet(options);
       });
     }
+    options = options || {};
 
+    // If need login
     if (!csWallet.isLogin()) {
       return $scope.showLoginModal(options)
         .then(function (walletData) {
@@ -258,7 +240,7 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   };
 
   // Login and go to a state (or wallet if not)
-  $scope.loginAndGo = function(state, stateParams) {
+  $scope.loginAndGo = function(state, options) {
     $scope.closeProfilePopover();
 
     state = state || 'app.view_wallet';
@@ -286,13 +268,13 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
       return $scope.showLoginModal()
         .then(function(walletData){
           if (walletData) {
-            return $state.go(state ? state : 'app.view_wallet', stateParams)
+            return $state.go(state, options)
               .then(UIUtils.loading.hide);
           }
         });
     }
     else {
-      return $state.go(state, stateParams);
+      return $state.go(state, options);
     }
   };
 
@@ -425,6 +407,21 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   };
 
   ////////////////////////////////////////
+  // Link managment (fix issue #)
+  ////////////////////////////////////////
+
+  $scope.openLink = function(event, uri, options) {
+    options = options || {};
+
+    // If unable to open, just copy value
+    options.onError = function() {
+      return UIUtils.popover.copy(event, uri);
+    };
+
+    return csHttp.uri.open(uri, options);
+  };
+
+  ////////////////////////////////////////
   // Layout Methods
   ////////////////////////////////////////
   $scope.showFab = function(id, timeout) {
@@ -439,12 +436,6 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   $scope.doMotion = function(options) {
     return $scope.motion.show(options);
   };
-}
-
-
-function AboutController($scope, csConfig) {
-  'ngInject';
-  $scope.config = csConfig;
 }
 
 

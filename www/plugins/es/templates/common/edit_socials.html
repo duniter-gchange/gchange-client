@@ -1,10 +1,9 @@
 
-<ng-controller ng-controller="ESSocialsEditCtrl">
   <div class="item item-divider" translate>PROFILE.SOCIAL_NETWORKS_DIVIDER</div>
 
   <ion-item class="item-remove-animate item-icon-left "
        type="no-padding item-text-wrap"
-       ng-if="formData.socials && formData.socials.length>0"
+       ng-if="formData.socials && formData.socials.length"
        ng-repeat="social in formData.socials | filter:filterFn track by social.url"
        id="social-{{social.url|formatSlug}}">
       <i class="icon ion-social-{{social.type}}"
@@ -54,5 +53,3 @@
             ng-click="addSocialNetwork()">
     </button>
   </div>
-
-</ng-controller>

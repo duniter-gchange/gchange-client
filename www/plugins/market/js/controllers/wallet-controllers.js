@@ -7,7 +7,7 @@ angular.module('cesium.market.wallet.controllers', ['cesium.es.services'])
     if (enable) {
       PluginServiceProvider.extendState('app.view_wallet', {
           points: {
-            'before-technical': {
+            'general': {
               templateUrl: "plugins/market/templates/wallet/view_wallet_extend.html",
               controller: 'MarketWalletViewCtrl'
             }

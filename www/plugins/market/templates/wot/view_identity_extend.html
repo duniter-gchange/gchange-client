@@ -2,7 +2,17 @@
 <ng-if ng-if="enable && extensionPoint === 'general'">
 
 
-  <div class="item item-divider item-divider-top-border">
+  <div class="item item-icon-left item-text-wrap">
+    <i class="icon ion-ios-help-outline positive"></i>
+    <span ng-bind-html="'MARKET.WOT.VIEW.DUNITER_ACCOUNT'|translate:{currency:$root.currency.name}"></span>
+    <h4 class="gray" translate>MARKET.WOT.VIEW.DUNITER_ACCOUNT_HELP</h4>
+  </div>
+
+</ng-if>
+
+<ng-if ng-if="enable && extensionPoint === 'after-general'">
+
+    <div class="item item-divider item-divider-top-border">
     {{'MENU.MARKET' | translate}}
   </div>
 

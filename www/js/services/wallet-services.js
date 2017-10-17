@@ -1428,6 +1428,9 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
     api.registerEvent('data', 'finishLoad');
     api.registerEvent('data', 'logout');
     api.registerEvent('data', 'reset');
+
+    api.registerEvent('error', 'send');
+
     api.registerEvent('action', 'certify');
 
     // init data

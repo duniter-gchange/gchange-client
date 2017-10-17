@@ -10,6 +10,10 @@ angular.module('cesium.market.wot.controllers', ['cesium.es.services'])
               'general': {
                   templateUrl: "plugins/market/templates/wot/view_identity_extend.html",
                   controller: 'MkWotIdentityExtendCtrl'
+              },
+              'after-general': {
+                  templateUrl: "plugins/market/templates/wot/view_identity_extend.html",
+                  controller: 'MkWotIdentityExtendCtrl'
               }
           }
       })

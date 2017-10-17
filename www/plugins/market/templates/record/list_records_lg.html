@@ -49,9 +49,9 @@
             </div>
           </div>
           <div class="col hidden-sm hidden-xs">
-              <h4 class="gray text-wrap text-italic">
-                <i class="icon ion-quote"></i>
-                <span ng-bind-html="::rec.description | truncText:500" ng-if="::rec.description"></span>
+              <h4 class="gray text-wrap text-italic" ng-if="::!!rec.description">
+                <i class="icon ion-quote" ></i>
+                <span ng-bind-html="::rec.description | truncText:500"></span>
               </h4>
               <div ng-if="::!rec.stock" class="badge badge-assertive"  translate>MARKET.COMMON.SOLD</div>
           </div>

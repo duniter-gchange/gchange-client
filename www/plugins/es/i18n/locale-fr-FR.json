@@ -206,7 +206,7 @@
     }
   },
   "PROFILE": {
-    "PROFILE_DIVIDER": "Profil",
+    "PROFILE_DIVIDER": "Profil ğ<b>change</b>",
     "NO_PROFILE_DEFINED": "Aucun profil saisi",
     "BTN_ADD": "Saisir mon profil",
     "BTN_EDIT": "Editer mon profil",
@@ -221,7 +221,7 @@
     "ADDRESS": "Rue",
     "ADDRESS_HELP": "Rue, complément d'adresse...",
     "CITY": "Ville",
-    "CITY_HELP": "Ville (optionnel)",
+    "CITY_HELP": "Ville, Pays",
     "SOCIAL_HELP": "http://...",
     "GENERAL_DIVIDER": "Informations générales",
     "LOCATION_DIVIDER": "Adresse",

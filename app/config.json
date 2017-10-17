@@ -24,7 +24,11 @@
         "maxUploadBodySize": 2097152
       },
       "market": {
-        "enable": true
+        "enable": true,
+        "cesiumApi": {
+          "enable": true,
+          "baseUrl": "https://g1.duniter.fr/api"
+        }
       }
     }
   },

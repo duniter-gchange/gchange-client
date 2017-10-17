@@ -33,7 +33,11 @@ angular.module("cesium.config", [])
 			"maxUploadBodySize": 2097152
 		},
 		"market": {
-			"enable": true
+			"enable": true,
+			"cesiumApi": {
+				"enable": true,
+				"baseUrl": "https://g1.duniter.fr/api"
+			}
 		}
 	},
 	"version": "0.5.7",

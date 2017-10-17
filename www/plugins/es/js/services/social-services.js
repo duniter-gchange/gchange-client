@@ -1,6 +1,6 @@
 angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
 
-.factory('SocialUtils', function($filter, $q, CryptoUtils, BMA, esCrypto) {
+.factory('SocialUtils', function($filter, $q, CryptoUtils, BMA, csWallet, esCrypto) {
   'ngInject';
 
     function SocialUtils() {
@@ -8,9 +8,8 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
       var
       regexp = {
         URI: "([a-zA−Z0-9]+)://[ a-zA-Z0-9-_:/;*?!^\\+=@&~#|<>%.]+",
-        //EMAIL: "[a-zA-Z0-9-_.]+@[a-zA-Z0-9_.-]+?\\.[a-zA-Z]{2,3}",
         EMAIL: "[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$",
-        PHONE: "[+]?[0-9]{9,10}",
+        PHONE: "[+]?[0-9. ]{9,15}",
         socials: {
           facebook: "https?://((fb.me)|((www.)?facebook.com))",
           twitter: "https?://(www.)?twitter.com",
@@ -53,7 +52,7 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
               urlToMatch = url.substring(0, slashPathIndex);
             }
           }
-          console.log("match URI, try to match: " + urlToMatch);
+          //console.log("match URI, try to match: " + urlToMatch);
           _.keys(regexp.socials).forEach(function(key){
             if (regexp.socials[key].test(urlToMatch)) {
               type = key;
@@ -120,19 +119,19 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
         };
       }
 
-      function openArray(socials, issuer, keypair, recipient) {
+      function openArray(socials, issuer, recipient) {
 
-        recipient = recipient || CryptoUtils.util.encode_base58(keypair.signPk);
+        recipient = recipient || csWallet.data.pubkey;
 
         // Waiting to load crypto libs
         if (!CryptoUtils.isLoaded()) {
           console.debug('[socials] Waiting crypto lib loading...');
           return $timeout(function() {
-            return openArray(socials, keypair);
+            return openArray(socials, issuer, recipient);
           }, 100);
         }
 
-        var socialsToEncrypt = _.filter(socials||[], function(social){
+        var socialsToDecrypt = _.filter(socials||[], function(social){
           var matches = social.url && social.type == 'curve25519' && regexp.socials.curve25519.exec(social.url);
           if (!matches) return false;
           social.recipient = matches[1];
@@ -142,33 +141,33 @@ angular.module('cesium.es.social.services', ['cesium.es.crypto.services'])
           social.valid = (social.recipient === recipient);
           return social.valid;
         });
-        if (!socialsToEncrypt.length) return $q.when(reduceArray(socials));
+        if (!socialsToDecrypt.length) return $q.when(reduceArray(socials));
 
-        return esCrypto.box.open(socialsToEncrypt, keypair, 'issuer', 'url')
+        return esCrypto.box.open(socialsToDecrypt, undefined/*=wallet keypair*/, 'issuer', 'url')
           .then(function() {
             // return all socials (encrypted or not)
             return reduceArray(socials);
           });
       }
 
-      function packArray(socials, keypair) {
+      function packArray(socials) {
         // Waiting to load crypto libs
         if (!CryptoUtils.isLoaded()) {
           console.debug('[socials] Waiting crypto lib loading...');
           return $timeout(function() {
-            return packArray(socials, keypair);
+            return packArray(socials);
           }, 100);
         }
 
         var socialsToEncrypt = _.filter(socials||[], function(social){
-          return social.url && social.recipient;
+          return social.type == 'curve25519' && social.url && social.recipient;
         });
         if (!socialsToEncrypt.length) return $q.when(socials);
 
         return CryptoUtils.util.random_nonce()
             .then(function(nonce) {
               return $q.all(socialsToEncrypt.reduce(function(res, social) {
-                return res.concat(esCrypto.box.pack(social, keypair, 'recipient', 'url', nonce));
+                return res.concat(esCrypto.box.pack(social, undefined/*=wallet keypair*/, 'recipient', 'url', nonce));
               }, []));
             })
             .then(function(res){
