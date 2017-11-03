@@ -40,7 +40,10 @@
     "HOME": {
       "BTN_NEW_AD": "Place an ad",
       "BTN_SHOW_MARKET_OFFER": "Explore Ads",
-      "LOCATION_HELP": "City, Country"
+      "LOCATION_HELP": "City, Country",
+      "ERROR": {
+        "GEO_LOCATION_NOT_FOUND": "City or zip code not found"
+      }
     },
     "CATEGORY": {
       "ALL": "All categories"
@@ -147,7 +150,8 @@
       "FAILED_SAVE_COMMENT": "Saving comment failed",
       "FAILED_REMOVE_COMMENT": "Deleting comment failed",
       "RECORD_NOT_EXISTS": "Ad not found",
-      "RECORD_EXCEED_UPLOAD_SIZE": "It seems that your <b> ad is too big </ b> to be accepted by the data node.<br/><br/>You can delete <b>delete photos</b> again."
+      "RECORD_EXCEED_UPLOAD_SIZE": "It seems that your <b> ad is too big </ b> to be accepted by the data node.<br/><br/>You can delete <b>delete photos</b> again.",
+      "GEO_LOCATION_NOT_FOUND": "City or zip code not found"
     },
     "INFO": {
       "RECORD_REMOVED": "Ad successfully deleted",

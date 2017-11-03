@@ -142,7 +142,8 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
                     aggs: {
                         by_id: {
                             terms: {
-                                field: 'category.id'
+                                field: 'category.id',
+                                size: 100
                             }
                         }
                     }

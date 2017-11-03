@@ -61,7 +61,7 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
     'ngInject';
 
     // Initialize the super class and extend it.
-    angular.extend(this, $controller('ESPositionEditCtrl', {$scope: $scope}));
+    angular.extend(this, $controller('ESLookupPositionCtrl', {$scope: $scope}));
 
     $scope.enable = esSettings.isEnable();
     $scope.search = {
@@ -85,13 +85,22 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
 
     $scope.doSearch = function() {
       if ($scope.search.location) {
-        return $scope.localizeByAddress($scope.search.location)
+        $scope.search.loadingPosition = true;
+        return $scope.searchPosition($scope.search.location)
           .then(function(res) {
-            if (!res) return;
+            if (!res) {
+                $scope.search.loadingPosition = false;
+                return UIUtils.alert.error('MARKET.HOME.ERROR.GEO_LOCATION_NOT_FOUND');
+            }
             var location = res.name && res.name.split(',')[0] || $scope.search.location;
-            $rootScope.geoPoints = $rootScope.geoPoints || {};
-            $rootScope.geoPoints[location] = res;
-            $state.go('app.market_lookup', {location: location});
+              $rootScope.geoPoints = $rootScope.geoPoints || {};
+              $rootScope.geoPoints[location] = res;
+            var stateParams = {
+                lat: res.lat,
+                lon: res.lon,
+                location: location
+            };
+            $state.go('app.market_lookup', stateParams);
           });
       }
     };

@@ -52,6 +52,8 @@ function MkListCategoriesController($scope, UIUtils, csConfig, mkRecord) {
 
   $scope.load = function(options) {
 
+    $scope.loading = true;
+
     options = options || {};
     options.filter = options.filter || ($scope.options && $scope.options.category && $scope.options.category.filter);
     options.withStock = (!$scope.options || !$scope.options.showClosed);
@@ -63,18 +65,14 @@ function MkListCategoriesController($scope, UIUtils, csConfig, mkRecord) {
          return res + cat.count;
         }, 0);
         $scope.loading = false;
+        $scope.motion.show && $scope.motion.show();
       });
   };
 
   $scope.refresh = function() {
-    $scope.loading = true;
+    if ($scope.loading) return;
     // Load data
-    $scope.load()
-      .then(function() {
-        $scope.loading = false;
-        $scope.motion.show && $scope.motion.show();
-        $scope.entered = true;
-      });
+    return $scope.load();
   };
 
   $scope.$watch('options.showClosed', $scope.refresh, true);

@@ -1,9 +1,9 @@
-<div class="item item-divider" translate>REGISTRY.LOCATION_DIVIDER</div>
+<div class="item item-divider" translate>LOCATION.LOCATION_DIVIDER</div>
 
 <!-- address -->
 <ion-item class="item-input item-floating-label item-button-right">
-  <span class="input-label">{{'PROFILE.ADDRESS' | translate}}</span>
-  <textarea placeholder="{{'PROFILE.ADDRESS_HELP' | translate}}"
+  <span class="input-label">{{'LOCATION.ADDRESS' | translate}}</span>
+  <textarea placeholder="{{'LOCATION.ADDRESS_HELP' | translate}}"
             ng-model="formData.address"
             ng-model-options="{ debounce: 350 }"
             rows="4" cols="10">
@@ -11,92 +11,66 @@
 </ion-item>
 
 <!-- city -->
-<div class="item item-input item-floating-label">
-  <span class="input-label" translate>PROFILE.CITY</span>
-  <input type="text" placeholder="{{'PROFILE.CITY_HELP'|translate}}"
+<div class="item item-input item-floating-label"
+     ng-class="{'item-input-error': form.$submitted && form.geoPoint.$invalid}">
+  <span class="input-label" translate>LOCATION.CITY</span>
+  <input type="text" placeholder="{{'LOCATION.CITY_HELP'|translate}}"
          ng-model="formData.city"
          ng-model-options="{ updateOn: 'blur' }"
          ng-change="onCityChanged()">
 </div>
+<input type="hidden"
+       name="geoPoint"
+       ng-model="formData.geoPoint"
+       required-if="formPosition.enable"
+       geo-point>
+<div class="form-errors"
+     ng-show="form.$submitted && form.geoPoint.$error"
+     ng-messages="form.geoPoint.$error">
+  <div class="form-error" ng-message="required">
+    <span translate="LOCATION.ERROR.REQUIRED_FOR_LOCATION" ng-if="!formData.city"></span>
+    <span translate="LOCATION.ERROR.INVALID_FOR_LOCATION" ng-if="formData.city"></span>
+  </div>
+  <div class="form-error" ng-message="geoPoint">
+    <span translate="LOCATION.ERROR.REQUIRED_FOR_LOCATION" ng-if="!formData.city"></span>
+    <span translate="LOCATION.ERROR.INVALID_FOR_LOCATION" ng-if="formData.city"></span>
+  </div>
+</div>
+
 
 <!-- Position (lat/lon) -->
-<div class="row responsive-md responsive-sm no-padding">
+<div class="item row responsive-md responsive-sm no-padding">
 
-  <!-- lat -->
   <div class="col no-padding">
-    <label class="item item-input item-floating-label"
-           ng-class="{'item-input-error': form.$submitted && form.latitude.$invalid}">
-      <span class="input-label" translate>PROFILE.LATITUDE</span>
-      <input class="no-padding-right"
-             name="latitude"
-             type="number" placeholder="{{'PROFILE.LATITUDE_HELP'|translate}}"
-             ng-model="formData.geoPoint.lat"
-             ng-model-options="{ debounce: 350 }"
-             ng-change="onFormDataChanged()"
-             min="-90" max="90">
-    </label>
-    <div class="form-errors"
-         ng-show="form.$submitted && form.latitude.$error"
-         ng-messages="form.latitude.$error">
-      <div class="form-error" ng-message="min">
-        <span translate="ERROR.FIELD_MIN" translate-values="{min: -90}"></span>
+
+    <!-- appear on map ? -->
+    <ion-checkbox ng-model="formPosition.enable"
+                  ng-change="onUseGeopointChanged()"
+                  class="item item-border-large done in">
+      <div class="item-content">
+        <span translate>LOCATION.USE_GEO_POINT</span>
+        <h4 class="gray" ng-if="formPosition.loading">
+          <ion-spinner class="icon ion-spinner-small" icon="android"></ion-spinner>
+          {{'LOCATION.LOADING_LOCATION'|translate}}
+        </h4>
       </div>
-      <div class="form-error" ng-message="max">
-        <span translate="ERROR.FIELD_MAX" translate-values="{max: 90}"></span>
-      </div>
-    </div>
+    </ion-checkbox>
   </div>
 
-  <div class="col-10 no-padding hidden-xs">
-    &nbsp;
-  </div>
-
-  <!-- lon -->
-  <div class="col no-padding">
-    <label class="item item-input item-floating-label"
-           ng-class="{'item-input-error': form.$submitted && form.longitude.$invalid}">
-      <span class="input-label" translate>PROFILE.LONGITUDE</span>
-      <input class="no-padding-right"
-             name="longitude"
-             type="number" placeholder="{{'PROFILE.LONGITUDE_HELP'|translate}}"
-             ng-model="formData.geoPoint.lon"
-             ng-model-options="{ debounce: 350 }"
-             ng-change="onFormDataChanged()"
-             min="-180" max="180">
-    </label>
-    <div class="form-errors"
-         ng-show="form.$submitted && form.longitude.$error"
-         ng-messages="form.longitude.$error">
-      <div class="form-error" ng-message="min">
-        <span translate="ERROR.FIELD_MIN" translate-values="{min: -180}"></span>
-      </div>
-      <div class="form-error" ng-message="max">
-        <span translate="ERROR.FIELD_MAX" translate-values="{max: 180}"></span>
-      </div>
-    </div>
-  </div>
-
-  <div class="col col-40">
+  <div class="col col-10 no-padding">
     <div class="row text-center">
 
-      <a class="col button  button-stable button-small-padding icon ion-refresh"
-         title="{{'PROFILE.BTN_GEOLOC_ADDRESS'|translate}}"
-         ng-disabled="!formData.city"
-         ng-click="localizeByAddress()">
+      <a class="button button-stable button-small-padding"
+         title="{{'LOCATION.BTN_GEOLOC_ADDRESS'|translate}}"
+         ng-disabled="!formPosition.enable"
+         ng-click="openSearchLocationModal()">
+        <i class=" icon ion-home" style="left: 15px;"></i>
+        <b class=" icon-secondary ion-search" style="top: -9px; left:32px; font-size: 18px;"></b>
       </a>
 
-      <a class="col button button-stable button-small-padding icon ion-android-locate"
-         title="{{'PROFILE.BTN_GEOLOC_ME'|translate}}"
-         ng-click="localizeMe()">
-      </a>
-
-      <a class="col button button-stable button-small-padding icon ion-close"
-         title="{{'PROFILE.BTN_REMOVE_GEOLOC'|translate}}"
-         ng-disabled="!formData.geoPoint || (!formData.geoPoint.lat && !formData.geoPoint.lon)"
-         ng-click="removeLocalisation()">
-      </a>
     </div>
   </div>
 </div>
+
 
 <cs-extension-point name="after-position"></cs-extension-point>

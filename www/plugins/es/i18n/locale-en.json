@@ -69,7 +69,11 @@
     "REPLY_TO_LINK": "In response to ",
     "REPLY_TO_DELETED_COMMENT": "In response to a deleted comment",
     "REPLY_COUNT": "{{replyCount}} responses",
-    "DELETED_COMMENT": "Comment deleted"
+    "DELETED_COMMENT": "Comment deleted",
+    "ERROR": {
+      "FAILED_SAVE_COMMENT": "Saving comment failed",
+      "FAILED_REMOVE_COMMENT": "Deleting comment failed"
+    }
   },
   "MESSAGE": {
     "REPLY_TITLE_PREFIX": "Re: ",
@@ -168,7 +172,7 @@
       "TITLE": "New reference",
       "SELECT_TYPE": "Kind of organization:",
       "ENUM": {
-        "SHOP": "local shops",
+        "SHOP": "Local shops",
         "COMPANY": "Company",
         "ASSOCIATION": "Association",
         "INSTITUTION": "Institution"
@@ -197,8 +201,7 @@
       "REMOVE_RECORD_FAILED": "Deleting failed",
       "SAVE_RECORD_FAILED": "Saving failed",
       "RECORD_NOT_EXISTS": "Record not found",
-      "FAILED_SAVE_COMMENT": "Saving comment failed",
-      "FAILED_REMOVE_COMMENT": "Deleting comment failed"
+      "GEO_LOCATION_NOT_FOUND": "City or zip code not found"
     },
     "INFO": {
       "RECORD_REMOVED" : "Reference successfully deleted"
@@ -209,26 +212,14 @@
     "NO_PROFILE_DEFINED": "No Cesium+ profile",
     "BTN_ADD": "Create my profile",
     "BTN_EDIT": "Edit my profile",
-    "BTN_GEOLOC_ADDRESS": "Update position from address",
-    "BTN_GEOLOC_ME": "Localize me",
-    "BTN_REMOVE_GEOLOC": "Remove position",
     "UID": "Pseudonym",
     "TITLE": "Lastname, FirstName",
     "TITLE_HELP": "Name",
     "DESCRIPTION": "About me",
     "DESCRIPTION_HELP": "About me...",
-    "ADDRESS": "Address",
-    "ADDRESS_HELP": "Address (optional)",
-    "CITY": "City",
-    "CITY_HELP": "City (optional)",
     "SOCIAL_HELP": "http://...",
     "GENERAL_DIVIDER": "General data",
-    "LOCATION_DIVIDER": "Localisation",
     "SOCIAL_NETWORKS_DIVIDER": "Social networks and web site",
-    "LATITUDE": "Latitude",
-    "LATITUDE_HELP": "Latitude",
-    "LONGITUDE": "Longitude",
-    "LONGITUDE_HELP": "Longitude",
     "TECHNICAL_DIVIDER": "Technical data",
     "MODAL_AVATAR": {
       "TITLE": "Avatar",
@@ -237,23 +228,41 @@
       "RESIZE_HELP": "<b>Re-crop the image</b> if necessary. A click on the image allows to move it. Click on the area at the bottom left to zoom in.",
       "RESULT_HELP": "<b>Here is the result</b> as seen on your profile:"
     },
-    "MODAL_LOCATIONS": {
-      "TITLE": "Validation de l'adresse",
-      "RESULT_DIVIDER": "Résultat(s) pour <b>{{address}}</b> :"
-    },
     "ERROR": {
       "LOAD_PROFILE_FAILED": "Could not load user profile.",
       "SAVE_PROFILE_FAILED": "Saving profile failed",
       "INVALID_SOCIAL_NETWORK_FORMAT": "Invalid format: please fill a valid Internet address.<br/><br/>Examples :<ul><li>- A Facebook page (https://www.facebook.com/user)</li><li>- A web page (http://www.domain.com)</li><li>- An email address (joe@dalton.com)</li></ul>",
-      "IMAGE_RESIZE_FAILED": "Error while resizing picture",
-      "GEO_LOCATION_FAILED": "Unable to retrieve your current position",
-      "ADDRESS_LOCATION_FAILED": "Unable to retrieve the address position"
+      "IMAGE_RESIZE_FAILED": "Error while resizing picture"
     },
     "INFO": {
       "PROFILE_SAVED": "Profile saved"
     },
     "HELP": {
       "WARNING_PUBLIC_DATA": "Please note that the information published here <b>is public</b>: visible including by <b>not logged in people</b>."
+    }
+  },
+  "LOCATION": {
+    "BTN_GEOLOC_ADDRESS": "Find my address on the map",
+    "USE_GEO_POINT": "Appear on {{'COMMON.APP_NAME'|translate}} maps?",
+    "LOADING_LOCATION": "Searching address...",
+    "LOCATION_DIVIDER": "Localisation",
+    "ADDRESS": "Address",
+    "ADDRESS_HELP": "Address (optional)",
+    "CITY": "City",
+    "CITY_HELP": "City, Country",
+    "DISTANCE": "Maximum distance around the city",
+    "DISTANCE_OPTION": "{{value}} km",
+    "MODAL": {
+      "TITLE": "Search address",
+      "SEARCH_HELP": "City, Country",
+      "ALTERNATIVE_RESULT_DIVIDER": "Alternative results for <b>{{address}}</b>:",
+      "POSITION": "lat/lon : {{lat}} {{lon}}"
+    },
+    "ERROR": {
+      "REQUIRED_FOR_LOCATION": "Required field to appear on the map",
+      "INVALID_FOR_LOCATION": "Unknown address",
+      "GEO_LOCATION_FAILED": "Unable to retrieve your current position. Please use the search button.",
+      "ADDRESS_LOCATION_FAILED": "Unable to retrieve the address position"
     }
   },
   "ES_SETTINGS": {

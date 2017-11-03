@@ -10,7 +10,7 @@ angular.module('cesium.es.geo.services', ['cesium.services', 'cesium.es.http.ser
 
   })
 
-  .factory('esGeo', function($q, csConfig, csHttp) {
+  .factory('esGeo', function($rootScope, $q, csConfig, csSettings, csHttp) {
     'ngInject';
 
     var
@@ -18,21 +18,32 @@ angular.module('cesium.es.geo.services', ['cesium.services', 'cesium.es.http.ser
 
     that.raw = {
       osm: {
-        searchByString: csHttp.get('nominatim.openstreetmap.org', 443, '/search.php?format=json&q=:query'),
-        searchByQuery: csHttp.get('nominatim.openstreetmap.org', 443, '/search.php?format=json')
+        search: csHttp.get('nominatim.openstreetmap.org', 443, '/search.php?format=json'),
+        license: {
+          name: 'OpenStreetMap',
+          url: 'https://www.openstreetmap.org/copyright'
+        }
       },
       google: {
+        apiKey: undefined,
         search: csHttp.get('maps.google.com', 443, '/maps/api/geocode/json')
       },
-      searchByIP: csHttp.get('freegeoip.net', 80, '/json/:ip')
+      searchByIP: csHttp.get('freegeoip.net', 443, '/json/:ip')
     };
 
-    function _fallbackSearchPositionByString(err, address) {
+    function _normalizeAddressString(text) {
+      // Remove line break
+      var searchText = text.trim().replace(/\n/g, ',');
+      // Remove zip code
+      searchText = searchText.replace(/(?:^|[\t\n\r\s ])([A−Z09-]+)(?:$|[\t\n\r\s ])/g, '');
+      // Remove redundant comma
+      searchText = searchText.replace(/,[ ,]+/g, ', ');
+      return searchText;
+    }
 
-      console.debug('[ES] [geo] Search position failed on [OSM]. Trying [google] service');
-      var apiKey = csConfig.plugins && csConfig.plugins.es && csConfig.plugins.googleApiKey;
+    function googleSearchPositionByString(address) {
 
-      return that.raw.google.search({address: address, key: apiKey})
+      return that.raw.google.search({address: address, key: that.raw.google.apiKey})
         .then(function(res) {
           if (!res || !res.results || !res.results.length) return;
           return res.results.reduce(function(res, hit) {
@@ -44,46 +55,69 @@ angular.module('cesium.es.geo.services', ['cesium.services', 'cesium.es.http.ser
               lon: hit.geometry && hit.geometry.location && hit.geometry.location.lng
             });
           }, []);
-        })
-        .catch(function() {
+        });
+    }
+
+    function _fallbackSearchPositionByString(osmErr, address) {
+
+      console.debug('[ES] [geo] Search position failed on [OSM]. Trying [google] service');
+
+      return googleSearchPositionByString(address)
+        .catch(function(googleErr) {
           console.debug('[ES] [geo] Search position failed on [google] service');
-          throw err; // throw first error (OMS error)
+          throw osmErr || googleErr; // throw first OMS error if exists
         });
     }
 
-    function searchPositionByString(address) {
+    function searchPositionByAddress(query) {
+
+      if (typeof query == 'string') {
+        query = {q: query};
+      }
+
+      // Normalize query string
+      if (query.q) {
+        query.q = _normalizeAddressString(query.q);
+      }
+
+      query.addressdetails = 1; // need address field
 
       var now = new Date();
-      console.debug('[ES] [geo] Searching position by string query [{0}]...'.format(address));
+      //console.debug('[ES] [geo] Searching position...', query);
 
-      return that.raw.osm.searchByString({query: address})
+      return that.raw.osm.search(query)
         .then(function(res) {
-          console.debug('[ES] [geo] Found {0} address position(s) in {0}ms'.format(res && res.length || 0, new Date().getTime() - now.getTime()));
-          return res;
+          //console.debug('[ES] [geo] Received {0} results from OSM'.format(res && res.length || 0), res);
+          if (!res) return; // no result
+
+          // Filter on city/town/village
+          res = res.reduce(function(res, hit){
+            if (hit.class == 'waterway' || hit.class == 'railway' ||!hit.address) return res;
+            hit.address.city =  hit.address.city || hit.address.village || hit.address.town || hit.address.postcode;
+            hit.address.road =  hit.address.road || hit.address.suburb || hit.address.hamlet;
+            if (hit.address.postcode && hit.address.city == hit.address.postcode) {
+              delete hit.address.postcode;
+            }
+            if (!hit.address.city) return res;
+            return res.concat({
+              id: hit.place_id,
+              name: hit.display_name,
+              address: hit.address,
+              lat: hit.lat,
+              lon: hit.lon,
+              class: hit.class,
+              license: that.raw.osm.license
+            });
+          }, []);
+
+          console.debug('[ES] [geo] Found {0} address position(s)'.format(res && res.length || 0, new Date().getTime() - now.getTime()), res);
+
+          return res.length ? res : undefined;
         })
 
         // Fallback service
         .catch(function(err) {
-          return _fallbackSearchPositionByString(err, address);
-        });
-    }
-
-    function searchhPositionByQuery(query) {
-
-      if (typeof query == 'string') return searchPositionByString(query);
-
-      var now = new Date();
-      console.debug('[ES] [geo] Searching position by query...', query);
-
-      return that.raw.osm.searchByQuery(query)
-        .then(function(res) {
-          console.debug('[ES] [geo] Found {0} address position(s) in {0}ms'.format(res && res.length || 0, new Date().getTime() - now.getTime()), res);
-          return res;
-        })
-
-        // Fallback service
-        .catch(function(err) {
-          var address = (query.street ? query.street +', ' : '') + query.city +  (query.country ? ', '+ query.country : '');
+          var address = query.q ? query.q : ((query.street ? query.street +', ' : '') + query.city +  (query.country ? ', '+ query.country : ''));
           return _fallbackSearchPositionByString(err, address);
         });
     }
@@ -121,11 +155,35 @@ angular.module('cesium.es.geo.services', ['cesium.services', 'cesium.es.http.ser
         });
     }
 
+    that.raw.google.apiKey = csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.googleApiKey;
+    var hasConfigApiKey = !!that.raw.google.apiKey;
+    csSettings.ready()
+      .then(function() {
+
+        // Listen settings changed
+        function onSettingsChanged(data){
+          if (!hasConfigApiKey) {
+            // If no google api key in config, use in settings
+            that.raw.google.apiKey = data.plugins.es.googleApiKey;
+          }
+          that.raw.google.enable = that.raw.google.apiKey && data.plugins && data.plugins.es && data.plugins.es.enableGoogleApi;
+        }
+        csSettings.api.data.on.changed($rootScope, onSettingsChanged, this);
+
+        onSettingsChanged(csSettings.data);
+      });
+
     return {
       point: {
         current: getCurrentPosition,
-        searchByAddress: searchhPositionByQuery,
+        searchByAddress: searchPositionByAddress,
         searchByIP: searchPositionByIP
+      },
+      google: {
+        isEnable: function() {
+          return that.raw.google.enable && that.raw.google.apiKey;
+        },
+        searchByAddress: googleSearchPositionByString
       }
     };
   });

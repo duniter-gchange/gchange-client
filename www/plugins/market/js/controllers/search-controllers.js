@@ -6,7 +6,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     $stateProvider
 
     .state('app.market_lookup', {
-      url: "/market?q&category&location&reload&type&hash",
+      url: "/market?q&category&location&reload&type&hash&lat&lon",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup.html",
@@ -20,7 +20,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     })
 
     .state('app.market_lookup_lg', {
-      url: "/market/lg?q&category&location&reload&type&hash&closed",
+      url: "/market/lg?q&category&location&reload&type&hash&closed&lat&lon",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup_lg.html",
@@ -57,7 +57,7 @@ function MkLookupAbstractController($scope, $state, $filter, $location, $control
   'ngInject';
 
   // Initialize the super class and extend it.
-  angular.extend(this, $controller('ESPositionEditCtrl', {$scope: $scope}));
+  angular.extend(this, $controller('ESLookupPositionCtrl', {$scope: $scope}));
 
   var defaultSearchLimit = 10;
 
@@ -73,44 +73,8 @@ function MkLookupAbstractController($scope, $state, $filter, $location, $control
     options: null,
     loadingMore: false,
     showClosed: false,
-    geoDistance: csSettings.data.plugins.market.geoDistance
+    geoDistance: csSettings.data.plugins.market.geoDistance || '20km'
   };
-
-  $scope.geoDistanceLabels = {
-    "5km": {
-      labelKey: 'MARKET.SEARCH.GEO_DISTANCE_OPTION',
-      labelParams: {value: 5}
-    },
-    "10km": {
-      labelKey: 'MARKET.SEARCH.GEO_DISTANCE_OPTION',
-      labelParams: {value: 10}
-    },
-    "20km": {
-      labelKey: 'MARKET.SEARCH.GEO_DISTANCE_OPTION',
-      labelParams: {value: 20}
-    },
-    "30km": {
-      labelKey: 'MARKET.SEARCH.GEO_DISTANCE_OPTION',
-      labelParams: {value: 30}
-    },
-    "50km": {
-      labelKey: 'MARKET.SEARCH.GEO_DISTANCE_OPTION',
-      labelParams: {value: 50}
-    },
-    "100km": {
-      labelKey: 'MARKET.SEARCH.GEO_DISTANCE_OPTION',
-      labelParams: {value: 100}
-    },
-    "250km": {
-      labelKey: 'MARKET.SEARCH.GEO_DISTANCE_OPTION',
-      labelParams: {value: 250}
-    },
-    "500km": {
-      labelKey: 'MARKET.SEARCH.GEO_DISTANCE_OPTION',
-      labelParams: {value: 500}
-    }
-  };
-  $scope.geoDistances = _.keys($scope.geoDistanceLabels);
 
   // Screen options
   $scope.options = $scope.options || angular.merge({
@@ -165,7 +129,7 @@ function MkLookupAbstractController($scope, $state, $filter, $location, $control
     }
 
     if ($scope.search.location && !$scope.search.geoPoint) {
-      return $scope.localizeByAddress($scope.search.location)
+      return $scope.searchPosition($scope.search.location)
         .then(function(res) {
           if (!res) {
             $scope.search.loading = false;
@@ -236,9 +200,7 @@ function MkLookupAbstractController($scope, $state, $filter, $location, $control
     if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
       // text match
       if ($scope.search.location && $scope.search.location.trim().length > 0) {
-        //matches.push({match: {location: $scope.search.location}});
-        //matches.push({prefix: {location: $scope.search.location}});
-        //filters.push({match_phrase: { location: $scope.search.location}});
+        matches.push({match_phrase: { location: $scope.search.location}});
       }
 
       matches.push({
@@ -479,37 +441,49 @@ function MkLookupController($scope, $rootScope, $controller, $focus, mkRecord) {
     if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
       var showAdvanced = false;
 
-      // Search by text
-      if (state.stateParams && state.stateParams.q) { // Query parameter
-        $scope.search.text = state.stateParams.q;
-      }
-
-      // Search on type
-      if (state.stateParams && state.stateParams.type) {
-        $scope.search.type = state.stateParams.type;
-      }
-
-      // Search on location
-      if (state.stateParams && state.stateParams.location) {
-        $scope.search.location = state.stateParams.location;
-        // Try to get geoPoint
-        $scope.search.geoPoint = $rootScope.geoPoints && $rootScope.geoPoints[$scope.search.location] || null;
-      }
-
-      // Search on hash tag
-      if (state.stateParams && state.stateParams.hash) {
-        if ($scope.search.text) {
-          $scope.search.text = '#' + state.stateParams.hash + ' ' + $scope.search.text;
+      if (state.stateParams) {
+        // Search by text
+        if (state.stateParams.q) { // Query parameter
+          $scope.search.text = state.stateParams.q;
         }
-        else {
-          $scope.search.text = '#' + state.stateParams.hash;
-        }
-      }
 
-      // Show closed ad
-      if (state.stateParams && state.stateParams.closed == true) {
-        $scope.search.showClosed = true;
-        showAdvanced = true;
+        // Search on type
+        if (state.stateParams.type) {
+          $scope.search.type = state.stateParams.type;
+        }
+
+        // Search on location
+        if (state.stateParams.location) {
+          $scope.search.location = state.stateParams.location;
+        }
+
+        // Geo point
+        if (state.stateParams.lat && state.stateParams.lon) {
+          $scope.search.geoPoint = {
+            lat: parseFloat(state.stateParams.lat),
+            lon: parseFloat(state.stateParams.lon)
+          };
+        }
+        else if (state.stateParams.location) {
+          // Try to get geoPoint from root scope
+          $scope.search.geoPoint = $rootScope.geoPoints && $rootScope.geoPoints[state.stateParams.location] || null;
+        }
+
+        // Search on hash tag
+        if (state.stateParams.hash) {
+          if ($scope.search.text) {
+            $scope.search.text = '#' + state.stateParams.hash + ' ' + $scope.search.text;
+          }
+          else {
+            $scope.search.text = '#' + state.stateParams.hash;
+          }
+        }
+
+        // Show closed ad
+        if (state.stateParams.closed == true) {
+          $scope.search.showClosed = true;
+          showAdvanced = true;
+        }
       }
 
       // Search on category
