@@ -30,11 +30,12 @@ angular.module("cesium.config", [])
 			"enable": true,
 			"host": "data.gchange.fr",
 			"port": "443",
-			"maxUploadBodySize": 2097152
+			"maxUploadBodySize": 2097152,
+			"defaultCountry": "France"
 		},
 		"market": {
 			"enable": true,
-			"geoDistance": "20km",
+			"searchDistance": "20km",
 			"cesiumApi": {
 				"enable": true,
 				"baseUrl": "https://g1.duniter.fr/api"
@@ -42,7 +43,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.5.7",
-	"build": "2017-08-31T10:03:07.002Z",
+	"build": "2017-11-03T16:37:37.457Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

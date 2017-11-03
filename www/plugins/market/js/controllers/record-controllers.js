@@ -496,6 +496,13 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
         if (!$scope.formData.currency) {
           $scope.formData.currency = $scope.currency;
         }
+
+        // Convert old record format
+        if (!$scope.formData.city && $scope.formData.location) {
+          $scope.formData.city = $scope.formData.location;
+          $scope.formData.location = null;
+        }
+
         $scope.id = data.id;
         $scope.pictures = data.record.pictures || [];
         delete $scope.formData.pictures; // duplicated with $scope.pictures

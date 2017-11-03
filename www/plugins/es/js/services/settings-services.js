@@ -16,11 +16,11 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
 
   var
     SETTINGS_SAVE_SPEC = {
-      includes: ['locale', 'useLocalStorage', 'expertMode', 'logoutIdle'],
+      includes: ['locale', 'useRelative', 'useLocalStorage', 'expertMode', 'logoutIdle'],
       excludes: ['newIssueVersion', 'timeout', 'cacheTimeMs', 'time', 'login', 'build'],
       plugins: {
         es: {
-          excludes: ['enable', 'host', 'port', 'wsPort']
+          excludes: ['enable', 'host', 'port', 'wsPort', 'fallbackNodes']
         }
       },
       helptip: {
@@ -40,7 +40,14 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
             },
             invitations: {
               readTime: true
-            }
+            },
+            defaultCountry: undefined,
+            enableGoogleApi: false,
+            googleApiKey: undefined,
+            wot: {
+              enableMixedSearch: true
+            },
+            geoDistance: '20km'
           }
         }
     }, {plugins: {es: csConfig.plugins && csConfig.plugins.es || {}}}),
