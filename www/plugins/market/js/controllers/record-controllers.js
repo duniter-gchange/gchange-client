@@ -702,7 +702,6 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
   $scope.showCategoryModal = function() {
     // load categories
     var getCategories;
-    console.log("getting categories");
     if ($scope.options && $scope.options.category && $scope.options.category.filter) {
       getCategories = mkRecord.category.filtered({filter: $scope.options.category.filter});
     }
@@ -711,16 +710,16 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
     }
 
     getCategories
-    .then(function(categories){
-      return ModalUtils.show('plugins/es/templates/common/modal_category.html', 'ESCategoryModalCtrl as ctrl',
-        {categories : categories},
-        {focusFirstInput: true}
-      );
-    })
-    .then(function(cat){
-      if (cat && cat.parent) {
-        $scope.formData.category = cat;
-      }
-    });
+      .then(function(categories){
+        return ModalUtils.show('plugins/es/templates/common/modal_category.html', 'ESCategoryModalCtrl as ctrl',
+          {categories : categories},
+          {focusFirstInput: true}
+        );
+      })
+      .then(function(cat){
+        if (cat && cat.parent) {
+          $scope.formData.category = cat;
+        }
+      });
   };
 }

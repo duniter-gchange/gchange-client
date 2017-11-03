@@ -111,7 +111,6 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
                 return UIUtils.loading.hide();
             }).then(function() {
                 if (!$scope.options.type.show && $scope.options.type.default) {
-                    console.log($scope.options);
                     return $scope.options.type.default;
                 }
                 return ModalUtils.show('plugins/market/templates/record/modal_record_type.html');
