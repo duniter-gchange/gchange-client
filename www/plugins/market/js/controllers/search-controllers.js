@@ -52,7 +52,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
 
 ;
 
-function MkLookupAbstractController($scope, $state, $filter, $location, $controller, UIUtils, esHttp,
+function MkLookupAbstractController($scope, $state, $filter, $q, $location, $translate, $controller, UIUtils, esHttp,
                                     ModalUtils, csConfig, csSettings, mkRecord, BMA, mkSettings, esProfile) {
   'ngInject';
 
@@ -73,7 +73,7 @@ function MkLookupAbstractController($scope, $state, $filter, $location, $control
     options: null,
     loadingMore: false,
     showClosed: false,
-    geoDistance: csSettings.data.plugins.market.geoDistance || '20km'
+    geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 20
   };
 
   // Screen options
@@ -101,9 +101,18 @@ function MkLookupAbstractController($scope, $state, $filter, $location, $control
   }, true);
 
   $scope.init = function() {
-    return mkSettings.currencies().then(function(currencies) {
-      $scope.currencies = currencies;
-    });
+    return $q.all([
+        // Init currency
+        mkSettings.currencies()
+          .then(function(currencies) {
+            $scope.currencies = currencies;
+        }),
+        // Resolve distance unit
+        $translate('LOCATION.DISTANCE_UNIT')
+          .then(function(unit) {
+            $scope.geoUnit = unit;
+          })
+       ]);
   };
 
   $scope.toggleAdType = function(type) {
@@ -205,7 +214,7 @@ function MkLookupAbstractController($scope, $state, $filter, $location, $control
 
       matches.push({
         geo_distance: {
-          distance: $scope.search.geoDistance,
+          distance: $scope.search.geoDistance + $scope.geoUnit,
           geoPoint: {
             lat: $scope.search.geoPoint.lat,
             lon: $scope.search.geoPoint.lon
@@ -430,7 +439,7 @@ function MkLookupAbstractController($scope, $state, $filter, $location, $control
 }
 
 
-function MkLookupController($scope, $rootScope, $controller, $focus, mkRecord) {
+function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, mkRecord, csSettings) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -467,6 +476,13 @@ function MkLookupController($scope, $rootScope, $controller, $focus, mkRecord) {
         else if (state.stateParams.location) {
           // Try to get geoPoint from root scope
           $scope.search.geoPoint = $rootScope.geoPoints && $rootScope.geoPoints[state.stateParams.location] || null;
+        }
+        else {
+          var defaultSearch = csSettings.data.plugins.es.market && csSettings.data.plugins.es.market.defaultSearch;
+          // Apply defaults from settings
+          if (defaultSearch) {
+            angular.merge($scope.search, csSettings.data.plugins.es.market.defaultSearch);
+          }
         }
 
         // Search on hash tag
@@ -528,6 +544,44 @@ function MkLookupController($scope, $rootScope, $controller, $focus, mkRecord) {
     // endRemoveIf(device)
     $scope.entered = true;
   };
+
+  // Store some search options as settings defaults
+  $scope.leave = function() {
+    var dirty = false;
+
+    csSettings.data.plugins.es.market = csSettings.data.plugins.es.market || {};
+    csSettings.data.plugins.es.market.defaultSearch = csSettings.data.plugins.es.market.defaultSearch || {};
+
+    // Check if location changed
+    var location = $scope.search.location && $scope.search.location.trim();
+    var oldLocation = csSettings.data.plugins.es.market.defaultSearch.location;
+    if (!oldLocation || (oldLocation !== location)) {
+      csSettings.data.plugins.es.market.defaultSearch = {
+        location: location,
+        geoPoint: location && $scope.search.geoPoint ? angular.copy($scope.search.geoPoint) : undefined
+      };
+      dirty = true;
+    }
+
+    // Check if distance changed
+    var odlDistance = csSettings.data.plugins.es.geoDistance;
+    if (!odlDistance || odlDistance !== $scope.search.geoDistance) {
+      csSettings.data.plugins.es.geoDistance = $scope.search.geoDistance;
+      dirty = true;
+    }
+
+    // execute with a delay, for better UI perf
+    if (dirty) {
+      $timeout(function() {
+        csSettings.store();
+      });
+    }
+  };
+  $scope.$on('$ionicView.leave', function() {
+    // WARN: do not set by reference
+    // because it can be overrided by sub controller
+    return $scope.leave();
+  });
 
   /* -- manage events -- */
 

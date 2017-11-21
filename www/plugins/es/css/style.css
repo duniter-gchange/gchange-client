@@ -168,6 +168,50 @@
   padding-bottom: 8px;
 }
 
+
+/**********
+   Location search modal
+**********/
+
+.modal-search-location .bar-footer {
+  height: 30px;
+}
+.modal-search-location .bar-footer .copyright {
+  font-size: 12px;
+  line-height: 30px;
+}
+
+/**********
+   Dropdown list (for autocompletion, need by issue #601)
+**********/
+
+.list.dropdown-list {
+  z-index: 1010;
+  opacity: 1;
+  display: block;
+  list-style: none;
+  position: absolute;
+  background-color: white;
+  border-radius: 0 0 2px 2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  cursor: pointer;
+}
+
+.list.dropdown-list .item {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.list.dropdown-list .item.active,
+.list.dropdown-list .item:hover,
+.list.dropdown-list .item:active,
+.list.dropdown-list .item:focus{
+  background-color: #b2e0ff;
+}
+
+
 /**
 * Pictures slider
 */

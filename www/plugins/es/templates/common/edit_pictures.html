@@ -6,7 +6,7 @@
        ng-class="{'in done': picture.isnew}">
     <div>
       <h2 ng-if="picture.title">{{picture.title}}</h2>
-      <img ng-src="{{picture.src}}" />
+      <img ng-src="{{picture.src}}">
     </div>
     <div class="item done in tabs tabs-secondary tabs-icon-left">
       <a class="tab-item stable-bg assertive" ng-click="removePicture($index)"

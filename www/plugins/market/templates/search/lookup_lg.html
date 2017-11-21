@@ -53,23 +53,9 @@
       </div>
 
       <!-- location -->
-      <div class="item no-padding" ng-if="entered && !search.geoPoint && options.location.show">
-        <div class="item-input ">
-
-          <i class="icon ion-location placeholder-icon"></i>
-          <input type="text"
-                 class="visible-xs visible-sm"
-                 placeholder="{{(options.location.help||'MARKET.SEARCH.LOCATION_HELP')|translate}}"
-                 ng-model="search.location"
-                 ng-model-options="{ debounce: 650 }"
-                 ng-change="doSearch()">
-          <input type="text"
-                 class="hidden-xs hidden-sm"
-                 placeholder="{{(options.location.help||'MARKET.SEARCH.LOCATION_HELP')|translate}}"
-                 ng-model="search.location"
-                 on-return="doSearch()">
-        </div>
-      </div>
+      <ng-include src="'plugins/es/templates/common/item_location_search.html'"
+                  ng-if="entered && !search.geoPoint && options.location.show"
+                  ng-controller="ESSearchPositionItemCtrl" ng-init=""></ng-include>
 
       <!-- options -->
       <ng-include src="'plugins/market/templates/search/lookup_options.html'"></ng-include>

@@ -83,26 +83,58 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
         $scope.enable = enable;
     });
 
-    $scope.doSearch = function() {
-      if ($scope.search.location) {
+    $scope.onGeoPointChanged = function() {
+        if ($scope.search.loading) return;
+
+        if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon && !$scope.search.geoPoint.exact) {
+            $scope.doSearch();
+        }
+    };
+    $scope.$watch('search.geoPoint', $scope.onGeoPointChanged, true);
+
+    $scope.resolveLocationPosition = function() {
+        if ($scope.search.loadingPosition) return;
+
         $scope.search.loadingPosition = true;
         return $scope.searchPosition($scope.search.location)
-          .then(function(res) {
-            if (!res) {
+            .then(function(res) {
+                if (!res) {
+                    $scope.search.loadingPosition = false;
+                    $scope.search.geoPoint = undefined;
+                    throw 'CANCELLED';
+                }
+                $scope.search.geoPoint = res;
+                if (res.shortName && !res.exact) {
+                    $scope.search.location = res.shortName;
+                }
                 $scope.search.loadingPosition = false;
-                return UIUtils.alert.error('MARKET.HOME.ERROR.GEO_LOCATION_NOT_FOUND');
-            }
-            var location = res.name && res.name.split(',')[0] || $scope.search.location;
-              $rootScope.geoPoints = $rootScope.geoPoints || {};
-              $rootScope.geoPoints[location] = res;
+            });
+    };
+
+    $scope.doSearch = function() {
+
+        // Resolve location position
+        if ($scope.search.location && $scope.search.location.length >= 3 && !$scope.search.geoPoint) {
+            return $scope.resolveLocationPosition()
+                .then(function() {
+                    return $scope.doSearch(); // Loop
+                })
+                .catch(function() {
+                    return UIUtils.alert.error('MARKET.HOME.ERROR.GEO_LOCATION_NOT_FOUND');
+                });
+        }
+
+        if ($scope.search.location && $scope.search.geoPoint) {
+            var locationShortName = $scope.search.location && $scope.search.location.split(', ')[0];
+            $rootScope.geoPoints = $rootScope.geoPoints || {};
+            $rootScope.geoPoints[locationShortName] = $scope.search.geoPoint;
             var stateParams = {
-                lat: res.lat,
-                lon: res.lon,
-                location: location
+                lat: $scope.search.geoPoint && $scope.search.geoPoint.lat,
+                lon: $scope.search.geoPoint && $scope.search.geoPoint.lon,
+                location: locationShortName
             };
-            $state.go('app.market_lookup', stateParams);
-          });
-      }
+            return $state.go('app.market_lookup', stateParams);
+        }
     };
 
     $scope.showNewRecordModal = function() {

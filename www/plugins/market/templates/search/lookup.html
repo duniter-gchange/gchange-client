@@ -22,6 +22,11 @@
                ng-model-options="{ debounce: 650 }"
                ng-change="doSearch()">
       </label>
+
+      <!-- location -->
+      <ng-include src="'plugins/es/templates/common/item_location_search.html'"
+                  ng-controller="ESSearchPositionItemCtrl" ng-init=""></ng-include>
+
     </form>
 
     <div ng-if="!search.loading && !search.category && options.category.show"

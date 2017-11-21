@@ -4,27 +4,35 @@
   <h2 ng-if="$root.config.plugins.market.homeMessage" ng-bind-html="$root.config.plugins.market.homeMessage"></h2>
 
   <!-- location -->
-  <div class="list" style="background-color: white;">
+  <div class="list" style="background-color: white;"  ng-controller="ESSearchPositionItemCtrl">
     <div class="item no-padding item-icon-right ">
       <div class="item-input item-input-search">
         <input type="text"
                class="visible-xs visible-sm"
                placeholder="{{(options.location.help||'MARKET.HOME.LOCATION_HELP')|translate}}"
                ng-model="search.location"
-               ng-model-options="{ debounce: 650 }"
-               ng-change="doSearch()">
+               ng-keydown="onKeydown($event)"
+               ng-change="onLocationChanged()"
+               ng-blur="hideDropdown()"
+               ng-model-options="{ debounce: 650 }">
         <input type="text"
                id="searchLocationInput"
                class="hidden-xs hidden-sm"
                placeholder="{{(options.location.help||'MARKET.HOME.LOCATION_HELP')|translate}}"
-               id="marketSearchText"
                ng-model="search.location"
+               ng-keydown="onKeydown($event)"
+               ng-change="onLocationChanged()"
+               ng-blur="hideDropdown()"
+               ng-model-options="{ debounce: 350 }"
                on-return="doSearch()">
       </div>
 
       <a class="icon ion-search ink-dark" ng-click="doSearch()"
         title="{{'MARKET.HOME.BTN_SHOW_MARKET_OFFER'|translate}}"></a>
     </div>
+
+    <!-- dropdown -->
+    <ng-include src="'plugins/es/templates/common/dropdown_locations.html'"></ng-include>
 
   </div>
 

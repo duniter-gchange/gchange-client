@@ -7,7 +7,9 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 
     var
       fields = {
-        commons: ["category", "title", "description", "issuer", "time", "location", "address", "city", "price", "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency"]
+        commons: ["category", "title", "description", "issuer", "time", "location", "address", "city", "price",
+            "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
+            "geoPoint"]
       },
       exports = {
         _internal: {}
@@ -317,9 +319,28 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           if (!res || !res.hits || !res.hits.total) {
             return [];
           }
+
+          // Get geo_distance filter
+          var geoDistanceFilter = _.findWhere(request.query && request.query.bool && request.query.bool.filter || [], function(res) {
+            return !!res.geo_distance;
+          });
+
+          var geoPoint = geoDistanceFilter && geoDistanceFilter.geo_distance && geoDistanceFilter.geo_distance.geoPoint;
+          var distanceUnit = 'km'; // TODO: get unit from geoDistanceFilter.geo_distance.distance
+
           return res.hits.hits.reduce(function(result, hit) {
             var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, html: true});
             record.id = hit._id;
+
+            // Add distance to point
+            if (geoPoint && record.geoPoint) {
+              record.distance = esGeo.point.distance(
+                geoPoint.lat, geoPoint.lon,
+                record.geoPoint.lat, record.geoPoint.lon,
+                distanceUnit
+              );
+            }
+
             return result.concat(record);
           }, []);
         });

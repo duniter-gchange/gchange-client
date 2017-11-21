@@ -22,6 +22,9 @@
             <h4 class="positive" ng-if="rec.city">
               <i class="icon ion-location"></i>
               {{::options.location.prefix|translate}}<span ng-bind-html="::rec.city"></span>
+              <span class="gray" ng-if="::rec.distance">
+                ({{::rec.distance|formatDecimal}} {{::geoUnit}})
+              </span>
             </h4>
             <h4 class="gray" ng-if="rec.time">
               <i class="icon ion-clock" ></i>

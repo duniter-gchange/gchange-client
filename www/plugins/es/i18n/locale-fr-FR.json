@@ -58,7 +58,6 @@
   },
   "COMMENTS": {
     "DIVIDER": "Commentaires",
-    "DIVIDER_WITH_TOTAL": "Commentaires ({{total}})",
     "SHOW_MORE_COMMENTS": "Afficher les commentaires précédents",
     "COMMENT_HELP": "Votre commentaire, question, etc.",
     "COMMENT_HELP_REPLY_TO": "Votre réponse...",
@@ -204,7 +203,8 @@
       "GEO_LOCATION_NOT_FOUND": "Ville ou code postal non trouvé"
     },
     "INFO": {
-      "RECORD_REMOVED" : "Page supprimée"
+      "RECORD_REMOVED" : "Page supprimée",
+      "RECORD_SAVED": "Page sauvegardée"
     }
   },
   "PROFILE": {
@@ -251,12 +251,14 @@
     "CITY": "Ville",
     "CITY_HELP": "Ville, Pays",
     "DISTANCE": "Distance maximale autour de la ville",
-    "DISTANCE_OPTION": "{{value}} km",
+    "DISTANCE_UNIT": "km",
+    "DISTANCE_OPTION": "{{value}} {{'LOCATION.DISTANCE_UNIT'|translate}}",
+    "SEARCH_HELP": "Ville, Code postal",
     "MODAL": {
       "TITLE": "Recherche de l'adresse",
-      "SEARCH_HELP": "Ville, Pays",
+      "SEARCH_HELP": "Ville, Code postal, Pays",
       "ALTERNATIVE_RESULT_DIVIDER": "Résultats alternatifs pour <b>{{address}}</b> :",
-      "POSITION": "Latitude/Longitude : {{lat}}  {{lon}}"
+      "POSITION": "Lat/Lon : {{lat}}/{{lon}}"
     },
     "ERROR": {
       "REQUIRED_FOR_LOCATION": "Champ obligatoire pour apparaître sur la carte",
