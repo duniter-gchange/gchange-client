@@ -30,7 +30,7 @@
 .row-record {
   border-bottom: solid 1px #ccc !important;
   padding: 0 !important;
-  height: 100px !important;
+  height: 95px !important;
   overflow: hidden;
 }
 
@@ -69,22 +69,22 @@
 }
 
 .row-record .col-text-wrap {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 .row-record .col .text-wrap {
-    height: 93px;
-    white-space: normal;
-    position: relative;
-    word-wrap: break-word !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -o-hyphens: auto;
-    hyphens: auto;
+  height: 93px;
+  white-space: normal;
+  position: relative;
+  word-wrap: break-word !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
 }
 
 /* Source: See doc: http://stackoverflow.com/questions/15814346 */
@@ -141,9 +141,9 @@
   line-height: 88px;
 }
 
-/**
-* Message screen
-*/
+/**********
+   Message screen
+**********/
 
 #composeMessage .list .item {
   border-bottom: solid 1px #ccc;
