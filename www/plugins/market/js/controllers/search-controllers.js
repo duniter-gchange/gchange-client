@@ -255,6 +255,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
           }
         }
       };
+      // Exclude result with score=0 (e.g. same city, but does not match any text search)
+      query.bool.minimum_should_match = 1;
+
       if (filters.length > 0) {
         query.filtered.filter = {
           and: {
@@ -347,6 +350,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     .then(function(records) {
       if (!records && !records.length) {
         $scope.search.results = (options.from > 0) ? $scope.search.results : [];
+        $scope.search.total = (options.from > 0) ? $scope.search.total : 0;
         $scope.search.hasMore = false;
         $scope.search.loading = false;
         return;

@@ -44,9 +44,11 @@
   <div class="col no-padding">
 
     <!-- appear on map ? -->
-    <ion-checkbox ng-model="formPosition.enable"
-                  ng-change="onUseGeopointChanged()"
-                  class="item item-border-large done in">
+    <ion-checkbox
+            ng-if="options.position.showCheckbox"
+            ng-model="formPosition.enable"
+            ng-change="onUseGeopointChanged()"
+            class="item item-border-large done in">
       <div class="item-content">
         <span translate>LOCATION.USE_GEO_POINT</span>
         <h4 class="gray" ng-if="formPosition.loading">

@@ -376,45 +376,51 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   csWallet.api.data.on.logout($scope, onWalletChange, this);
 }
 
-function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $ionicHistory, $focus, $controller,
+function MkRecordEditController($scope, $q, $state, $ionicPopover, $timeout, mkRecord, $ionicHistory, $focus, $controller,
                                       UIUtils, ModalUtils, csConfig, esHttp, csSettings, mkSettings) {
   'ngInject';
+
+  // Screen options
+  $scope.options = $scope.options || angular.merge({
+        recordType: {
+          show: true,
+          canEdit: true
+        },
+        category: {
+          show: true,
+          filter: undefined
+        },
+        description: {
+          show: true
+        },
+        location: {
+          show: true,
+          required: true
+        },
+        position: {
+          showCheckbox: true,
+          required: true
+        },
+        unit: {
+          canEdit: true
+        },
+        login: {
+          type: "full"
+        }
+      }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
+
 
   // Initialize the super class and extend it.
   angular.extend(this, $controller('ESPositionEditCtrl', {$scope: $scope}));
 
   $scope.formData = {
     price: null,
-    category: {}
+    category: {},
+    geoPoint: null
   };
   $scope.id = null;
   $scope.pictures = [];
   $scope.loading = true;
-
-  // Screen options
-  $scope.options = $scope.options || angular.merge({
-    recordType: {
-      show: true,
-      canEdit: true
-    },
-    category: {
-      show: true,
-      filter: undefined
-    },
-    description: {
-      show: true
-    },
-    location: {
-      show: true,
-      required: true
-    },
-    unit: {
-      canEdit: true
-    },
-    login: {
-      type: "full"
-    }
-  }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
   //console.debug("[market] Screen options: ", $scope.options);
 
@@ -482,12 +488,15 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
   };
 
   $scope.load = function(id) {
+
+    UIUtils.loading.show();
+
     return mkRecord.record.load(id, {
         fetchPictures: true,
         convertPrice: false // keep original price
       })
       .then(function(data) {
-        $scope.formData = data.record;
+        angular.merge($scope.formData, data.record);
         if (data.record.unit === 'unit') {
           $scope.formData.price = $scope.formData.price ? $scope.formData.price / 100 : undefined; // add 2 decimals in quantitative mode
           $scope.formData.fees = $scope.formData.fees ? $scope.formData.fees / 100 : undefined; // add 2 decimals in quantitative mode
@@ -510,11 +519,17 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
           ($scope.formData.unit === 'UD') :
           csSettings.data.useRelative;
         $scope.dirty = false;
-        $scope.loading = false;
-        UIUtils.loading.hide();
+
         $scope.motion.show({
           selector: '.animate-ripple .item, .card-gallery'
         });
+        UIUtils.loading.hide();
+
+        // Update loading - done with a delay, to avoid trigger onFormDataChanged()
+        $timeout(function() {
+          $scope.loading = false;
+        }, 1000);
+
       })
       .catch(UIUtils.onError('MARKET.ERROR.LOAD_RECORD_FAILED'));
   };
@@ -577,6 +592,15 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, mkRecord, $io
         }
 
         json.time = esHttp.date.now();
+
+        // geo point
+        if (json.geoPoint && json.geoPoint.lat && json.geoPoint.lon) {
+          json.geoPoint.lat =  parseFloat(json.geoPoint.lat);
+          json.geoPoint.lon =  parseFloat(json.geoPoint.lon);
+        }
+        else{
+          json.geoPoint = null;
+        }
 
         json.picturesCount = $scope.pictures.length;
         if (json.picturesCount) {

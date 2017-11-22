@@ -18,6 +18,24 @@ angular.module('cesium.directives', [])
       };
   })
 
+  // Add new different-to directive (need for form validation)
+  .directive("differentTo", function() {
+    return {
+      require: "?ngModel",
+      link: function(scope, element, attributes, ngModel) {
+        if (ngModel && attributes.differentTo) {
+          ngModel.$validators.differentTo = function(modelValue) {
+            return modelValue != scope.$eval(attributes.differentTo);
+          };
+
+          scope.$watch(attributes.differentTo, function() {
+            ngModel.$validate();
+          });
+        }
+      }
+    };
+  })
+
   .directive('numberFloat', function() {
     var NUMBER_REGEXP = new RegExp('^[0-9]+([.,][0-9]+)?$');
 
@@ -25,8 +43,8 @@ angular.module('cesium.directives', [])
       require: '?ngModel',
       link: function(scope, element, attributes, ngModel) {
         if (ngModel) {
-          ngModel.$validators.numberFloat = function(modelValue) {
-            return ngModel.$isEmpty(modelValue) || NUMBER_REGEXP.test(modelValue);
+          ngModel.$validators.numberFloat = function(value) {
+            return ngModel.$isEmpty(value) || NUMBER_REGEXP.test(value);
           };
         }
       }
@@ -55,6 +73,36 @@ angular.module('cesium.directives', [])
         if (ngModel) {
           ngModel.$validators.email = function (value) {
             return ngModel.$isEmpty(value) || EMAIL_REGEXP.test(value);
+          };
+        }
+      }
+    };
+  })
+
+  .directive('requiredIf', function() {
+    return {
+      require: '?ngModel',
+      link: function(scope, element, attributes, ngModel) {
+        if (ngModel && attributes.requiredIf) {
+          ngModel.$validators.required = function(value) {
+            return !(scope.$eval(attributes.requiredIf)) || !ngModel.$isEmpty(value);
+          };
+
+          scope.$watch(attributes.requiredIf, function() {
+            ngModel.$validate();
+          });
+        }
+      }
+    };
+  })
+
+  .directive('geoPoint', function() {
+    return {
+      require: '?ngModel',
+      link: function(scope, element, attributes, ngModel) {
+        if (ngModel) {
+          ngModel.$validators.geoPoint = function(value) {
+            return ngModel.$isEmpty(value) || (angular.isDefined(value.lat) && angular.isDefined(value.lon));
           };
         }
       }
@@ -117,9 +165,9 @@ angular.module('cesium.directives', [])
       restrict: 'A',
       link: function(scope, element, attrs, controller) {
         var clazz = attrs.activeLink;
-        var path = attrs.activeLinkPathPrefix ? attrs.activeLinkPathPrefix : attrs.href;
-        if (path) {
-          path = path.substring(1); //hack because path does not return including hashbang
+        var path;
+        if (attrs.activeLinkPathPrefix) {
+          path = attrs.activeLinkPathPrefix.substring(1); //hack because path does not return including hashbang
           scope.location = $location;
           scope.$watch('location.path()', function (newPath) {
             if (newPath && newPath.indexOf(path) === 0) {
@@ -129,10 +177,20 @@ angular.module('cesium.directives', [])
             }
           });
         }
+        else if (attrs.href) {
+          path = attrs.href.substring(1); //hack because path does not return including hashbang
+          scope.location = $location;
+          scope.$watch('location.path()', function (newPath) {
+            if (newPath && newPath == path) {
+              element.addClass(clazz);
+            } else {
+              element.removeClass(clazz);
+            }
+          });
+        }
       }
     };
   })
-
 
   // All this does is allow the message
   // to be sent when you tap return
@@ -292,7 +350,7 @@ angular.module('cesium.directives', [])
           };
 
           reader.onload = function(onLoadEvent) {
-            scope.$apply(function() {
+            scope.$applyAsync(function() {
               fn(scope, {
                 file: {
                   fileContent: onLoadEvent.target.result,

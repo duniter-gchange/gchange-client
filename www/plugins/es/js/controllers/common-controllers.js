@@ -437,9 +437,14 @@ function ESPositionEditController($scope, csConfig, esGeo, ModalUtils) {
     var defaultCountry = csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.defaultCountry;
 
     var loadingCurrentPosition = false;
+    $scope.options = $scope.options || {};
+    $scope.options.position = $scope.options.position || {
+        showCheckbox: true,
+        required: false
+    };
     $scope.formPosition = {
         loading: false,
-        enable: undefined
+        enable: angular.isDefined($scope.options.position.required) ? $scope.options.position.required : undefined
     };
 
     $scope.tryToLocalize = function() {

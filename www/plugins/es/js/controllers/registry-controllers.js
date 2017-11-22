@@ -25,6 +25,9 @@ angular.module('cesium.es.registry.controllers', ['cesium.es.services', 'cesium.
           templateUrl: "plugins/es/templates/registry/lookup_lg.html",
           controller: 'ESRegistryLookupCtrl'
         }
+      },
+      data: {
+        silentLocationChange: true
       }
     })
 
@@ -83,6 +86,9 @@ angular.module('cesium.es.registry.controllers', ['cesium.es.services', 'cesium.
 function ESRegistryLookupController($scope, $state, $focus, $timeout, esRegistry, UIUtils, ModalUtils, $filter, BMA) {
   'ngInject';
 
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESLookupPositionCtrl', {$scope: $scope}));
+
   var defaultSearchLimit = 10;
 
   $scope.search = {
@@ -93,8 +99,18 @@ function ESRegistryLookupController($scope, $state, $focus, $timeout, esRegistry
     type: null,
     category: null,
     location: null,
-    options: null
+    options: null,
+    geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 20
   };
+  $scope.searchTextId = 'registrySearchText';
+  $scope.enableFilter = true;
+  $scope.smallscreen = angular.isDefined($scope.smallscreen) ? $scope.smallscreen : UIUtils.screen.isSmall();
+
+  $scope.options = angular.merge($scope.options||{}, {
+    location: {
+      help: 'REGISTRY.SEARCH.LOCATION_HELP'
+    }
+  });
 
   $scope.$on('$ionicView.enter', function(e, state) {
     if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
@@ -114,14 +130,16 @@ function ESRegistryLookupController($scope, $state, $focus, $timeout, esRegistry
         }
         // removeIf(device)
         // Focus on search text (only if NOT device, to avoid keyboard opening)
-        $focus('registrySearchText');
+        if ($scope.searchTextId) {
+          $focus($scope.searchTextId);
+        }
         // endRemoveIf(device)
 
         $scope.entered = true;
       };
 
       // Search by text
-      if (state.stateParams && state.stateParams.q) {
+      if (state.stateParams && state.stateParams.q && (typeof state.stateParams.q == 'string')) {
         $scope.search.text=state.stateParams.q;
         runSearch = true;
       }
@@ -175,6 +193,7 @@ function ESRegistryLookupController($scope, $state, $focus, $timeout, esRegistry
       }
       else {
         text = text.toLowerCase();
+        var tags = text ? esHttp.util.parseTags(text) : undefined;
         var matchFields = ["title", "description", "city", "address"];
         matches.push({multi_match : { query: text,
           fields: matchFields,
@@ -195,6 +214,9 @@ function ESRegistryLookupController($scope, $state, $focus, $timeout, esRegistry
             }
           }
         });
+        if (tags && tags.length) {
+          filters.push({terms: {tags: tags}});
+        }
       }
     }
     if ($scope.search.options && $scope.search.type) {
@@ -214,8 +236,23 @@ function ESRegistryLookupController($scope, $state, $focus, $timeout, esRegistry
         }
       });
     }
-    if ($scope.search.options && $scope.search.location && $scope.search.location.length > 0) {
-      filters.push({match_phrase: { city: $scope.search.location}});
+
+    var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
+    if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
+
+      // text match
+      if (location && location.length) {
+        matches.push({match_phrase: { city: location}});
+      }
+
+      filters.push({
+        geo_distance: {
+          distance: $scope.search.geoDistance + $scope.geoUnit,
+          geoPoint: {
+            lat: $scope.search.geoPoint.lat,
+            lon: $scope.search.geoPoint.lon
+          }
+        }});
     }
 
     if (matches.length === 0 && filters.length === 0) {
@@ -226,6 +263,8 @@ function ESRegistryLookupController($scope, $state, $focus, $timeout, esRegistry
     var query = {bool: {}};
     if (matches.length > 0) {
       query.bool.should =  matches;
+      // Exclude result with score=0 (e.g. same city, but does not match any text search)
+      query.bool.minimum_should_match = 1;
     }
     if (filters.length > 0) {
       query.bool.filter =  filters;
