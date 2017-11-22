@@ -534,13 +534,22 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, $timeout, mkR
       .catch(UIUtils.onError('MARKET.ERROR.LOAD_RECORD_FAILED'));
   };
 
-  $scope.save = function() {
+  $scope.save = function(silent, hasWaitDebounce) {
     $scope.form.$submitted=true;
     if($scope.saving || // avoid multiple save
        !$scope.form.$valid || !$scope.formData.category.id) {
-      return;
+      return $q.reject();
     }
+
+    if (!hasWaitDebounce) {
+      console.debug('[ES] [market] Waiting debounce end, before saving...');
+      return $timeout(function() {
+        return $scope.save(silent, true);
+      }, 650);
+    }
+
     $scope.saving = true;
+    console.debug('[ES] [market] Saving record...');
 
     return UIUtils.loading.show({delay: 0})
       // Preparing json (pictures + resizing thumbnail)

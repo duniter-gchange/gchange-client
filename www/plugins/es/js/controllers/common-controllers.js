@@ -444,7 +444,7 @@ function ESPositionEditController($scope, csConfig, esGeo, ModalUtils) {
     };
     $scope.formPosition = {
         loading: false,
-        enable: angular.isDefined($scope.options.position.required) ? $scope.options.position.required : undefined
+        enable: angular.isDefined($scope.options.position.required) ? $scope.options.position.required : false
     };
 
     $scope.tryToLocalize = function() {

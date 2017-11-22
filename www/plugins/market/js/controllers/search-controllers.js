@@ -206,24 +206,20 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       filters.push({terms: {tags: tags}});
     }
 
-    if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
-      // text match
-      if ($scope.search.location && $scope.search.location.trim().length > 0) {
-        matches.push({match_phrase: { location: $scope.search.location}});
-      }
+    if (!matches.length && !filters.length) {
+      return $scope.doGetLastRecord();
+    }
 
-      matches.push({
+    if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
+
+      filters.push({
         geo_distance: {
           distance: $scope.search.geoDistance + $scope.geoUnit,
           geoPoint: {
             lat: $scope.search.geoPoint.lat,
             lon: $scope.search.geoPoint.lon
           }
-      }});
-    }
-
-    if (!matches.length && !filters.length) {
-      return $scope.doGetLastRecord();
+        }});
     }
 
     var stateParams = {};
@@ -246,28 +242,13 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
     stateParams.q = $scope.search.text;
 
-    var query = {};
+    var query = {bool: {}};
     if (matches.length > 0) {
-      query.filtered = {
-        query: {
-          bool: {
-            should: matches
-          }
-        }
-      };
+      query.bool.should = matches;
       // Exclude result with score=0 (e.g. same city, but does not match any text search)
       query.bool.minimum_should_match = 1;
-
-      if (filters.length > 0) {
-        query.filtered.filter = {
-          and: {
-            filters: filters
-          }
-        };
-      }
     }
-    else if (filters.length > 0) {
-      query.bool = {};
+    if (filters.length > 0) {
       query.bool.filter = filters;
     }
 
@@ -291,6 +272,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     };
 
     var filters = [];
+    var matches = [];
     if (!$scope.search.showClosed) {
       filters.push({range: {stock: {gt: 0}}});
     }
@@ -302,8 +284,30 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     if ($scope.currencies) {
       filters.push({terms: {currency: $scope.currencies}});
     }
-    if (filters.length) {
+
+    var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
+    if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
+
+      // text match
+      if (location && location.length) {
+        matches.push({match_phrase: { city: location}});
+      }
+
+      filters.push({
+        geo_distance: {
+          distance: $scope.search.geoDistance + $scope.geoUnit,
+          geoPoint: {
+            lat: $scope.search.geoPoint.lat,
+            lon: $scope.search.geoPoint.lon
+          }
+        }});
+    }
+    if (matches.length) {
       options.query = {bool: {}};
+      options.query.bool.should =  matches;
+    }
+    if (filters.length) {
+      options.query = options.query || {bool: {}};
       options.query.bool.filter =  filters;
     }
 

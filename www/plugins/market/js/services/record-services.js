@@ -1,6 +1,6 @@
 angular.module('cesium.market.record.services', ['ngResource', 'cesium.services', 'cesium.es.services', 'cesium.market.settings.services'])
 
-.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, csWot, csCurrency, mkSettings) {
+.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, esGeo, csWot, csCurrency, mkSettings) {
   'ngInject';
 
   function EsMarket() {
@@ -321,8 +321,8 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           }
 
           // Get geo_distance filter
-          var geoDistanceFilter = _.findWhere(request.query && request.query.bool && request.query.bool.filter || [], function(res) {
-            return !!res.geo_distance;
+          var geoDistanceFilter = _.find(request.query && request.query.bool && request.query.bool.filter || [], function(f) {
+            return angular.isDefined(f.geo_distance);
           });
 
           var geoPoint = geoDistanceFilter && geoDistanceFilter.geo_distance && geoDistanceFilter.geo_distance.geoPoint;
