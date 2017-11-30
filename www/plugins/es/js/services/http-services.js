@@ -251,9 +251,9 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       if (Array.isArray(obj)) {
         return obj.reduce(function(res, item) {
           return res ? res : findObjectInTree(item, attrName);
-        }, false)
+        }, false);
       }
-      if (typeof obj == "object") {
+      else if (typeof obj == "object") {
         return _.reduce(_.keys(obj), function (res, key) {
           return res ? res : findObjectInTree(obj[key], attrName);
         }, false);
