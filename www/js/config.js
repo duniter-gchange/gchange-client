@@ -28,9 +28,8 @@ angular.module("cesium.config", [])
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "locahost",
-			"port": "9200",
-			"wsPort": "9400",
+			"host": "data.gchange.fr",
+			"port": "443",
 			"maxUploadBodySize": 2097152,
 			"defaultCountry": "France"
 		},
@@ -43,8 +42,8 @@ angular.module("cesium.config", [])
 			}
 		}
 	},
-	"version": "0.5.7",
-	"build": "2017-11-03T16:37:37.457Z",
+	"version": "0.6.0",
+	"build": "2017-11-30T09:44:24.374Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

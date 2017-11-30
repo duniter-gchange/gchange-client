@@ -1,6 +1,6 @@
 {
     "name": "gchange-client",
-    "version": "0.5.7",
+    "version": "0.6.0",
     "description": "Unhosted webapp client for Duniter network",
     "repository": {
         "type": "git",
@@ -27,6 +27,7 @@
         "new": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
     },
     "dependencies": {
+        "bower": "^1.8.0",
         "bluebird": "^3.5.0",
         "cordova-android": "^6.2.3",
         "cordova-plugin-camera": "^2.4.1",
