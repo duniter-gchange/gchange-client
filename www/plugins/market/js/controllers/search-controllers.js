@@ -286,29 +286,50 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
 
     var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
-    var hasMatchOnLocation = false;
     if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
 
       // text match
       if (location && location.length) {
         var locationCity = location.split(',')[0];
-        matches.push({match_phrase_prefix: { city: locationCity}});
-        hasMatchOnLocation = true;
+        filters.push({
+          or : [
+            // No position defined
+            {
+              and: [
+                {not: {exists: { field : "geoPoint" }}},
+                {multi_match: {
+                  query: locationCity,
+                  fields : [ "city^3", "location" ]
+                }}
+              ]
+            },
+            // Has position
+            {geo_distance: {
+              distance: $scope.search.geoDistance + $scope.geoUnit,
+              geoPoint: {
+                lat: $scope.search.geoPoint.lat,
+                lon: $scope.search.geoPoint.lon
+              }
+            }}
+          ]
+        });
       }
 
-      filters.push({
-        geo_distance: {
-          distance: $scope.search.geoDistance + $scope.geoUnit,
-          geoPoint: {
-            lat: $scope.search.geoPoint.lat,
-            lon: $scope.search.geoPoint.lon
-          }
-        }});
+      else {
+        filters.push(
+            {geo_distance: {
+              distance: $scope.search.geoDistance + $scope.geoUnit,
+              geoPoint: {
+                lat: $scope.search.geoPoint.lat,
+                lon: $scope.search.geoPoint.lon
+              }
+            }});
+      }
     }
     if (matches.length) {
       options.query = {bool: {}};
       options.query.bool.should =  matches;
-      options.query.bool.minimum_should_match = (matches.length > 1 || !hasMatchOnLocation) ? 1 : 0;
+      options.query.bool.minimum_should_match = 1;
     }
     if (filters.length) {
       options.query = options.query || {bool: {}};
@@ -376,7 +397,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         $scope.search.total = res.total;
       }
       else {
-        $scope.search.results = $scope.search.results.concat(hits);
+        $scope.search.results = $scope.search.results.concat(res.hits);
       }
       $scope.search.hasMore = $scope.search.results.length < $scope.search.total;
 

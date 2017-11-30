@@ -509,6 +509,8 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, $timeout, mkR
         // Convert old record format
         if (!$scope.formData.city && $scope.formData.location) {
           $scope.formData.city = $scope.formData.location;
+        }
+        if ($scope.formData.location) {
           $scope.formData.location = null;
         }
 
@@ -609,6 +611,11 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, $timeout, mkR
         }
         else{
           json.geoPoint = null;
+        }
+
+        // Location is deprecated: force to null
+        if (angular.isDefined(json.location)) {
+          json.location = null;
         }
 
         json.picturesCount = $scope.pictures.length;

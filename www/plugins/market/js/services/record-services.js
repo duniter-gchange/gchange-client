@@ -42,6 +42,23 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         search: esHttp.post('/market/category/_search')
       };
 
+    function _findAttributeInObjectTree(obj, attrName) {
+
+      if (!obj) return;
+      if (obj[attrName]) return obj[attrName];
+
+      if (Array.isArray(obj)) {
+        return obj.reduce(function(res, item) {
+          return res ? res : _findAttributeInObjectTree(item, attrName);
+        }, false)
+      }
+
+      if (typeof obj == "object") {
+        return _.reduce(_.keys(obj), function (res, key) {
+          return res ? res : _findAttributeInObjectTree(obj[key], attrName);
+        }, false);
+      }
+    }
 
     function getCategories() {
       if (exports._internal.categories && exports._internal.categories.length) {
@@ -323,13 +340,11 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             };
           }
 
-          // Get geo_distance filter
-          var geoDistanceFilter = _.find(request.query && request.query.bool && request.query.bool.filter || [], function(f) {
-            return angular.isDefined(f.geo_distance);
-          });
-
-          var geoPoint = geoDistanceFilter && geoDistanceFilter.geo_distance && geoDistanceFilter.geo_distance.geoPoint;
-          var distanceUnit = 'km'; // TODO: get unit from geoDistanceFilter.geo_distance.distance
+          // Get the geoPoint from the 'geo_distance' filter
+          var geoDistance = _findAttributeInObjectTree(request.query, 'geo_distance');
+          var geoPoint = geoDistance && geoDistance.geoPoint;
+          var distanceUnit = geoDistance && geoDistance.distance && geoDistance.distance.replace(new RegExp("[0-9 ]+", "gm"), '');
+          console.log(distanceUnit);
 
           var hits = res.hits.hits.reduce(function(result, hit) {
             var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, html: true});

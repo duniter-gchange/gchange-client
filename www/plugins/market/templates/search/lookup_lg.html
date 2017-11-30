@@ -19,6 +19,16 @@
 
         <div class="item-input">
           <div class="animate-show-hide ng-hide" ng-show="entered">
+            <!-- selected location -->
+            <div ng-show="!search.loading && search.geoPoint"
+                 class="button button-small button-text button-stable button-icon-event stable-900-bg"
+                 style="margin-right: 10px;">
+              &nbsp;<i class="icon ion-location"></i>
+              <span ng-bind-html="search.location"></span>
+              <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
+            </div>
+
+            <!-- selected category -->
             <div ng-show="search.category.name"
                  class="button button-small button-text button-stable button-icon-event stable-900-bg"
                  style="margin-right: 10px;">
@@ -27,13 +37,7 @@
               <span ng-bind-html="search.category.name"></span>
               <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
             </div>
-            <div ng-show="!search.loading && search.geoPoint"
-                 class="button button-small button-text button-stable button-icon-event stable-900-bg"
-                 style="margin-right: 10px;">
-              &nbsp;<i class="icon ion-location"></i>
-              <span ng-bind-html="search.location"></span>
-              <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
-            </div>
+
           </div>
 
           <i class="icon ion-search placeholder-icon"></i>
