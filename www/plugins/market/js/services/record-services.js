@@ -341,21 +341,20 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           }
 
           // Get the geoPoint from the 'geo_distance' filter
-          var geoDistance = _findAttributeInObjectTree(request.query, 'geo_distance');
-          var geoPoint = geoDistance && geoDistance.geoPoint;
-          var distanceUnit = geoDistance && geoDistance.distance && geoDistance.distance.replace(new RegExp("[0-9 ]+", "gm"), '');
-          console.log(distanceUnit);
+          var geoDistanceObj = esHttp.util.findObjectInTree(request.query, 'geo_distance');
+          var geoPoint = geoDistanceObj && geoDistanceObj.geoPoint;
+          var geoDistanceUnit = geoDistanceObj && geoDistanceObj.distance && geoDistanceObj.distance.replace(new RegExp("[0-9 ]+", "gm"), '');
 
           var hits = res.hits.hits.reduce(function(result, hit) {
             var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, html: true});
             record.id = hit._id;
 
             // Add distance to point
-            if (geoPoint && record.geoPoint) {
+            if (geoPoint && record.geoPoint && geoDistanceUnit) {
               record.distance = esGeo.point.distance(
                 geoPoint.lat, geoPoint.lon,
                 record.geoPoint.lat, record.geoPoint.lon,
-                distanceUnit
+                geoDistanceUnit
               );
             }
 

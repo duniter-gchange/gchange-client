@@ -245,6 +245,21 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       }, []);
     }
 
+    function findObjectInTree(obj, attrName) {
+      if (!obj) return;
+      if (obj[attrName]) return obj[attrName];
+      if (Array.isArray(obj)) {
+        return obj.reduce(function(res, item) {
+          return res ? res : findObjectInTree(item, attrName);
+        }, false)
+      }
+      if (typeof obj == "object") {
+        return _.reduce(_.keys(obj), function (res, key) {
+          return res ? res : findObjectInTree(obj[key], attrName);
+        }, false);
+      }
+    }
+
     function postRecord(path, options) {
       options = options || {};
       var postRequest = that.post(path);
@@ -445,7 +460,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       },
       util: {
         parseTags: parseTagsFromText,
-        parseAsHtml: parseAsHtml
+        parseAsHtml: parseAsHtml,
+        findObjectInTree: findObjectInTree
       },
       constants: constants
     };

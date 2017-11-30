@@ -210,19 +210,51 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       return $scope.doGetLastRecord();
     }
 
+    var stateParams = {};
+
     if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
 
-      filters.push({
-        geo_distance: {
-          distance: $scope.search.geoDistance + $scope.geoUnit,
-          geoPoint: {
-            lat: $scope.search.geoPoint.lat,
-            lon: $scope.search.geoPoint.lon
-          }
-        }});
-    }
+      // match location OR geo distance
+      if ($scope.search.location && $scope.search.location.length) {
+        var locationCity = $scope.search.location.split(',')[0];
+        filters.push({
+          or : [
+            // No position defined
+            {
+              and: [
+                {not: {exists: { field : "geoPoint" }}},
+                {multi_match: {
+                  query: locationCity,
+                  fields : [ "city^3", "location" ]
+                }}
+              ]
+            },
+            // Has position
+            {geo_distance: {
+              distance: $scope.search.geoDistance + $scope.geoUnit,
+              geoPoint: {
+                lat: $scope.search.geoPoint.lat,
+                lon: $scope.search.geoPoint.lon
+              }
+            }}
+          ]
+        });
+        stateParams.location = $scope.search.location;
+      }
 
-    var stateParams = {};
+      else {
+        filters.push(
+          {geo_distance: {
+            distance: $scope.search.geoDistance + $scope.geoUnit,
+            geoPoint: {
+              lat: $scope.search.geoPoint.lat,
+              lon: $scope.search.geoPoint.lon
+            }
+          }});
+      }
+      stateParams.lat=$scope.search.geoPoint.lat;
+      stateParams.lon=$scope.search.geoPoint.lon;
+    }
 
     if ($scope.search.showClosed) {
       stateParams.closed = true;
@@ -245,7 +277,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     var query = {bool: {}};
     if (matches.length > 0) {
       query.bool.should = matches;
-      // Exclude result with score=0 (e.g. same city, but does not match any text search)
+      // Exclude result with score=0
       query.bool.minimum_should_match = 1;
     }
     if (filters.length > 0) {
@@ -288,7 +320,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
     if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
 
-      // text match
+      // match location OR geo distance
       if (location && location.length) {
         var locationCity = location.split(',')[0];
         filters.push({
@@ -315,6 +347,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         });
       }
 
+      // match geo distance
       else {
         filters.push(
             {geo_distance: {
