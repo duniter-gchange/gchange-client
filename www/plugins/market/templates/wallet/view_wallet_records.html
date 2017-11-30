@@ -30,8 +30,8 @@
     </div>
 
     <!-- list of records -->
-    <div class="lookupForm" ng-class="{'padding-horizontal': !smallscreen}">
-      <ng-include src="smallscreen ? 'plugins/market/templates/search/list_records.html' : 'plugins/market/templates/search/list_records_lg.html'"></ng-include>
+    <div class="lookupForm" ng-class="::{'padding-horizontal': !smallscreen}">
+      <ng-include src="::smallscreen ? 'plugins/market/templates/search/list_records.html' : 'plugins/market/templates/search/list_records_lg.html'"></ng-include>
     </div>
   </ion-content>
 

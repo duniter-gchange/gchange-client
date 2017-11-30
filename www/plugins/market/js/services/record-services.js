@@ -7,7 +7,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 
     var
       fields = {
-        commons: ["category", "title", "description", "issuer", "time", "location", "address", "city", "price",
+        commons: ["category", "title", "description", "issuer", "time", "creationTime", "location", "address", "city", "price",
             "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
             "geoPoint"]
       },

@@ -47,9 +47,9 @@
             ({{::rec.distance|formatDecimal}} {{::geoUnit}})
           </span>
         </h4>
-        <h4 class="gray" ng-if="rec.time">
+        <h4 class="gray" ng-if="rec.creationTime">
           <i class="icon ion-clock" ></i>
-          {{::rec.time | formatFromNow}}
+          {{::rec.creationTime | formatFromNow}}
           {{::'MARKET.SEARCH.BY'|translate}}
           <span class="dark">{{::rec.name || (rec.pubkey|formatPubkey)}}</span>
         </h4>
@@ -67,8 +67,8 @@
         </div>
         <div class="badge badge-price"
              ng-if="::!search.type && !rec.price"
-             ng-class="{'badge-calm': rec.type=='offer', 'badge-energized': rec.type=='need'}">
-          <i class="cion-market-{{rec.type}}"></i>
+             ng-class="::{'badge-calm': rec.type=='offer', 'badge-energized': rec.type=='need'}">
+          <i class="cion-market-{{::rec.type}}"></i>
           {{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
         </div>
       </div>

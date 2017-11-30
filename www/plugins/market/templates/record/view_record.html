@@ -35,12 +35,12 @@
             <h2 class="gray hidden-xs">
               <a class="positive" ng-if="formData.city" ui-sref="app.market_lookup({location:formData.city})">
                 <i class="icon ion-location"></i>
-                {{options.location.prefix|translate}}<span ng-bind-html="formData.city"></span>
+                {{::options.location.prefix|translate}}<span ng-bind-html="::formData.city"></span>
               </a>
               <span ng-if="formData.city && formData.category.name">&nbsp;|&nbsp;</span>
               <a ng-if="formData.category.name" ui-sref="app.market_lookup({category:formData.category.id})">
                 <i class="icon ion-flag"></i>
-                <span ng-bind-html="formData.category.name"></span>
+                <span ng-bind-html="::formData.category.name"></span>
               </a>
             </h2>
             <h4 class="hidden-xs">
@@ -53,13 +53,23 @@
                 </span>
                 <span ng-if="!issuer.name && !issuer.uid" class="gray">
                   <i class="icon ion-key"></i>
-                  {{formData.issuer|formatPubkey}}
+                  {{::formData.issuer|formatPubkey}}
                 </span>
               </a>
               <span>
-                {{formData.time|formatFromNow}}
+                {{formData.creationTime|formatFromNow}}
                 <span class="gray hidden-xs">|
-                  {{formData.time | formatDate}}
+                  {{formData.creationTime | formatDate}}
+                </span>
+              </span>
+            </h4>
+            <h4 class="hidden-xs" ng-if="formData.time - formData.creationTime > 86400">
+              <i class="icon ion-edit"></i>
+              <span translate>MARKET.COMMON.LAST_UPDATE</span>
+              <span>
+                {{::formData.time|formatFromNow}}
+                <span class="gray hidden-xs">|
+                  {{::formData.time | formatDate}}
                 </span>
               </span>
             </h4>
@@ -73,14 +83,14 @@
 
           <div class="item visible-xs no-padding-top no-padding-bottom">
             <h2 class="gray">
-              <a class="positive" ng-if="formData.location" ui-sref="app.market_lookup({location:formData.location})">
+              <a class="positive" ng-if="formData.city" ui-sref="app.market_lookup({location:formData.location})">
                 <i class="icon ion-location"></i>
-                {{options.location.prefix|translate}}<span ng-bind-html="formData.location"></span>
+                {{::options.location.prefix|translate}}<span ng-bind-html="::formData.city"></span>
               </a>
               <br/>
               <a ng-if="formData.category.name" ui-sref="app.market_lookup({category:formData.category.id})">
                 <i class="icon ion-flag"></i>
-                <span ng-bind-html="formData.category.name"></span>
+                <span ng-bind-html="::formData.category.name"></span>
               </a>
             </h2>
             <h4>
@@ -89,11 +99,11 @@
               <a ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.uid})">
                 <span class="positive" ng-if="issuer.name||issuer.uid">
                   <i class="icon ion-person"></i>
-                  {{issuer.name||issuer.uid}}
+                  {{::issuer.name||issuer.uid}}
                 </span>
                 <span class="gray" ng-if="!issuer.name && !issuer.uid">
                   <i class="icon ion-key"></i>
-                  {{issuer.pubkey|formatPubkey}}
+                  {{::issuer.pubkey|formatPubkey}}
                 </span>
               </a>
               <span>
@@ -104,11 +114,11 @@
               </span>
             </h4>
             <div class="badge badge-price"
-                 ng-class="{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}"
+                 ng-class="::{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}"
                  ng-if="formData.price">
               <i class="icon "
-                 ng-class="{'cion-market-need': formData.type == 'need', 'ion-pricetag': formData.type == 'offer'}"></i>
-              <span ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></span>
+                 ng-class="::{'cion-market-need': formData.type == 'need', 'ion-pricetag': formData.type == 'offer'}"></i>
+              <span ng-bind-html="::formData.price | formatAmount:{currency:formData.currency}"></span>
             </div>
           </div>
 
@@ -161,20 +171,20 @@
           <span class="item item-icon-left item-button-right hidden-xs" ng-if="formData.price||formData.fees">
             <ng-if ng-if="formData.price">
               <i class="calm icon ion-pricetag"></i>
-              <h1 class="calm" ng-bind-html="formData.price | formatAmount:{currency:formData.currency}"></h1>
+              <h1 class="calm" ng-bind-html="::formData.price | formatAmount:{currency:formData.currency}"></h1>
             </ng-if>
             <h3>
               <ng-if ng-if="formData.fees">
                 <span class="dark">
-                  <i class="ion-plus" ng-if="formData.price"></i>
-                  <ng-bind-html ng-bind-html="formData.fees | formatAmount:{currency: (formData.feesCurrency||formData.currency)}"></ng-bind-html>
+                  <i class="ion-plus" ng-if="::formData.price"></i>
+                  <ng-bind-html ng-bind-html="::formData.fees | formatAmount:{currency: (formData.feesCurrency||formData.currency)}"></ng-bind-html>
                 </span>
                  <span class="gray">{{'MARKET.VIEW.RECORD_FEES_PARENTHESIS'|translate}} | </span>
               </ng-if>
               <span class="gray">
                 <i class="ion-pie-graph"></i>
                 {{'MARKET.VIEW.RECORD_STOCK'|translate}}
-                <ng-if ng-if="formData.stock"><span class="dark">{{formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
+                <ng-if ng-if="formData.stock"><span class="dark">{{::formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
                 <ng-if ng-if="!formData.stock"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
               </span>
             </h3>

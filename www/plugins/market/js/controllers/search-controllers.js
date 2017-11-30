@@ -436,21 +436,23 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         // Compute title for url
         record.urlTitle = formatSlug(record.title);
       });
-      if (!options.from) {
-        $scope.search.results = res.hits;
-        $scope.search.total = res.total;
-      }
-      else {
-        $scope.search.results = $scope.search.results.concat(res.hits);
-      }
-      $scope.search.hasMore = $scope.search.results.length < $scope.search.total;
 
       // Load avatar and name
       return esProfile.fillAvatars(res.hits, 'issuer')
+        .then(function(hits) {
+          // Replace results, or concat if offset
+          if (!options.from) {
+            $scope.search.results = hits;
+            $scope.search.total = res.total;
+          }
+          else {
+            $scope.search.results = $scope.search.results.concat(hits);
+          }
+          $scope.search.hasMore = $scope.search.results.length < $scope.search.total;
+        });
     })
     .then(function() {
 
-      // Replace results, or append if 'show more' clicked
       $scope.search.loading = false;
 
       // motion
