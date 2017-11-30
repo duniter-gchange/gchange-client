@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var bower = require('bower');
 var concat = require('gulp-concat');
 var path = require("path");
 var sass = require('gulp-sass');
@@ -47,14 +48,23 @@ var paths = {
   css_plugin: ['./www/plugins/*/css/**/*.css']
 };
 
-gulp.task('default', ['sass', 'config', 'templatecache', 'ng_translate', 'ng_annotate',
-  'templatecache_plugin', 'ng_translate_plugin', 'ng_annotate_plugin', 'css_plugin'
+gulp.task('serve:before', ['sass',
+  'config',
+  'templatecache',
+  'ng_translate',
+  'ng_annotate',
+  'templatecache_plugin',
+  'ng_translate_plugin',
+  'ng_annotate_plugin',
+  'css_plugin'
 ]);
 
+gulp.task('default', ['config', 'serve:before']);
+
 gulp.task('sass-images', function (done) {
-    gulp.src('./scss/leaflet/images/**/*.*')
-        .pipe(gulp.dest('./www/img/'))
-        .on('end', done);
+  gulp.src('./scss/leaflet/images/**/*.*')
+    .pipe(gulp.dest('./www/img/'))
+    .on('end', done);
 });
 
 gulp.task('sass', ['sass-images'], function(done) {
@@ -114,6 +124,12 @@ gulp.task('watch', function() {
   gulp.watch(paths.css_plugin, ['css_plugin']);
 });
 
+gulp.task('install', ['git-check'], function() {
+  return bower.commands.install()
+    .on('log', function(data) {
+      gutil.log('bower', gutil.colors.cyan(data.id), data.message);
+    });
+});
 
 gulp.task('git-check', function(done) {
   if (!sh.which('git')) {
@@ -179,15 +195,15 @@ gulp.task('ng_annotate', function (done) {
     .on('end', done);
 });
 
-gulp.task('ng_translate', function() {
-  return gulp.src('www/i18n/locale-*.json')
+gulp.task('ng_translate', function(done) {
+  gulp.src('www/i18n/locale-*.json')
     .pipe(ngTranslate({standalone:true, module: 'cesium.translations'}))
-    .pipe(gulp.dest('www/dist/dist_js/app'));
-    //.pipe(gulp.dest('www/js'));
+    .pipe(gulp.dest('www/dist/dist_js/app'))
+    .on('end', done);
 });
 
 
-gulp.task('debug_file', function() {
+gulp.task('debug_file', function(done) {
   gutil.log(gutil.colors.green("Building `www/debug.html`..."));
 
   return gulp.src(['www/index.html'])
@@ -200,7 +216,8 @@ gulp.task('debug_file', function() {
     .pipe(replace('plugins/translations.js', 'dist/dist_js/plugins/translations.js'))
     .pipe(replace('ng-strict-di', ''))
     .pipe(rename('debug.html'))
-    .pipe(gulp.dest('www'));
+    .pipe(gulp.dest('www'))
+    .on('end', done);
 });
 
 /* -- Plugins -- */
@@ -223,10 +240,11 @@ gulp.task('ng_annotate_plugin', function (done) {
     .on('end', done);
 });
 
-gulp.task('ng_translate_plugin', function() {
-  return gulp.src(paths.ng_translate_plugin)
+gulp.task('ng_translate_plugin', function(done) {
+  gulp.src(paths.ng_translate_plugin)
     .pipe(ngTranslate({standalone:true, module: 'cesium.plugins.translations'}))
-    .pipe(gulp.dest('www/dist/dist_js/plugins'));
+    .pipe(gulp.dest('www/dist/dist_js/plugins'))
+    .on('end', done);
 });
 
 gulp.task('css_plugin', function (done) {
@@ -236,13 +254,11 @@ gulp.task('css_plugin', function (done) {
 });
 
 /* -- Web dist build -- */
-gulp.task('clean:tmp', function(done) {
-  return del([
-      './tmp'
-    ]);
+gulp.task('clean:tmp', function() {
+  return del(['tmp']);
 });
 
-gulp.task('clean:web', function(done) {
+gulp.task('clean:web', function() {
   return del([
       './platforms/web/www',
       './platforms/web/build'
@@ -268,7 +284,7 @@ gulp.task('copy-files:web', ['clean:tmp', 'clean:web', 'sass', 'config'], functi
 
     // Copy index.html (and remove unused code)
     gulp.src('./www/index.html')
-      .pipe(removeCode({"no-device": true}))
+      .pipe(removeCode({'no-device': true}))
       .pipe(removeHtml('.hidden-no-device'))
       .pipe(removeHtml('[remove-if][remove-if="no-device"]'))
       .pipe(htmlmin())
@@ -276,7 +292,7 @@ gulp.task('copy-files:web', ['clean:tmp', 'clean:web', 'sass', 'config'], functi
 
     // Copy index.html to debug.html (and remove unused code)
     gulp.src('./www/index.html')
-      .pipe(removeCode({"no-device": true}))
+      .pipe(removeCode({'no-device': true}))
       .pipe(removeHtml('.hidden-no-device'))
       .pipe(removeHtml('[remove-if][remove-if="no-device"]'))
       .pipe(rename("debug.html"))
@@ -393,6 +409,7 @@ gulp.task('optimize-files:web', ['debug-files:web'], function(done) {
   // Process index.html
   gulp.src(tmpPath + '/index.html')
     .pipe(useref())             // Concatenate with gulp-useref
+
     // Process JS
     .pipe(jsFilter)
     .pipe(uglify())             // Minify any javascript sources
@@ -426,7 +443,7 @@ gulp.task('clean-unused-files:web', ['optimize-files:web'], function(done) {
   .on ('end', done);
 });
 
-gulp.task('clean-unused-directories:web', ['clean-unused-files:web'], function(done) {
+gulp.task('clean-unused-directories:web', ['clean-unused-files:web'], function() {
   var tmpPath = './platforms/web/www';
   return del([
     tmpPath + '/css',
@@ -440,12 +457,12 @@ gulp.task('clean-unused-directories:web', ['clean-unused-files:web'], function(d
   ]);
 });
 
-gulp.task('zip:web', ['clean-unused-directories:web'], function(done) {
+gulp.task('zip:web', ['clean-unused-directories:web'], function() {
   var tmpPath = './platforms/web/www';
   var version = JSON.parse(fs.readFileSync('./package.json', 'utf8')).version;
   var txtFilter = filter(["**/*.txt"], { restore: true });
 
-  gulp.src(tmpPath + '/**/*.*')
+  return gulp.src(tmpPath + '/**/*.*')
 
     // Process TXT files: Add the UTF-8 BOM character
     .pipe(txtFilter)
@@ -454,15 +471,12 @@ gulp.task('zip:web', ['clean-unused-directories:web'], function(done) {
 
     .pipe(zip('gchange-web-'+version+'.zip'))
 
-    .pipe(gulp.dest('./platforms/web/build'))
-    .on('end', done);
+    .pipe(gulp.dest('./platforms/web/build'));
 });
 
-gulp.task('build:web', ['git-check', 'zip:web'], function(done) {
+gulp.task('build:web', ['git-check', 'zip:web'], function() {
   var version = JSON.parse(fs.readFileSync('./package.json', 'utf8')).version;
   gutil.log(gutil.colors.green("Build for web created at: 'plateforms/web/build/gchange-web-" + version + ".zip'"));
-  return del([
-      './tmp'
-    ]);
+  return del(['./tmp']);
 });
 
