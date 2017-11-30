@@ -22,11 +22,15 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   echo "new build android version: $3"
   case "$1" in
     rel|pre)
-       # Change the version in package.json and test file
+      # Change the version in files: 'package.json' and 'config.xml'
       sed -i "s/version\": \"$current\"/version\": \"$2\"/g" package.json
-        currentConfigXmlVersion=`grep -oP "version=\"\d+.\d+.\d+((a|b)[0-9]+)?\"" config.xml | grep -oP "\d+.\d+.\d+((a|b)[0-9]+)?"`
+      currentConfigXmlVersion=`grep -oP "version=\"\d+.\d+.\d+((a|b)[0-9]+)?\"" config.xml | grep -oP "\d+.\d+.\d+((a|b)[0-9]+)?"`
       sed -i "s/ version=\"$currentConfigXmlVersion\"/ version=\"$2\"/g" config.xml
       sed -i "s/ android-versionCode=\"$currentAndroid\"/ android-versionCode=\"$3\"/g" config.xml
+
+      # Change version in file: 'www/manifest.json'
+      currentManifestJsonVersion=`grep -oP "version\": \"\d+.\d+.\d+((a|b)[0-9]+)?\"" www/manifest.json | grep -oP "\d+.\d+.\d+((a|b)[0-9]+)?"`
+      sed -i "s/version\": \"$currentManifestJsonVersion\"/version\": \"$2\"/g" www/manifest.json
 
       # Bump the install.sh
       sed -i "s/echo \"v.*\" #lastest/echo \"v$2\" #lastest/g" install.sh
@@ -35,7 +39,6 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
       echo "No task given"
       ;;
   esac
-
 
   # force nodejs version to 5
   if [ -d "$NVM_DIR" ]; then
@@ -50,22 +53,26 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   gulp config --env default
 
   echo "----------------------------------"
-  echo "- Building Android artifact..."
+  echo "- Compiling sources..."
   echo "----------------------------------"
   gulp
+
+  echo "----------------------------------"
+  echo "- Building Android artifact..."
+  echo "----------------------------------"
   ionic build android --release
+
   #ionic build firefoxos --release
 
   echo "----------------------------------"
   echo "- Building web artifact..."
   echo "----------------------------------"
 
-  # Update config file
   gulp build:web --release
 
   #ionic build ubuntu --release
   #cd platforms/ubuntu/native/gchange; debuild
-  #cd $DIRNAME
+  cd $DIRNAME
 
   echo "----------------------------------"
   echo "- Executing git push, with tag: v$2"
@@ -80,7 +87,7 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
 
   if [[ $4 =~ ^[a-zA-Z0-9_]+:[a-zA-Z0-9_]+$ && "_$5" != "_" ]]; then
       echo "**********************************"
-      echo "* Uploading artifact to Github..."
+      echo "* Uploading artifacts to Github..."
       echo "**********************************"
 
       ./github.sh $1 $4 "'"$5"'"
@@ -88,6 +95,9 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
       echo "----------------------------------"
       echo "- Building desktop versions..."
       echo "----------------------------------"
+
+      # Remove old vagrant virtual machines
+      rm -rf ~/.vagrant.d/*
 
       git submodule update --init
       git submodule sync
@@ -104,17 +114,25 @@ gchange-desktop-v$2-linux-x64.tar.gz"
       cd $DIRNAME
       nvm use 5
 
-      echo "**********************************"
-      echo "* Build release succeed !"
-      echo "**********************************"
-
+    echo "**********************************"
+    echo "* Build release succeed !"
+    echo "**********************************"
   else
+
+    echo "**********************************"
+    echo "* Build release succeed !"
+    echo "**********************************"
+
     echo " WARN - missing arguments: "
     echo "       user:password 'release_description'"
     echo
     echo "   Binaries files NOT sending to github repository"
     echo "   Please run:"
-    echo "  > ./github.sh pre|rel user:password 'release_description'"
+    echo "   > ./github.sh pre|rel user:password 'release_description'"
+    echo
+    echo "   Desktop artifact are NOT build"
+    echo "   Please run:"
+    echo "   > platforms/desktop/release.sh <version>"
     echo
   fi
 

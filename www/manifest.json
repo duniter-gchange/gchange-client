@@ -1,6 +1,9 @@
 {
   "short_name": "ğchange",
   "name": "ğchange",
+  "version": "0.5.7",
+  "default_locale": "fr",
+  "description": "A market place for Ğ1 libre currency",
   "icons": [
     {
       "src": "img/logo_64px.png",
