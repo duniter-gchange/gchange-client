@@ -6,7 +6,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     $stateProvider
 
     .state('app.market_lookup', {
-      url: "/market?q&category&location&reload&type&hash&lat&lon",
+      url: "/market?q&category&location&reload&type&hash&lat&lon&last",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup.html",
@@ -20,7 +20,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     })
 
     .state('app.market_lookup_lg', {
-      url: "/market/lg?q&category&location&reload&type&hash&closed&lat&lon",
+      url: "/market/lg?q&category&location&reload&type&hash&closed&lat&lon&last",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup_lg.html",
@@ -369,6 +369,17 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       options.query.bool.filter =  filters;
     }
 
+    // Update location href
+    if (!from) {
+      $location.search({
+        last: true,
+        type: $scope.search.type,
+        location: $scope.search.location,
+        lat: $scope.search.geoPoint && $scope.search.geoPoint.lat,
+        lon: $scope.search.geoPoint && $scope.search.geoPoint.lon
+      }).replace();
+    }
+
     return $scope.doRequest(options);
   };
 
@@ -520,6 +531,9 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, m
         if (state.stateParams.q) { // Query parameter
           $scope.search.text = state.stateParams.q;
         }
+        else if (state.stateParams.last){
+          $scope.search.lastRecords = true;
+        }
 
         // Search on type
         if (state.stateParams.type) {
@@ -590,7 +604,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, m
 
   $scope.finishEnter = function(isAdvanced) {
     $scope.search.advanced = isAdvanced ? true : $scope.search.advanced; // keep null if first call
-    if (isAdvanced || $scope.search.category || $scope.search.text) {
+    if (!$scope.search.lastRecords) {
       $scope.doSearch()
           .then(function() {
             $scope.showFab('fab-add-market-record');
