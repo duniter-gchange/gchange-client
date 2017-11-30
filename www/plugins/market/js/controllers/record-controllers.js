@@ -376,7 +376,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   csWallet.api.data.on.logout($scope, onWalletChange, this);
 }
 
-function MkRecordEditController($scope, $q, $state, $ionicPopover, $timeout, mkRecord, $ionicHistory, $focus, $controller,
+function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $timeout, mkRecord, $ionicHistory, $focus, $controller,
                                       UIUtils, ModalUtils, csConfig, esHttp, csSettings, mkSettings) {
   'ngInject';
 
@@ -667,12 +667,32 @@ function MkRecordEditController($scope, $q, $state, $ionicPopover, $timeout, mkR
 
       // Redirect to record view
       .then(function(id) {
+        var isNew = !$scope.id;
         $scope.id = $scope.id || id;
         $scope.saving = false;
         $scope.dirty = false;
-        $ionicHistory.clearCache($ionicHistory.currentView().stateId); // clear current view
-        $ionicHistory.nextViewOptions({historyRoot: true});
-        return $state.go('app.market_view_record', {id: $scope.id, refresh: true});
+        var viewStateId = $ionicHistory.currentView().stateId;
+        console.log($ionicHistory);
+
+        var offState = $rootScope.$on('$stateChangeSuccess',
+          function(event, toState, toParams, fromState, fromParams){
+            event.preventDefault();
+            $state.go('app.market_view_record', {id: $scope.id}, {location: "replace", reload: true});
+            offState();
+          });
+        $ionicHistory.goBack(isNew ? -1 : -2);
+        /*
+        return $ionicHistory.goBack(-2)
+          .then(function() {
+            return
+          });*/
+        //$ionicHistory.nextViewOptions({historyRoot: true});
+        /*return $state.go('app.market_view_record', {id: $scope.id}, {location: "replace", reload: true})
+          .then(function() {
+            $timeout(function(){
+              $ionicHistory.clearCache(viewStateId); // clear current viewfrom cache
+            }, 500);
+          })*/
       })
 
       .catch(function(err) {

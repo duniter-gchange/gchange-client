@@ -11,7 +11,7 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
   })
 
 .factory('mkSettings', function($rootScope, $q, $timeout, $ionicHistory, Api, esHttp,
-                            csConfig, csSettings, esSettings, csCurrency, csWallet) {
+                            csConfig, csSettings, esSettings, csCurrency) {
   'ngInject';
 
   var
