@@ -8,14 +8,7 @@
     "!www/css/ionic.app**"
   ],
   "gulpStartupTasks": [
-    "sass",
-    "templatecache",
-    "ng_annotate",
-    "ng_translate",
-    "templatecache_plugin",
-    "ng_annotate_plugin",
-    "ng_translate_plugin",
-    "css_plugin",
+    "serve:before",
     "watch"
   ],
   "defaultBrowser": "chrome",

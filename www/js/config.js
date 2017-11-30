@@ -28,8 +28,9 @@ angular.module("cesium.config", [])
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "data.gchange.fr",
-			"port": "443",
+			"host": "locahost",
+			"port": "9200",
+			"wsPort": "9400",
 			"maxUploadBodySize": 2097152,
 			"defaultCountry": "France"
 		},
