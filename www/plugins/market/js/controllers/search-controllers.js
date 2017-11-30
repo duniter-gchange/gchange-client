@@ -286,11 +286,14 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
 
     var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
+    var hasMatchOnLocation = false;
     if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
 
       // text match
       if (location && location.length) {
-        matches.push({match_phrase: { city: location}});
+        var locationCity = location.split(',')[0];
+        matches.push({match_phrase_prefix: { city: locationCity}});
+        hasMatchOnLocation = true;
       }
 
       filters.push({
@@ -305,6 +308,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     if (matches.length) {
       options.query = {bool: {}};
       options.query.bool.should =  matches;
+      options.query.bool.minimum_should_match = (matches.length > 1 || !hasMatchOnLocation) ? 1 : 0;
     }
     if (filters.length) {
       options.query = options.query || {bool: {}};
@@ -351,8 +355,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     $scope.search.loading = (options.from === 0);
 
     return  mkRecord.record.search(options)
-    .then(function(records) {
-      if (!records && !records.length) {
+    .then(function(res) {
+
+      if (!res || !res.hits || !res.hits.length) {
         $scope.search.results = (options.from > 0) ? $scope.search.results : [];
         $scope.search.total = (options.from > 0) ? $scope.search.total : 0;
         $scope.search.hasMore = false;
@@ -362,36 +367,34 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
       // Filter on type (workaround if filter on term 'type' not working)
       var formatSlug = $filter('formatSlug');
-      records.reduce(function (res, record) {
-        if ($scope.search.type && $scope.search.type != record.type) {
-          return res;
-        }
+      _.forEach(res.hits, function(record) {
+        // Compute title for url
         record.urlTitle = formatSlug(record.title);
-        return res.concat(record);
-      }, []);
-
-      return esProfile.fillAvatars(records, 'issuer');
-    })
-    .then(function(records) {
-
-      // Replace results, or append if 'show more' clicked
+      });
       if (!options.from) {
-        $scope.search.results = records;
+        $scope.search.results = res.hits;
+        $scope.search.total = res.total;
       }
       else {
-        $scope.search.results = $scope.search.results.concat(records);
+        $scope.search.results = $scope.search.results.concat(hits);
       }
-      $scope.search.hasMore = $scope.search.results.length >= options.from + options.size;
+      $scope.search.hasMore = $scope.search.results.length < $scope.search.total;
+
+      // Load avatar and name
+      return esProfile.fillAvatars(res.hits, 'issuer')
+    })
+    .then(function() {
+
+      // Replace results, or append if 'show more' clicked
       $scope.search.loading = false;
 
       // motion
-      if (records.length > 0) {
-        $scope.motion.show();
-      }
+      $scope.motion.show();
     })
     .catch(function(err) {
       $scope.search.loading = false;
       $scope.search.results = (options.from > 0) ? $scope.search.results : [];
+      $scope.search.total = (options.from > 0) ? $scope.search.total : 0;
       $scope.search.hasMore = false;
       UIUtils.onError('MARKET.ERROR.LOOKUP_RECORDS_FAILED')(err);
     });

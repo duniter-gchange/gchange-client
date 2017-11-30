@@ -577,107 +577,107 @@ function ESPositionEditController($scope, csConfig, esGeo, ModalUtils) {
 
 
 function ESLookupPositionController($scope, $q, csConfig, esGeo, ModalUtils) {
-    'ngInject';
+  'ngInject';
 
-    // The default country used for address localisation
-    var defaultCountry = csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.defaultCountry;
-    var loadingPosition = false;
+  // The default country used for address localisation
+  var defaultCountry = csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.defaultCountry;
+  var loadingPosition = false;
 
   $scope.geoDistanceLabels = [5,10,20,50,100,250,500].reduce(function(res, distance){
-    res[distance] = {
-      labelKey: 'LOCATION.DISTANCE_OPTION',
-      labelParams: {value: distance}
-    };
-    return res;
-  }, {});
+      res[distance] = {
+        labelKey: 'LOCATION.DISTANCE_OPTION',
+        labelParams: {value: distance}
+      };
+      return res;
+    }, {});
   $scope.geoDistances = _.keys($scope.geoDistanceLabels);
 
-    $scope.searchPosition = function(searchText) {
-        if (loadingPosition) return $q.when();
+  $scope.searchPosition = function(searchText) {
+    if (loadingPosition) return $q.when();
 
-        loadingPosition = true;
+    loadingPosition = true;
 
-        // No address, so try to localize by device
-        var promise = !searchText ?
-            esGeo.point.current() :
-            esGeo.point.searchByAddress(searchText)
-                .then(function(res) {
-                    if (res && res.length == 1) {
-                        res[0].exact = true;
-                        return res[0];
-                    }
-                    return $scope.openSearchLocationModal({
-                        text: searchText,
-                        results: res||[],
-                        forceFallback: !res || !res.length // force fallback search first
-                    })
-                        .then(function(res) {
-                            // Compute point name
-                            if (res && res.address && res.address.city) {
-                                var cityParts = [res.address.city];
-                                if (res.address.postcode) {
-                                    cityParts.push(res.address.postcode);
-                                }
-                                if (res.address.country != defaultCountry) {
-                                    cityParts.push(res.address.country);
-                                }
-                                res.shortName = cityParts.join(', ');
-                            }
-                            return res;
-                        });
-                });
-
-        promise
+    // No address, so try to localize by device
+    var promise = !searchText ?
+        esGeo.point.current() :
+        esGeo.point.searchByAddress(searchText)
             .then(function(res) {
-
-                loadingPosition = false;
-
-                // user cancel
-                if (!res || !res.lat || !res.lon) return;
-
-                return {
-                    lat: parseFloat(res.lat),
-                    lon: parseFloat(res.lon),
-                    name: res.shortName,
-                    exact: res.exact
-                };
-
-            })
-            .catch(function(err) {
-                console.error(err); // Silent
-                loadingPosition = false;
+                if (res && res.length == 1) {
+                    res[0].exact = true;
+                    return res[0];
+                }
+                return $scope.openSearchLocationModal({
+                    text: searchText,
+                    results: res||[],
+                    forceFallback: !res || !res.length // force fallback search first
+                })
+                    .then(function(res) {
+                        // Compute point name
+                        if (res && res.address && res.address.city) {
+                            var cityParts = [res.address.city];
+                            if (res.address.postcode) {
+                                cityParts.push(res.address.postcode);
+                            }
+                            if (res.address.country != defaultCountry) {
+                                cityParts.push(res.address.country);
+                            }
+                            res.shortName = cityParts.join(', ');
+                        }
+                        return res;
+                    });
             });
 
-        return promise;
+    promise
+        .then(function(res) {
+
+            loadingPosition = false;
+
+            // user cancel
+            if (!res || !res.lat || !res.lon) return;
+
+            return {
+                lat: parseFloat(res.lat),
+                lon: parseFloat(res.lon),
+                name: res.shortName,
+                exact: res.exact
+            };
+
+        })
+        .catch(function(err) {
+            console.error(err); // Silent
+            loadingPosition = false;
+        });
+
+    return promise;
+  };
+
+
+  /* -- modal -- */
+
+  $scope.openSearchLocationModal = function(options) {
+
+    options = options || {};
+
+    var parameters = {
+        text: options.text || $scope.getAddressToSearch(),
+        results: options.results,
+        fallbackText: options.fallbackText || $scope.search.location,
+        forceFallback: angular.isDefined(options.forceFallback) ? options.forceFallback : undefined
     };
 
-
-    /* -- modal -- */
-
-    $scope.openSearchLocationModal = function(options) {
-
-        options = options || {};
-
-        var parameters = {
-            text: options.text || $scope.getAddressToSearch(),
-            results: options.results,
-            fallbackText: options.fallbackText || $scope.search.location,
-            forceFallback: angular.isDefined(options.forceFallback) ? options.forceFallback : undefined
-        };
-
-        return ModalUtils.show(
-            'plugins/es/templates/common/modal_location.html',
-            'ESSearchPositionModalCtrl',
-            parameters,
-            {
-                focusFirstInput: true
-                //,scope: $scope
-            }
-        );
-    };
+    return ModalUtils.show(
+        'plugins/es/templates/common/modal_location.html',
+        'ESSearchPositionModalCtrl',
+        parameters,
+        {
+            focusFirstInput: true
+            //,scope: $scope
+        }
+    );
+  };
 }
 
-function ESSearchPositionItemController($scope, $q, $timeout, ModalUtils, UIUtils, csConfig, esGeo) {
+function ESSearchPositionItemController($scope, $q, $timeout, ModalUtils, csConfig, esGeo) {
   'ngInject';
 
   // The default country used for address localisation

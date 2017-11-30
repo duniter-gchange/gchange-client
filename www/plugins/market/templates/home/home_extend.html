@@ -1,11 +1,12 @@
 
-<ng-if ng-if="enable">
+<ng-if ng-if="enable" >
 
   <h2 ng-if="$root.config.plugins.market.homeMessage" ng-bind-html="$root.config.plugins.market.homeMessage"></h2>
 
-  <!-- location -->
-  <div class="list" style="background-color: white;"  ng-controller="ESSearchPositionItemCtrl">
-    <div class="item no-padding item-icon-right ">
+  <div class="row no-padding center" ng-controller="ESSearchPositionItemCtrl">
+
+    <!-- location -->
+    <div class="item no-padding item-icon-right" style="background-color: white;">
       <div class="item-input item-input-search">
         <input type="text"
                class="visible-xs visible-sm"
@@ -36,9 +37,14 @@
 
   </div>
 
+  <br class="hidden-xs hidden-sm"/>
+  <br class="hidden-xs hidden-sm"/>
+  <br/>
+
   <button type="button"
           class="button button-block button-balanced button-raised icon icon-left ion-compose ink-dark"
           ng-click="showNewRecordModal()" translate>MARKET.HOME.BTN_NEW_AD</button>
+
 
   <br class="hidden-xs"/>
 

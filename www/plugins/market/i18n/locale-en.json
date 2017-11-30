@@ -62,9 +62,13 @@
       "SHOW_MORE_COUNT": "(current limit to {{limit}})",
       "LOCATION": "Location",
       "LOCATION_HELP": "City",
-      "LAST_RECORDS": "Last records:",
-      "RESULTS": "Results:",
-      "BTN_LAST_RECORDS": "Last ads",
+      "RESULTS": "Results",
+      "RESULT_COUNT_LOCATION": "{{count}} result{{count>0?'s':''}}, near {{location}}",
+      "RESULT_COUNT": "{{count}} result{{count>0?'s':''}}",
+      "LAST_RECORDS": "Recent ads:",
+      "LAST_RECORD_COUNT_LOCATION": "{{count}} recent ad{{count>0?'s':''}}, near {{location}}",
+      "LAST_RECORD_COUNT": "{{count}} recent ad{{count>0?'s':''}}",
+      "BTN_LAST_RECORDS": "Recent ads",
       "BTN_SHOW_CATEGORIES": "Show categories",
       "BTN_OFFERS": "Offers",
       "BTN_NEEDS": "Needs",
@@ -98,7 +102,7 @@
     },
     "WALLET": {
       "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
-      "DUNITER_ACCOUNT_HELP": "The public key (above) indicates the destination of the payments you will receive.",
+      "DUNITER_ACCOUNT_HELP": "The public key (above) indicates the destination of the payments you will receive."
     },
     "TYPE": {
       "TITLE": "New ad",
@@ -134,7 +138,7 @@
       "VIEW": {
         "BTN_RECORDS": "Ads",
         "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
-        "DUNITER_ACCOUNT_HELP": "The public key (above) is the account to be used to pay for this user.",
+        "DUNITER_ACCOUNT_HELP": "The public key (above) is the account to be used to pay for this user."
       }
     },
     "ERROR": {

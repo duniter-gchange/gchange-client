@@ -1,27 +1,13 @@
 
-    <!--<a class="padding-top button button-text button-small ink" ng-if="search.advanced"
-       ng-class="{'button-text-positive': search.advanced, 'button-text-stable': !search.advanced}"
-       ng-click="search.advanced=!search.advanced">
-        {{'MARKET.SEARCH.BTN_OPTIONS' | translate}}
-        <i class="icon ion-arrow-up-b"></i>
-    </a>-->
 
-    <div class="item item-input item-select" ng-if="search.advanced && options.location.show">
-        <div class="input-label">
-            <span class="input-label" translate>MARKET.SEARCH.GEO_DISTANCE</span>
-        </div>
-
-        <label>
-            <select ng-model="search.geoDistance"
-                    ng-options="i as (geoDistanceLabels[i].labelKey | translate:geoDistanceLabels[i].labelParams ) for i in geoDistances track by i">
-            </select>
-        </label>
-    </div>
-
-    <div class="item item-toggle dark" ng-if="search.advanced">
-        <div class="input-label">
+    <!-- Show closed ad ? -->
+    <div ng-if="search.advanced"
+         class="item item-icon-left item-input item-toggle stable-bg" >
+        <i class="icon ion-speakerphone gray"></i>
+        <b class="icon-secondary ion-close-circled assertive" style="top:7px; left: 34px;"></b>
+        <span class="input-label item-icon-left-padding" ng-click="search.showClosed=!search.showClosed">
             {{'MARKET.SEARCH.SHOW_CLOSED_RECORD' | translate}}
-        </div>
+        </span>
         <label class="toggle toggle-royal">
             <input type="checkbox" ng-model="search.showClosed">
             <div class="track">
@@ -29,3 +15,13 @@
             </div>
         </label>
     </div>
+
+    <div class="item item-icon-left item-input item-select stable-bg" ng-if="search.advanced && options.location.show">
+        <i class="icon ion-arrow-resize gray"></i>
+        <span class="input-label item-icon-left-padding " translate>MARKET.SEARCH.GEO_DISTANCE</span>
+        <label>
+            <select ng-model="search.geoDistance" class="col-border-left"
+                    ng-options="i as (geoDistanceLabels[i].labelKey | translate:geoDistanceLabels[i].labelParams ) for i in geoDistances track by i">
+            </select>
+        </label>
+    </span>

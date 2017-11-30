@@ -145,7 +145,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
                         by_id: {
                             terms: {
                                 field: 'category.id',
-                                size: 100
+                                size: 1000
                             }
                         }
                     }
@@ -317,7 +317,10 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           res = res[2];
 
           if (!res || !res.hits || !res.hits.total) {
-            return [];
+            return {
+              total: 0,
+              hits: []
+            };
           }
 
           // Get geo_distance filter
@@ -328,7 +331,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           var geoPoint = geoDistanceFilter && geoDistanceFilter.geo_distance && geoDistanceFilter.geo_distance.geoPoint;
           var distanceUnit = 'km'; // TODO: get unit from geoDistanceFilter.geo_distance.distance
 
-          return res.hits.hits.reduce(function(result, hit) {
+          var hits = res.hits.hits.reduce(function(result, hit) {
             var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, html: true});
             record.id = hit._id;
 
@@ -343,6 +346,11 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 
             return result.concat(record);
           }, []);
+
+          return {
+            total: res.hits.total,
+            hits: hits
+          };
         });
     }
 
@@ -478,14 +486,14 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             });
     }
 
-      exports.category = {
-        all: getCategories,
-        filtered: getFilteredCategories,
-        get: getCategory,
-        searchText: esHttp.get('/market/category/_search?q=:search'),
-        search: esHttp.post('/market/category/_search'),
-        stats: getCategoriesStats
-      };
+    exports.category = {
+      all: getCategories,
+      filtered: getFilteredCategories,
+      get: getCategory,
+      searchText: esHttp.get('/market/category/_search?q=:search'),
+      search: esHttp.post('/market/category/_search'),
+      stats: getCategoriesStats
+    };
     exports.record = {
         search: search,
         load: loadData,

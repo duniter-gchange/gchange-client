@@ -114,13 +114,17 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
     $scope.doSearch = function() {
 
         // Resolve location position
-        if ($scope.search.location && $scope.search.location.length >= 3 && !$scope.search.geoPoint) {
-            return $scope.resolveLocationPosition()
-                .then(function() {
-                    return $scope.doSearch(); // Loop
+        if (!$scope.search.geoPoint) {
+            return $scope.searchPosition($scope.search.location)
+                .then(function(res) {
+                    if (res) {
+                        $scope.search.geoPoint = res;
+                        return $scope.doSearch(); // Loop
+                    }
                 })
-                .catch(function() {
-                    return UIUtils.alert.error('MARKET.HOME.ERROR.GEO_LOCATION_NOT_FOUND');
+                .catch(function(err) {
+                  console.error(err);
+                  return $state.go('app.market_lookup', stateParams);
                 });
         }
 

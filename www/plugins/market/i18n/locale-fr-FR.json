@@ -56,14 +56,18 @@
       "BTN_ADD": "Nouveau",
       "BTN_OPTIONS": "Recherche avancée",
       "BTN_AROUND_ME": "Autour de moi",
-      "GEO_DISTANCE": "Distance maximale autour de la ville",
+      "GEO_DISTANCE": "Distance maximale autour de la ville :",
       "GEO_DISTANCE_OPTION": "{{value}} km",
       "SHOW_MORE": "Afficher plus",
       "SHOW_MORE_COUNT": "(limite actuelle à {{limit}})",
       "LOCATION": "Ville",
       "LOCATION_HELP": "Ville, Code postal",
-      "LAST_RECORDS": "Dernières annonces :",
-      "RESULTS": "Résultats :",
+      "RESULTS": "Résultats",
+      "RESULT_COUNT_LOCATION": "{{count}} résultat{{count>0?'s':''}}, près de {{location}}",
+      "RESULT_COUNT": "{{count}} résultat{{count>0?'s':''}}",
+      "LAST_RECORDS": "Dernières annonces",
+      "LAST_RECORD_COUNT_LOCATION": "{{count}} page{{count>0?'s':''}} récente{{count>0?'s':''}}, près de {{location}}",
+      "LAST_RECORD_COUNT": "{{count}} page{{count>0?'s':''}} récente{{count>0?'s':''}}",
       "BTN_LAST_RECORDS": "Dernières annonces",
       "BTN_SHOW_CATEGORIES": "Parcourir les catégories",
       "BTN_OFFERS": "Offres",
@@ -134,7 +138,7 @@
       "VIEW": {
         "BTN_RECORDS": "Annonces",
         "DUNITER_ACCOUNT": "Réception des paiements en {{currency|currencySymbol}}",
-        "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) correspond au compte à utiliser pour payer cet utilisateur.",
+        "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) correspond au compte à utiliser pour payer cet utilisateur."
       }
     },
     "ERROR": {
