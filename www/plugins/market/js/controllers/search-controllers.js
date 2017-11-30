@@ -532,6 +532,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, m
         // Search by text
         if (state.stateParams.q) { // Query parameter
           $scope.search.text = state.stateParams.q;
+          $scope.search.lastRecords = false;
         }
         else if (state.stateParams.last){
           $scope.search.lastRecords = true;
