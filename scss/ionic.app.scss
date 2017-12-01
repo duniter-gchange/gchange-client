@@ -1,3 +1,5 @@
+//$active: #56d67a !default;
+
 // Include all of Ionic
 @import "cesium.app";
 
@@ -7,3 +9,53 @@
 .avatar-wallet {
   background-image: url('../img/person.png') !important;
 }
+
+/*
+#home {
+  .positive-900-bg {
+    background: url(../img/background.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/background.jpg', sizingMethod='scale');
+    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/background.jpg', sizingMethod='scale')";
+
+    !* Set rules to fill background *!
+    min-height: 100%;
+    min-width: 1024px;
+
+    !* Set up proportionate scaling *!
+    width: 100%;
+    height: auto;
+
+    !* Set up positioning *!
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    z-index: 0;
+  }
+
+  h4 {
+    @extend .dark;
+  }
+
+  .no-padding-xs {
+    padding: 0 !important;
+  }
+
+}
+
+#wallet .hero.positive-900-bg {
+  background: url(../img/header_bg.jpg) !important;
+  background-position-x: 0;
+  background-position-y: 0;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/background.jpg', sizingMethod='scale');
+  -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/background.jpg', sizingMethod='scale')";
+}
+*/

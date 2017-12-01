@@ -3,16 +3,19 @@
 
   </ion-nav-title>
 
-  <ion-content class="has-header text-center padding-xs positive-900-bg">
+  <ion-content class="has-header text-center padding-xs positive-900-bg" scroll="false">
+    <div class="bg"></div>
 
     <div class="logo"></div>
     <p class="hidden-xs">&nbsp;</p>
-    <h4 class="hidden-xs" translate>HOME.MESSAGE</h4>
-    <h4 class="visible-xs" translate>HOME.MESSAGE_SHORT</h4>
 
-    <br class="hidden-xs"/>
+    <div class="center padding" style="max-width: 382px;">
 
-    <div class="center padding" >
+      <h4 class="hidden-xs" translate>HOME.MESSAGE</h4>
+      <h4 class="visible-xs" translate>HOME.MESSAGE_SHORT</h4>
+
+      <br class="hidden-xs"/>
+      <br/>
 
       <ion-spinner icon="android" ng-if="loading"></ion-spinner>
 

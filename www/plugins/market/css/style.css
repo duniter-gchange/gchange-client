@@ -7,6 +7,12 @@
     border-bottom: none;
 }
 
+/*#home .light-bg {
+    background-color: rgba(255,255,255,0.7);
+    z-index: 10;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+}*/
+
 .market .row-record h2 {
     height: 38px;
     overflow: hidden;
