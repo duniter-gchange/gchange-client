@@ -212,11 +212,12 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
     var stateParams = {};
 
+    var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
     if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
 
       // match location OR geo distance
-      if ($scope.search.location && $scope.search.location.length) {
-        var locationCity = $scope.search.location.split(',')[0];
+      if (location && location.length) {
+        var locationCity = location.split(',')[0];
         filters.push({
           or : [
             // No position defined
@@ -239,7 +240,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
             }}
           ]
         });
-        stateParams.location = $scope.search.location;
+        stateParams.location = $scope.search.location.trim();
       }
 
       else {
@@ -666,6 +667,16 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, m
   });
 
   /* -- manage events -- */
+
+  $scope.onGeoPointChanged = function() {
+    if ($scope.search.loading) return;
+
+    if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon && !$scope.search.geoPoint.exact) {
+      $scope.doSearch();
+    }
+  };
+  $scope.$watch('search.geoPoint', $scope.onGeoPointChanged, true);
+
 
   $scope.onToggleAdvanced = function() {
     if ($scope.search.loading || !$scope.entered) return;

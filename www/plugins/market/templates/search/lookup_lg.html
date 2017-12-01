@@ -19,6 +19,7 @@
 
         <div class="item-input">
           <div class="animate-show-hide ng-hide" ng-show="entered">
+
             <!-- selected location -->
             <div ng-show="!search.loading && search.geoPoint"
                  class="button button-small button-text button-stable button-icon-event stable-900-bg"
@@ -57,12 +58,12 @@
       </div>
 
       <!-- location -->
-      <ng-include src="'plugins/es/templates/common/item_location_search.html'"
+      <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
                   ng-if="entered && !search.geoPoint && options.location.show"
-                  ng-controller="ESSearchPositionItemCtrl" ng-init=""></ng-include>
+                  ng-controller="ESSearchPositionItemCtrl"></ng-include>
 
       <!-- options -->
-      <ng-include src="'plugins/market/templates/search/lookup_options.html'"></ng-include>
+      <ng-include src="::'plugins/market/templates/search/lookup_options.html'"></ng-include>
     </form>
 
 
