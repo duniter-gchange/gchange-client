@@ -63,15 +63,10 @@
                 </span>
               </span>
             </h4>
-            <h4 class="hidden-xs" ng-if="formData.time - formData.creationTime > 86400">
-              <i class="icon ion-edit"></i>
+            <h4 class="dark hidden-xs" ng-if="formData.time - formData.creationTime > 86400">
+              <i class="icon ion-edit "></i>
               <span translate>MARKET.COMMON.LAST_UPDATE</span>
-              <span>
-                {{::formData.time|formatFromNow}}
-                <span class="gray hidden-xs">|
-                  {{::formData.time | formatDate}}
-                </span>
-              </span>
+              <span>{{::formData.time | formatDate}}</span>
             </h4>
             <div class="badge hidden-xs"
                  ng-if="options.type.show"
