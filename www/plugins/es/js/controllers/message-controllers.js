@@ -424,7 +424,7 @@ function ESMessageViewController($scope, $state, $timeout, $translate, $ionicHis
 
     return $scope.loadWallet({minData: true})
       .then(function() {
-        return esMessage.get({type: type, id: id});
+        return esMessage.get(id, {type: type});
       })
       .catch(UIUtils.onError('MESSAGE.ERROR.LOAD_MESSAGE_FAILED'))
       .then(function(message) {
