@@ -671,8 +671,6 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
         $scope.id = $scope.id || id;
         $scope.saving = false;
         $scope.dirty = false;
-        var viewStateId = $ionicHistory.currentView().stateId;
-        console.log($ionicHistory);
 
         var offState = $rootScope.$on('$stateChangeSuccess',
           function(event, toState, toParams, fromState, fromParams){
@@ -681,18 +679,6 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
             offState();
           });
         $ionicHistory.goBack(isNew ? -1 : -2);
-        /*
-        return $ionicHistory.goBack(-2)
-          .then(function() {
-            return
-          });*/
-        //$ionicHistory.nextViewOptions({historyRoot: true});
-        /*return $state.go('app.market_view_record', {id: $scope.id}, {location: "replace", reload: true})
-          .then(function() {
-            $timeout(function(){
-              $ionicHistory.clearCache(viewStateId); // clear current viewfrom cache
-            }, 500);
-          })*/
       })
 
       .catch(function(err) {
