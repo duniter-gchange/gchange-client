@@ -13,7 +13,7 @@
 
       <h4>
         <span class="hidden-xs" translate>HOME.MESSAGE</span>
-        <br class="hidden-xs"/>
+        <!--<br class="hidden-xs"/>-->
         <span ng-show="!loading">{{'HOME.MESSAGE_CURRENCY'|translate:{currency: $root.currency.name} }}</span>
       </h4>
 
@@ -68,8 +68,8 @@
         </div>
 
         <!-- disconnect link -->
-        <div class="text-center no-padding hidden-xs hidden-sm" ng-show="login">
-          <span ng-bind-html="'HOME.NOT_YOUR_ACCOUNT_QUESTION'|translate:$root.walletData"></span>
+        <div class="text-center no-padding hidden-xs hidden-sm " ng-show="login">
+          <span class="dark" ng-bind-html="'HOME.NOT_YOUR_ACCOUNT_QUESTION'|translate:$root.walletData"></span>
           <a class="bold positive" ng-click="logout()" translate>
             HOME.BTN_CHANGE_ACCOUNT
           </a>

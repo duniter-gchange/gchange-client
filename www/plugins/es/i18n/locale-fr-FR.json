@@ -249,11 +249,11 @@
     "ADDRESS": "Rue",
     "ADDRESS_HELP": "Rue, complément d'adresse...",
     "CITY": "Ville",
-    "CITY_HELP": "Ville, Pays",
+    "CITY_HELP": "Code postal, Ville, Pays",
     "DISTANCE": "Distance maximale autour de la ville",
     "DISTANCE_UNIT": "km",
     "DISTANCE_OPTION": "{{value}} {{'LOCATION.DISTANCE_UNIT'|translate}}",
-    "SEARCH_HELP": "Ville, Code postal",
+    "SEARCH_HELP": "Code postal, Ville",
     "MODAL": {
       "TITLE": "Recherche de l'adresse",
       "SEARCH_HELP": "Ville, Code postal, Pays",
