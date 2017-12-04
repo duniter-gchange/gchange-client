@@ -108,8 +108,8 @@
   },
   "HOME": {
     "TITLE": "Cesium",
-    "MESSAGE": "Welcome to the {{'COMMON.APP_NAME'|translate}} Application!<br/>A great market place in Libre currency !",
-    "MESSAGE_SHORT": "A great market place in Libre currency !",
+    "MESSAGE": "Welcome to the {{'COMMON.APP_NAME'|translate}} Application!",
+    "MESSAGE_CURRENCY": "Make exchanges in the libre currency {{currency|abbreviate}}!",
     "BTN_CURRENCY": "Explore currency",
     "BTN_ABOUT": "about",
     "BTN_HELP": "Help",

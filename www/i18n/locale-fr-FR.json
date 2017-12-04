@@ -108,8 +108,8 @@
   },
   "HOME": {
     "TITLE": "Cesium",
-    "MESSAGE": "Bienvenue dans l'application {{'COMMON.APP_NAME'|translate}} !<br/>Faites des échanges d'un genre nouveau !",
-    "MESSAGE_SHORT": "Faites des échanges d'un genre nouveau !",
+    "MESSAGE": "Bienvenue dans l'application {{'COMMON.APP_NAME'|translate}}.",
+    "MESSAGE_CURRENCY": "Faites des échanges en monnaie libre {{currency|abbreviate}} !",
     "BTN_CURRENCY": "Explorer la monnaie {{name|abbreviate}}",
     "BTN_ABOUT": "à propos",
     "BTN_HELP": "Aide en ligne",

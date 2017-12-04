@@ -992,6 +992,14 @@ $screen-menu:                     845px;
 .item-radio .item-content .stable-bg{
   background-color: $stable !important;
 }
+.card.balanced-bg,
+.card .balanced-bg,
+.item.balanced-bg,
+.item .balanced-bg,
+.item-complex .item-content .balanced-bg,
+.item-radio .item-content .balanced-bg{
+  background-color: $balanced !important;
+}
 
 .card .card-header {
   padding-top: 5px !important;

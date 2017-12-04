@@ -3,19 +3,21 @@
 
   </ion-nav-title>
 
-  <ion-content class="has-header text-center padding-xs positive-900-bg" scroll="false">
+  <ion-content class="has-header text-center padding-xs " scroll="false">
     <div class="bg"></div>
 
     <div class="logo"></div>
     <p class="hidden-xs">&nbsp;</p>
 
-    <div class="center padding" style="max-width: 382px;">
+    <div class="center padding light-bg" style="max-width: 382px;">
 
-      <h4 class="hidden-xs" translate>HOME.MESSAGE</h4>
-      <h4 class="visible-xs" translate>HOME.MESSAGE_SHORT</h4>
+      <h4>
+        <span class="hidden-xs" translate>HOME.MESSAGE</span>
+        <br class="hidden-xs"/>
+        <span ng-show="!loading">{{'HOME.MESSAGE_CURRENCY'|translate:{currency: $root.currency.name} }}</span>
+      </h4>
 
       <br class="hidden-xs"/>
-      <br/>
 
       <ion-spinner icon="android" ng-if="loading"></ion-spinner>
 
@@ -68,12 +70,9 @@
         <!-- disconnect link -->
         <div class="text-center no-padding hidden-xs hidden-sm" ng-show="login">
           <span ng-bind-html="'HOME.NOT_YOUR_ACCOUNT_QUESTION'|translate:$root.walletData"></span>
-          <br/>
-          <b>
-            <a class="assertive" ng-click="logout()" translate>
-              HOME.BTN_CHANGE_ACCOUNT
-            </a>
-          </b>
+          <a class="bold positive" ng-click="logout()" translate>
+            HOME.BTN_CHANGE_ACCOUNT
+          </a>
         </div>
 
         <button type="button"
