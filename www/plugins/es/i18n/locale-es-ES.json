@@ -332,9 +332,7 @@
       "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado la repuesta a su comentario sobre el referencia : <b>{{params[2]}}</b>"
     }
   },
-  "ES_HTTP": {
-    "ERROR": {
-      "MAX_UPLOAD_BODY_SIZE": "El volumen de datos a enviar excede el límite establecido por el servidor.<br/><br/>Por favor, inténtelo de nuevo después, por ejemplo, borrando fotos."
-    }
+  "ERROR": {
+    "ES_MAX_UPLOAD_BODY_SIZE": "El volumen de datos a enviar excede el límite establecido por el servidor.<br/><br/>Por favor, inténtelo de nuevo después, por ejemplo, borrando fotos."
   }
 }

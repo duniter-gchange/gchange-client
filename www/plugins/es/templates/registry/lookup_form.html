@@ -1,0 +1,140 @@
+
+<!-- selected location
+<a
+     class="button button-small button-text button-stable button-icon-event stable-900-bg"
+     style="margin-right: 10px;">
+  &nbsp;<i class="icon ion-location"></i>
+  {{search.location}}
+  <i class="icon ion-close" ng-click="removeLocation2()">&nbsp;&nbsp;</i>
+</a>-->
+<form ng-submit="doSearch()"/>
+  <div class="item no-padding">
+
+    <div class="item-input">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input type="text"
+             class="visible-xs visible-sm"
+             placeholder="{{'REGISTRY.SEARCH.SEARCH_HELP'|translate}}"
+             ng-model="search.text"
+             ng-model-options="{ debounce: 650 }"
+             ng-change="doSearch()"
+             on-return="doSearchText()"
+             select-on-click>
+      <input type="text"
+             class="hidden-xs hidden-sm"
+             placeholder="{{'REGISTRY.SEARCH.SEARCH_HELP'|translate}}"
+             id="registrySearchText"
+             ng-model="search.text"
+             on-return="doSearchText()">
+    </div>
+
+    <div class="row double-padding-x item-text-wrap animate-show-hide ng-hide hidden-xs hidden-sm"
+         ng-show="entered"
+         ng-if="search.geoPoint || search.type || search.category" >
+
+      <!-- selected location -->
+      <div ng-show="search.geoPoint"
+           class="button button-small button-text button-stable button-icon-event stable-900-bg"
+           style="margin-right: 10px;">
+        &nbsp;<i class="icon ion-location"></i>
+        <span ng-bind-html="search.location"></span>
+        <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
+      </div>
+
+      <!-- selected type -->
+      <div ng-show="search.type"
+           class="button button-small button-text button-stable button-icon-event stable-900-bg"
+           style="margin-right: 10px;" >
+        &nbsp;<i class="icon cion-page-{{search.type}}"></i>
+        <span>{{'REGISTRY.TYPE.ENUM.'+search.type|uppercase|translate}}</span>
+        <i class="icon ion-close" ng-click="removeType()">&nbsp;&nbsp;</i>
+      </div>
+
+      <!-- selected category -->
+      <div ng-show="search.category.name"
+           class="button button-small button-text button-stable button-icon-event stable-900-bg"
+           style="margin-right: 10px;">
+        &nbsp;<i class="icon ion-flag"></i>
+        <span>{{search.category.name|truncText:40}}</span>
+        <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
+      </div>
+    </div>
+  </div>
+
+  <!-- location -->
+  <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
+              ng-if="entered && options.location.show && (!search.geoPoint || smallscreen)"
+              ng-controller="ESSearchPositionItemCtrl"></ng-include>
+
+  <!-- options -->
+  <ng-include src="::'plugins/es/templates/registry/lookup_form_options.html'"></ng-include>
+
+</form>
+
+<div class="buttons-block padding-top hidden-xs hidden-sm">
+
+  <div class="pull-left" >
+
+    <a class="button button-text button-small ink "
+       ng-class="{'button-text-stable': !search.advanced, 'button-text-positive': search.advanced}"
+       ng-click="search.advanced=!search.advanced">
+      {{'REGISTRY.SEARCH.BTN_ADVANCED_SEARCH' | translate}}
+      <i class="icon" ng-class="{'ion-arrow-down-b': !search.advanced, 'ion-arrow-up-b': search.advanced}"></i>
+    </a>
+
+    &nbsp;
+
+  </div>
+
+  <div class="pull-right">
+
+    <a ng-if="enableFilter"
+       class="button button-text button-small ink"
+       ng-class="{'button-text-positive': search.lastRecords}"
+       ng-click="doGetLastRecords()">
+      <i class="icon ion-clock"></i>
+      {{'REGISTRY.SEARCH.BTN_LAST_RECORDS' | translate}}
+    </a>
+    &nbsp;
+
+    <!-- Allow extension here -->
+    <cs-extension-point name="filter-buttons"></cs-extension-point>
+
+    &nbsp;
+
+    <button class="button button-small button-stable ink"
+            ng-click="doSearchText()">
+      {{'COMMON.BTN_SEARCH' | translate}}
+    </button>
+  </div>
+</div>
+
+
+<div class="padding-xs" style="display: block; height: 60px;">
+  <div class="pull-left ng-hide" ng-show="!search.loading && search.results">
+    <ng-if ng-if="search.lastRecords">
+      <h4  translate>REGISTRY.SEARCH.LAST_RECORDS</h4>
+      <small class="gray no-padding" ng-if="search.total">
+        <span ng-if="search.geoPoint && search.total">{{'REGISTRY.SEARCH.LAST_RECORD_COUNT_LOCATION'|translate:{count: search.total, location: search.location} }}</span>
+        <span ng-if="!search.geoPoint && search.total">{{'REGISTRY.SEARCH.LAST_RECORD_COUNT'|translate:{count: search.total} }}</span>
+      </small>
+    </ng-if>
+
+    <ng-if ng-if="!search.lastRecords">
+      <h4 translate>COMMON.RESULTS_LIST</h4>
+      <small class="gray no-padding" ng-if="search.total">
+        <span ng-if="search.geoPoint && search.total">{{'REGISTRY.SEARCH.RESULT_COUNT_LOCATION'|translate:{count: search.total, location: search.location} }}</span>
+        <span ng-if="!search.geoPoint && search.total">{{'REGISTRY.SEARCH.RESULT_COUNT'|translate:{count: search.total} }}</span>
+      </small>
+    </ng-if>
+
+  </div>
+</div>
+
+<div class="center padding" ng-if="search.loading">
+  <ion-spinner icon="android"></ion-spinner>
+</div>
+
+<div class="padding assertive" ng-if="!search.loading && search.results.length===0" translate>
+  COMMON.SEARCH_NO_RESULT
+</div>

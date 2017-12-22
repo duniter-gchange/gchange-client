@@ -102,14 +102,14 @@
     "DEVELOPERS": "Développé par :",
     "FORUM": "Forum :",
     "DEV_WARNING": "Avertissement",
-    "DEV_WARNING_MESSAGE": "Cette application n'est pas encore stabilisée (développement en cours).<br/>N'hésitez pas à nous remonter les anomalies rencontrées !",
-    "DEV_WARNING_MESSAGE_SHORT": "Cette App n'est pas encore stabilisée (développement en cours).",
+    "DEV_WARNING_MESSAGE": "Cette application est toujours en développement.<br/>N'hésitez pas à nous remonter les anomalies rencontrées !",
+    "DEV_WARNING_MESSAGE_SHORT": "Cette application est toujours en développement.",
     "REPORT_ISSUE": "Remonter un problème"
   },
   "HOME": {
     "TITLE": "Cesium",
-    "MESSAGE": "Bienvenue dans l'application {{'COMMON.APP_NAME'|translate}}.",
-    "MESSAGE_CURRENCY": "Faites des échanges en monnaie libre {{currency|abbreviate}} !",
+    "MESSAGE": "Bienvenue sur {{'COMMON.APP_NAME'|translate}} !",
+    "MESSAGE_CURRENCY": "Échanger en {{currency|abbreviate}} devient... juste simple !",
     "BTN_CURRENCY": "Explorer la monnaie {{name|abbreviate}}",
     "BTN_ABOUT": "à propos",
     "BTN_HELP": "Aide en ligne",

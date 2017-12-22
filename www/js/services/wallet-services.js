@@ -45,6 +45,7 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
       data.isMember = false;
       data.events = [];
 
+      resetKeypair();
       resetTxAndSources();
 
       started = false;
@@ -61,10 +62,17 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
       }
     },
 
+    resetKeypair = function(){
+      data.keypair = {
+        signSk: null,
+        signPk: null
+      };
+    },
+
     resetTxAndSources = function(){
       // reset sources data
-      data.sources = [];
-      data.sourcesIndexByKey = {};
+      data.sources = undefined;
+      data.sourcesIndexByKey = undefined;
       data.balance = 0;
       // reset TX data
       data.tx = data.tx || {};
@@ -84,6 +92,8 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
     },
 
     addSources = function(sources) {
+      data.sources = data.sources || [];
+      data.sourcesIndexByKey = data.sourcesIndexByKey || {};
       _(sources).forEach(function(src) {
         addSource(src, data.sources, data.sourcesIndexByKey);
       });
@@ -143,14 +153,31 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
       return !!data.pubkey && data.requirements && !data.requirements.needSelf;
     },
 
+    isDataLoaded = function(options) {
+      if (options && options.minData) return data.loaded;
+      return data.loaded; // && data.sources; -- Gchange not use sources
+    },
+
     isNeverUsed = function() {
       if (!data.loaded) return undefined; // undefined if not full loaded
-      return !data.pubkey ||
-        (!data.isMember &&
-        (!data.requirements || (!data.requirements.pendingMembership && !data.requirements.wasMember)) &&
-         !data.tx.history.length &&
-         !data.tx.pendings.length);
+      return !data.pubkey || !(
+         // Check registration
+         data.isMember ||
+         data.requirements.pendingMembership ||
+         !data.requirements.needSelf ||
+         data.requirements.wasMember ||
+
+         // Check TX history
+         data.tx.history.length ||
+         data.tx.pendings.length ||
+
+         // Check extended data (name+avatar)
+         data.name ||
+         data.avatar
+        );
     },
+
+    isNew = function() {return !!data.isNew;},
 
     // If connected and same pubkey
     isUserPubkey = function(pubkey) {
@@ -161,11 +188,6 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
       if (csSettings.data.useLocalStorage) {
 
         if (isLogin() && csSettings.data.rememberMe) {
-          // FIXME: #372
-          /*var dataToStore = {
-            pubkey: data.pubkey,
-            uid: data.uid
-          };*/
 
           var dataToStore = {
             keypair: data.keypair,
@@ -398,6 +420,10 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
       else {
         if (data.requirements.pendingMembership) {
           addEvent({type:'pending', message: 'ACCOUNT.WAITING_MEMBERSHIP', context: 'requirements'});
+        }
+        // If user has send a SELF, ask for membership - fix #625
+        else if (!data.requirements.needSelf && data.requirements.needMembership){
+          addEvent({type:'warn', message: 'ACCOUNT.NO_WAITING_MEMBERSHIP', context: 'requirements'});
         }
         if (data.requirements.needCertificationCount > 0) {
           addEvent({type:'warn', message: 'ACCOUNT.WAITING_CERTIFICATIONS', messageParams: data.requirements, context: 'requirements'});
@@ -1447,6 +1473,7 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
       logout: logout,
       isLogin: isLogin,
       hasSelf: hasSelf,
+      isDataLoaded: isDataLoaded,
       isNeverUsed: isNeverUsed,
       isNew: function() {return !!data.isNew;},
       isUserPubkey: isUserPubkey,

@@ -1,6 +1,6 @@
 angular.module('cesium.es.modal.services', ['cesium.modal.services', 'cesium.es.message.services'])
 
-.factory('esModals', function(ModalUtils, UIUtils) {
+.factory('esModals', function($state, ModalUtils, UIUtils, csWallet) {
   'ngInject';
 
   function showMessageCompose(parameters) {
@@ -42,16 +42,27 @@ angular.module('cesium.es.modal.services', ['cesium.modal.services', 'cesium.es.
       parameters);
   }
 
-  function showPictures(parameters, options) {
-    return ModalUtils.show('plugins/es/templates/common/modal_pictures_slider.html', 'ESPicturesSliderModalCtrl',
-        parameters, options);
+  function showNewPage() {
+    return csWallet.login({minData: true})
+      .then(function() {
+        UIUtils.loading.hide();
+
+        return ModalUtils.show('plugins/es/templates/registry/modal_record_type.html', undefined, {
+          title: 'REGISTRY.EDIT.TITLE_NEW'
+        })
+          .then(function(type){
+            if (type) {
+              $state.go('app.registry_add_record', {type: type});
+            }
+          });
+      });
   }
 
   return {
     showMessageCompose: showMessageCompose,
     showNotifications: showNotificationsPopover,
     showNewInvitation: showNewInvitation,
-    showPictures: showPictures
+    showNewPage: showNewPage
   };
 
 });

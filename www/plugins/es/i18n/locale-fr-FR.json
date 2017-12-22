@@ -20,7 +20,7 @@
     }
   },
   "MENU": {
-    "REGISTRY": "Professionnels",
+    "REGISTRY": "Pages",
     "USER_PROFILE": "Mon profil",
     "MESSAGES": "Messages",
     "NOTIFICATIONS": "Notifications",
@@ -49,6 +49,11 @@
     "ASK_CERTIFICATIONS_MODAL": {
       "TITLE": "Demander des certifications",
       "HELP": "Sélectionner les destinataires"
+    },
+    "SEARCH": {
+      "DIVIDER_PROFILE": "Comptes",
+      "DIVIDER_PAGE": "Pages",
+      "DIVIDER_GROUP": "Groupes"
     },
     "CONFIRM": {
       "SUGGEST_CERTIFICATIONS": "Etes-vous sûr de vouloir <b>envoyer ces suggestions de certification</b> ?",
@@ -111,7 +116,8 @@
       "TITLE": "Message",
       "SENDER": "Envoyé par",
       "RECIPIENT": "Envoyé à",
-      "NO_CONTENT": "Message vide"
+      "NO_CONTENT": "Message vide",
+      "DELETE": "Supprimer le message"
     },
     "CONFIRM": {
       "REMOVE": "Êtes-vous sûr de vouloir <b>supprimer ce message</b> ?<br/><br/>Cette opération est irréversible.",
@@ -146,18 +152,31 @@
     "LOCATION_DIVIDER": "Adresse",
     "SOCIAL_NETWORKS_DIVIDER": "Réseaux sociaux et site web",
     "TECHNICAL_DIVIDER": "Informations techniques",
+    "BTN_SHOW_WOT": "Personnes",
+    "BTN_SHOW_WOT_HELP": "Rechercher des personnes",
+    "BTN_SHOW_PAGES": "Pages",
+    "BTN_SHOW_PAGES_HELP": "Rechercher des pages",
     "BTN_NEW": "Créer une page",
+    "MY_PAGES": "Mes pages",
+    "NO_PAGE": "Aucune page",
     "SEARCH": {
       "TITLE": "Pages",
-      "TITLE_SMALL_DEVICE": "Pages",
       "SEARCH_HELP": "Quoi, Qui : restaurant, Chez Marcel, ...",
       "BTN_ADD": "Nouveau",
+      "BTN_LAST_RECORDS": "Pages récentes",
+      "BTN_ADVANCED_SEARCH": "Recherche avancée",
       "BTN_OPTIONS": "Recherche avancée",
       "TYPE": "Type de page",
-      "LOCATION": "Localisation",
-      "LOCATION_HELP": "Ville",
-      "LAST_RECORDS": "Derniers enregistrements :",
-      "RESULTS": "Résultats :"
+      "LOCATION_HELP": "Où : Ville, Code postal",
+      "RESULTS": "Résultats",
+      "RESULT_COUNT_LOCATION": "{{count}} résultat{{count>0?'s':''}}, près de {{location}}",
+      "RESULT_COUNT": "{{count}} résultat{{count>0?'s':''}}",
+      "LAST_RECORDS": "Pages récentes",
+      "LAST_RECORD_COUNT_LOCATION": "{{count}} page{{count>0?'s':''}} récente{{count>0?'s':''}}, près de {{location}}",
+      "LAST_RECORD_COUNT": "{{count}} page{{count>0?'s':''}} récente{{count>0?'s':''}}",
+      "POPOVER_FILTERS": {
+        "BTN_ADVANCED_SEARCH": "Options avancées ?"
+      }
     },
     "VIEW": {
       "TITLE": "Annuaire",
@@ -168,7 +187,7 @@
       "REMOVE_CONFIRMATION" : "Êtes-vous sûr de vouloir supprimer cette page ?<br/><br/>Cette opération est irréversible."
     },
     "TYPE": {
-      "TITLE": "Nouvelle page",
+      "TITLE": "Types",
       "SELECT_TYPE": "Type de page :",
       "ENUM": {
         "SHOP": "Commerce local",
@@ -186,12 +205,16 @@
       "RECORD_DESCRIPTION": "Description",
       "RECORD_DESCRIPTION_HELP": "Description de l'activité",
       "RECORD_ADDRESS": "Rue",
-      "RECORD_ADDRESS_HELP": "Adresse : rue, batiment...",
+      "RECORD_ADDRESS_HELP": "Rue, batiment...",
       "RECORD_CITY": "Ville",
       "RECORD_CITY_HELP": "Ville",
       "RECORD_SOCIAL_NETWORKS": "Réseaux sociaux et site web",
       "RECORD_PUBKEY": "Clé publique",
       "RECORD_PUBKEY_HELP": "Clé publique de réception des paiements"
+    },
+    "WALLET": {
+      "REGISTRY_DIVIDER": "Pages",
+      "REGISTRY_HELP": "Les pages référencent des activités acceptant la monnaie ou la favorisant : commerces, entreprises, associations, institutions."
     },
     "ERROR": {
       "LOAD_CATEGORY_FAILED": "Erreur de chargement de la liste des activités",
@@ -209,6 +232,7 @@
   },
   "PROFILE": {
     "PROFILE_DIVIDER": "Profil ğ<b>change</b>",
+    "PROFILE_DIVIDER_HELP": "Il s'agit de données annexes, stockées en dehors du réseau de la monnaie.",
     "NO_PROFILE_DEFINED": "Aucun profil saisi",
     "BTN_ADD": "Saisir mon profil",
     "BTN_EDIT": "Editer mon profil",
@@ -267,9 +291,41 @@
       "ADDRESS_LOCATION_FAILED": "Impossible de récupérer la position à partir de l'adresse"
     }
   },
+  "DOCUMENT": {
+    "HASH": "Hash: ",
+    "LOOKUP": {
+      "TITLE": "Recherche de documents",
+      "BTN_ACTIONS": "Actions",
+      "SEARCH_HELP": "issuer:AAA*, time:1508406169",
+      "LAST_DOCUMENTS": "Derniers documents",
+      "SHOW_QUERY": "Voir la requête",
+      "HIDE_QUERY": "Masquer la requête",
+      "HEADER_TIME": "Date/Heure",
+      "HEADER_ISSUER": "Emetteur",
+      "HEADER_RECIPIENT": "Destinataire",
+      "READ": "Lu",
+      "BTN_REMOVE": "Supprimer ce document",
+      "POPOVER_ACTIONS": {
+        "TITLE": "Actions",
+        "REMOVE_ALL": "Supprimer ces documents..."
+      }
+    },
+    "INFO": {
+      "REMOVED": "Document supprimé"
+    },
+    "CONFIRM": {
+      "REMOVE": "Etes-vous sûr de vouloir <b>supprimer ce document</b> ?",
+      "REMOVE_ALL": "Etes-vous sûr de vouloir <b>supprimer ces documents</b> ?"
+    },
+    "ERROR": {
+      "REMOVE_FAILED": "Erreur lors de la suppression du document",
+      "REMOVE_ALL_FAILED": "Erreur lors de la suppression des documents"
+    }
+  },
   "ES_SETTINGS": {
     "PLUGIN_NAME": "Paramètres avancés",
     "PLUGIN_NAME_HELP": "Filtrage des notifications, etc.",
+    "ENABLE_TOGGLE": "Activer l'extension ?",
     "ENABLE_MESSAGE_TOGGLE": "Activer les messages privés ?",
     "ENABLE_SETTINGS_TOGGLE": "Activer le stockage distant des paramètres ?",
     "PEER": "Addresse du nœud de données",
@@ -287,8 +343,8 @@
       "ENABLE_CERT_RECEIVED": "Notifier les <b>certifications reçues</b> ?"
     },
     "CONFIRM": {
-      "ASK_ENABLE_TITLE": "Nouvelles fonctionnalités",
-      "ASK_ENABLE": "De nouvelles fonctionnalités sont disponibles : <ul><li>&nbsp;&nbsp;<b><i class=\"icon ion-person\"></i> Profils</b>;<li>&nbsp;&nbsp;<b><i class=\"icon ion-android-notifications\"></i> Notifications</b>;<li>&nbsp;&nbsp;<b><i class=\"icon ion-email\"></i> Messages privés</b>.</ul><br/>Elles ont été <b>désactivées</b> dans vos paramètres.<br/><br/><b>Souhaitez-vous les activer</b> ?"
+      "ASK_ENABLE_TITLE": "Fonctionnalités optionnelles",
+      "ASK_ENABLE": "L'extension Cesium+ est <b>désactivée</b> dans vos paramètres, rendant inactives les fonctionnalités : <ul><li>&nbsp;&nbsp;<b><i class=\"icon ion-person\"></i> Profils Cesium+</b>;<li>&nbsp;&nbsp;<b><i class=\"icon ion-android-notifications\"></i> Notifications</b>;<li>&nbsp;&nbsp;<b><i class=\"icon ion-email\"></i> Messages privés</b>.<li>&nbsp;&nbsp;<b><i class=\"icon ion-location\"></i> Cartes, etc.</b>.</ul><br/><b>Souhaitez-vous la ré-activer</b> l'extension ?"
     }
   },
   "ES_WALLET": {
@@ -318,9 +374,10 @@
       "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié sa réponse à votre commentaire sur le référencement : <b>{{params[2]}}</b>"
     }
   },
-  "ES_HTTP": {
-    "ERROR": {
-      "MAX_UPLOAD_BODY_SIZE": "Le volume des données à envoyer dépasse la limite fixée par le serveur.<br/>Veuillez ré-essayer après avoir, par exemple, supprimer des photos."
-    }
+  "CONFIRM": {
+    "ES_USE_FALLBACK_NODE": "Nœud de données <b>{{old}}</b> injoignable ou adresse invalide.<br/><br/>Voulez-vous temporairement utiliser le nœud de données <b>{{new}}</b> ?"
+  },
+  "ERROR": {
+    "ES_MAX_UPLOAD_BODY_SIZE": "Le volume des données à envoyer dépasse la limite fixée par le serveur.<br/>Veuillez ré-essayer après avoir, par exemple, supprimer des photos."
   }
 }

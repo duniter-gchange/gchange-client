@@ -1,7 +1,8 @@
 {
   "MENU": {
     "MARKET": "Annonces",
-    "MY_RECORDS": "Mes annonces"
+    "MY_RECORDS": "Mes annonces",
+    "PAGES": "Pages pro"
   },
   "MARKET": {
     "COMMON": {
@@ -41,7 +42,7 @@
     "HOME": {
       "BTN_NEW_AD": "Déposer une annonce",
       "BTN_SHOW_MARKET_OFFER": "Voir les annonces",
-      "LOCATION_LABEL": "Rechercher des annonces près de :",
+      "LOCATION_LABEL": "Recherche d'annonces par ville :",
       "LOCATION_HELP": "Code postal, Ville",
       "ERROR": {
         "GEO_LOCATION_NOT_FOUND": "Ville ou code postal non trouvé"

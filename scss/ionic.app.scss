@@ -16,15 +16,19 @@ $balanced-active: #80e09b !default;
   background-color: $dark-balanced !important;
 }
 
+.bg-image-cover {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  //filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/background.jpg', sizingMethod='scale');
+  //-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/background.jpg', sizingMethod='scale')";
+}
+
+
 #home {
+
   ion-content {
-    background: url(../img/background.jpg) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/background.jpg', sizingMethod='scale');
-    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/background.jpg', sizingMethod='scale')";
     z-index: 0;
   }
 

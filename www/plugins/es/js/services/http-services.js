@@ -306,7 +306,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
                   .catch(function(err) {
                     var bodyLength = that.byteCount(obj);
                     if (bodyLength > constants.MAX_UPLOAD_BODY_SIZE) {
-                      throw {message: 'ES_HTTP.ERROR.MAX_UPLOAD_BODY_SIZE', length: bodyLength};
+                      throw {message: 'ERROR.ES_MAX_UPLOAD_BODY_SIZE', length: bodyLength};
                     }
                     throw err;
                   });

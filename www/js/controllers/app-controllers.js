@@ -45,9 +45,9 @@ angular.module('cesium.app.controllers', ['cesium.services'])
 
   .controller('AppCtrl', AppController)
 
-    .controller('HomeCtrl', HomeController)
+  .controller('HomeCtrl', HomeController)
 
-    .controller('PluginExtensionPointCtrl', PluginExtensionPointController)
+  .controller('PluginExtensionPointCtrl', PluginExtensionPointController)
 
   .controller('EmptyModalCtrl', EmptyModalController)
 
@@ -442,7 +442,46 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
 function HomeController($scope, $state, $timeout, $ionicHistory, csPlatform, csCurrency) {
   'ngInject';
 
+
   $scope.loading = true;
+
+  function getRandomImage() {
+    var imageCountByKind = {
+      'service': 13,
+      'spring': 7,
+      'summer': 11,
+      'autumn': 7,
+      'winter': 5
+    };
+
+    var kind;
+    // Or landscape
+
+    if (Math.random() < 0.5) {
+     kind = 'service';
+    }
+    else {
+      var day = moment().format('D');
+      var month = moment().format('M');
+      if ((month < 3) || (month == 3 && day < 21) || (month == 12 && day >= 21)) {
+        kind = 'winter'
+      }
+      else if ((month == 3 && day >= 21) || (month < 6) || (month == 6 && day < 21)) {
+        kind = 'spring'
+      }
+      else if ((month == 6 && day >= 21) || (month < 9) || (month == 9 && day < 21)) {
+        kind = 'summer'
+      }
+      else {
+        kind = 'autumn'
+      }
+    }
+    var imageCount = imageCountByKind[kind];
+    var imageIndex = Math.floor(Math.random()*imageCount)+1;
+    console.log(kind, imageIndex);
+    return './img/bg/{0}-{1}.jpg'.format(kind, imageIndex);
+  }
+  $scope.bgImage = getRandomImage();
 
   $scope.enter = function(e, state) {
     if (state && state.stateParams && state.stateParams.error) { // Query parameter
