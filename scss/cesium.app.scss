@@ -24,6 +24,7 @@ $dark:                            #444 !default;
 //$balanced:                        #94c11f !default;
 
 $active: #b2e0ff !default;
+$stable-100-bg : #f2f2f2 !default;
 $stable-900-bg: #e0e0e0 !default;
 $positive-900-bg: #1A237E !default;
 $dark-100-bg: #555 !default;
@@ -120,7 +121,7 @@ $screen-lg:                       1200px;
     .button.hidden-xs {
       display: inline-block;
     }
-  .item-toggle .toggle {
+    .item-toggle .toggle {
       right: 32px;
     }
 }
@@ -652,6 +653,9 @@ $screen-menu:                     845px;
 .button-text-stable {
   color: #b2b2b2 !important;
 }
+.button-text-dark {
+  @extend .dark;
+}
 .popup-buttons .button.icon-right,
 .popup-buttons .button.icon-left {
   padding-left: 32px !important;
@@ -841,9 +845,47 @@ $screen-menu:                     845px;
 }
 
 /******
+* 'ion-refresher'
+*******/
+
+// Workaround to control background of 'ion-refresher'
+.refresher-top-bg:before {
+  position: absolute;
+  display: block;
+  top: 0;
+  width: 100%;
+  height: 100px;
+  z-index: -10;
+  content: " ";
+}
+.refresher-top-bg .scroll-refresher {
+  z-index: 50;
+}
+// Set refresher color (icon and text)
+.refresher-light .scroll-refresher {
+  .ionic-refresher-content {
+    color: $light;
+  }
+  .spinner {
+    stroke: $light;
+    fill: $light;
+  }
+}
+
+/******
 * Wallet view
 *******/
-#wallet {
+.view-wallet {
+
+  /* set 'ion-refresher' background color */
+  .refresher-top-bg {
+    @extend .refresher-light;
+  }
+  .refresher-top-bg:before {
+    @extend .positive-900-bg;
+    height: 200px;
+  }
+
   .qrcode {
     position: absolute;
     top: 30px;
@@ -912,12 +954,9 @@ $screen-menu:                     845px;
 
 }
 
-.popover-wallet-actions {
-  height: 400px;
-}
 
 @media screen and (max-width: $screen-sm-max) {
-  #wallet {
+  .view-wallet {
     .qrcode {
       top: 8px;
       width: 60px;
@@ -936,11 +975,24 @@ $screen-menu:                     845px;
   }
 }
 
+
+.popover-wallet-actions {
+  height: 400px;
+}
+
 /******
 * Wallet TX view
 *******/
 .view-wallet-tx {
   .hero {
+    height: 100px;
+  }
+  /* set 'ion-refresher' background color */
+  .refresher-top-bg {
+    @extend .refresher-light;
+  }
+  .refresher-top-bg:before {
+    @extend .positive-900-bg;
     height: 100px;
   }
 
@@ -963,6 +1015,10 @@ $screen-menu:                     845px;
   .item-divider .badge {
     top:16px !important;
   }
+}
+
+.stable-100-bg{
+  background-color: $stable-100-bg !important;
 }
 
 .card .card-header,
@@ -1100,15 +1156,14 @@ a.underline:hover,
   float: left;
   display: block;
 
-  img {
+  /*img {
     max-height: 150px;
-  }
+  }*/
 }
 
 .gallery .card-gallery-new {
   max-height: 199px;
 }
-
 
 .list .item.text-left {
   text-align: left !important;
@@ -1132,7 +1187,7 @@ a.underline:hover,
     min-height: 80px !important;
 
     .item-content {
-      min-height: 46px;
+      //min-height: 46px;
     }
   }
 
@@ -1322,13 +1377,15 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   content: $ionicon-var-badge-editable;
 }
 
-.badge-button {
-  position: absolute !important;
-  margin: 0 !important;
-  padding: 0px 4px !important;
-  font-size: 10px;
-  top: 5px !important;
-  right: 3px !important;
+.bar {
+  .badge-button {
+    margin: 0 !important;
+    padding: 0px 4px !important;
+    font-size: 10px;
+    position: absolute !important;
+    top: 5px;
+    right: 3px;
+  }
 }
 
 /**********
@@ -1538,6 +1595,11 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   }
 }
 
+
+.hero.stable-bg {
+  background-color: #f8f8f8 !important;
+}
+
 /**********
    Screen - identity Certifications
 **********/
@@ -1603,6 +1665,12 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
     padding: 8px;
     height: 25px;
     font-size: 18.2px;
+  }
+
+  a,
+  a:active,
+  a:hover {
+    text-decoration: underline;
   }
 }
 
@@ -1694,7 +1762,7 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
    Profile popover
 **********/
 
-#profile-popover {
+.popover.popover-profile {
   height: 200px;
   .avatar {
     height: 90px;
@@ -1748,16 +1816,17 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   }
 }
 
-.badge.badge-secondary,
-.badge .badge-secondary {
-  font-size: 12px;
-  font-style: italic;
-  top: 37px !important;
-  font-weight: normal !important;
-  margin-right: 0px;
-  padding-right: 0px;
+.list {
+  .badge.badge-secondary,
+  .badge .badge-secondary {
+    font-size: 12px;
+    font-style: italic;
+    top: 37px !important;
+    font-weight: normal !important;
+    margin-right: 0px;
+    padding-right: 0px;
+  }
 }
-
 
 .row-header{
   border-bottom: solid 1px #ccc !important;
@@ -1868,7 +1937,7 @@ div[dropzone] {
 }
 
 /**********
-  join waizard modal
+  join wizard modal
 **********/
 @media screen and (max-width: $screen-sm-max) {
   .modal iframe.iframe-license {
@@ -1888,4 +1957,92 @@ div[dropzone] {
   }
 }
 
+/**********
+  Help modal
+**********/
+.modal.modal-help {
 
+  .row.selected {
+    @extend .energized-100-bg;
+
+    .col:first-child {
+      font-weight: bold;
+    }
+  }
+}
+@media screen and (max-width: $screen-xs-max) {
+  .modal.modal-help {
+    .row .col:first-child {
+      font-weight: bold;
+    }
+
+    h2 {
+      padding-left: 10px;
+    }
+  }
+}
+
+/**********
+  Login modal
+**********/
+.modal.modal-login {
+
+  .item.item-icon-right.item-text-wrap {
+
+    .item-content {
+      margin-right: 58px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}
+
+/**********
+   Locales popover (used by cesump API)
+**********/
+
+.popover-locales {
+  height: 284px;
+  width: 200px;
+
+  .item {
+    height: 48px;
+  }
+}
+
+/**********
+   Button tabs
+**********/
+
+.buttons-tabs {
+  display: block;
+  height: 57px;
+  border: 0;
+  padding: 16px 16px 0 16px;
+  overflow: hidden;
+
+  .button.button-tab:first-child {
+    border-top-left-radius: 15px;
+  }
+  .button.button-tab:last-child {
+    border-top-right-radius: 15px;
+  }
+
+  .button.button-tab.active {
+    background-color: $active;
+  }
+}
+
+.buttons-tabs.border-bottom {
+  border-bottom: solid 1px #ccc !important;
+}
+
+@media screen and (max-width: $screen-xs-max) {
+  .buttons-tabs {
+    padding: 10px 10px 0 10px;
+
+    .button.button-tab {
+      padding: 2px 10px 0 10px !important;
+    }
+  }
+}

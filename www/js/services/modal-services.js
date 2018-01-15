@@ -1,5 +1,27 @@
 angular.module('cesium.modal.services', [])
 
+
+// Useful for modal with no controller
+.controller('EmptyModalCtrl', function () {
+  'ngInject';
+
+})
+
+.controller('AboutModalCtrl', function ($scope, UIUtils, csHttp) {
+  'ngInject';
+
+  $scope.openLink = function(event, uri, options) {
+    options = options || {};
+
+    // If unable to open, just copy value
+    options.onError = function() {
+      return UIUtils.popover.copy(event, uri);
+    };
+
+    return csHttp.uri.open(uri, options);
+  };
+})
+
 .factory('ModalUtils', function($ionicModal, $rootScope, $q, $injector, $controller, $timeout) {
   'ngInject';
 
@@ -151,7 +173,7 @@ angular.module('cesium.modal.services', [])
   }
 
   function showAbout(parameters) {
-    return ModalUtils.show('templates/modal_about.html','EmptyModalCtrl',
+    return ModalUtils.show('templates/modal_about.html','AboutModalCtrl',
       parameters);
   }
 

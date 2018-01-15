@@ -52,8 +52,8 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
 
 ;
 
-function MkLookupAbstractController($scope, $state, $filter, $q, $location, $translate, $controller, UIUtils, esHttp,
-                                    ModalUtils, csConfig, csSettings, mkRecord, BMA, mkSettings, esProfile) {
+function MkLookupAbstractController($scope, $state, $filter, $q, $location, $translate, $controller, $timeout,
+                                    UIUtils, esHttp, ModalUtils, csConfig, csSettings, mkRecord, BMA, mkSettings, esProfile) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -112,7 +112,14 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
           .then(function(unit) {
             $scope.geoUnit = unit;
           })
-       ]);
+       ])
+      .then(function() {
+        $timeout(function() {
+          // Set Ink
+          UIUtils.ink({selector: '.item'});
+          //$scope.showHelpTip();
+        }, 200);
+      });
   };
 
   $scope.toggleAdType = function(type) {
@@ -293,8 +300,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     return $scope.doRequest({query: query, from: from});
   };
 
-  $scope.doGetLastRecord = function(from) {
+  $scope.doGetLastRecords = function(from) {
 
+    $scope.hideActionsPopover();
     $scope.search.lastRecords = true;
 
     var options = {
@@ -316,6 +324,21 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     // filter on currencies
     if ($scope.currencies) {
       filters.push({terms: {currency: $scope.currencies}});
+    }
+    // Category
+    if ($scope.search.category) {
+      filters.push({
+        nested: {
+          path: "category",
+          query: {
+            bool: {
+              filter: {
+                term: { "category.id": $scope.search.category.id}
+              }
+            }
+          }
+        }
+      });
     }
 
     var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
@@ -374,6 +397,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     if (!from) {
       $location.search({
         last: true,
+        category: $scope.search.category && $scope.search.category.id,
         type: $scope.search.type,
         location: $scope.search.location,
         lat: $scope.search.geoPoint && $scope.search.geoPoint.lat,
@@ -386,7 +410,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
   $scope.doRefresh = function() {
     var searchFunction = ($scope.search.lastRecords) ?
-        $scope.doGetLastRecord :
+        $scope.doGetLastRecords :
         $scope.doSearch;
     return searchFunction();
   };
@@ -397,7 +421,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     $scope.search.loadingMore = true;
 
     var searchFunction = ($scope.search.lastRecords) ?
-      $scope.doGetLastRecord :
+      $scope.doGetLastRecords :
       $scope.doSearch;
 
     return searchFunction(from)
@@ -518,7 +542,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 }
 
 
-function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, mkRecord, csSettings) {
+function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $ionicPopover, mkRecord, csSettings) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -564,7 +588,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, m
           var defaultSearch = csSettings.data.plugins.es.market && csSettings.data.plugins.es.market.defaultSearch;
           // Apply defaults from settings
           if (defaultSearch) {
-            angular.merge($scope.search, csSettings.data.plugins.es.market.defaultSearch);
+            angular.merge($scope.search, defaultSearch);
           }
         }
 
@@ -586,8 +610,8 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, m
       }
 
       // Search on category
-      if (state.stateParams && state.stateParams.category) {
-        mkRecord.category.get({id: state.stateParams.category})
+      if (state.stateParams && (state.stateParams.category || state.stateParams.cat)) {
+        mkRecord.category.get({id: state.stateParams.category || state.stateParams.cat})
             .then(function (cat) {
               $scope.search.category = cat;
               return $scope.init();
@@ -614,8 +638,8 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, m
             $scope.showFab('fab-add-market-record');
           });
     }
-    else { // By default : get last record
-      $scope.doGetLastRecord()
+    else { // By default : get last records
+      $scope.doGetLastRecords()
           .then(function() {
             $scope.showFab('fab-add-market-record');
           });
@@ -710,6 +734,38 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, m
     $scope.search.geoPoint = null;
     $scope.doSearch();
   };
+
+
+  /* -- modals & popover -- */
+
+  $scope.showActionsPopover = function (event) {
+    if (!$scope.actionsPopover) {
+      $ionicPopover.fromTemplateUrl('plugins/market/templates/search/lookup_popover_filters.html', {
+        scope: $scope
+      }).then(function (popover) {
+        $scope.actionsPopover = popover;
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+          $scope.actionsPopover.remove();
+        });
+        $scope.actionsPopover.show(event);
+      });
+    }
+    else {
+      $scope.actionsPopover.show(event);
+    }
+  };
+
+  $scope.hideActionsPopover = function () {
+    if ($scope.actionsPopover) {
+      $scope.actionsPopover.hide();
+    }
+  };
+
+  $scope.toggleAdvanced = function() {
+    $scope.hideActionsPopover();
+    $scope.search.advanced = !$scope.search.advanced;
+  }
 }
 
 function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $ionicSlideBoxDelegate, $ionicModal, $interval, mkRecord) {

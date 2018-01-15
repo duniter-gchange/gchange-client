@@ -30,7 +30,10 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
         exports = {
           // workaround to quickly no is device or not (even before the ready() event)
           enable: true
-        };
+        },
+        cache = {},
+        started = false,
+        startPromise;
 
       // removeIf(device)
       // workaround to quickly no is device or not (even before the ready() event)
@@ -96,8 +99,7 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
         var deferred = $q.defer();
         cordova.plugins.barcodeScanner.scan(
           function(result) {
-            //console.log('bar code result');
-            //console.log(result);
+            console.debug('[device] bar code result', result);
             if (!result.cancelled) {
               deferred.resolve(result.text); // make sure to convert into String
             }
@@ -105,7 +107,10 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
               deferred.resolve();
             }
           },
-          function(err) {deferred.reject(err);},
+          function(err) {
+            console.error('[device] Error while using barcode scanner -> ' + err);
+            deferred.reject(err);
+          },
           n);
         return deferred.promise;
       }
@@ -134,7 +139,7 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
       exports.camera = {
           getPicture : getPicture,
           scan: function(n){
-            console.log('Deprecated use of Device.camera.scan(). Use Device.barcode.scan() instead');
+            console.warn('Deprecated use of Device.camera.scan(). Use Device.barcode.scan() instead');
             return scan(n);
           }
         };
@@ -150,46 +155,64 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
         }
       };
 
-      var started = false;
-      var startPromise = ionicReady().then(function(){
+      exports.isIOS = function() {
+        return !!navigator.userAgent.match(/iPhone | iPad | iPod/i) || ionic.Platform.isIOS();
+      };
 
-        exports.enable = window.cordova && cordova && cordova.plugins;
-
-        if (exports.enable){
-          exports.camera.enable = !!navigator.camera;
-          exports.keyboard.enable = cordova && cordova.plugins && !!cordova.plugins.Keyboard;
-          exports.barcode.enable = cordova && cordova.plugins && !!cordova.plugins.barcodeScanner;
-
-          if (exports.keyboard.enable) {
-            angular.extend(exports.keyboard, cordova.plugins.Keyboard);
-          }
-
-          console.debug('[device] Ionic platform ready, with [camera: {0}] [barcode scanner: {1}] [keyboard: {2}]'
-            .format(exports.camera.enable, exports.barcode.enable, exports.keyboard.enable));
-
-          if (cordova.InAppBrowser) {
-            console.debug('[device] Enabling InAppBrowser');
+      exports.isDesktop = function() {
+        if (!angular.isDefined(cache.isDesktop)) {
+          try {
+            // Should have NodeJs and NW
+            cache.isDesktop = !exports.enable && !!process && !!App;
+          } catch (err) {
+            cache.isDesktop = false;
           }
         }
-        else {
-          console.debug('[device] Ionic platform ready - no device detected.');
-        }
+        return cache.isDesktop;
+      };
 
-        started = true;
-        startPromise = null;
-      });
+      exports.isWeb = function() {
+        return !exports.enable && !exports.isDesktop();
+      };
 
-      var readyPromise;
+      exports.ready = function() {
+        if (started) return $q.when();
+        return startPromise || exports.start();
+      };
 
-      // backward compat
-      exports.ready = function () {
-        if (!readyPromise) {
-          readyPromise = $q.all([
-            ionicReady(),
-            csSettings.ready()
-          ]);
-        }
-        return readyPromise;
+      exports.start = function() {
+
+        var startPromise = ionicReady()
+          .then(function(){
+
+            exports.enable = window.cordova && cordova && cordova.plugins;
+
+            if (exports.enable){
+              exports.camera.enable = !!navigator.camera;
+              exports.keyboard.enable = cordova && cordova.plugins && !!cordova.plugins.Keyboard;
+              exports.barcode.enable = cordova && cordova.plugins && !!cordova.plugins.barcodeScanner;
+              exports.clipboard.enable = cordova && cordova.plugins && !!cordova.plugins.clipboard;
+
+              if (exports.keyboard.enable) {
+                angular.extend(exports.keyboard, cordova.plugins.Keyboard);
+              }
+
+              console.debug('[device] Ionic platform ready, with [camera: {0}] [barcode scanner: {1}] [keyboard: {2}]'
+                .format(exports.camera.enable, exports.barcode.enable, exports.keyboard.enable));
+
+              if (cordova.InAppBrowser) {
+                console.debug('[device] Enabling InAppBrowser');
+              }
+            }
+            else {
+              console.debug('[device] Ionic platform ready - no device detected.');
+            }
+
+            started = true;
+            startPromise = null;
+          });
+
+        return startPromise;
       };
 
       return exports;

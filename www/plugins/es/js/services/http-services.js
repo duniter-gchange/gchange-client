@@ -3,8 +3,16 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 /**
  * Elastic Search Http
  */
-.factory('esHttp', function($q, $timeout, $rootScope, $state, $sce, CryptoUtils, csHttp, csConfig, csSettings, BMA, csWallet, csPlatform, Api) {
+.factory('esHttp', function($q, $timeout, $rootScope, $state, $sce, $window,
+                            CryptoUtils, csHttp, csConfig, csSettings, BMA, csWallet, csPlatform, Api) {
   'ngInject';
+
+  // Allow to force SSL connection with port different from 443
+  var forceUseSsl = (csConfig.httpsMode === 'true' || csConfig.httpsMode === true || csConfig.httpsMode === 'force') ||
+  ($window.location && $window.location.protocol === 'https:') ? true : false;
+  if (forceUseSsl) {
+    console.debug('[ES] [https] Enable SSL (forced by config or detected in URL)');
+  }
 
   function Factory(host, port, wsPort, useSsl) {
 
@@ -30,17 +38,18 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
     function init(host, port, wsPort, useSsl) {
       // Use settings as default
-      if (csSettings.data) {
+      if (!host && csSettings.data) {
         host = host || (csSettings.data.plugins && csSettings.data.plugins.es ? csSettings.data.plugins.es.host : null);
         port = port || (host ? csSettings.data.plugins.es.port : null);
         wsPort = wsPort || (host ? csSettings.data.plugins.es.wsPort : null);
+        useSsl = angular.isDefined(useSsl) ? useSsl : (port == 443 || csSettings.data.plugins.es.useSsl || forceUseSsl);
       }
 
       that.alive = false;
       that.host = host;
-      that.port = port || 80;
-      that.wsPort = wsPort || port || 80;
-      that.useSsl = angular.isDefined(useSsl) ? useSsl : false;
+      that.port = port || ((useSsl || forceUseSsl) ? 443 : 80);
+      that.wsPort = wsPort || that.port;
+      that.useSsl = angular.isDefined(useSsl) ? useSsl : (that.port == 443 || forceUseSsl);
       that.server = csHttp.getServer(host, port);
     }
 
@@ -472,8 +481,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
   var service = new Factory();
 
-  service.instance = function(host, port, wsPort) {
-    return new Factory(host, port, wsPort);
+  service.instance = function(host, port, wsPort, useSsl) {
+    return new Factory(host, port, wsPort, useSsl);
   };
 
   return service;

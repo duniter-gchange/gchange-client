@@ -242,7 +242,7 @@
   },
   "LOCATION": {
     "BTN_GEOLOC_ADDRESS": "Find my address on the map",
-    "USE_GEO_POINT": "Appear on {{'COMMON.APP_NAME'|translate}} maps?",
+    "USE_GEO_POINT": "geo-locate (recommended)?",
     "LOADING_LOCATION": "Searching address...",
     "LOCATION_DIVIDER": "Localisation",
     "ADDRESS": "Address",

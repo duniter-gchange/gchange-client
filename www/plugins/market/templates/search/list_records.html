@@ -1,3 +1,24 @@
+    <!-- result label -->
+    <div class="padding" style="display: block; height: 60px;">
+      <div class="pull-left ng-hide" ng-show="!search.loading">
+        <ng-if ng-if="search.lastRecords">
+          <h4  translate>MARKET.SEARCH.LAST_RECORDS</h4>
+          <small class="gray no-padding" ng-if="search.total">
+            <span ng-if="search.geoPoint && search.total">{{'MARKET.SEARCH.LAST_RECORD_COUNT_LOCATION'|translate:{count: search.total, location: search.location} }}</span>
+            <span ng-if="!search.geoPoint && search.total">{{'MARKET.SEARCH.LAST_RECORD_COUNT'|translate:{count: search.total} }}</span>
+          </small>
+        </ng-if>
+
+        <ng-if ng-if="!search.lastRecords">
+          <h4 translate>MARKET.SEARCH.RESULTS</h4>
+          <small class="gray no-padding" ng-if="search.total">
+            <span ng-if="search.geoPoint && search.total">{{'MARKET.SEARCH.RESULT_COUNT_LOCATION'|translate:{count: search.total, location: search.location} }}</span>
+            <span ng-if="!search.geoPoint && search.total">{{'MARKET.SEARCH.RESULT_COUNT'|translate:{count: search.total} }}</span>
+          </small>
+        </ng-if>
+
+      </div>
+    </div>
 
     <div class="center" ng-if="search.loading">
       <ion-spinner icon="android"></ion-spinner>
@@ -16,12 +37,12 @@
         <a class="card card-record stable-bg  ink"
              ng-click="showRecord($event, $index)">
 
-          <div class="card-item  item-text-wrap padding-right" ng-class="{'item-thumbnail-left': rec.thumbnail, 'padding-left': !rec.thumbnail}">
-            <i class="item-image" ng-if="rec.thumbnail" style="background-image: url('{{::rec.thumbnail.src}}')" ></i>
-            <h2 class="padding-top" ng-bind-html="rec.title | truncText:100"></h2>
+          <div class="card-item  item-text-wrap padding-right" ng-class="::{'item-thumbnail-left': rec.thumbnail, 'padding-left': !rec.thumbnail}">
+            <i class="item-image" ng-if="::rec.thumbnail" style="background-image: url('{{::rec.thumbnail.src}}')" ></i>
+            <h2 class="padding-top" ng-bind-html="::rec.title | truncText:100"></h2>
             <h4 class="gray">
-              <span class="positive" ng-if="rec.location">
-                <i class="icon ion-location"></i> {{options.location.prefix|translate}}<span ng-bind-html="rec.location"></span>
+              <span class="positive" ng-if="::rec.location">
+                <i class="icon ion-location"></i> {{::options.location.prefix|translate}}<span ng-bind-html="rec.location"></span>
               </span>
               <span ng-show="rec.time">
                 <br ng-show="rec.location"/>

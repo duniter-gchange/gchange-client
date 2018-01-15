@@ -7,46 +7,40 @@
   <ion-nav-buttons side="secondary">
     <button class="button button-icon button-clear icon ion-loop visible-xs visible-sm" ng-click="doRefresh()">
     </button>
+    <button class="button button-bar button-icon button-clear icon ion-android-funnel visible-xs visible-sm"
+            ng-click="showActionsPopover($event)">
+    </button>
   </ion-nav-buttons>
 
   <ion-content class="lookupForm "
                bind-notifier="{ rebind:$root.settings.useRelative }">
 
-    <form ng-submit="doSearch()">
+      <form ng-submit="doSearch()">
 
-      <label class="item item-input">
-        <i class="icon ion-search placeholder-icon"></i>
-        <input type="text"
-               placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
-               ng-model="search.text"
-               ng-model-options="{ debounce: 650 }"
-               ng-change="doSearch()">
-      </label>
+        <a ng-if="!search.category && options.category.show"
+           class="item item-icon-right ink"
+           ui-sref="app.market_categories">
+          <span class="gray"> <i class="gray ion-android-funnel"></i> {{'MARKET.SEARCH.BTN_SHOW_CATEGORIES'|translate}}</span>
+          <i class="gray icon ion-ios-arrow-right"></i>
+        </a>
 
-      <!-- location -->
-      <ng-include src="'plugins/es/templates/common/item_location_search.html'"
-                  ng-controller="ESSearchPositionItemCtrl" ng-init=""></ng-include>
+        <label class="item item-input">
+          <i class="icon ion-search placeholder-icon"></i>
+          <input type="text"
+                 placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+                 ng-model="search.text"
+                 ng-model-options="{ debounce: 650 }"
+                 ng-change="doSearch()">
+        </label>
 
-    </form>
+        <!-- location -->
+        <ng-include src="'plugins/es/templates/common/item_location_search.html'"
+                    ng-controller="ESSearchPositionItemCtrl" ng-init=""></ng-include>
 
-    <div ng-if="!search.loading && !search.category && options.category.show"
-         class="padding-right" style="display: block; height: 35px;">
-      <a class="button button-text button-small button-text-positive pull-right ink"
-         ui-sref="app.market_categories">
-        <i class="icon ion-android-funnel"></i>
-        {{'MARKET.SEARCH.BTN_SHOW_CATEGORIES' | translate}}
-      </a>
-    </div>
+        <!-- options -->
+        <ng-include src="::'plugins/market/templates/search/lookup_options.html'"></ng-include>
+      </form>
 
-    <div class="padding" style="display: block; height: 45px;">
-      <h4
-        ng-if="!search.loading && search.lastRecords && search.results.length" translate>
-        MARKET.SEARCH.LAST_RECORDS
-      </h4>
-      <h4
-        ng-if="!search.loading && !search.lastRecords && (search.text.length || search.advanced != null)" translate>
-        COMMON.RESULTS_LIST
-      </h4>
     </div>
 
     <!-- list of records -->

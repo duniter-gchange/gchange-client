@@ -258,7 +258,7 @@
   },
   "LOCATION": {
     "BTN_GEOLOC_ADDRESS": "Actualizar desde la dirección",
-    "USE_GEO_POINT": "Aparecer en la tarjeta {{'COMMON.APP_NAME'|translate}} ?",
+    "USE_GEO_POINT": "Geo-localizar (recomendado)?",
     "LOADING_LOCATION": "Encontrar la dirección ...",
     "LOCATION_DIVIDER": "Dirección",
     "ADDRESS": "Calle",

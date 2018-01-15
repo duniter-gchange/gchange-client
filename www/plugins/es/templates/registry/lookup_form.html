@@ -10,7 +10,38 @@
 <form ng-submit="doSearch()"/>
   <div class="item no-padding">
 
-    <div class="item-input">
+    <div class="item-input light-bg">
+
+      <div class="animate-show-hide ng-hide" ng-show="entered"
+           ng-if="search.geoPoint || search.type || search.category">
+        <!-- selected location -->
+        <div ng-show="search.geoPoint"
+             class="button button-small button-text button-stable button-icon-event stable-900-bg"
+             style="margin-right: 10px;">
+          &nbsp;<i class="icon ion-location"></i>
+          <span ng-bind-html="search.location"></span>
+          <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
+        </div>
+
+        <!-- selected type -->
+        <div ng-show="search.type"
+             class="button button-small button-text button-stable button-icon-event stable-900-bg"
+             style="margin-right: 10px;" >
+          &nbsp;<i class="icon cion-page-{{search.type}}"></i>
+          <span>{{'REGISTRY.TYPE.ENUM.'+search.type|uppercase|translate}}</span>
+          <i class="icon ion-close" ng-click="removeType()">&nbsp;&nbsp;</i>
+        </div>
+
+        <!-- selected category -->
+        <div ng-show="search.category.name"
+             class="button button-small button-text button-stable button-icon-event stable-900-bg"
+             style="margin-right: 10px;">
+          &nbsp;<i class="icon ion-flag"></i>
+          <span>{{search.category.name|truncText:40}}</span>
+          <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
+        </div>
+      </div>
+
       <i class="icon ion-search placeholder-icon"></i>
       <input type="text"
              class="visible-xs visible-sm"
@@ -28,37 +59,6 @@
              on-return="doSearchText()">
     </div>
 
-    <div class="row double-padding-x item-text-wrap animate-show-hide ng-hide hidden-xs hidden-sm"
-         ng-show="entered"
-         ng-if="search.geoPoint || search.type || search.category" >
-
-      <!-- selected location -->
-      <div ng-show="search.geoPoint"
-           class="button button-small button-text button-stable button-icon-event stable-900-bg"
-           style="margin-right: 10px;">
-        &nbsp;<i class="icon ion-location"></i>
-        <span ng-bind-html="search.location"></span>
-        <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
-      </div>
-
-      <!-- selected type -->
-      <div ng-show="search.type"
-           class="button button-small button-text button-stable button-icon-event stable-900-bg"
-           style="margin-right: 10px;" >
-        &nbsp;<i class="icon cion-page-{{search.type}}"></i>
-        <span>{{'REGISTRY.TYPE.ENUM.'+search.type|uppercase|translate}}</span>
-        <i class="icon ion-close" ng-click="removeType()">&nbsp;&nbsp;</i>
-      </div>
-
-      <!-- selected category -->
-      <div ng-show="search.category.name"
-           class="button button-small button-text button-stable button-icon-event stable-900-bg"
-           style="margin-right: 10px;">
-        &nbsp;<i class="icon ion-flag"></i>
-        <span>{{search.category.name|truncText:40}}</span>
-        <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
-      </div>
-    </div>
   </div>
 
   <!-- location -->

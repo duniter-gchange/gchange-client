@@ -267,7 +267,7 @@
   },
   "LOCATION": {
     "BTN_GEOLOC_ADDRESS": "Trouver mon adresse sur la carte",
-    "USE_GEO_POINT": "Apparaître sur les cartes {{'COMMON.APP_NAME'|translate}} ?",
+    "USE_GEO_POINT": "Géolocaliser (recommandé) ?",
     "LOADING_LOCATION": "Recherche de l'adresse...",
     "LOCATION_DIVIDER": "Adresse",
     "ADDRESS": "Rue",

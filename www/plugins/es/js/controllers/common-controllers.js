@@ -765,15 +765,20 @@ function ESSearchPositionItemController($scope, $q, $timeout, ModalUtils, csConf
   $scope.showDropdown = function() {
     var text = $scope.search.location && $scope.search.location.trim();
     if (!text || text.length < minLength) {
-      $scope.locations = undefined;
-      return $q.when(); // nothing to search
+        return $scope.hideDropdown(true/*force, if still loading*/);
     }
+
+    // Compute a request id, to apply response only if current request
+    var requestId = ($scope.requestId && $scope.requestId + 1) || 1;
+    $scope.requestId = requestId;
 
     loadingPosition = true;
 
     // Execute the given query
     return esGeo.point.searchByAddress(text)
       .then(function(res) {
+        if ($scope.requestId != requestId) return; // Skip apply if not same request:
+
         loadingPosition = false;
         $scope.locations = res||[];
         $scope.license = res && res.length && res[0].license;
@@ -785,6 +790,7 @@ function ESSearchPositionItemController($scope, $q, $timeout, ModalUtils, csConf
   };
 
   $scope.hideDropdown = function(force) {
+    // force, even if still loading
     if (force) {
       $scope.locations = undefined;
       $scope.selectLocationIndex = -1;
