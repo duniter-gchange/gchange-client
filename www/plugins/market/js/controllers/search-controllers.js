@@ -130,7 +130,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       $scope.search.type = type;
     }
     if ($scope.search.lastRecords) {
-      $scope.doGetLastRecord();
+      $scope.doGetLastRecords();
     }
     else {
       $scope.doSearch();
@@ -214,7 +214,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
 
     if (!matches.length && !filters.length) {
-      return $scope.doGetLastRecord();
+      return $scope.doGetLastRecords();
     }
 
     var stateParams = {};
