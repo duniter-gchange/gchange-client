@@ -38,7 +38,7 @@ angular.module('cesium.market.join.controllers', ['cesium.services', 'cesium.mar
     $scope.slides.slider.unlockSwipes();
     $scope.slides.slider.slideNext();
     $scope.slides.slider.lockSwipes();
-    $scope.isLastSlide = $scope.slides.slider.activeIndex === 4;
+    $scope.isLastSlide = $scope.slides.slider.activeIndex === ($scope.slides.slider.slides.length-1);
   };
 
 

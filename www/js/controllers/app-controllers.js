@@ -437,7 +437,7 @@ function HomeController($scope, $state, $timeout, $ionicHistory, csPlatform, csC
 
   function getRandomImage() {
     var imageCountByKind = {
-      'service': 13,
+      'service': 12,
       'spring': 7,
       'summer': 11,
       'autumn': 7,
