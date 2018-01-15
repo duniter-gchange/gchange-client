@@ -155,6 +155,63 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
         }
       };
 
+      // Numerical keyboard - fix #30
+      exports.keyboard.digit = {
+        settings: {
+          bindModel: function(modelScope, modelPath, settings) {
+            settings = settings || {};
+            modelScope = modelScope || $rootScope;
+            var getModelValue = function() {
+              return (modelPath||'').split('.').reduce(function(res, path) {
+                return res ? res[path] : undefined;
+              }, modelScope);
+            };
+            var setModelValue = function(value) {
+              var paths = (modelPath||'').split('.');
+              var property = paths.length && paths[paths.length-1];
+              paths.reduce(function(res, path) {
+                if (path == property) {
+                  res[property] = value;
+                  return;
+                }
+                return res[path];
+              }, modelScope);
+            };
+
+            settings.action = settings.action || function(number) {
+                setModelValue((getModelValue() ||'') + number);
+              };
+            if (settings.decimal) {
+              settings.decimalSeparator = settings.decimalSeparator || '.';
+              settings.leftButton = settings.leftButton = {
+                html: '<span>.</span>',
+                action: function () {
+                  var text = getModelValue() || '';
+                  // only one '.' allowed
+                  if (text.indexOf(settings.decimalSeparator) >= 0) return;
+                  // Auto add zero when started with '.'
+                  if (!text.trim().length) {
+                    text = '0';
+                  }
+                  setModelValue(text + settings.decimalSeparator);
+                }
+              };
+            }
+            settings.rightButton = settings.rightButton || {
+                html: '<i class="icon ion-backspace-outline"></i>',
+                action: function() {
+                  var text = getModelValue();
+                  if (text && text.length) {
+                    text = text.slice(0, -1);
+                    setModelValue(text);
+                  }
+                }
+              };
+            return settings;
+          }
+        }
+      };
+
       exports.isIOS = function() {
         return !!navigator.userAgent.match(/iPhone | iPad | iPod/i) || ionic.Platform.isIOS();
       };
@@ -182,7 +239,7 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
 
       exports.start = function() {
 
-        var startPromise = ionicReady()
+        startPromise = ionicReady()
           .then(function(){
 
             exports.enable = window.cordova && cordova && cordova.plugins;
@@ -197,8 +254,8 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
                 angular.extend(exports.keyboard, cordova.plugins.Keyboard);
               }
 
-              console.debug('[device] Ionic platform ready, with [camera: {0}] [barcode scanner: {1}] [keyboard: {2}]'
-                .format(exports.camera.enable, exports.barcode.enable, exports.keyboard.enable));
+              console.debug('[device] Ionic platform ready, with [camera: {0}] [barcode scanner: {1}] [keyboard: {2}] [clipboard: {3}]'
+                .format(exports.camera.enable, exports.barcode.enable, exports.keyboard.enable, exports.clipboard.enable));
 
               if (cordova.InAppBrowser) {
                 console.debug('[device] Enabling InAppBrowser');
