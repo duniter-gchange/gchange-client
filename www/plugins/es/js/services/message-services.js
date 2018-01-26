@@ -25,6 +25,7 @@ angular.module('cesium.es.message.services', ['ngResource', 'cesium.services', '
     },
     raw = {
       postSearch: esHttp.post('/message/inbox/_search'),
+      postSearchByType: esHttp.post('/message/:type/_search'),
       getByTypeAndId : esHttp.get('/message/:type/:id'),
       postReadById: esHttp.post('/message/inbox/:id/_read')
     },
@@ -109,27 +110,30 @@ angular.module('cesium.es.message.services', ['ngResource', 'cesium.services', '
       });
   }
 
-  function sendMessage(message, keypair) {
-    return doSendMessage(message, keypair)
-      .then(function(res){
-        var outbox = (csSettings.data.plugins.es.message &&
-          angular.isDefined(csSettings.data.plugins.es.message.outbox)) ?
-          csSettings.data.plugins.es.message.outbox : true;
+  function sendMessage(message) {
+    return csWallet.getKeypair()
+      .then(function(keypair) {
+      return doSendMessage(message, keypair)
+        .then(function(res){
+          var outbox = (csSettings.data.plugins.es.message &&
+            angular.isDefined(csSettings.data.plugins.es.message.outbox)) ?
+            csSettings.data.plugins.es.message.outbox : true;
 
-        if (!outbox) return res;
+          if (!outbox) return res;
 
-        // Send to outbox
-        return doSendMessage(message, keypair, '/message/outbox', 'issuer')
-          .catch(function(err) {
-            console.error("Failed to store message to outbox: " + err);
-            return res; // the first result
-          });
-      })
-      .then(function(res) {
-        // Raise event
-        api.data.raise.sent(res);
+          // Send to outbox
+          return doSendMessage(message, keypair, '/message/outbox', 'issuer')
+            .catch(function(err) {
+              console.error("Failed to store message to outbox: " + err);
+              return res; // the first result
+            });
+        })
+        .then(function(res) {
+          // Raise event
+          api.data.raise.sent(res);
 
-        return res;
+          return res;
+        });
       });
   }
 
@@ -197,13 +201,13 @@ angular.module('cesium.es.message.services', ['ngResource', 'cesium.services', '
     };
 
     if (options.type == 'inbox') {
-      request.query = {bool: {filter: {term: {recipient: csWallet.data.pubkey}}}};
+      request.query = {bool: {filter: {term: {recipient: pubkey}}}};
     }
     else {
-      request.query = {bool: {filter: {term: {issuer: csWallet.data.pubkey}}}};
+      request.query = {bool: {filter: {term: {issuer: pubkey}}}};
     }
 
-    return esHttp.post('/message/:type/_search')(request, {type: options.type})
+    return raw.postSearchByType(request, {type: options.type})
       .then(function(res) {
         if (!res || !res.hits || !res.hits.total) {
           return [];
@@ -405,7 +409,12 @@ angular.module('cesium.es.message.services', ['ngResource', 'cesium.services', '
     }
     message.read = true;
 
-    return CryptoUtils.sign(message.hash, csWallet.data.keypair)
+      return csWallet.getKeypair()
+
+      // Prepare the read_signature to sent
+        .then(function(keypair) {
+          return CryptoUtils.sign(message.hash, keypair);
+        })
 
       // Send read request
       .then(function(signature){
@@ -469,7 +478,7 @@ angular.module('cesium.es.message.services', ['ngResource', 'cesium.services', '
       .then(function(keypair) {
         return $q.all(developers.reduce(function(res, developer){
           return !developer.pubkey ? res :
-              res.concat(sendMessage(angular.merge({recipient: developer.pubkey}, message), csWallet.data.keypair));
+              res.concat(doSendMessage(angular.merge({recipient: developer.pubkey}, message), keypair));
         }, []));
       })
       .then(function(res) {

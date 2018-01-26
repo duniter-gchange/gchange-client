@@ -1,4 +1,8 @@
-<div class="item gallery done in" ng-if="pictures && pictures.length>0" >
+<div ng-if="pictures && pictures.length>0"
+     class="item gallery done in"
+     ng-class="{'gallery-small': !smallscreen && smallpictures}"
+     on-tap="smallpictures=!smallpictures;"
+     >
   <div ng-repeat="picture in pictures"
        class="item card card-gallery">
     <div class="ink">

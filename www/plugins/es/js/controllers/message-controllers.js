@@ -52,8 +52,8 @@ angular.module('cesium.es.message.controllers', ['cesium.es.services'])
 
 ;
 
-function ESMessageListController($scope, $rootScope, $state, $translate, $ionicHistory, $ionicPopover,
-                                 esModals, UIUtils, esMessage) {
+function ESMessageListController($scope, $state, $translate, $ionicHistory, $ionicPopover,
+                                 esModals, UIUtils, csWallet, esMessage) {
   'ngInject';
 
   $scope.loading = true;
@@ -81,14 +81,18 @@ function ESMessageListController($scope, $rootScope, $state, $translate, $ionicH
     });
   });
 
-  $scope.load = function(size, offset) {
+  $scope.refresh = function(silent) {
+    return $scope.load(undefined, undefined, silent);
+  };
+
+  $scope.load = function(size, offset, silent) {
     var options  = {};
     options.from = offset || 0;
     options.size = size || 20;
     options.type = $scope.type;
 
-    $scope.loading = true;
-    return esMessage.load($rootScope.walletData.keypair, options)
+    $scope.loading = !silent;
+    return esMessage.load(options)
       .then(function(messages) {
         $scope.messages = messages;
 
@@ -170,8 +174,8 @@ function ESMessageListController($scope, $rootScope, $state, $translate, $ionicH
       .then(function() {
         UIUtils.loading.hide();
         return esModals.showMessageCompose(parameters)
-          .then(function(sent) {
-            if (sent) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
+          .then(function(id) {
+            if (id) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
           });
       });
   };
@@ -224,6 +228,65 @@ function ESMessageListController($scope, $rootScope, $state, $translate, $ionicH
     }
   };
 
+  /* -- watch events (delete, received, sent) -- */
+
+  // Message deletion
+  $scope.onMessageDelete = function(id) {
+    var index = _.findIndex($scope.messages, function(msg) {
+      return msg.id == id;
+    });
+    if (index) {
+      $scope.messages.splice(index,1); // remove from messages array
+    }
+  };
+  esMessage.api.data.on.delete($scope, $scope.onMessageDelete);
+
+  // Watch user sent message
+  $scope.onNewOutboxMessage = function(id) {
+    if ($scope.type != 'outbox') return;
+    // Add message sent to list
+    $scope.loading = true;
+    return $timeout(function() {
+       // Load the message sent
+        return esMessage.get(id, {type: $scope.type, summary: true});
+      }, 500 /*waiting ES propagation*/)
+      .then(function(msg) {
+        $scope.messages.splice(0,0,msg);
+        $scope.loading = false;
+        $scope.motion.show({selector: '.view-messages .list .item'});
+      })
+      .catch(function() {
+        $scope.loading = false;
+      });
+  };
+  esMessage.api.data.on.sent($scope, $scope.onNewOutboxMessage);
+
+  // Watch received message
+  $scope.onNewInboxMessage = function(notification) {
+    if ($scope.type != 'inbox' || !$scope.entered) return;
+    // Add message sent to list
+    $scope.loading = true;
+    // Load the the message
+    return esMessage.get(notification.id, {type: $scope.type, summary: true})
+      .then(function(msg) {
+        $scope.messages.splice(0,0,msg);
+        $scope.loading = false;
+        $scope.motion.show({selector: '.view-messages .list .item'});
+      })
+      .catch(function() {
+        $scope.loading = false;
+      });
+  };
+  esMessage.api.data.on.new($scope, $scope.onNewInboxMessage);
+
+  // Watch unauth
+  $scope.onUnauth = function() {
+    // Reset all data
+    $scope.messages = undefined;
+    $scope.loading = false;
+    $scope.entered = false;
+  };
+  csWallet.api.data.on.unauth($scope, $scope.onUnauth);
 
   // for DEV only
   /*$timeout(function() {
@@ -324,11 +387,11 @@ function ESMessageComposeModalController($scope, Modals, UIUtils, csWallet, esHt
       time: esHttp.date.now()
     };
 
-    esMessage.send(data, csWallet.data.keypair)
+    esMessage.send(data)
       .then(function(id) {
         $scope.id=id;
         UIUtils.loading.hide();
-        $scope.closeModal(true);
+        $scope.closeModal(id);
       })
       .catch(UIUtils.onError('MESSAGE.ERROR.SEND_MSG_FAILED'));
   };
@@ -374,7 +437,8 @@ function ESMessageComposeModalController($scope, Modals, UIUtils, csWallet, esHt
 }
 
 
-function ESMessageViewController($scope, $state, $timeout, $translate, $ionicHistory, UIUtils, esModals, esMessage) {
+function ESMessageViewController($scope, $state, $timeout, $translate, $ionicHistory, $ionicPopover,
+                                 UIUtils, esModals, esMessage) {
   'ngInject';
 
   $scope.formData = {};
@@ -447,7 +511,7 @@ function ESMessageViewController($scope, $state, $timeout, $translate, $ionicHis
     UIUtils.alert.confirm('MESSAGE.CONFIRM.REMOVE')
       .then(function(confirm) {
         if (confirm) {
-          esMessage.remove($scope.id, $scope.type)
+          return esMessage.remove($scope.id, $scope.type)
             .then(function () {
               $ionicHistory.nextViewOptions({
                 historyRoot: true
@@ -458,6 +522,32 @@ function ESMessageViewController($scope, $state, $timeout, $translate, $ionicHis
             .catch(UIUtils.onError('MESSAGE.ERROR.REMOVE_MESSAGE_FAILED'));
         }
       });
+  };
+
+  /* -- Popover -- */
+
+  $scope.showActionsPopover = function(event) {
+    if (!$scope.actionsPopover) {
+      $ionicPopover.fromTemplateUrl('plugins/es/templates/message/view_popover_actions.html', {
+        scope: $scope
+      }).then(function(popover) {
+        $scope.actionsPopover = popover;
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function() {
+          $scope.actionsPopover.remove();
+        });
+        $scope.actionsPopover.show(event);
+      });
+    }
+    else {
+      $scope.actionsPopover.show(event);
+    }
+  };
+
+  $scope.hideActionsPopover = function() {
+    if ($scope.actionsPopover) {
+      $scope.actionsPopover.hide();
+    }
   };
 
   /* -- Modals -- */
@@ -584,8 +674,8 @@ function PopoverMessageController($scope, UIUtils, $state, csWallet, esHttp, esM
   $scope.showNewMessageModal = function(parameters) {
     $scope.closePopover();
     return esModals.showMessageCompose(parameters)
-      .then(function(sent) {
-        if (sent) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
+      .then(function(id) {
+        if (id) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
       });
   };
 

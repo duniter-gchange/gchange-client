@@ -68,6 +68,8 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   $scope.maxCommentSize = 10;
   $scope.loading = true;
   $scope.motion = UIUtils.motion.fadeSlideInRight;
+  $scope.smallscreen = UIUtils.screen.isSmall();
+  $scope.smallpictures = !$scope.smallscreen;
 
   // Screen options
   $scope.options = $scope.options || angular.merge({
@@ -333,7 +335,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         return esModals.showMessageCompose({
           title: title,
           destPub: $scope.issuer.pubkey,
-          destUid: $scope.issuer.name || $scope.issuer.uid,
+          destUid: $scope.issuer.name || $scope.issuer.uid
         });
       })
       .then(function(send) {

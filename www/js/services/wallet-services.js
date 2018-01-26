@@ -141,12 +141,29 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
         // Send logout event
         api.data.raise.logout();
 
+        // Send unauth event (compat with new Cesium auth)
+        api.data.raise.unauth();
+
         resolve();
       });
     },
 
     isLogin = function() {
       return !!data.pubkey;
+    },
+
+    getKeypair = function(options) {
+      if (!started) {
+        return (startPromise || start())
+          .then(function () {
+            return getKeypair(options); // loop
+          });
+      }
+
+      if (isLogin()) {
+        return $q.when(data.keypair);
+      }
+      return $q.reject('Not auth');
     },
 
     hasSelf = function() {
@@ -1453,6 +1470,7 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
     api.registerEvent('data', 'load');
     api.registerEvent('data', 'finishLoad');
     api.registerEvent('data', 'logout');
+    api.registerEvent('data', 'unauth');
     api.registerEvent('data', 'reset');
 
     api.registerEvent('error', 'send');
@@ -1472,6 +1490,7 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
       login: login,
       logout: logout,
       isLogin: isLogin,
+      getKeypair: getKeypair,
       hasSelf: hasSelf,
       isDataLoaded: isDataLoaded,
       isNeverUsed: isNeverUsed,

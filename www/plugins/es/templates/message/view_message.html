@@ -4,11 +4,9 @@
   </ion-nav-title>
 
   <ion-nav-buttons side="secondary">
-    <!--<button class="button button-bar button-icon button-clear visible-xs visible-sm" ng-click="edit()" ng-if="canEdit">
-      <i class="icon ion-android-create"></i>
-    </button>-->
-    <button class="button button-bar button-icon button-clear icon ion-android-more-vertical visible-xs visible-sm"
-            ng-click="actionsPopover.show($event)">
+
+    <button class="button button-icon button-clear icon ion-android-more-vertical visible-xs visible-sm"
+            ng-click="showActionsPopover($event)">
     </button>
   </ion-nav-buttons>
 
@@ -80,8 +78,7 @@
 
           <!-- content -->
           <ion-item>
-            <p class="dark">
-              <span class="text-keep-lines" ng-bind-html="formData.content"></span>
+            <p ng-bind-html="formData.html">
             </p>
 
             <div class="padding gray" ng-if="!formData.content" translate>
