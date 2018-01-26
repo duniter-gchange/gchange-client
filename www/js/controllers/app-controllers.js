@@ -454,16 +454,16 @@ function HomeController($scope, $state, $timeout, $ionicHistory, csPlatform, csC
       var day = moment().format('D');
       var month = moment().format('M');
       if ((month < 3) || (month == 3 && day < 21) || (month == 12 && day >= 21)) {
-        kind = 'winter'
+        kind = 'winter';
       }
       else if ((month == 3 && day >= 21) || (month < 6) || (month == 6 && day < 21)) {
-        kind = 'spring'
+        kind = 'spring';
       }
       else if ((month == 6 && day >= 21) || (month < 9) || (month == 9 && day < 21)) {
-        kind = 'summer'
+        kind = 'summer';
       }
       else {
-        kind = 'autumn'
+        kind = 'autumn';
       }
     }
     var imageCount = imageCountByKind[kind];
