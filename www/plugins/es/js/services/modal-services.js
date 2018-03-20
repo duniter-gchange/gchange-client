@@ -43,19 +43,16 @@ angular.module('cesium.es.modal.services', ['cesium.modal.services', 'cesium.es.
   }
 
   function showNewPage() {
-    return csWallet.login({minData: true})
-      .then(function() {
-        UIUtils.loading.hide();
-
-        return ModalUtils.show('plugins/es/templates/registry/modal_record_type.html', undefined, {
-          title: 'REGISTRY.EDIT.TITLE_NEW'
-        })
-          .then(function(type){
-            if (type) {
-              $state.go('app.registry_add_record', {type: type});
-            }
-          });
-      });
+    // Fix #50 - avoid to login and fake account, when creating a new page
+    //return csWallet.login({minData: true})
+      return ModalUtils.show('plugins/es/templates/registry/modal_record_type.html', undefined, {
+        title: 'REGISTRY.EDIT.TITLE_NEW'
+      })
+        .then(function(type){
+          if (type) {
+            $state.go('app.registry_add_record', {type: type});
+          }
+        });
   }
 
   return {

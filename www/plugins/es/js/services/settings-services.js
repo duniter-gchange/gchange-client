@@ -136,7 +136,8 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
             var settings = JSON.parse(json || '{}');
             settings.time = record.time;
             console.debug('[ES] [settings] Loaded user settings in '+ (new Date().getTime()-now) +'ms');
-            console.debug(settings);
+            //console.debug(settings);
+
             return settings;
           })
           // if error: skip stored content

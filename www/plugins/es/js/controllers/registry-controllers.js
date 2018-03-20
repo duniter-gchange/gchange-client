@@ -653,7 +653,15 @@ function ESRegistryLookupController($scope, $focus, $timeout, $filter, $controll
 
   $scope.showNewPageModal = function() {
     $scope.hidePopovers();
-    return esModals.showNewPage();
+
+    return $scope.loadWallet()
+      .then(function(walletData) {
+        UIUtils.loading.hide();
+
+        if (walletData) {
+          return esModals.showNewPage();
+        }
+      });
   };
 
   /* -- popovers -- */
