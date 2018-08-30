@@ -63,7 +63,8 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
 
           // Avoid too long name (workaround for #308)
           if (profile.name && profile.name.length > 30) {
-            profile.name = profile.name.substr(0, 27) + '...';
+            // now using truncText filter
+            // profile.name = profile.name.substr(0, 27) + '...';
           }
 
           // avatar
@@ -121,7 +122,8 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     data.name = hit._source.title;
     // Avoid too long name (workaround for #308)
     if (data.name && data.name.length > 30) {
-      data.name = data.name.substr(0, 27) + '...';
+      // now using truncText filter
+      //data.name = data.name.substr(0, 27) + '...';
     }
     data.description = hit._source.description || data.description;
     data.city = hit._source.city || data.city;

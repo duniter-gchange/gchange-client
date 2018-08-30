@@ -468,7 +468,6 @@ function HomeController($scope, $state, $timeout, $ionicHistory, csPlatform, csC
     }
     var imageCount = imageCountByKind[kind];
     var imageIndex = Math.floor(Math.random()*imageCount)+1;
-    console.log(kind, imageIndex);
     return './img/bg/{0}-{1}.jpg'.format(kind, imageIndex);
   }
   $scope.bgImage = getRandomImage();

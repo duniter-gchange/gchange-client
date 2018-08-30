@@ -90,8 +90,12 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 
   $scope.enter = function (e, state) {
     if (state.stateParams && state.stateParams.id) { // Load by id
-      if ($scope.loading || state.stateParams.refresh) { // prevent reload if same id (if not force)
+      if ($scope.loading || state.stateParams.refresh) {
         $scope.load(state.stateParams.id, state.stateParams.anchor);
+      }
+      else {
+        // prevent reload if same id (and if not forced)
+        UIUtils.loading.hide();
       }
 
       // Notify child controllers
@@ -468,6 +472,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
     })
     .catch(function(err){
       if (err == 'CANCELLED') {
+        $scope.motion.hide();
         $scope.showHome();
       }
     });
@@ -674,13 +679,23 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
         $scope.saving = false;
         $scope.dirty = false;
 
-        var offState = $rootScope.$on('$stateChangeSuccess',
-          function(event, toState, toParams, fromState, fromParams){
-            event.preventDefault();
-            $state.go('app.market_view_record', {id: $scope.id}, {location: "replace", reload: true});
-            offState();
+        // Has back history: go back then reload the view record page
+        if (!!$ionicHistory.backView()) {
+          var offState = $rootScope.$on('$stateChangeSuccess',
+            function(event, toState, toParams, fromState, fromParams){
+              event.preventDefault();
+              $state.go('app.market_view_record', {id: $scope.id}, {location: "replace", reload: true});
+              offState(); // remove added listener
+            });
+          $ionicHistory.goBack(isNew ? -1 : -2);
+        }
+        // No back view: can occur when reloading the edit page
+        else {
+          $ionicHistory.nextViewOptions({
+            historyRoot: true
           });
-        $ionicHistory.goBack(isNew ? -1 : -2);
+          $state.go('app.market_view_record', {id: $scope.id});
+        }
       })
 
       .catch(function(err) {

@@ -12,8 +12,8 @@
         <i class="avatar"
            ng-if="::formData.avatar"
            style="background-image: url({{::formData.avatar.src}})"></i>
-        <ng-if ng-if="::formData.name">
-          <h3 class="light">{{::formData.name}}</h3>
+        <ng-if ng-if="::formData.name" title="{{::formData.name}}">
+          <h3 class="light">{{::formData.name|truncText: 30}}</h3>
         </ng-if>
         <ng-if ng-if="::!formData.name">
           <h3 class="light" ng-if="::formData.uid">{{::formData.uid}}</h3>
@@ -74,13 +74,13 @@
 
         <span class="item item-divider" translate>WOT.GENERAL_DIVIDER</span>
 
-        <!-- Pubkey -->
+        <!-- Pubkey
         <ion-item class="item-icon-left item-text-wrap ink"
                   copy-on-click="{{:rebind:formData.pubkey}}">
           <i class="icon ion-key"></i>
           <span translate>COMMON.PUBKEY</span>
           <h4 id="pubkey" class="dark text-left">{{:rebind:formData.pubkey}}</h4>
-        </ion-item>
+        </ion-item>-->
 
         <!--<div class="item item-icon-left item-text-wrap"
               ng-if=":rebind:!formData.hasSelf">

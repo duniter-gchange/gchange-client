@@ -103,6 +103,7 @@
       "NEW_MESSAGE_TITLE": "About your ad \"{{title}}\"..."
     },
     "WALLET": {
+      "DUNITER_PUBKEY": "Public key to receive payments",
       "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
       "DUNITER_ACCOUNT_HELP": "The public key (above) indicates the destination of the payments you will receive."
     },
@@ -139,6 +140,7 @@
     "WOT": {
       "VIEW": {
         "BTN_RECORDS": "Ads",
+        "DUNITER_PUBKEY": "Public key to receive payments",
         "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
         "DUNITER_ACCOUNT_HELP": "The public key (above) is the account to be used to pay for this user."
       }

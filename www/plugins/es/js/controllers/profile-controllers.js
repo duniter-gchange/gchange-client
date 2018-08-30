@@ -24,7 +24,7 @@ angular.module('cesium.es.profile.controllers', ['cesium.es.services'])
 ;
 
 function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $focus, $translate, $controller, $ionicHistory,
-                                     UIUtils, esHttp, esProfile, ModalUtils, Device) {
+                                     UIUtils, BMA, esHttp, esProfile, ModalUtils, Device) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -44,6 +44,8 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
   $scope.socialData = {
     url: null
   };
+
+  $scope.pubkeyPattern = BMA.regexp.PUBKEY;
 
   $scope.$on('$ionicView.enter', function(e) {
     $scope.loadWallet()

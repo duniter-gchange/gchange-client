@@ -102,20 +102,24 @@
               {{'PROFILE.TECHNICAL_DIVIDER' | translate}}
             </div>
 
-            <!-- uid -->
-            <ion-item class="item-icon-left" ng-if="walletData && walletData.uid">
-              <span translate>COMMON.UID</span>
-              <span class="badge badge-stable">{{::walletData.uid}}</span>
-            </ion-item>
-
-            <!-- pubkey-->
-            <ion-item class="item-icon-left item-icon-right item-text-wrap ink"
-                  on-hold="copy(formData.pubkey)"
-                  copy-on-click>
-                <i class="icon ion-key"></i>
-                <span translate>COMMON.PUBKEY</span>
-                <p class="gray">{{walletData.pubkey}}</p>
-            </ion-item>
+            <!-- pubkey  -->
+            <div class="item item-input item-floating-label"
+                 ng-class="{'item-input-error': form.$submitted && form.pubkey.$invalid}">
+              <span class="input-label" translate>REGISTRY.EDIT.RECORD_PUBKEY</span>
+              <input type="text" name="pubkey" placeholder="{{'REGISTRY.EDIT.RECORD_PUBKEY_HELP'|translate}}"
+                     ng-model="formData.pubkey"
+                     autocomplete="off"
+                     ng-pattern="pubkeyPattern"
+                     ng-model-options="{ debounce: 250 }"
+              />
+            </div>
+            <div class="form-errors"
+                 ng-show="form.pubkey.$error"
+                 ng-messages="form.pubkey.$error">
+              <div class="form-error" ng-message="pattern">
+                <span translate="ERROR.INVALID_PUBKEY"></span>
+              </div>
+            </div>
 
             <div class="item padding hidden-xs hidden-sm text-right">
               <button class="button button-clear button-dark ink"

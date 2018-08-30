@@ -1,5 +1,14 @@
 <ng-if ng-if="enable">
 
+
+  <ion-item class="item-icon-left item-text-wrap ink"
+            ng-if="formData.profile && formData.profile.pubkey"
+            copy-on-click="{{:rebind:formData.profile.pubkey}}">
+    <i class="icon ion-card"></i>
+    <span translate>MARKET.WALLET.DUNITER_PUBKEY</span>
+    <h4 id="pubkey" class="dark text-left">{{:rebind:formData.profile.pubkey}}</h4>
+  </ion-item>
+
   <div class="item item-icon-left item-text-wrap">
     <i class="icon ion-ios-help-outline positive"></i>
     <span ng-bind-html="'MARKET.WALLET.DUNITER_ACCOUNT'|translate:{currency:$root.currency.name}"></span>
@@ -10,6 +19,7 @@
     <div class="item item-divider item-divider-top-border">
       {{'MENU.MARKET' | translate}}
     </div>
+
 
     <!-- market records -->
     <a class="item item-icon-left item-icon-right"
