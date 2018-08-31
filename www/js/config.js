@@ -42,6 +42,7 @@ angular.module("cesium.config", [])
 			}
 		},
 		"converse": {
+			"enable": true,
 			"jid": "anonymous.duniter.org",
 			"bosh_service_url": "https://chat.duniter.org/http-bind/",
 			"auto_join_rooms": [

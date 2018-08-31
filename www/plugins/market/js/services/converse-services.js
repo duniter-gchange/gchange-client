@@ -10,7 +10,7 @@ angular.module('cesium.market.converse.services', ['cesium.es.services'])
 
   })
 
-.factory('mkConverse', function($rootScope, $q, $timeout, $translate, esHttp, csWallet, Device, csSettings) {
+.factory('mkConverse', function($rootScope, $q, $timeout, $translate, esHttp, csConfig, csWallet, Device, csSettings) {
   'ngInject';
   var
     defaultProfile,
@@ -38,78 +38,86 @@ angular.module('cesium.market.converse.services', ['cesium.es.services'])
     }
     else {
 
-      var nickname = data.name ? textToNickname(data.name) : data.pubkey.substring(0,8);
-
       if (!initialized) {
         initialized = true;
 
-        var now = new Date().getTime();
-        console.debug("[market] [converse] Starting Chatroom with username {"+nickname+"}...");
+        var isEnable = csConfig.plugins && csConfig.plugins.converse && csConfig.plugins.converse.enable;
+        if (!isEnable) {
+          console.debug("[market] [converse] Disabled by config - no plugins.converse found in 'config.js'");
+          initialized = true;
+        }
+        else {
 
-        // Register plugin
-        converse.plugins.add('gchange-plugin', {
+          var nickname = data.name ? textToNickname(data.name) : data.pubkey.substring(0, 8);
+          var now = new Date().getTime();
+          console.debug("[market] [converse] Starting Chatroom with username {" + nickname + "}...");
 
-          initialize: function () {
-            var _converse = this._converse;
+          // Register plugin
+          converse.plugins.add('gchange-plugin', {
 
-            $q.all([
-              _converse.api.waitUntil('chatBoxesFetched'),
-              _converse.api.waitUntil('roomsPanelRendered')
-            ]).then(function() {
-              console.debug("[market] [converse] Chatroom started in "+(new Date().getTime() - now)+"ms");
-            });
-          }
-        });
+            initialize: function () {
+              var _converse = this._converse;
 
-        var options = angular.merge({
-          "allow_muc_invitations" : false,
-          "auto_login" : true,
-          "allow_logout": true,
-          "authentication": "anonymous",
-          "jid" : "anonymous.duniter.org",
-          "auto_away": 300,
-          "auto_join_on_invite" : true,
-          "auto_reconnect": true,
-          "auto_join_rooms" : [
-            "gchange@muc.duniter.org"
-          ],
-          "blacklisted_plugins" : [
-            "converse-mam",
-            "converse-otr",
-            "converse-register",
-            "converse-vcard"
-          ],
-          "whitelisted_plugins": [
-            "gchange-plugin"
-          ],
-          "bosh_service_url": "https://chat.duniter.org/http-bind/",
-          "allow_registration": false,
-          "show_send_button": false,
-          "muc_show_join_leave": false,
-          "notification_icon": "img/logo.png",
-          "i18n": $translate.use()
-        }, csSettings.data.plugins && csSettings.data.plugins.converse || {});
-
-        options.auto_join_rooms = _.map(options.auto_join_rooms||[], function(room) {
-          if (typeof room === "string") {
-            return {
-              jid: room,
-              nick: nickname
+              $q.all([
+                _converse.api.waitUntil('chatBoxesFetched'),
+                _converse.api.waitUntil('roomsPanelRendered')
+              ]).then(function () {
+                console.debug("[market] [converse] Chatroom started in " + (new Date().getTime() - now) + "ms");
+              });
             }
-          }
-          room.nick = nickname;
-          return room;
-        });
+          });
 
-        // Run initialization
-        converse.initialize(options)
-          .catch(console.error);
+          var options = angular.merge({
+            "allow_muc_invitations": false,
+            "auto_login": true,
+            "allow_logout": true,
+            "authentication": "anonymous",
+            "jid": "anonymous.duniter.org",
+            "auto_away": 300,
+            "auto_join_on_invite": true,
+            "auto_reconnect": true,
+            "auto_join_rooms": [
+              "gchange@muc.duniter.org"
+            ],
+            "blacklisted_plugins": [
+              "converse-mam",
+              "converse-otr",
+              "converse-register",
+              "converse-vcard"
+            ],
+            "whitelisted_plugins": [
+              "gchange-plugin"
+            ],
+            "bosh_service_url": "https://chat.duniter.org/http-bind/",
+            "allow_registration": false,
+            "show_send_button": false,
+            "muc_show_join_leave": false,
+            "notification_icon": "img/logo.png",
+            "i18n": $translate.use()
+          }, csSettings.data.plugins && csSettings.data.plugins.converse || {});
+
+          options.auto_join_rooms = _.map(options.auto_join_rooms || [], function (room) {
+            if (typeof room === "string") {
+              return {
+                jid: room,
+                nick: nickname
+              }
+            }
+            room.nick = nickname;
+            return room;
+          });
+
+          // Run initialization
+          converse.initialize(options)
+            .catch(console.error);
+        }
       }
 
       // Already init
       else {
         // TODO:: close previous dialog and reconnect with the username
       }
+
     }
 
     return deferred ? deferred.resolve() && deferred.promise : $q.when();
