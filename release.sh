@@ -40,6 +40,11 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
       ;;
   esac
 
+  # Load env.sh if exists
+  if [ -f "${DIRNAME}/env.sh" ]; then
+    source ${DIRNAME}/env.sh
+  fi
+
   # force nodejs version to 5
   if [ -d "$NVM_DIR" ]; then
     . $NVM_DIR/nvm.sh
