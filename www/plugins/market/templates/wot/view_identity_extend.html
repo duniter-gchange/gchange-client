@@ -3,14 +3,15 @@
 
 
   <ion-item class="item-icon-left item-text-wrap ink"
-            ng-if="formData.profile && formData.profile.pubkey"
+            ng-if="formData.profile.pubkey"
             copy-on-click="{{:rebind:formData.profile.pubkey}}">
     <i class="icon ion-card"></i>
     <span translate>MARKET.WOT.VIEW.DUNITER_PUBKEY</span>
     <h4 id="pubkey" class="dark text-left">{{:rebind:formData.profile.pubkey}}</h4>
   </ion-item>
 
-  <div class="item item-icon-left item-text-wrap">
+  <div class="item item-icon-left item-text-wrap"
+       ng-if="formData.profile.pubkey">
     <i class="icon ion-ios-help-outline positive"></i>
     <span ng-bind-html="'MARKET.WOT.VIEW.DUNITER_ACCOUNT'|translate:{currency:$root.currency.name}"></span>
     <h4 class="gray" translate>MARKET.WOT.VIEW.DUNITER_ACCOUNT_HELP</h4>

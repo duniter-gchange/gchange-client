@@ -67,16 +67,12 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   echo "----------------------------------"
   ionic build android --release
 
-  #ionic build firefoxos --release
-
   echo "----------------------------------"
   echo "- Building web artifact..."
   echo "----------------------------------"
 
   gulp build:web --release
 
-  #ionic build ubuntu --release
-  #cd platforms/ubuntu/native/gchange; debuild
   cd $DIRNAME
 
   echo "----------------------------------"
