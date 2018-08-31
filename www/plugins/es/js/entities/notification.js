@@ -1,5 +1,7 @@
 
-function Notification(json, markAsReadCallback) {
+
+
+function EsNotification(json, markAsReadCallback) {
 
   var messagePrefixes = {
     'market': 'EVENT.MARKET.',
@@ -134,4 +136,6 @@ function Notification(json, markAsReadCallback) {
     that.avatarIcon = 'ion-close';
     that.icon = 'ion-close-circled assertive';
   }
+
+  return that;
 }

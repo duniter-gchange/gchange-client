@@ -31,7 +31,15 @@
           "enable": true,
           "baseUrl": "https://g1.duniter.fr/api"
         }
+      },
+      "converse": {
+        "jid" : "anonymous.duniter.org",
+        "bosh_service_url": "https://chat.duniter.org/http-bind/",
+        "auto_join_rooms" : [
+          "gchange@muc.duniter.org"
+        ]
       }
+
     }
   },
 

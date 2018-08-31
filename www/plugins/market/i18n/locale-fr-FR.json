@@ -1,8 +1,7 @@
 {
   "MENU": {
     "MARKET": "Annonces",
-    "MY_RECORDS": "Mes annonces",
-    "PAGES": "Pages pro"
+    "MY_RECORDS": "Mes annonces"
   },
   "MARKET": {
     "COMMON": {
@@ -106,7 +105,8 @@
     "WALLET": {
       "DUNITER_PUBKEY": "Clé publique de réception des paiements",
       "DUNITER_ACCOUNT": "Réception des paiements en {{currency|currencySymbol}}",
-      "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) indique la destination des paiements que vous recevrez."
+      "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) indique la destination des paiements que vous recevrez.",
+      "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Aucune clé publique de compte n'a été renseignée. Vous devrez la donner aux acheteurs éventuels.<br/>Vous pouvez la saisir à tout moment, <b>en éditant votre profile</b>."
     },
     "TYPE": {
       "TITLE": "Nouvelle annonce",

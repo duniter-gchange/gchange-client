@@ -2,7 +2,7 @@
 
 
   <ion-item class="item-icon-left item-text-wrap ink"
-            ng-if="formData.profile && formData.profile.pubkey"
+            ng-if="formData.profile.pubkey"
             copy-on-click="{{:rebind:formData.profile.pubkey}}">
     <i class="icon ion-card"></i>
     <span translate>MARKET.WALLET.DUNITER_PUBKEY</span>
@@ -12,7 +12,11 @@
   <div class="item item-icon-left item-text-wrap">
     <i class="icon ion-ios-help-outline positive"></i>
     <span ng-bind-html="'MARKET.WALLET.DUNITER_ACCOUNT'|translate:{currency:$root.currency.name}"></span>
-    <h4 class="gray" translate>MARKET.WALLET.DUNITER_ACCOUNT_HELP</h4>
+
+    <h4 ng-if="formData.profile.pubkey"
+        class="gray" translate>MARKET.WALLET.DUNITER_ACCOUNT_HELP</h4>
+    <h4 ng-if="!formData.profile.pubkey"
+        class="gray" translate>MARKET.WALLET.DUNITER_ACCOUNT_NO_PUBKEY_HELP</h4>
   </div>
 
   <div class="visible-xs visible-sm">

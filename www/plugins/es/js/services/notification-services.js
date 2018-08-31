@@ -10,7 +10,8 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
 
   })
 
-.factory('esNotification', function($rootScope, $q, $timeout, esHttp, csConfig, csSettings, csWallet, csWot, UIUtils, BMA, CryptoUtils, csPlatform, Api) {
+.factory('esNotification', function($rootScope, $q, $timeout, $translate, $state,
+                                    esHttp, csConfig, csSettings, csWallet, csWot, UIUtils, BMA, CryptoUtils, csPlatform, Api) {
   'ngInject';
 
   var
@@ -121,7 +122,7 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
       .then(function(res) {
         if (!res.hits || !res.hits.total) return [];
         var notifications = res.hits.hits.reduce(function(res, hit) {
-          var item = new Notification(hit._source, markNotificationAsRead);
+          var item = new EsNotification(hit._source, markNotificationAsRead);
           item.id = hit._id;
           return res.concat(item);
         }, []);
@@ -145,7 +146,7 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
       return;
     }
 
-    var notification = new Notification(event, markNotificationAsRead);
+    var notification = new EsNotification(event, markNotificationAsRead);
 
     // Extend the notification entity
     return csWot.extendAll([notification])
@@ -158,6 +159,9 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
         else {
           addNewNotification(notification);
         }
+      })
+      .then(function() {
+        return emitEsNotification(notification);
       });
   }
 
@@ -165,6 +169,65 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
     csWallet.data.notifications = csWallet.data.notifications || {};
     csWallet.data.notifications.unreadCount++;
     api.data.raise.new(notification);
+    return notification;
+  }
+
+  function htmlToPlaintext(text) {
+    return text ? String(text).replace(/<[^>]*>/gm, '').replace(/&[^;]+;/gm, '')  : '';
+  }
+
+  function emitEsNotification(notification, title) {
+
+      // If it's okay let's create a notification
+      $q.all([
+        $translate(title||'COMMON.NOTIFICATION.TITLE'),
+        $translate(notification.message, notification)
+      ])
+      .then(function(res) {
+        var title = htmlToPlaintext(res[0]);
+        var body = htmlToPlaintext(res[1]);
+        var icon = notification.avatar && notification.avatar.src || './img/logo.png';
+        emitHtml5Notification(title, {
+          body: body,
+          icon: icon,
+          lang: $translate.use(),
+          tag: notification.id,
+          onclick: function() {
+            $rootScope.$applyAsync(function() {
+              if (typeof notification.markAsRead === "function") {
+                notification.markAsRead();
+              }
+              if (notification.state) {
+                $state.go(notification.state, notification.stateParams);
+              }
+            });
+          }
+        });
+      });
+  }
+
+  function emitHtml5Notification(title, options) {
+
+    // Let's check if the browser supports notifications
+    if (!("Notification" in window)) return;
+
+    // Let's check whether notification permissions have already been granted
+    if (Notification.permission === "granted") {
+
+      // If it's okay let's create a notification
+      var browserNotification = new Notification(title, options);
+      browserNotification.onclick = options.onclick || browserNotification.onclick;
+    }
+
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== "denied") {
+      Notification.requestPermission(function (permission) {
+        // If the user accepts, let's create a notification
+        if (permission === "granted") {
+          emitHtml5Notification(title, options); // recursive call
+        }
+      });
+    }
   }
 
   // Mark a notification as read
@@ -211,6 +274,16 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
       .then(function(unreadCount) {
         data.notifications = data.notifications || {};
         data.notifications.unreadCount = unreadCount;
+        // Emit HTML5 notification
+        if (unreadCount > 0) {
+          $timeout(function() {
+            emitEsNotification({
+              message: 'COMMON.NOTIFICATION.HAS_UNREAD',
+              count: unreadCount,
+              state: 'app.view_notifications'
+            }, 'COMMON.APP_NAME');
+          }, 500);
+        }
         console.debug('[ES] [notification] Loaded count (' + unreadCount + ') in '+(new Date().getTime()-now)+'ms');
         deferred.resolve(data);
       })
@@ -287,6 +360,9 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
   // Exports
   that.load = loadNotifications;
   that.unreadCount = loadUnreadNotificationsCount;
+  that.html5 = {
+    emit: emitHtml5Notification
+  };
   that.api = api;
   that.websocket = {
       event: that.raw.ws.getUserEvent,

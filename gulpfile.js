@@ -62,9 +62,32 @@ gulp.task('serve:before', ['sass',
 gulp.task('default', ['config', 'serve:before']);
 
 gulp.task('sass-images', function (done) {
-  gulp.src('./scss/leaflet/images/**/*.*')
-    .pipe(gulp.dest('./www/img/'))
-    .on('end', done);
+
+  var noFaviconFilter = filter(["!favicon.ico"]);
+
+  es.concat(
+    // Copy leaflet images
+    gulp.src('./scss/leaflet/images/**/*.*')
+      .pipe(gulp.dest('./www/img/')),
+
+    // Copy converse images
+    gulp.src('./www/lib/converse/css/images/**/*.*')
+      .pipe(noFaviconFilter)
+      .pipe(gulp.dest('./www/img/')),
+
+    // Copy converse fonts
+    gulp.src('./www/lib/converse/fonticons/fonts/**/*.*')
+      .pipe(gulp.dest('./www/fonts/')),
+
+    // Copy converse locales
+    gulp.src('./www/lib/converse/locale/**/*.*')
+      .pipe(gulp.dest('./www/locale/')),
+
+    // Copy converse sounds
+    gulp.src('./www/lib/converse/sounds/**/*.*')
+      .pipe(gulp.dest('./www/sounds/'))
+  )
+  .on('end', done);
 });
 
 gulp.task('sass', ['sass-images'], function(done) {
@@ -101,6 +124,30 @@ gulp.task('sass', ['sass-images'], function(done) {
         maxImageSize: 14 * 1024,
         deleteAfterEncoding: true
       }))
+      .pipe(gulp.dest('./www/css/'))
+      .pipe(cleanCss({
+        keepSpecialComments: 0
+      }))
+      .pipe(sourcemaps.write())
+      .pipe(rename({ extname: '.min.css' }))
+      .pipe(gulp.dest('./www/css/')),
+
+    // Converse App style
+    gulp.src('./scss/converse.app.scss')
+      .pipe(sass()).on('error', sass.logError)
+      // Fix bad images path
+      .pipe(replace("url('../images/", "url('../img/"))
+      .pipe(replace("url(\"../images/", "url(\"../img/"))
+      .pipe(replace("url('images/", "url('../img/"))
+      .pipe(replace("url(\"images/", "url(\"../img/"))
+      .pipe(replace("url(images/", "url(../img/"))
+      .pipe(replace("url(\"../fonticons/fonts", "url(\"../fonts"))
+      // .pipe(base64({
+      //   baseDir: "./www/css/",
+      //   extensions: ['png', 'gif', /\.jpg#datauri$/i],
+      //   maxImageSize: 14 * 1024,
+      //   deleteAfterEncoding: true
+      // }))
       .pipe(gulp.dest('./www/css/'))
       .pipe(cleanCss({
         keepSpecialComments: 0
@@ -322,6 +369,14 @@ gulp.task('copy-files:web', ['clean:tmp', 'clean:web', 'sass', 'config'], functi
     // Copy lib/ionic
     gulp.src('./www/lib/ionic/**/*.*')
       .pipe(gulp.dest(tmpPath + '/lib/ionic')),
+
+    // Copy converse: sound
+    gulp.src('./www/lib/converse/sounds/**/*.*')
+      .pipe(gulp.dest(tmpPath + '/sounds')),
+
+    // Copy converse: locale
+    gulp.src('./www/lib/converse/locale/**/*.*')
+      .pipe(gulp.dest(tmpPath + '/locale')),
 
     // Copy license
     gulp.src('./www/license/**/*.txt')

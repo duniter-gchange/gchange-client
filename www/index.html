@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" sizes="152x152" href="./img/logo_152px.png">
   <link rel="apple-touch-icon" sizes="167x167" href="./img/logo_167px.png">
   <link rel="manifest" href="/manifest.json">
-  <!-- build:css dist_css/cesium.css -->
+  <!-- build:css dist_css/gchange.css -->
   <link rel="stylesheet" type="text/css" href="css/ionic.app.min.css">
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/angular-image-crop.css">
@@ -23,11 +23,12 @@
   <link rel="stylesheet" type="text/css" href="css/leaflet.app.min.css">
   <link rel="stylesheet" type="text/css" href="dist/dist_css/plugins/es/css/style.css">
   <link rel="stylesheet" type="text/css" href="dist/dist_css/plugins/market/css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/converse.app.min.css">
   <!--endRemoveIf(no-plugin)-->
   <!-- endbuild -->
 
 </head>
-<body ng-app="cesium" id="cesium" ng-strict-di="">
+<body ng-app="gchange" id="gchange" ng-strict-di="">
   <ion-nav-view>
     <h3 style="text-align: center; margin-top: 44px;">
       ğ<b>change</b>
@@ -48,6 +49,8 @@
   <script src="js/vendor/numeral.es.js"></script>
   <script src="js/vendor/socket-io.js"></script>
   <script src="js/vendor/underscore.js"></script>
+  <script src="js/vendor/converse.js"></script>
+
   <!--<script src="js/vendor/qrcode.min.js"></script>-->
 
   <!-- ionic/angularjs js -->
@@ -85,7 +88,7 @@
   <script src="cordova.js"></script>
   <!--endRemoveIf(no-device)-->
 
-  <!-- build:js dist_js/cesium.js -->
+  <!-- build:js dist_js/gchange.js -->
   <!-- services -->
   <script src="dist/dist_js/app/services/settings-services.js"></script>
   <script src="dist/dist_js/app/services/crypto-services.js"></script>
@@ -161,6 +164,7 @@
   <script src="dist/dist_js/plugins/market/js/services/record-services.js"></script>
   <script src="dist/dist_js/plugins/market/js/services/wallet-services.js"></script>
   <script src="dist/dist_js/plugins/market/js/services/settings-services.js"></script>
+  <script src="dist/dist_js/plugins/market/js/services/converse-services.js"></script>
   <script src="dist/dist_js/plugins/market/js/controllers/app-controllers.js"></script>
   <script src="dist/dist_js/plugins/market/js/controllers/join-controllers.js"></script>
   <script src="dist/dist_js/plugins/market/js/controllers/login-controllers.js"></script>
@@ -201,5 +205,6 @@
   <!-- config  -->
   <script src="dist/dist_js/app/config.js"></script>
   <!-- endbuild -->
+
 </body>
 </html>

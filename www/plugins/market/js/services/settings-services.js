@@ -20,9 +20,21 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
           market: {
             enable: true,
             geoDistance: "20km"
+          },
+          converse: {
+            jid : "anonymous.duniter.org",
+            bosh_service_url: "https://chat.duniter.org/http-bind/",
+            auto_join_rooms : [
+              "gchange@muc.duniter.org"
+            ]
           }
         }
-    }, {plugins: {market: csConfig.plugins && csConfig.plugins.market || {}}}),
+      },
+      // Market plugin
+      {plugins: {market: csConfig.plugins && csConfig.plugins.market || {}}},
+      // Converse plugin
+      {plugins: {converse: csConfig.plugins && csConfig.plugins.converse || {}}}
+    ),
     that = this,
     readyDeferred = $q.defer(),
     listeners,

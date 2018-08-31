@@ -1,8 +1,11 @@
 angular.module('cesium.market.services', [
-    'cesium.market.modal.services',
-    'cesium.market.record.services',
-    'cesium.market.wallet.services',
-    'cesium.market.settings.services'
+  // removeIf(device)
+  'cesium.market.converse.services',
+  // endRemoveIf(device)
+  'cesium.market.modal.services',
+  'cesium.market.record.services',
+  'cesium.market.wallet.services',
+  'cesium.market.settings.services'
 ]);
 
 
