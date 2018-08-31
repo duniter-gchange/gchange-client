@@ -143,7 +143,7 @@
         "DUNITER_PUBKEY": "Public key to receive payments",
         "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
         "DUNITER_ACCOUNT_HELP": "The public key (above) is the account to be used to pay for this user.",
-        "DUNITER_ACCOUNT_HELP_ASK_USER": "This user has not communicated their account public key. Contact him to get it."
+        "DUNITER_ACCOUNT_HELP_ASK_USER": "This user has not communicated their account public key. <a ng-click=\"showNewMessageModal()\">Contact him</a> to get it."
       }
     },
     "ERROR": {
