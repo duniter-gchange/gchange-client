@@ -21,11 +21,11 @@
           <span class="gray" translate>TRANSFER.FROM</span>
           <span class="badge badge-balanced">
               <ion-spinner icon="android" ng-if="!$root.walletData.pubkey"></ion-spinner>
-              <span ng-if="$root.walletData.pubkey && !$root.walletData.isMember">
+              <span ng-if="$root.walletData.pubkey && !$root.walletData.name">
               {{$root.walletData.pubkey| formatPubkey}}&nbsp;&nbsp;
               </span>
-              <span ng-if="$root.walletData.isMember">
-                {{$root.walletData.name||$root.walletData.uid}}
+              <span ng-if="$root.walletData.pubkey && $root.walletData.name">
+                {{$root.walletData.name}}
               </span>
           </span>
       </div>

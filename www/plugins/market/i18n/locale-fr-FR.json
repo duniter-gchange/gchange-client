@@ -143,7 +143,8 @@
         "BTN_RECORDS": "Annonces",
         "DUNITER_PUBKEY": "Clé publique de réception des paiements",
         "DUNITER_ACCOUNT": "Réception des paiements en {{currency|currencySymbol}}",
-        "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) correspond au compte à utiliser pour payer cet utilisateur."
+        "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) correspond au compte à utiliser pour payer cet utilisateur.",
+        "DUNITER_ACCOUNT_HELP_ASK_USER": "Cet utilisateur n'a pas communiqué sa clef publique de compte. <a ng-click=\"showNewMessageModal()\">Contactez-le</a> pour l'obtenir."
       }
     },
     "ERROR": {

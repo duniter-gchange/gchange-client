@@ -39,7 +39,7 @@ angular.module('cesium.market.wot.controllers', ['cesium.es.services'])
 
 ;
 
-function MkWotIdentityExtendController($scope, PluginService, esSettings) {
+function MkWotIdentityExtendController($scope, PluginService, UIUtils, esSettings, esModals) {
   'ngInject';
 
   $scope.extensionPoint = PluginService.extensions.points.current.get();
@@ -48,6 +48,21 @@ function MkWotIdentityExtendController($scope, PluginService, esSettings) {
     $scope.enable = enable;
   });
 
+  $scope.showNewMessageModal = function() {
+    return $scope.loadWallet({minData: true})
+
+      // Open modal
+      .then(function(walletData) {
+        $scope.walletData = walletData;
+        return esModals.showMessageCompose({
+          destPub: $scope.formData.pubkey,
+          destUid: $scope.formData.name||$scope.formData.uid
+        })
+        .then(function(sent) {
+          if (sent) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
+        });
+      });
+  };
 }
 
 

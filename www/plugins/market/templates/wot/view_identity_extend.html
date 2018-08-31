@@ -10,13 +10,17 @@
     <h4 id="pubkey" class="dark text-left">{{:rebind:formData.profile.pubkey}}</h4>
   </ion-item>
 
-  <div class="item item-icon-left item-text-wrap"
-       ng-if="formData.profile.pubkey">
+  <div class="item item-icon-left item-text-wrap item-wallet-event"
+       >
     <i class="icon ion-ios-help-outline positive"></i>
     <span ng-bind-html="'MARKET.WOT.VIEW.DUNITER_ACCOUNT'|translate:{currency:$root.currency.name}"></span>
-    <h4 class="gray" translate>MARKET.WOT.VIEW.DUNITER_ACCOUNT_HELP</h4>
+    <h4 class="gray"
+        ng-if="formData.profile.pubkey"
+        translate>MARKET.WOT.VIEW.DUNITER_ACCOUNT_HELP</h4>
+    <h4
+        ng-if="!formData.profile.pubkey"
+        trust-as-html="'MARKET.WOT.VIEW.DUNITER_ACCOUNT_HELP_ASK_USER'|translate"></h4>
   </div>
-
 </ng-if>
 
 <ng-if ng-if="enable && extensionPoint === 'after-general'">

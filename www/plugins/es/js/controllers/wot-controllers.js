@@ -41,8 +41,7 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
 
 ;
 
-function ESWotIdentityViewController($scope, $ionicPopover, $q, UIUtils, Modals, esSettings, PluginService,
-                                     esModals, esHttp, esWallet) {
+function ESWotIdentityViewController($scope, $ionicPopover, UIUtils, esSettings, PluginService, esModals) {
   'ngInject';
 
   $scope.extensionPoint = PluginService.extensions.points.current.get();
