@@ -91,7 +91,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   $scope.enter = function (e, state) {
     if (state.stateParams && state.stateParams.id) { // Load by id
       if ($scope.loading || state.stateParams.refresh) {
-        $scope.load(state.stateParams.id, state.stateParams.anchor);
+        $scope.load(state.stateParams.id);
       }
       else {
         // prevent reload if same id (and if not forced)
@@ -111,7 +111,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     $scope.$broadcast('$recordView.beforeLeave', args);
   });
 
-  $scope.load = function (id, anchor) {
+  $scope.load = function (id) {
     $scope.loading = true;
     mkRecord.record.load(id, {
       fetchPictures: false,// lazy load for pictures
@@ -177,10 +177,8 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       // Load other data (from child controller)
       $scope.$broadcast('$recordView.load', id, mkRecord.record.comment);
 
-      // scroll (if comment anchor)
-      if (anchor) $timeout(function () {
-        $anchorScroll(anchor);
-      }, 1000);
+      // scroll (for comment anchor)
+      //if (anchor) scrollToAnchorByName(anchor);
     });
 
   };

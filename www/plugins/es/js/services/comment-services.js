@@ -101,7 +101,7 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
         options.size = options.size || DEFAULT_SIZE;
         options.loadAvatar = angular.isDefined(options.loadAvatar) ? options.loadAvatar : true;
         options.loadAvatarAllParent = angular.isDefined(options.loadAvatarAllParent) ? (options.loadAvatar && options.loadAvatarAllParent) : false;
-        if (options.size < 0) options.size = DEFAULT_SIZE;
+        if (options.size < 0) options.size = 1000; // all comments
 
         var request = {
           query : {

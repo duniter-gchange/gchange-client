@@ -50,6 +50,11 @@
       "TITLE": "Ask certifications",
       "HELP": "Select recipients"
     },
+    "SEARCH": {
+      "DIVIDER_PROFILE": "Profile",
+      "DIVIDER_PAGE": "Pages",
+      "DIVIDER_GROUP": "Groups"
+    },
     "CONFIRM": {
       "SUGGEST_CERTIFICATIONS": "Etes-vous sûr de vouloir <b>envoyer ces suggestions de certification</b> ?",
       "ASK_CERTIFICATION": "Etes-vous sûr de vouloir <b>envoyer une demande de certification</b> ?",
@@ -69,6 +74,8 @@
     "REPLY_TO_DELETED_COMMENT": "In response to a deleted comment",
     "REPLY_COUNT": "{{replyCount}} responses",
     "DELETED_COMMENT": "Comment deleted",
+    "MODIFIED_ON": "modified on {{time|formatDate}}",
+    "MODIFIED_PARENTHESIS": "(modified then)",
     "ERROR": {
       "FAILED_SAVE_COMMENT": "Saving comment failed",
       "FAILED_REMOVE_COMMENT": "Deleting comment failed"
@@ -111,7 +118,8 @@
       "TITLE": "Message",
       "SENDER": "Sent by",
       "RECIPIENT": "Sent to",
-      "NO_CONTENT": "Empty message"
+      "NO_CONTENT": "Empty message",
+      "DELETE": "Delete the message"
     },
     "CONFIRM": {
       "REMOVE": "Are you sure you want to <b>delete this message</b>?<br/><br/> This operation is irreversible.",
@@ -146,18 +154,31 @@
     "LOCATION_DIVIDER": "Address",
     "SOCIAL_NETWORKS_DIVIDER": "Social networks, web sites",
     "TECHNICAL_DIVIDER": "Technical data",
-    "BTN_NEW": "Add",
+    "BTN_SHOW_WOT": "People",
+    "BTN_SHOW_WOT_HELP": "Search people",
+    "BTN_SHOW_PAGES": "Reference",
+    "BTN_SHOW_PAGES_HELP": "Search references",
+    "BTN_NEW": "Add a reference",
+    "MY_PAGES": "My reference",
+    "NO_PAGE": "No reference",
     "SEARCH": {
-      "TITLE": "Professional Directory",
-      "TITLE_SMALL_DEVICE": "Pro Directory",
+      "TITLE": "References",
       "SEARCH_HELP": "What, Who: hairdresser, Lili's restaurant, ...",
       "BTN_ADD": "New",
+      "BTN_LAST_RECORDS": "Pages récentes",
+      "BTN_ADVANCED_SEARCH": "Recherche avancée",
       "BTN_OPTIONS": "Advanced search",
       "TYPE": "Kind of organization",
-      "LOCATION": "Location",
-      "LOCATION_HELP": "City",
-      "LAST_RECORDS": "Latest references:",
-      "RESULTS": "Results:"
+      "LOCATION_HELP": "Where: postal code, city",
+      "RESULTS": "Results",
+      "RESULT_COUNT_LOCATION": "{{count}} result{{count>0?'s':''}}, near by {{location}}",
+      "RESULT_COUNT": "{{count}} result{{count>0?'s':''}}",
+      "LAST_RECORDS": "Recents references",
+      "LAST_RECORD_COUNT_LOCATION": "{{count}} recent reference{{count>0?'s':''}}, near by {{location}}",
+      "LAST_RECORD_COUNT": "{{count}} recent reference{{count>0?'s':''}}",
+      "POPOVER_FILTERS": {
+        "BTN_ADVANCED_SEARCH": "Advanced options?"
+      }
     },
     "VIEW": {
       "TITLE": "Registry",

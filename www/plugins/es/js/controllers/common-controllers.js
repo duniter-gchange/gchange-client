@@ -141,7 +141,7 @@ function ESCategoryModalController($scope, UIUtils, $timeout, parameters) {
 
 
 
-function ESCommentsController($scope, $filter, $state, $focus, UIUtils) {
+function ESCommentsController($scope, $filter, $state, $focus, $timeout, $anchorScroll, UIUtils) {
     'ngInject';
 
     $scope.loading = true;
@@ -150,8 +150,13 @@ function ESCommentsController($scope, $filter, $state, $focus, UIUtils) {
     $scope.comments = {};
 
     $scope.$on('$recordView.enter', function(e, state) {
+
+        // First enter
+        if ($scope.loading) {
+            $scope.anchor = state && state.stateParams.anchor;
+        }
         // second call (when using cached view)
-        if (!$scope.loading && $scope.id) {
+        else if ($scope.id) {
             $scope.load($scope.id, {animate: false});
         }
     });
@@ -159,15 +164,21 @@ function ESCommentsController($scope, $filter, $state, $focus, UIUtils) {
     $scope.$on('$recordView.load', function(event, id, service) {
         $scope.id = id || $scope.id;
         $scope.service = service || $scope.service;
-        console.debug("[ES] [comment] Initialized service with: " + service.id);
+        console.debug("[ES] [comment] Will use {" + service.index + "} service");
         if ($scope.id) {
-            $scope.load($scope.id);
+            $scope.load($scope.id)
+              .then(function() {
+                  // Scroll to anchor
+                  $scope.scrollToAnchor();
+              });
         }
     });
 
     $scope.load = function(id, options) {
         options = options || {};
         options.from = options.from || 0;
+        // If anchor has been defined, load all comments
+        options.size = options.size || ($scope.anchor && -1/*all*/);
         options.size = options.size || $scope.defaultCommentSize;
         options.animate = angular.isDefined(options.animate) ? options.animate : true;
         options.loadAvatarAllParent = angular.isDefined(options.loadAvatarAllParent) ? options.loadAvatarAllParent : true;
@@ -201,6 +212,25 @@ function ESCommentsController($scope, $filter, $state, $focus, UIUtils) {
             $scope.service.changes.stop($scope.comments);
         }
     });
+
+    $scope.scrollToAnchor = function() {
+        if (!$scope.anchor) return;
+        var elemList = document.getElementsByName($scope.anchor);
+        // Waiting for the element
+        if (!elemList || !elemList.length) {
+            return $timeout($scope.scrollToAnchor, 500);
+        }
+        // If many, remove all anchor except the last one
+        for (var i = 0; i<elemList.length-1; i++) {
+            angular.element(elemList[i]).remove();
+        }
+        // Scroll to the anchor
+        $anchorScroll($scope.anchor);
+        // Remove the anchor. This will the CSS class 'positive-100-bg' on the comment
+        $timeout(function () {
+            $scope.anchor = null;
+        }, 1500);
+    };
 
     $scope.showMore = function(){
         var from = 0;

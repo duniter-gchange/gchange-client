@@ -74,6 +74,8 @@
     "REPLY_TO_DELETED_COMMENT": "En réponse à un commentaire supprimé",
     "REPLY_COUNT": "{{replyCount}} réponses",
     "DELETED_COMMENT": "Commentaire supprimé",
+    "MODIFIED_ON": "modifié le {{time|formatDate}}",
+    "MODIFIED_PARENTHESIS": "(modifié ensuite)",
     "ERROR": {
       "FAILED_SAVE_COMMENT": "Erreur lors de la sauvegarde du commentaire",
       "FAILED_REMOVE_COMMENT": "Erreur lors de la suppression du commentaire"

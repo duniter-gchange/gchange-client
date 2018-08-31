@@ -43,7 +43,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.6.6",
-	"build": "2018-08-28T10:07:18.480Z",
+	"build": "2018-08-30T15:11:05.156Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

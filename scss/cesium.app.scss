@@ -26,6 +26,7 @@ $dark:                            #444 !default;
 $active: #b2e0ff !default;
 $stable-100-bg : #f2f2f2 !default;
 $stable-900-bg: #e0e0e0 !default;
+$positive-100-bg: #bfd6fc !default;
 $positive-900-bg: #1A237E !default;
 $dark-100-bg: #555 !default;
 
@@ -1055,6 +1056,16 @@ $screen-menu:                     845px;
 .item-complex .item-content .balanced-bg,
 .item-radio .item-content .balanced-bg{
   background-color: $balanced !important;
+}
+
+.card.positive-100-bg,
+.card .positive-100-bg,
+.item.positive-100-bg,
+.item .positive-100-bg,
+.item-complex .item-content .positive-100-bg,
+.item-radio .item-content .positive-100-bg{
+  background-color: $positive-100-bg !important;
+  color: white;
 }
 
 .card .card-header {

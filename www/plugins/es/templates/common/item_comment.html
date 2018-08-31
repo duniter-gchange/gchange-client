@@ -1,10 +1,10 @@
-<ng-init ng-init="level = level + 1">
-  <a name="{{::comment.id|formatHash}}"></a>
+<ng-init ng-init="level = level + 1; hash=(comment.id|formatHash)">
+  <a name="{{::hash}}"></a>
 
   <ion-item
     id="comment-{{::comment.id|formatHash}}"
     class="card card-comment card-avatar stable-900-bg item-text-wrap no-padding"
-    ng-class="::{'in done': comment.isnew}">
+    ng-class="{'in done': comment.isnew, 'positive-100-bg': (hash == anchor)}">
 
     <!-- Parent comment -->
     <div class="card-header padding-left" ng-if="comment.parent && !hideParent">
@@ -39,7 +39,9 @@
 
     <div class="card-footer gray">
       <small class="underline">
-        <a ng-click="share($event, comment, $index)">{{comment.creationTime | formatFromNow}}</a>
+        <a ng-click="share($event, comment, $index)" title="{{comment.creationTime | formatDate}}{{ (comment.creationTime != comment.time) ? (' - ' + ('COMMENTS.MODIFIED_ON'|translate:comment)) : ''}}">{{comment.creationTime | formatFromNow}}
+          <span ng-if="comment.creationTime != comment.time" translate>COMMENTS.MODIFIED_PARENTHESIS</span>
+        </a>
 
         <ng-if ng-if="comment.replyCount">
           | <a class="dark" ng-click="toggleExpandedReplies(comment, $index)">{{'COMMENTS.REPLY_COUNT'|translate:comment}}</a>
