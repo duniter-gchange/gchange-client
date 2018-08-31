@@ -14,6 +14,8 @@
 /*.iml
 
 /www/lib/*
+/www/locale
+/www/sounds
 !/www/lib/ionic
 /www/dist
 /hooks/playstore-config.json
