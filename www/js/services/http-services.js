@@ -225,8 +225,28 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
           };
         });
       }
+
       if (callback) self.callbacks.push(callback);
       return _waitOpen(self);
+    }
+
+    function _close(self) {
+      if (self.delegate) {
+        self.delegate.closing = true;
+        console.debug('[http] Closing websocket ['+self.path+']...');
+        self.delegate.close();
+        self.callbacks = [];
+        if (self.onclose) self.onclose();
+      }
+    }
+
+    function _remove(self, callback) {
+      self.callbacks = _.reject(self.callbacks, function(item) {
+        return item === callback;
+      });
+      if (!self.callbacks.length) {
+        _close(self);
+      }
     }
 
     return {
@@ -236,21 +256,27 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
       on: function(callback, params) {
         return _open(this, callback, params);
       },
+      onListener: function(callback, params) {
+        var self = this;
+        _open(self, callback, params);
+        return function() {
+          _remove(self, callback);
+        };
+      },
       send: function(data) {
         var self = this;
         return _waitOpen(self)
           .then(function(){
-            self.delegate.send(data);
+            if (self.delegate) self.delegate.send(data);
           });
       },
       close: function() {
         var self = this;
-        if (self.delegate) {
-          self.delegate.closing = true;
-          console.debug('[http] Closing websocket ['+self.path+']...');
-          self.delegate.close();
-          self.callbacks = [];
-        }
+        _close(self);
+      },
+      isClosed: function() {
+        var self = this;
+        return !self.delegate || self.delegate.closing;
       }
     };
   }
@@ -314,7 +340,7 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
         uri = parts.protocol + uri;
       }
 
-      // Check if device is enable, on spcial tel: or mailto: protocole
+      // Check if device is enable, on special tel: or mailto: protocole
       var validProtocol = (parts.protocol == 'mailto:' || parts.protocol == 'tel:') && Device.enable;
       if (!validProtocol) {
         if (options.onError && typeof options.onError == 'function') {
@@ -325,15 +351,22 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
     }
     // Note: If device enable, then target=_system will use InAppBrowser cordova plugin
     var openTarget = (options.target || (Device.enable ? '_system' : '_blank'));
-    var openOptions;
+
     // If desktop, should always open in new window (no tabs)
-    if (openTarget == '_blank' && Device.isDesktop() && $window.screen && $window.screen.width && $window.screen.height) {
-      openOptions= "width={0},height={1},location=1,menubar=1,toolbar=1,resizable=1,scrollbars=1".format($window.screen.width/2, $window.screen.height/2);
+    var openOptions;
+    if (openTarget == '_blank' && Device.isDesktop()) {
+      openOptions= "location=1,titlebar=1,status=1,menubar=1,toolbar=1,resizable=1,scrollbars=1";
+      // Add width/height
+      if ($window.screen && $window.screen.width && $window.screen.height) {
+        openOptions += ",width={0},height={1}".format(Math.trunc($window.screen.width/2), Math.trunc($window.screen.height/2));
+      }
     }
     var win = $window.open(uri,
       openTarget,
       openOptions);
-    if (openOptions) {
+
+    // Center the opened window
+    if (openOptions && $window.screen && $window.screen.width && $window.screen.height) {
       win.moveTo($window.screen.width/2/2, $window.screen.height/2/2);
       win.focus();
     }
