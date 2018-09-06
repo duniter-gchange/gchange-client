@@ -42,7 +42,7 @@ angular.module("cesium.config", [])
 			}
 		},
 		"converse": {
-			"enable": false,
+			"enable": true,
 			"jid": "anonymous.duniter.org",
 			"bosh_service_url": "https://chat.duniter.org/http-bind/",
 			"auto_join_rooms": [
@@ -50,8 +50,8 @@ angular.module("cesium.config", [])
 			]
 		}
 	},
-	"version": "0.7.2",
-	"build": "2018-09-06T12:35:31.181Z",
+	"version": "0.7.3",
+	"build": "2018-09-06T14:18:32.181Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
