@@ -160,17 +160,17 @@
     "TECHNICAL_DIVIDER": "Technical data",
     "BTN_SHOW_WOT": "People",
     "BTN_SHOW_WOT_HELP": "Search people",
-    "BTN_SHOW_PAGES": "Reference",
-    "BTN_SHOW_PAGES_HELP": "Search references",
-    "BTN_NEW": "Add a reference",
-    "MY_PAGES": "My reference",
-    "NO_PAGE": "No reference",
+    "BTN_SHOW_PAGES": "Pages",
+    "BTN_SHOW_PAGES_HELP": "Search pages",
+    "BTN_NEW": "Add a page",
+    "MY_PAGES": "My pages",
+    "NO_PAGE": "No page",
     "SEARCH": {
-      "TITLE": "References",
+      "TITLE": "Pages",
       "SEARCH_HELP": "What, Who: hairdresser, Lili's restaurant, ...",
       "BTN_ADD": "New",
-      "BTN_LAST_RECORDS": "Pages récentes",
-      "BTN_ADVANCED_SEARCH": "Recherche avancée",
+      "BTN_LAST_RECORDS": "Recents pages",
+      "BTN_ADVANCED_SEARCH": "Advanced search",
       "BTN_OPTIONS": "Advanced search",
       "TYPE": "Kind of organization",
       "LOCATION_HELP": "Where: postal code, city",
@@ -193,7 +193,7 @@
       "REMOVE_CONFIRMATION" : "Are you sure you want to delete this reference?<br/><br/>This is irreversible."
     },
     "TYPE": {
-      "TITLE": "New reference",
+      "TITLE": "New page",
       "SELECT_TYPE": "Kind of organization:",
       "ENUM": {
         "SHOP": "Local shops",
@@ -204,7 +204,7 @@
     },
     "EDIT": {
       "TITLE": "Edit",
-      "TITLE_NEW": "New reference",
+      "TITLE_NEW": "New page",
       "RECORD_TYPE":"Kind of organization",
       "RECORD_TITLE": "Name",
       "RECORD_TITLE_HELP": "Name",
@@ -232,8 +232,8 @@
       "GEO_LOCATION_NOT_FOUND": "City or zip code not found"
     },
     "INFO": {
-      "RECORD_REMOVED" : "Reference successfully deleted",
-      "RECORD_SAVED": "Reference saved"
+      "RECORD_REMOVED" : "Page successfully deleted",
+      "RECORD_SAVED": "Page saved"
     }
   },
   "PROFILE": {
@@ -332,17 +332,17 @@
     "MEMBER_EXCLUDE": "You are <b>not more member</b> of the currency <b>{{params[0]}}</b>, for lack of renewal or lack of certifications.",
     "MEMBER_REVOKE": "Your account has been revoked. It will no longer be a member of the currency <b>{{params[0]}}</b>.",
     "MEMBER_ACTIVE": "Your membership to <b>{{params[0]}}</b> has been <b>renewed successfully</b>.",
-    "TX_SENT": "Your payment to <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> was executed.",
+    "TX_SENT": "Your payment to <span class=\"positive\" ><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> was executed.",
     "TX_SENT_MULTI": "Your payment to <b>{{params[1]}}</b> was executed.",
-    "TX_RECEIVED": "You received a payment from <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
+    "TX_RECEIVED": "You received a payment from <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
     "TX_RECEIVED_MULTI": "You received a payment from <b>{{params[1]}}</b>.",
-    "CERT_SENT": "Your <b>certification</b> to <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> was executed.",
-    "CERT_RECEIVED": "You  have <b>received a certification</b> from <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
+    "CERT_SENT": "Your <b>certification</b> to <span class=\"positive\" ><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> was executed.",
+    "CERT_RECEIVED": "You  have <b>received a certification</b> from <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
     "REGISTRY": {
-      "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has commented on your referencing: <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his comment on your referencing: <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has replied to your comment on the referencing: <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his answer to your comment, on the referencing: <b>{{params[2]}}</b>"
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has commented on your referencing: <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his comment on your referencing: <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has replied to your comment on the referencing: <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his answer to your comment, on the referencing: <b>{{params[2]}}</b>"
     }
   },
   "ERROR": {

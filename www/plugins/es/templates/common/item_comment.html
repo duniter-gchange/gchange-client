@@ -40,7 +40,7 @@
     <div class="card-footer gray">
       <small class="underline">
         <a ng-click="share($event, comment, $index)" title="{{comment.creationTime | formatDate}}{{ (comment.creationTime != comment.time) ? (' - ' + ('COMMENTS.MODIFIED_ON'|translate:comment)) : ''}}">{{comment.creationTime | formatFromNow}}
-          <span ng-if="comment.creationTime != comment.time" translate>COMMENTS.MODIFIED_PARENTHESIS</span>
+          <span ng-if="comment.time && comment.creationTime != comment.time" translate>COMMENTS.MODIFIED_PARENTHESIS</span>
         </a>
 
         <ng-if ng-if="comment.replyCount">

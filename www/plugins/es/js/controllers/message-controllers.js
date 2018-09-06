@@ -52,7 +52,7 @@ angular.module('cesium.es.message.controllers', ['cesium.es.services'])
 
 ;
 
-function ESMessageListController($scope, $state, $translate, $ionicHistory, $ionicPopover,
+function ESMessageListController($scope, $state, $translate, $ionicHistory, $ionicPopover, $timeout,
                                  esModals, UIUtils, csWallet, esMessage) {
   'ngInject';
 
@@ -655,7 +655,7 @@ function PopoverMessageController($scope, UIUtils, $state, csWallet, esHttp, esM
 
   $scope.select = function(notification) {
     if (!notification.read) notification.read = true;
-    $state.go('app.user_view_message', {id: notification.id});
+    $state.go('app.user_view_message', {id: notification.id, type: 'inbox'});
     $scope.closePopover(notification);
   };
 

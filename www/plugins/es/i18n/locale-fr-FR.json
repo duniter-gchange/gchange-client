@@ -367,17 +367,17 @@
     "MEMBER_EXCLUDE": "Vous n'êtes <b>plus membre</b> de la monnaie <b>{{params[0]}}</b>, faute de non renouvellement ou par manque de certifications.",
     "MEMBER_REVOKE": "La révocation de votre compte a été effectuée. Il ne pourra plus être un compte membre de la monnaie <b>{{params[0]}}</b>.",
     "MEMBER_ACTIVE": "Votre renouvellement d'adhésion à la monnaie <b>{{params[0]}}</b> a été <b>pris en compte</b>.",
-    "TX_SENT": "Votre <b>paiement</b> à <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a été effectué.",
+    "TX_SENT": "Votre <b>paiement</b> à <span class=\"positive\" ><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a été effectué.",
     "TX_SENT_MULTI": "Votre <b>paiement</b> à <b>{{params[1]}}</b> a été effectué.",
-    "TX_RECEIVED": "Vous avez <b>reçu un paiement</b> de <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
+    "TX_RECEIVED": "Vous avez <b>reçu un paiement</b> de <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
     "TX_RECEIVED_MULTI": "Vous avez <b>reçu un paiement</b> de <b>{{params[1]}}</b>.",
-    "CERT_SENT": "Votre <b>certification</b> à <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a été effectuée.",
-    "CERT_RECEIVED": "Vous avez <b>reçu une certification</b> de <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
+    "CERT_SENT": "Votre <b>certification</b> à <span class=\"positive\" ><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a été effectuée.",
+    "CERT_RECEIVED": "Vous avez <b>reçu une certification</b> de <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
     "REGISTRY": {
-      "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a commenté votre référencement : <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié son commentaire sur votre référencement : <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a répondu à votre commentaire sur le référencement : <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié sa réponse à votre commentaire sur le référencement : <b>{{params[2]}}</b>"
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a commenté votre référencement : <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié son commentaire sur votre référencement : <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a répondu à votre commentaire sur le référencement : <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié sa réponse à votre commentaire sur le référencement : <b>{{params[2]}}</b>"
     }
   },
   "CONFIRM": {

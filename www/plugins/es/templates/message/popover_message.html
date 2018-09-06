@@ -25,17 +25,17 @@
         ng-class="{'unread': !notification.read}"
         ng-click="select(notification)">
 
-        <i ng-if="!notification.avatar" class="item-image icon" ng-class="{'ion-person': notification.uid, 'ion-email': !notification.uid}"></i>
-        <i ng-if="notification.avatar" class="item-image avatar" style="background-image: url({{::notification.avatar.src}})"></i>
+        <i ng-if="::!notification.avatar" class="item-image icon ion-email"></i>
+        <i ng-if="::notification.avatar" class="item-image avatar" style="background-image: url({{::notification.avatar.src}})"></i>
 
         <h3>
           <span translate>MESSAGE.NOTIFICATIONS.MESSAGE_RECEIVED</span>
-          <span class="positive" ng-if="notification.uid"><i class="ion-person"></i>&thinsp;{{notification.name||notification.uid}}</span>
-          <span class="gray" ng-if="!notification.uid"><i class="ion-key"></i>&thinsp;{{notification.issuer|formatPubkey}}</span>
+          <span class="positive" ng-if="::notification.name||notification.uid"><i class="ion-person"></i>&thinsp;{{::notification.name||notification.uid}}</span>
+          <span class="gray" ng-if="::!notification.name && !notification.uid"><i class="ion-key"></i>&thinsp;{{::notification.issuer|formatPubkey}}</span>
         </h3>
         <h4>
           <i class="icon ion-archive balanced"></i>&thinsp;<span class="dark">{{notification.time|formatFromNow}}</span>
-          <span class="gray">| {{notification.time|formatDate}}</span>
+          <span class="gray">| {{::notification.time|formatDate}}</span>
         </h4>
       </ion-item>
     </ion-list>

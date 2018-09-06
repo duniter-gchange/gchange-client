@@ -233,17 +233,17 @@
     "MEMBER_JOIN": "Je bent nu <b>lid</b> van valuta <b>{{params[0]}}</b>!",
     "MEMBER_LEAVE": "Je bent <b>geen lid meer</b> van valuta <b>{{params[0]}}</b>!",
     "MEMBER_ACTIVE": "Je lidmaatschap bij <b>{{params[0]}}</b> is met <b>succes verlengd</b>.",
-    "TX_SENT": "Je <b>betaling</b> aan <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> is uitgevoerd.",
+    "TX_SENT": "Je <b>betaling</b> aan <span class=\"positive\" ><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> is uitgevoerd.",
     "TX_SENT_MULTI": "Je <b>betaling</b> aan <b>{{params[1]}}</b> is uitgevoerd.",
-    "TX_RECEIVED": "Je hebt een <b>betaling ontvangen</b> van <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
+    "TX_RECEIVED": "Je hebt een <b>betaling ontvangen</b> van <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
     "TX_RECEIVED_MULTI": "Je hebt een <b>betaling ontvangen</b> van <b>{{params[1]}}</b>.",
-    "CERT_SENT": "Je <b>certificatie</b> van <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> is uitgevoerd.",
-    "CERT_RECEIVED": "Je hebt een <b>certificatie ontvangen</b> van <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
+    "CERT_SENT": "Je <b>certificatie</b> van <span class=\"positive\" ><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> is uitgevoerd.",
+    "CERT_RECEIVED": "Je hebt een <b>certificatie ontvangen</b> van <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
     "REGISTRY": {
-      "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft gereageerd op jouw referentie: <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft zijn/aar reactie op jouw referentie bewerkt: <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> hheeft gereageerd op jouw commentaar op referentie: <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft zijn/haar reactie op jouw commentaar bewerkt, op referentie: <b>{{params[2]}}</b>"
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft gereageerd op jouw referentie: <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft zijn/aar reactie op jouw referentie bewerkt: <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> hheeft gereageerd op jouw commentaar op referentie: <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft zijn/haar reactie op jouw commentaar bewerkt, op referentie: <b>{{params[2]}}</b>"
     }
   },
   "ERROR": {

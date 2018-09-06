@@ -81,11 +81,11 @@
           <button class="button button-stable button-small-padding icon ion-android-share-alt"
                   ng-click="showSharePopover($event)">
           </button>
-          <button class="button button-calm ink-dark"
-                  ng-if="formData.pubkey && !isUserPubkey(formData.pubkey)"
-                  ng-click="showTransferModal({pubkey:formData.pubkey, uid: formData.title})">
-            {{'COMMON.BTN_SEND_MONEY' | translate}}
-          </button>
+          <!--<button class="button button-calm ink-dark"-->
+                  <!--ng-if="formData.pubkey && !isUserPubkey(formData.pubkey)"-->
+                  <!--ng-click="showTransferModal({pubkey:formData.pubkey, uid: formData.title})">-->
+            <!--{{'COMMON.BTN_SEND_MONEY' | translate}}-->
+          <!--</button>-->
           <button class="button button-stable icon-left ink-dark"
                   ng-if="canEdit"
                   ng-click="delete()">

@@ -10,7 +10,7 @@ angular.module('cesium.market.converse.services', ['cesium.es.services'])
 
   })
 
-.factory('mkConverse', function($rootScope, $q, $timeout, $translate, esHttp, csConfig, csWallet, Device, csSettings) {
+.factory('mkConverse', function($rootScope, $q, $timeout, $translate, esHttp, UIUtils, csConfig, csWallet, Device, csSettings) {
   'ngInject';
   var
     defaultProfile,
@@ -43,7 +43,11 @@ angular.module('cesium.market.converse.services', ['cesium.es.services'])
 
         var isEnable = csConfig.plugins && csConfig.plugins.converse && csConfig.plugins.converse.enable;
         if (!isEnable) {
-          console.debug("[market] [converse] Disabled by config - no plugins.converse found in 'config.js'");
+          console.debug("[market] [converse] Disabled by config (property 'plugins.converse.enable')");
+          initialized = true;
+        }
+        else if (UIUtils.screen.isSmall()) {
+          console.debug("[market] [converse] Disabled on small screen");
           initialized = true;
         }
         else {
