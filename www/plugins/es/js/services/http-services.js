@@ -204,7 +204,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
     function parseTitlesFromText(value, prefix, suffix) {
       prefix = prefix || '##';
-      var reg = match('(?:^|[\\r\\s])('+prefix+'([\\wḡĞǦğàáâãäåçèéêëìíîïðòóôõöùúûüýÿ ]+)' + (suffix||'') + ')');
+      var reg = match('(?:^|[\\r\\s])('+prefix+'([\\w\\sḡĞǦğàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)' + (suffix||'') + ')');
       var matches = value && reg.exec(value);
       var lines = matches && [];
       var res = matches && [];
@@ -220,7 +220,6 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         value = value.substr(matches.index + matches[1].length + 1);
         matches = value.length > 0 && reg.exec(value);
       }
-      console.log("DEBUG", res);
       return res;
     }
 
@@ -245,7 +244,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         var urls = parseUrlsFromText(content);
         _.forEach(urls, function(url){
           // Make sure protocol is defined
-          var href = (url.startsWith('http://') || url.startsWith('http://')) ? url : ('http://' + url);
+          var href = (url.startsWith('http://') || url.startsWith('https://')) ? url : ('http://' + url);
           // Redirect URL to the function 'openLink', to open a new window if need (e.g. desktop app)
           var link = '<a on-tap=\"openLink($event, \'{0}\')\" href=\"{1}\" target="_blank">{2}</a>'.format(href, href, truncUrlFilter(url));
           content = content.replace(url, link);
