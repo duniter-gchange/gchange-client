@@ -8,7 +8,7 @@
     "rememberMe": true,
     "useRelative": false,
     "decimalCount": 2,
-    "shareBaseUrl": "http://gchange.fr",
+    "shareBaseUrl": "https://gchange.fr",
     "helptip": {
       "enable": false
     },

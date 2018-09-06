@@ -17,7 +17,7 @@ angular.module("cesium.config", [])
 	"rememberMe": true,
 	"useRelative": false,
 	"decimalCount": 2,
-	"shareBaseUrl": "http://gchange.fr",
+	"shareBaseUrl": "https://gchange.fr",
 	"helptip": {
 		"enable": false
 	},
@@ -51,7 +51,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.7.2",
-	"build": "2018-09-06T10:07:44.051Z",
+	"build": "2018-09-06T12:35:31.181Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

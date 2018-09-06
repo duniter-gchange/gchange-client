@@ -3,7 +3,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 /**
  * Elastic Search Http
  */
-.factory('esHttp', function($q, $timeout, $rootScope, $state, $sce, $window,
+.factory('esHttp', function($q, $timeout, $rootScope, $state, $sce, $window, $filter,
                             CryptoUtils, csHttp, csConfig, csSettings, BMA, csWallet, csPlatform, Api) {
   'ngInject';
 
@@ -28,7 +28,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         HASH_TAG: match('(?:^|[\t\n\r\s ])#([\\wḡĞǦğàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)'),
         USER_TAG: match('(?:^|[\t\n\r\s ])@('+BMA.constants.regexp.USER_ID+')'),
         ES_USER_API_ENDPOINT: exact(constants.ES_USER_API_ENDPOINT)
-      };
+      },
+      truncUrlFilter = $filter('truncUrl');
 
     that.cache = _emptyCache();
     that.api = new Api(this, "esHttp");
@@ -175,10 +176,9 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       prefix = prefix || '#';
       var reg = prefix === '@' ? regexp.USER_TAG : regexp.HASH_TAG;
       var matches = value && reg.exec(value);
-      var tags;
+      var tags = matches && [];
       while(matches) {
         var tag = matches[1];
-        tags = tags || [];
         if (!_.contains(tags, tag)) {
           tags.push(tag);
         }
@@ -190,10 +190,9 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
     function parseUrlsFromText(value) {
       var matches = value && regexp.URL.exec(value);
-      var urls;
+      var urls = matches && [];
       while(matches) {
         var url = matches[0];
-        urls = urls || [];
         if (!_.contains(urls, url)) {
           urls.push(url);
         }
@@ -202,6 +201,29 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       }
       return urls;
     }
+
+    function parseTitlesFromText(value, prefix, suffix) {
+      prefix = prefix || '##';
+      var reg = match('(?:^|[\\r\\s])('+prefix+'([\\wḡĞǦğàáâãäåçèéêëìíîïðòóôõöùúûüýÿ ]+)' + (suffix||'') + ')');
+      var matches = value && reg.exec(value);
+      var lines = matches && [];
+      var res = matches && [];
+      while(matches) {
+        var line = matches[1];
+        if (!_.contains(lines, line)) {
+          lines.push(line);
+          res.push({
+            line: line,
+            title: matches[2]
+          });
+        }
+        value = value.substr(matches.index + matches[1].length + 1);
+        matches = value.length > 0 && reg.exec(value);
+      }
+      console.log("DEBUG", res);
+      return res;
+    }
+
 
     function escape(text) {
       if (!text) return text;
@@ -222,8 +244,10 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         // Replace URL in description
         var urls = parseUrlsFromText(content);
         _.forEach(urls, function(url){
+          // Make sure protocol is defined
+          var href = (url.startsWith('http://') || url.startsWith('http://')) ? url : ('http://' + url);
           // Redirect URL to the function 'openLink', to open a new window if need (e.g. desktop app)
-          var link = '<a ng-click=\"openLink($event, \'{0}\')\">{1}</a>'.format(url, url);
+          var link = '<a on-tap=\"openLink($event, \'{0}\')\" href=\"{1}\" target="_blank">{2}</a>'.format(href, href, truncUrlFilter(url));
           content = content.replace(url, link);
         });
 
@@ -236,9 +260,16 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
         // Replace user tags
         var userTags = parseTagsFromText(content, '@');
-        _.forEach(userTags, function(uid){
-          var link = '<a ui-sref=\"{0}({uid: \'{1}\'})\">@{2}</a>'.format(options.uidState, uid, uid);
-          content = content.replace('@'+uid, link);
+        _.forEach(userTags, function(tag){
+          var link = '<a ui-sref=\"{0}({uid: \'{1}\'})\">@{2}</a>'.format(options.uidState, tag, tag);
+          content = content.replace('@'+tag, link);
+        });
+
+        // Replace title
+        var titles = parseTitlesFromText(content, '#+[ ]*', '<br>');
+        _.forEach(titles, function(matches){
+          var size = matches.line.lastIndexOf('#', 5)+1;
+          content = content.replace(matches.line, '<h{0}>{1}</h{2}>'.format(size, matches.title, size));
         });
       }
       return content;
