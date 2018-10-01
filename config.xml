@@ -27,7 +27,7 @@
     <preference name="xwalkVersion" value="19" />
     <preference name="xwalkMultipleApk" value="false" />
     <preference name="android-minSdkVersion" value="16" />
-    <preference name="android-targetSdkVersion" value="25" />
+    <preference name="android-targetSdkVersion" value="26" />
     <allow-navigation href="https://data.gchange.fr/*" />
     <allow-navigation href="https://g1.duniter.org/*" />
     <allow-navigation href="https://g1.duniter.fr/*" />
