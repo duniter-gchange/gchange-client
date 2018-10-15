@@ -26,7 +26,7 @@
       },
       "market": {
         "enable": true,
-        "searchDistance": "20km",
+        "searchDistance": "100km",
         "cesiumApi": {
           "enable": true,
           "baseUrl": "https://g1.duniter.fr/api"
@@ -40,19 +40,15 @@
           "gchange@muc.duniter.org"
         ]
       }
-
     }
   },
 
-  "test-vide-grenier": {
+  "dev": {
     "defaultLanguage": "fr-FR",
-    "timeout": 4000,
-    "cacheTimeMs": 60000,
+    "timeout": 300000,
+    "cacheTimeMs": 300000,
     "useLocalStorage": true,
     "rememberMe": true,
-    "useRelative": false,
-    "decimalCount": 2,
-    "shareBaseUrl": "http://gchange.fr",
     "helptip": {
       "enable": false
     },
@@ -60,67 +56,29 @@
       "host": "g1.duniter.fr",
       "port": "443"
     },
-    "login": {
-      "templateUrl": "plugins/market/templates/login/modal_simple_login.html",
-      "controller": "MarketLoginModalCtrl"
-    },
-    "plugins":{
+    "plugins": {
       "es": {
         "enable": true,
         "host": "data.gchange.fr",
         "port": "443",
+        "maxUploadBodySize": 2097152,
         "defaultCountry": "France"
       },
       "market": {
         "enable": true,
-        "defaultCurrency": "€",
-        "homeMessage": "<i class=\"icon ion-location\"></i> Vide-grenier de Villiers-charlemagne",
-        "defaultTags": [
-          {
-            "tag": "VideGrenier",
-            "name":  "Vide-grenier"
-          },
-          {
-            "tag": "VillersCharlemagne2017",
-            "name":  "Vide-grenier de Villiers-charlemagne"
-          }
-        ],
-        "defaultAdminPubkeys": [
-          "CohjkoP5YnqzTV2wwdCFND74BDDmDR7dAQEPGt4tj2Tw",
-          "GWAKPVoMdQw1LYqcWW8jckzox9VwNXGt6cQ1L5gNt3E9"
-        ],
-        "record": {
-          "type": {
-            "show": false,
-            "default": "offer",
-            "canEdit": false
-          },
-          "category": {
-            "show": true,
-            "filter": "localSale"
-          },
-          "description": {
-            "show": false
-          },
-          "location": {
-            "show": true,
-            "required": true,
-            "label": "MARKET.LOCAL_SALE.LOCATION",
-            "help": "MARKET.LOCAL_SALE.LOCATION_HELP",
-            "prefix": "MARKET.LOCAL_SALE.LOCATION_PREFIX"
-          },
-          "unit": {
-            "canEdit": false
-          },
-          "fees": {
-            "show": false
-          }
+        "searchDistance": "100km",
+        "cesiumApi": {
+          "enable": true,
+          "baseUrl": "https://g1.duniter.fr/api"
         }
+      },
+      "converse": {
+        "enable": false
       }
     }
   },
 
-  "dev": {
+  "dev-pod": {
     "defaultLanguage": "fr-FR",
     "timeout": 300000,
     "cacheTimeMs": 300000,
@@ -143,6 +101,9 @@
       },
       "market": {
         "enable": true
+      },
+      "converse": {
+        "enable": false
       }
     }
   }

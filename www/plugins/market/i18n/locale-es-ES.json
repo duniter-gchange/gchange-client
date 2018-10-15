@@ -7,7 +7,8 @@
     "COMMON": {
       "PRICE": "Precio",
       "BTN_NEW_AD": "Presento un anuncio",
-      "SOLD": "El anuncio cerrada"
+      "SOLD": "El anuncio cerrada",
+      "AROUND_ME": "Alrededor de yo"
     },
     "HOME": {
       "BTN_NEW_AD": "Poner un anuncio",

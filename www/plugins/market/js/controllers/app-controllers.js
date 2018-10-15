@@ -56,7 +56,7 @@ function MarketMenuExtendController($scope, esSettings, PluginService) {
 /**
  * Control home extension
  */
-function MarketHomeExtendController($scope, $rootScope, $state, $controller, $focus, $timeout,
+function MarketHomeExtendController($scope, $rootScope, $state, $controller, $focus, $timeout, $translate,
                                     ModalUtils, UIUtils, csConfig, esSettings, mkModals) {
     'ngInject';
 
@@ -111,7 +111,7 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
             });
     };
 
-    $scope.doSearch = function() {
+    $scope.doSearch = function(locationName) {
 
         // Resolve location position
         if (!$scope.search.geoPoint) {
@@ -119,6 +119,14 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
                 .then(function(res) {
                     if (res) {
                         $scope.search.geoPoint = res;
+                        // No location = Around me
+                        if (!$scope.search.location) {
+                          $scope.search.geoPoint.exact= true;
+                          return $translate("MARKET.COMMON.AROUND_ME")
+                            .then(function(locationName) {
+                              return $scope.doSearch(locationName); // Loop
+                            })
+                        }
                         return $scope.doSearch(); // Loop
                     }
                 })
@@ -128,17 +136,20 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
                 });
         }
 
-        if ($scope.search.location && $scope.search.geoPoint) {
-            var locationShortName = $scope.search.location && $scope.search.location.split(', ')[0];
-            $rootScope.geoPoints = $rootScope.geoPoints || {};
-            $rootScope.geoPoints[locationShortName] = $scope.search.geoPoint;
-            var stateParams = {
-                lat: $scope.search.geoPoint && $scope.search.geoPoint.lat,
-                lon: $scope.search.geoPoint && $scope.search.geoPoint.lon,
-                location: locationShortName
-            };
-            return $state.go('app.market_lookup', stateParams);
-        }
+      var locationShortName = locationName || $scope.search.location && $scope.search.location.split(', ')[0];
+      if (locationShortName && $scope.search.geoPoint) {
+          $rootScope.geoPoints = $rootScope.geoPoints || {};
+          $rootScope.geoPoints[locationShortName] = $scope.search.geoPoint;
+          var stateParams = {
+              lat: $scope.search.geoPoint && $scope.search.geoPoint.lat,
+              lon: $scope.search.geoPoint && $scope.search.geoPoint.lon,
+              location: locationShortName
+          };
+          return $state.go('app.market_lookup', stateParams);
+      }
+      else {
+        $scope.search.geoPoint = undefined;
+      }
     };
 
     $scope.showNewRecordModal = function() {

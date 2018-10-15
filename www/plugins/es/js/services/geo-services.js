@@ -123,24 +123,26 @@ angular.module('cesium.es.geo.services', ['cesium.services', 'cesium.es.http.ser
     }
 
     function getCurrentPosition() {
-      var defer = $q.defer();
-      if (navigator.geolocation) {
+      if (!navigator.geolocation) {
+        return $q.reject();
+      }
+      return $q(function(resolve, reject) {
+        console.debug("[ES] [geo] Getting current GPS position...");
+
         navigator.geolocation.getCurrentPosition(function(position) {
           if (!position || !position.coords) {
             console.error('[ES] [geo] navigator geolocation > Unknown format:', position);
+            reject({message: "navigator geolocation > Unknown format"});
             return;
           }
-          defer.resolve({
+          resolve({
             lat: position.coords.latitude,
             lon: position.coords.longitude
           });
         }, function(error) {
-          defer.reject(error);
+          reject(error);
         },{timeout:5000});
-      }else{
-        defer.reject();
-      }
-      return defer.promise;
+      });
     }
 
     function searchPositionByIP(ip) {

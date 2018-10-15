@@ -701,6 +701,15 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   };
   $scope.$watch('search.geoPoint', $scope.onGeoPointChanged, true);
 
+  $scope.onLocationChanged = function() {
+    if ($scope.search.loading) return;
+
+    if (!$scope.search.location) {
+      $scope.search.geoPoint = null;
+      $scope.doSearch();
+    }
+  };
+  $scope.$watch('search.location', $scope.onLocationChanged, true);
 
   $scope.onToggleAdvanced = function() {
     if ($scope.search.loading || !$scope.entered) return;
