@@ -11,8 +11,8 @@ angular.module('cesium.utils.services', [])
   var
     loadingTextCache=null,
     CONST = {
-      MAX_HEIGHT: 350,
-      MAX_WIDTH: 350,
+      MAX_HEIGHT: 300,
+      MAX_WIDTH: 400,
       THUMB_MAX_HEIGHT: 130,
       THUMB_MAX_WIDTH: 130
     },
@@ -93,7 +93,7 @@ angular.module('cesium.utils.services', [])
           cancelText: translations[options.cancelText],
           cancelType: options.cancelType,
           okText: translations[options.okText],
-          okType: options.okType,
+          okType: options.okType
         });
       });
   }
@@ -218,34 +218,75 @@ angular.module('cesium.utils.services', [])
 
   function imageOnLoadResize(resolve, reject, thumbnail) {
     return function(event) {
-          var width = event.target.width;
-          var height = event.target.height;
-       var maxWidth = (thumbnail ? CONST.THUMB_MAX_WIDTH : CONST.MAX_WIDTH);
-       var maxHeight = (thumbnail ? CONST.THUMB_MAX_HEIGHT : CONST.MAX_HEIGHT);
+       var width = event.target.width,
+         height = event.target.height,
+         maxWidth = (thumbnail ? CONST.THUMB_MAX_WIDTH : CONST.MAX_WIDTH),
+         maxHeight = (thumbnail ? CONST.THUMB_MAX_HEIGHT : CONST.MAX_HEIGHT)
+       ;
 
-       if (width > height) {
-         if (width > maxWidth) {
-           height *= maxWidth / width;
-           width = maxWidth;
-            }
-          } else {
-         if (height > maxHeight) {
-           width *= maxHeight / height;
-           height = maxHeight;
-            }
+      var canvas = document.createElement("canvas");
+      var ctx;
+
+      // Thumbnail: resize and crop (to the expected size)
+      if (thumbnail) {
+
+        // landscape
+        if (width > height) {
+          width *= maxHeight / height;
+          height = maxHeight;
+        }
+
+        // portrait
+        else {
+          height *= maxWidth / width;
+          width = maxWidth;
+        }
+        canvas.width = maxWidth;
+        canvas.height = maxHeight;
+        ctx = canvas.getContext("2d");
+        var xoffset = Math.trunc((maxWidth - width) / 2 + 0.5);
+        var yoffset = Math.trunc((maxHeight - height) / 2 + 0.5);
+        ctx.drawImage(event.target,
+          xoffset, // x1
+          yoffset, // y1
+          maxWidth + -2 * xoffset, // x2
+          maxHeight + -2 * yoffset // y2
+        );
+      }
+
+      // Resize, but keep the full image
+      else {
+
+        // landscape
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
           }
-          var canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          var ctx = canvas.getContext("2d");
-          ctx.drawImage(event.target, 0, 0,  canvas.width, canvas.height);
+        }
 
-          var dataurl = canvas.toDataURL();
+        // portrait
+        else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
 
-          canvas.remove();
+        canvas.width = width;
+        canvas.height = height;
+        ctx = canvas.getContext("2d");
 
-          resolve(dataurl);
-        };
+        // Resize the whole image
+        ctx.drawImage(event.target, 0, 0,  canvas.width, canvas.height);
+      }
+
+      var dataurl = canvas.toDataURL();
+
+      canvas.remove();
+
+      resolve(dataurl);
+    };
   }
 
   function resizeImageFromFile(file, thumbnail) {

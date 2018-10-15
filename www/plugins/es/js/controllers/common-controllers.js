@@ -51,19 +51,23 @@ function ESPicturesEditController($scope, UIUtils, $q, Device) {
     };
 
     $scope.fileChanged = function(event) {
+        if (!event.target.files || !event.target.files.length) return;
         UIUtils.loading.show();
-        return $q(function(resolve, reject) {
-            var file = event.target.files[0];
-            UIUtils.image.resizeFile(file)
-                .then(function(imageData) {
-                    $scope.pictures.push({
-                        src: imageData,
-                        isnew: true // use to prevent visibility hidden (if animation)
-                    });
-                    UIUtils.loading.hide(100);
-                    resolve();
-                });
-        });
+        var file = event.target.files[0];
+        return UIUtils.image.resizeFile(file)
+          .then(function(imageData) {
+            $scope.pictures.push({
+              src: imageData,
+              isnew: true // use to prevent visibility hidden (if animation)
+            });
+            event.target.value = ""; // reset input[type=file]
+            UIUtils.loading.hide(100);
+          })
+          .catch(function(err) {
+              console.error(err);
+              event.target.value = ""; // reset input[type=file]
+              UIUtils.loading.hide();
+          });
     };
 
     $scope.removePicture = function(index){
