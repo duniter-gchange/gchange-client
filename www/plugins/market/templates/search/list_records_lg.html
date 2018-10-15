@@ -37,7 +37,9 @@
 
     <div class="row row-record">
       <div class="col item-text-wrap item-thumbnail-left">
-        <img ng-src="{{::rec.thumbnail.src}}" ng-if="::rec.thumbnail">
+        <i ng-if="::rec.thumbnail" class="item-image avatar" style="background-image: url({{::rec.thumbnail.src}})"></i>
+
+        <!--<img ng-src="{{::rec.thumbnail.src}}" ng-if="::rec.thumbnail">-->
         <i class="item-image ion-speakerphone" ng-if="::!rec.thumbnail"></i>
         <h2 ng-bind-html="rec.title" ></h2>
         <h4 class="positive" ng-if="rec.city">
