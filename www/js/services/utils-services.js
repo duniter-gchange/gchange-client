@@ -13,8 +13,8 @@ angular.module('cesium.utils.services', [])
     CONST = {
       MAX_HEIGHT: 350,
       MAX_WIDTH: 350,
-      THUMB_MAX_HEIGHT: 100,
-      THUMB_MAX_WIDTH: 100
+      THUMB_MAX_HEIGHT: 130,
+      THUMB_MAX_WIDTH: 130
     },
     data = {
       smallscreen: screenmatch.bind('xs, sm', $rootScope)
@@ -223,7 +223,7 @@ angular.module('cesium.utils.services', [])
        var maxWidth = (thumbnail ? CONST.THUMB_MAX_WIDTH : CONST.MAX_WIDTH);
        var maxHeight = (thumbnail ? CONST.THUMB_MAX_HEIGHT : CONST.MAX_HEIGHT);
 
-          if (width > height) {
+       if (width > height) {
          if (width > maxWidth) {
            height *= maxWidth / width;
            width = maxWidth;
