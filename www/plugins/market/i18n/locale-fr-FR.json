@@ -7,7 +7,7 @@
     "COMMON": {
       "PRICE": "Prix",
       "BTN_NEW_AD": "Je dépose une annonce",
-      "SOLD": "Annonce clôturée",
+      "SOLD": "Annonce close",
       "LAST_UPDATE": "Dernière mise à jour",
       "AROUND_ME": "Autour de moi"
     },
@@ -75,7 +75,7 @@
       "BTN_SHOW_CATEGORIES": "Parcourir les catégories",
       "BTN_OFFERS": "Offres",
       "BTN_NEEDS": "Demandes",
-      "SHOW_CLOSED_RECORD": "Afficher les annonces clôturées ?",
+      "SHOW_CLOSED_RECORD": "Afficher les annonces closes ?",
       "RECORD_STOCK": "Stock :"
     },
     "GALLERY": {
@@ -89,8 +89,8 @@
     },
     "VIEW": {
       "TITLE": "Annonce",
-      "BTN_SOLD_AD": "Clôturer l'annonce",
-      "BTN_SOLD": "Clôturer",
+      "BTN_SOLD_AD": "Clore l'annonce",
+      "BTN_SOLD": "Clore",
       "BTN_REOPEN": "Réouvrir l'annonce",
       "BTN_WRITE_OFFER": "Ecrire au vendeur",
       "BTN_WRITE_NEED": "Ecrire au demandeur",
@@ -99,7 +99,7 @@
       "RECORD_STOCK": "Stock disponible :",
       "POPOVER_SHARE_TITLE": "Annonce {{title}}",
       "REMOVE_CONFIRMATION" : "Êtes-vous sûr de vouloir supprimer cette annonce ?<br/><br/>Cette opération est irréversible.",
-      "SOLD_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir clôturer cette annonce ?",
+      "SOLD_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir clore cette annonce ?",
       "REOPEN_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir réouvrir cette annonce ?",
       "NEW_MESSAGE_TITLE": "Au sujet de l'annonce \"{{title}}\"..."
     },
@@ -156,7 +156,7 @@
       "LOOKUP_RECORDS_FAILED": "Erreur lors de l'execution de la recherche.",
       "LOAD_RECORD_FAILED": "Erreur lors du chargement de l'annonce.",
       "REMOVE_RECORD_FAILED": "Erreur de la suppression de l'annonce",
-      "SOLD_RECORD_FAILED": "Erreur lors de la clôture de l'annonce",
+      "SOLD_RECORD_FAILED": "Erreur lors de la fermeture de l'annonce",
       "REOPEN_RECORD_FAILED": "Erreur lors de la réouverture de l'annonce",
       "FAILED_SAVE_COMMENT": "Erreur lors de la sauvegarde du commentaire",
       "FAILED_REMOVE_COMMENT": "Erreur lors de la suppression du commentaire",
@@ -166,7 +166,7 @@
     },
     "INFO": {
       "RECORD_REMOVED" : "Annonce supprimée",
-      "RECORD_SOLD" : "Annonce clôturée",
+      "RECORD_SOLD" : "Annonce close",
       "RECORD_REOPEN" : "Annonce réouverte"
     }
   },
