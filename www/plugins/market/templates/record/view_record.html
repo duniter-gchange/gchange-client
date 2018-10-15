@@ -25,14 +25,14 @@
 
         <div class="list {{::motion.ionListClass}} item-text-wrap no-padding-xs">
 
-          <div class="item item-text-wrap" ng-class="{'item-thumbnail-left': thumbnail}">
-            <img ng-src="{{thumbnail.src}}" ng-if="thumbnail">
+          <!-- descktop : title and location -->
+          <div class="item item-text-wrap hidden-xs">
 
             <!-- title -->
             <h1 ng-bind-html="formData.title"></h1>
 
             <!-- location and category-->
-            <h2 class="gray hidden-xs">
+            <h2 class="gray">
               <a class="positive" ng-if="formData.city" ui-sref="app.market_lookup({location:formData.city, lat: formData.geoPoint && formData.geoPoint.lat, lon:formData.geoPoint && formData.geoPoint.lon})">
                 <i class="icon ion-location"></i>
                 {{::options.location.prefix|translate}}<span ng-bind-html="::formData.city"></span>
@@ -43,7 +43,7 @@
                 <span ng-bind-html="::formData.category.name"></span>
               </a>
             </h2>
-            <h4 class="hidden-xs">
+            <h4>
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
               <a ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.uid})">
@@ -63,12 +63,12 @@
                 </span>
               </span>
             </h4>
-            <h4 class="dark hidden-xs" ng-if="formData.time - formData.creationTime > 86400">
+            <h4 class="dark" ng-if="formData.time - formData.creationTime > 86400">
               <i class="icon ion-edit "></i>
               <span translate>MARKET.COMMON.LAST_UPDATE</span>
               <span>{{::formData.time | formatDate}}</span>
             </h4>
-            <div class="badge hidden-xs"
+            <div class="badge"
                  ng-if="options.type.show"
                  ng-class="{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}">
               <i class="cion-market-{{formData.type}}"></i>
@@ -76,7 +76,12 @@
             </div>
           </div>
 
-          <div class="item visible-xs no-padding-top no-padding-bottom">
+          <!-- mobile: title and location -->
+          <div class="item visible-xs item-text-wrap">
+
+            <!-- title -->
+            <h1 ng-bind-html="formData.title"></h1>
+
             <h2 class="gray">
               <a class="positive" ng-if="formData.city" ui-sref="app.market_lookup({location:formData.location})">
                 <i class="icon ion-location"></i>
@@ -108,6 +113,11 @@
                 </span>
               </span>
             </h4>
+          </div>
+
+          <!-- mobile: price -->
+          <div class="item visible-xs no-padding-top no-padding-bottom">
+
             <div class="badge badge-price"
                  ng-class="::{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}"
                  ng-if="formData.price">
@@ -115,7 +125,22 @@
                  ng-class="::{'cion-market-need': formData.type == 'need', 'ion-pricetag': formData.type == 'offer'}"></i>
               <span ng-bind-html="::formData.price | formatAmount:{currency:formData.currency}"></span>
             </div>
+            <div class="badge badge-secondary" ng-if="formData.fees">
+              <span class="dark">
+                <i class="ion-plus" ng-if="::formData.price"></i>
+                <ng-bind-html ng-bind-html="::formData.fees | formatAmount:{currency: (formData.feesCurrency||formData.currency)}"></ng-bind-html>
+              </span>
+              <span class="gray">{{'MARKET.VIEW.RECORD_FEES_PARENTHESIS'|translate}} | </span>
+              <span class="gray">
+                <i class="ion-pie-graph"></i>
+                {{'MARKET.VIEW.RECORD_STOCK'|translate}}
+                <ng-if ng-if="formData.stock"><span class="dark">{{::formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
+                <ng-if ng-if="!formData.stock"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
+              </span>
+            </div>
           </div>
+
+
 
           <!-- Buttons bar-->
           <a id="record-share-anchor-{{id}}"></a>
