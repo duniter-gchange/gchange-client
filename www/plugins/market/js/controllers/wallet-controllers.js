@@ -59,6 +59,8 @@ function MarketWalletRecordsController($scope, $controller, UIUtils) {
             .then(function(walletData) {
                 $scope.search.text = walletData.pubkey;
                 $scope.search.lastRecords=false;
+                $scope.search.sortAttribute="creationTime";
+                $scope.search.sortDirection="desc";
 
                 if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
                     $scope.doSearch()

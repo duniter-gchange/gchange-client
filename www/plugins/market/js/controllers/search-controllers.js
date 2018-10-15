@@ -73,7 +73,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     options: null,
     loadingMore: false,
     showClosed: false,
-    geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 20
+    geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 20,
+    sortAttribute: null,
+    sortDirection: 'desc'
   };
 
   // Screen options
@@ -297,7 +299,14 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       $location.search(stateParams).replace();
     }
 
-    return $scope.doRequest({query: query, from: from});
+    var request = {query: query, from: from};
+
+    if ($scope.search.sortAttribute) {
+      request.sort = request.sort || {};
+      request.sort[$scope.search.sortAttribute] = $scope.search.sortDirection == "asc" ? "asc" : "desc";
+    }
+
+    return $scope.doRequest(request);
   };
 
   $scope.doGetLastRecords = function(from) {
