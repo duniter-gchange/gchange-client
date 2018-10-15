@@ -35,14 +35,14 @@ angular.module("cesium.config", [])
 		},
 		"market": {
 			"enable": true,
-			"searchDistance": "20km",
+			"searchDistance": "100km",
 			"cesiumApi": {
 				"enable": true,
 				"baseUrl": "https://g1.duniter.fr/api"
 			}
 		},
 		"converse": {
-			"enable": true,
+			"enable": false,
 			"jid": "anonymous.duniter.org",
 			"bosh_service_url": "https://chat.duniter.org/http-bind/",
 			"auto_join_rooms": [
@@ -51,7 +51,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "0.7.4",
-	"build": "2018-09-06T14:53:45.533Z",
+	"build": "2018-10-15T10:45:39.465Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
