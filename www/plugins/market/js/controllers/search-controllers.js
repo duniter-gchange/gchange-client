@@ -596,7 +596,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
         else {
           var defaultSearch = csSettings.data.plugins.es.market && csSettings.data.plugins.es.market.defaultSearch;
           // Apply defaults from settings
-          if (defaultSearch) {
+          if (defaultSearch && defaultSearch.location) {
             angular.merge($scope.search, defaultSearch);
           }
         }
@@ -662,7 +662,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   };
 
   // Store some search options as settings defaults
-  $scope.leave = function() {
+  $scope.updateSettings = function() {
     var dirty = false;
 
     csSettings.data.plugins.es.market = csSettings.data.plugins.es.market || {};
@@ -693,6 +693,11 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
       });
     }
   };
+
+  // Store some search options as settings defaults
+  $scope.leave = function() {
+    $scope.updateSettings();
+  };
   $scope.$on('$ionicView.leave', function() {
     // WARN: do not set by reference
     // because it can be overrided by sub controller
@@ -714,8 +719,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
     if ($scope.search.loading) return;
 
     if (!$scope.search.location) {
-      $scope.search.geoPoint = null;
-      $scope.doSearch();
+      $scope.removeLocation();
     }
   };
   $scope.$watch('search.location', $scope.onLocationChanged, true);
@@ -750,6 +754,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   $scope.removeLocation = function() {
     $scope.search.location = null;
     $scope.search.geoPoint = null;
+    $scope.updateSettings();
     $scope.doSearch();
   };
 
