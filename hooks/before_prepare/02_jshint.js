@@ -61,8 +61,8 @@ function lintFile(file, callback) {
             return;
         }
         if(jshint(data.toString())) {
-            console.log('File ' + file + ' has no errors.');
-            console.log('-----------------------------------------');
+            //console.log('File ' + file + ' has no errors.');
+            //console.log('-----------------------------------------');
             callback(false);
         } else {
             console.log('Errors in file ' + file);
@@ -72,7 +72,7 @@ function lintFile(file, callback) {
                 console.log(errors[j].line + ':' + errors[j].character + ' -> ' + errors[j].reason + ' -> ' +
 errors[j].evidence);
             }
-            console.log('-----------------------------------------');
+            //console.log('-----------------------------------------');
             callback(true);
         }
     });

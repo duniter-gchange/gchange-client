@@ -86,13 +86,24 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   git commit -m "v$2"
   git tag "v$2"
   git push
+  if [ $? -ne 0 ]; then
+    exit -1
+  fi
 
- if [[ "_$4" != "_" ]]; then
+  description="$4"
+  if [[ "_$description" == "_" ]]; then
+     description="Release v$1"
+  fi
+
+  if [[ "_$4" != "_" ]]; then
       echo "**********************************"
       echo "* Uploading artifacts to Github..."
       echo "**********************************"
 
-      ./github.sh $1 ''"$4"''
+      ./github.sh $1 ''"$description"''
+      if [ $? -ne 0 ]; then
+        exit -1
+      fi
 
       echo "----------------------------------"
       echo "- Building desktop versions..."
@@ -111,6 +122,9 @@ gchange-desktop-v$2-linux-x64.tar.gz"
       export EXPECTED_ASSETS
 
       ./release.sh $2
+      if [ $? -ne 0 ]; then
+          exit -1
+      fi
 
       # back to nodejs version 5
       cd $DIRNAME
