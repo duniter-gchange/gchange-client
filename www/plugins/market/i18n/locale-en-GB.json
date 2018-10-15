@@ -20,7 +20,7 @@
         "DESCRIPTION_HELP": "Say something about you..."
       },
       "LAST_SLIDE_CONGRATULATION": "You have entered all necessary information: Congratulations!<br/>You can now <b>send the creation request </b>.<br/><br/>For information, the public key below will identify your future account:",
-      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Warning:</b> The secret identifier and the password can not be changed.<br/><br/>You should <b>always remember it!</b><br/><br/><b>Are you sure</b> you want to continue with these credentials?"
+      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Warning:</b> The identifier and the password can not be changed.<br/><br/>You should <b>always remember it!</b><br/><br/><b>Are you sure</b> you want to continue with these credentials?"
     },
     "PROFILE": {
       "DEFAULT_TITLE": "User {{pubkey|formatPubkey}}"

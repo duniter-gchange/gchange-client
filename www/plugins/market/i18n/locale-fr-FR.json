@@ -20,7 +20,7 @@
         "DESCRIPTION_HELP": "Dites quelques chose à propos de vous..."
       },
       "LAST_SLIDE_CONGRATULATION": "Vous avez saisi toutes les informations nécessaires : Bravo !<br/>Vous pouvez maintenant <b>envoyer la demande de création</b> de compte.><br/><br/>Pour information, la clé publique ci-dessous identifiera votre futur compte :",
-      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant secret et le mot de passe ne pourront plus être modifiés.<br/><br/><b>Assurez-vous de toujours vous en rappeller !</b><br/><br/><b>Etes-vous sûr</b> de vouloir continuer avec ces identifiants ?",
+      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant et le mot de passe ne pourront plus être modifiés.<br/><br/><b>Assurez-vous de toujours vous en rappeller !</b><br/><br/><b>Etes-vous sûr</b> de vouloir continuer avec ces identifiants ?",
     },
     "PROFILE": {
       "DEFAULT_TITLE": "Utilisateur {{pubkey|formatPubkey}}"
