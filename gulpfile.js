@@ -49,7 +49,6 @@ var paths = {
 };
 
 gulp.task('serve:before', ['sass',
-  'config',
   'templatecache',
   'ng_translate',
   'ng_annotate',

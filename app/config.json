@@ -21,7 +21,7 @@
         "enable": true,
         "host": "data.gchange.fr",
         "port": "443",
-        "maxUploadBodySize": 2097152,
+        "maxUploadBodySize": 5242880,
         "defaultCountry": "France"
       },
       "market": {
@@ -61,7 +61,7 @@
         "enable": true,
         "host": "data.gchange.fr",
         "port": "443",
-        "maxUploadBodySize": 2097152,
+        "maxUploadBodySize": 5242880,
         "defaultCountry": "France"
       },
       "market": {

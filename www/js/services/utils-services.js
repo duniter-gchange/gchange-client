@@ -11,10 +11,10 @@ angular.module('cesium.utils.services', [])
   var
     loadingTextCache=null,
     CONST = {
-      MAX_HEIGHT: 300,
-      MAX_WIDTH: 400,
-      THUMB_MAX_HEIGHT: 130,
-      THUMB_MAX_WIDTH: 130
+      MAX_HEIGHT: 480,
+      MAX_WIDTH: 640,
+      THUMB_MAX_HEIGHT: 200,
+      THUMB_MAX_WIDTH: 200
     },
     data = {
       smallscreen: screenmatch.bind('xs, sm', $rootScope)
