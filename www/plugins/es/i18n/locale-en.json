@@ -100,7 +100,11 @@
     "LIST": {
       "INBOX": "Inbox",
       "OUTBOX": "Outbox",
+      "LAST_INBOX": "New messages",
+      "LAST_OUTBOX": "Sent messages",
+      "BTN_LAST_MESSAGES": "Recent messages",
       "TITLE": "Private messages",
+      "SEARCH_HELP": "Search in messages",
       "POPOVER_ACTIONS": {
         "TITLE": "Options",
         "DELETE_ALL": "Delete all messages"
@@ -159,27 +163,27 @@
     "SOCIAL_NETWORKS_DIVIDER": "Social networks, web sites",
     "TECHNICAL_DIVIDER": "Technical data",
     "BTN_SHOW_WOT": "People",
-    "BTN_SHOW_WOT_HELP": "Search people",
+    "BTN_SHOW_WOT_HELP": "Search for people",
     "BTN_SHOW_PAGES": "Pages",
-    "BTN_SHOW_PAGES_HELP": "Search pages",
-    "BTN_NEW": "Add a page",
+    "BTN_SHOW_PAGES_HELP": "Search for pages",
+    "BTN_NEW": "New page",
     "MY_PAGES": "My pages",
     "NO_PAGE": "No page",
     "SEARCH": {
       "TITLE": "Pages",
       "SEARCH_HELP": "What, Who: hairdresser, Lili's restaurant, ...",
       "BTN_ADD": "New",
-      "BTN_LAST_RECORDS": "Recents pages",
+      "BTN_LAST_RECORDS": "Recent pages",
       "BTN_ADVANCED_SEARCH": "Advanced search",
       "BTN_OPTIONS": "Advanced search",
       "TYPE": "Kind of organization",
-      "LOCATION_HELP": "Where: postal code, city",
+      "LOCATION_HELP": "Where: City, Country",
       "RESULTS": "Results",
-      "RESULT_COUNT_LOCATION": "{{count}} result{{count>0?'s':''}}, near by {{location}}",
+      "RESULT_COUNT_LOCATION": "{{count}} result{{count>0?'s':''}}, near {{location}}",
       "RESULT_COUNT": "{{count}} result{{count>0?'s':''}}",
-      "LAST_RECORDS": "Recents references",
-      "LAST_RECORD_COUNT_LOCATION": "{{count}} recent reference{{count>0?'s':''}}, near by {{location}}",
-      "LAST_RECORD_COUNT": "{{count}} recent reference{{count>0?'s':''}}",
+      "LAST_RECORDS": "Recent pages",
+      "LAST_RECORD_COUNT_LOCATION": "{{count}} recent page{{count>0?'s':''}}, near {{location}}",
+      "LAST_RECORD_COUNT": "{{count}} recent page{{count>0?'s':''}}",
       "POPOVER_FILTERS": {
         "BTN_ADVANCED_SEARCH": "Advanced options?"
       }
@@ -210,8 +214,8 @@
       "RECORD_TITLE_HELP": "Name",
       "RECORD_DESCRIPTION": "Description",
       "RECORD_DESCRIPTION_HELP": "Describe activity",
-      "RECORD_ADDRESS": "Address",
-      "RECORD_ADDRESS_HELP": "Address: Street, building...",
+      "RECORD_ADDRESS": "Street",
+      "RECORD_ADDRESS_HELP": "Street, building...",
       "RECORD_CITY": "City",
       "RECORD_CITY_HELP": "City, Country",
       "RECORD_SOCIAL_NETWORKS": "Social networks and web site",
@@ -220,7 +224,7 @@
     },
     "WALLET": {
       "REGISTRY_DIVIDER": "Pages",
-      "REGISTRY_HELP": "The pages refer to activities accepting money or favoring it: businesses, businesses, associations, institutions."
+      "REGISTRY_HELP": "Pages refer to activities accepting money or promoting it: local shops, companies, associations, institutions."
     },
     "ERROR": {
       "LOAD_CATEGORY_FAILED": "Loading main activities failed",
@@ -233,14 +237,17 @@
     },
     "INFO": {
       "RECORD_REMOVED" : "Page successfully deleted",
-      "RECORD_SAVED": "Page saved"
+      "RECORD_SAVED": "Page successfully saved"
     }
   },
   "PROFILE": {
-    "PROFILE_DIVIDER": "Cesium+ profile",
-    "NO_PROFILE_DEFINED": "No Cesium+ profile",
+    "PROFILE_DIVIDER": "ğchange profile",
+    "PROFILE_DIVIDER_HELP": "It is related data, stored in the ğchange network.",
+    "NO_PROFILE_DEFINED": "No ğchange profile",
     "BTN_ADD": "Create my profile",
     "BTN_EDIT": "Edit my profile",
+    "BTN_DELETE": "Delete my profile",
+    "BTN_REORDER": "Reorder",
     "UID": "Pseudonym",
     "TITLE": "Lastname, FirstName",
     "TITLE_HELP": "Name",
@@ -257,13 +264,18 @@
       "RESIZE_HELP": "<b>Re-crop the image</b> if necessary. A click on the image allows to move it. Click on the area at the bottom left to zoom in.",
       "RESULT_HELP": "<b>Here is the result</b> as seen on your profile:"
     },
+    "CONFIRM": {
+      "DELETE": "Are you sure you want to <b>delete your Cesium+ profile ?</b><br/><br/>This operation is irreversible."
+    },
     "ERROR": {
+      "REMOVE_PROFILE_FAILED": "Deleting profile failed",
       "LOAD_PROFILE_FAILED": "Could not load user profile.",
       "SAVE_PROFILE_FAILED": "Saving profile failed",
       "INVALID_SOCIAL_NETWORK_FORMAT": "Invalid format: please fill a valid Internet address.<br/><br/>Examples :<ul><li>- A Facebook page (https://www.facebook.com/user)</li><li>- A web page (http://www.domain.com)</li><li>- An email address (joe@dalton.com)</li></ul>",
       "IMAGE_RESIZE_FAILED": "Error while resizing picture"
     },
     "INFO": {
+      "PROFILE_REMOVED": "Profile deleted",
       "PROFILE_SAVED": "Profile saved"
     },
     "HELP": {
@@ -280,18 +292,89 @@
     "CITY": "City",
     "CITY_HELP": "City, Country",
     "DISTANCE": "Maximum distance around the city",
-    "DISTANCE_OPTION": "{{value}} km",
+    "DISTANCE_UNIT": "mi",
+    "DISTANCE_OPTION": "{{value}} {{'LOCATION.DISTANCE_UNIT'|translate}}",
+    "SEARCH_HELP": "City, Country",
     "MODAL": {
       "TITLE": "Search address",
       "SEARCH_HELP": "City, Country",
       "ALTERNATIVE_RESULT_DIVIDER": "Alternative results for <b>{{address}}</b>:",
-      "POSITION": "lat/lon : {{lat}} {{lon}}"
+      "POSITION": "lat/lon : {{lat}} / {{lon}}"
     },
     "ERROR": {
       "REQUIRED_FOR_LOCATION": "Required field to appear on the map",
       "INVALID_FOR_LOCATION": "Unknown address",
       "GEO_LOCATION_FAILED": "Unable to retrieve your current position. Please use the search button.",
       "ADDRESS_LOCATION_FAILED": "Unable to retrieve the address position"
+    }
+  },
+  "SUBSCRIPTION": {
+    "SUBSCRIPTION_DIVIDER": "Online services",
+    "SUBSCRIPTION_DIVIDER_HELP": "Online services offer optional additional services, delegated to a third party.",
+    "BTN_ADD": "Add a service",
+    "BTN_EDIT": "Manage my services",
+    "NO_SUBSCRIPTION": "No service defined",
+    "SUBSCRIPTION_COUNT": "Services / Subscription",
+    "EDIT": {
+      "TITLE": "Online services",
+      "HELP_TEXT": "Manage your subscriptions and other online services here",
+      "PROVIDER": "Provider:"
+    },
+    "TYPE": {
+      "ENUM": {
+        "EMAIL": "Receive email notifications"
+      }
+    },
+    "CONFIRM": {
+      "DELETE_SUBSCRIPTION": "Are you sur you want to <b>delete this subscription</b>?"
+    },
+    "ERROR": {
+      "LOAD_SUBSCRIPTIONS_FAILED": "Error while loading online services",
+      "ADD_SUBSCRIPTION_FAILED": "Error while adding subscription",
+      "UPDATE_SUBSCRIPTION_FAILED": "Error during subscription update",
+      "DELETE_SUBSCRIPTION_FAILED": "Error while deleting subscription"
+    },
+    "MODAL_EMAIL": {
+      "TITLE" : "Notification by email",
+      "HELP" : "Fill out this form to <b>be notified by email</ b> of your account's events. <br/>Your email address will be encrypted only to be visible to the service provider.",
+      "EMAIL_LABEL" : "Your email:",
+      "EMAIL_HELP": "john@domain.com",
+      "FREQUENCY_LABEL": "Frequency of notifications:",
+      "FREQUENCY_DAILY": "Daily",
+      "FREQUENCY_WEEKLY": "Weekly",
+      "PROVIDER": "Service Provider:"
+    }
+  },
+  "DOCUMENT": {
+    "HASH": "Hash: ",
+    "LOOKUP": {
+      "TITLE": "Document search",
+      "BTN_ACTIONS": "Actions",
+      "SEARCH_HELP": "issuer:AAA*, time:1508406169",
+      "LAST_DOCUMENTS": "Last documents",
+      "SHOW_QUERY": "Show query",
+      "HIDE_QUERY": "Hide query",
+      "HEADER_TIME": "Time/Hour",
+      "HEADER_ISSUER": "Issuer",
+      "HEADER_RECIPIENT": "Recipient",
+      "READ": "Read",
+      "BTN_REMOVE": "Delete this document",
+      "POPOVER_ACTIONS": {
+        "TITLE": "Actions",
+        "REMOVE_ALL": "Delete these documents..."
+      }
+    },
+    "INFO": {
+      "REMOVED": "Deleted document"
+    },
+    "CONFIRM": {
+      "REMOVE": "Are you sure you want to <b>delete this document</b>?",
+      "REMOVE_ALL": "Are you sure you want to <b>delete these documents</b>?"
+    },
+    "ERROR": {
+      "LOAD_DOCUMENTS_FAILED": "Error searching documents",
+      "REMOVE_FAILED": "Error deleting the document",
+      "REMOVE_ALL_FAILED": "Error deleting documents"
     }
   },
   "ES_SETTINGS": {
@@ -311,7 +394,7 @@
       "ENABLE_TX_SENT": "Notify the validation of <b>sent payments</b>?",
       "ENABLE_TX_RECEIVED": "Notify the validation of <b>received payments</b>?",
       "ENABLE_CERT_SENT": "Notify the validation of <b>sent certifications</b>?",
-      "ENABLE_CERT_RECEIVED": "Notify the validation des <b>received certifications</b>?"
+      "ENABLE_CERT_RECEIVED": "Notify the validation of <b>received certifications</b>?"
     },
     "CONFIRM": {
       "ASK_ENABLE_TITLE": "New features",
@@ -345,7 +428,12 @@
       "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his answer to your comment, on the referencing: <b>{{params[2]}}</b>"
     }
   },
+  "CONFIRM": {
+    "ES_USE_FALLBACK_NODE": "Data node <b>{{old}}</b> unreachable or invalid address.<br/><br/>Do you want to temporarily use the <b>{{new}}</b> data node?"
+  },
   "ERROR": {
-    "ES_MAX_UPLOAD_BODY_SIZE": "The volume of data to be sent exceeds the limit set by the server.<br/><br/>Please try again after, for example, deleting photos."
+    "ES_CONNECTION_ERROR": "Data node <b>{{server}}</b> unreachable or invalid address.<br/><br/>Check your Internet connection, or change data node in <a class=\"positive\" ng-click=\"doQuickFix('settings')\">advanced settings</a>.",
+    "ES_MAX_UPLOAD_BODY_SIZE": "The volume of data to be sent exceeds the limit set by the server.<br/><br/>Please try again after, for example, deleting photos.",
+    "INVALID_PUBKEY": "Invalid public key"
   }
 }

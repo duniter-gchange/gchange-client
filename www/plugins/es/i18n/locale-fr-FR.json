@@ -39,7 +39,7 @@
       "MEMBER_WITHOUT_PROFILE": "Pour obtenir vos certifications plus rapidement, completez <a ui-sref=\"app.user_edit_profile\">votre profil utilisateur</a>. Les membres accorderont plus facilement leur confiance à une identité vérifiable."
     },
     "ERROR": {
-      "WS_CONNECTION_FAILED": "Cesium ne peut pas recevoir les notifications, à cause d'une erreur technique (connexion au noeud de données ğ<b>change</b>).<br/><br/>Si le problème persiste, veuillez <b>choisir un autre noeud de données</b> dans les paramètres+."
+      "WS_CONNECTION_FAILED": "Cesium ne peut pas recevoir les notifications, à cause d'une erreur technique (connexion au noeud de données ğchange).<br/><br/>Si le problème persiste, veuillez <b>choisir un autre noeud de données</b> dans les paramètres+."
     }
   },
   "WOT": {
@@ -100,7 +100,11 @@
     "LIST": {
       "INBOX": "Boite de réception",
       "OUTBOX": "Messages envoyés",
+      "LAST_INBOX": "Nouveaux messages",
+      "LAST_OUTBOX": "Messages envoyés",
+      "BTN_LAST_MESSAGES": "Messages récents",
       "TITLE": "Messages",
+      "SEARCH_HELP": "Recherche dans les messages",
       "POPOVER_ACTIONS": {
         "TITLE": "Options",
         "DELETE_ALL": "Supprimer tous les messages"
@@ -237,11 +241,13 @@
     }
   },
   "PROFILE": {
-    "PROFILE_DIVIDER": "Profil ğ<b>change</b>",
-    "PROFILE_DIVIDER_HELP": "Il s'agit de données annexes, stockées en dehors du réseau de la monnaie.",
+    "PROFILE_DIVIDER": "Profil ğchange",
+    "PROFILE_DIVIDER_HELP": "Il s'agit de données annexes, stockées sur le réseau ğchange.",
     "NO_PROFILE_DEFINED": "Aucun profil saisi",
     "BTN_ADD": "Saisir mon profil",
     "BTN_EDIT": "Editer mon profil",
+    "BTN_DELETE": "Supprimer mon profil",
+    "BTN_REORDER": "Réordonner",
     "UID": "Pseudonyme",
     "TITLE": "Nom, Prénom",
     "TITLE_HELP": "Nom, Prénom",
@@ -258,13 +264,18 @@
       "RESIZE_HELP": "<b>Recadrez l'image</b>, si besoin. Un clic maintenu sur l'image permet de la déplacer. Cliquez sur la zone en bas à gauche pour zoomer.",
       "RESULT_HELP": "<b>Voici le résultat</b> tel que visible sur votre profil :"
     },
+    "CONFIRM": {
+      "DELETE": "Êtes-vous sur de vouloir <b>supprimer votre profif Cesium+ ?</b><br/><br/>Cette opération est irréversible."
+    },
     "ERROR": {
+      "REMOVE_PROFILE_FAILED": "Erreur de suppression du profil",
       "LOAD_PROFILE_FAILED": "Erreur de chargement du profil utilisateur.",
       "SAVE_PROFILE_FAILED": "Erreur lors de la sauvegarde",
       "INVALID_SOCIAL_NETWORK_FORMAT": "Format non pris en compte : veuillez indiquer une adresse valide.<br/><br/>Exemples :<ul><li>- Une page Facebook (https://www.facebook.com/user)</li><li>- Une page web (http://www.monsite.fr)</li><li>- Une adresse email (joe@dalton.com)</li></ul>",
       "IMAGE_RESIZE_FAILED": "Erreur lors du redimensionnement de l'image"
     },
     "INFO": {
+      "PROFILE_REMOVED": "Profil supprimé",
       "PROFILE_SAVED": "Profil sauvegardé"
     },
     "HELP": {
@@ -297,6 +308,43 @@
       "ADDRESS_LOCATION_FAILED": "Impossible de récupérer la position à partir de l'adresse"
     }
   },
+  "SUBSCRIPTION": {
+    "SUBSCRIPTION_DIVIDER": "Services en ligne",
+    "SUBSCRIPTION_DIVIDER_HELP": "Les services en ligne offrent des services supplémentaires optionnels, délégués à un tiers.",
+    "BTN_ADD": "Ajouter un service",
+    "BTN_EDIT": "Gérer mes services",
+    "NO_SUBSCRIPTION": "Aucun service utilisé",
+    "SUBSCRIPTION_COUNT": "Services / Abonnements",
+    "EDIT": {
+      "TITLE": "Services en lignes",
+      "HELP_TEXT": "Gérer ici vos abonnements et autres services en ligne",
+      "PROVIDER": "Prestataire :"
+    },
+    "TYPE": {
+      "ENUM": {
+        "EMAIL": "Recevoir les notifications par email"
+      }
+    },
+    "CONFIRM": {
+      "DELETE_SUBSCRIPTION": "Êtes-vous sûr de vouloir <b>supprimer cet abonnement</b> ?"
+    },
+    "ERROR": {
+      "LOAD_SUBSCRIPTIONS_FAILED": "Erreur lors du chargement des services en ligne",
+      "ADD_SUBSCRIPTION_FAILED": "Erreur de l'envoi de l'abonnement",
+      "UPDATE_SUBSCRIPTION_FAILED": "Erreur de la mise à jour de l'abonnement",
+      "DELETE_SUBSCRIPTION_FAILED": "Erreur lors de la suppression de l'abonnement"
+    },
+    "MODAL_EMAIL": {
+      "TITLE" : "Notification par email",
+      "HELP" : "Remplissez ce formulaire pour <b>être notifié par email</b> des événements de votre compte.<br/>Votre adresse email sera chiffrée pour n'être visible que par le prestataire de service.",
+      "EMAIL_LABEL" : "Votre email :",
+      "EMAIL_HELP": "jean.dupond@domaine.com",
+      "FREQUENCY_LABEL": "Fréquence des notifications :",
+      "FREQUENCY_DAILY": "Journalier",
+      "FREQUENCY_WEEKLY": "Hebdomadaire",
+      "PROVIDER": "Prestataire du service :"
+    }
+  },
   "DOCUMENT": {
     "HASH": "Hash: ",
     "LOOKUP": {
@@ -320,10 +368,11 @@
       "REMOVED": "Document supprimé"
     },
     "CONFIRM": {
-      "REMOVE": "Etes-vous sûr de vouloir <b>supprimer ce document</b> ?",
-      "REMOVE_ALL": "Etes-vous sûr de vouloir <b>supprimer ces documents</b> ?"
+      "REMOVE": "Êtes-vous sûr de vouloir <b>supprimer ce document</b> ?",
+      "REMOVE_ALL": "Êtes-vous sûr de vouloir <b>supprimer ces documents</b> ?"
     },
     "ERROR": {
+      "LOAD_DOCUMENTS_FAILED": "Erreur lors de la recherche de documents",
       "REMOVE_FAILED": "Erreur lors de la suppression du document",
       "REMOVE_ALL_FAILED": "Erreur lors de la suppression des documents"
     }
@@ -384,6 +433,7 @@
     "ES_USE_FALLBACK_NODE": "Nœud de données <b>{{old}}</b> injoignable ou adresse invalide.<br/><br/>Voulez-vous temporairement utiliser le nœud de données <b>{{new}}</b> ?"
   },
   "ERROR": {
+    "ES_CONNECTION_ERROR": "Nœud de données <b>{{server}}</b> injoignable ou adresse invalide.<br/><br/>Vérifiez votre connection Internet, ou changer de nœud de données dans les <a class=\"positive\" ng-click=\"doQuickFix('settings')\">paramètres avancées</a>.",
     "ES_MAX_UPLOAD_BODY_SIZE": "Le volume des données à envoyer dépasse la limite fixée par le serveur.<br/>Veuillez ré-essayer après avoir, par exemple, supprimer des photos.",
     "INVALID_PUBKEY": "Clé publique invalide"
   }

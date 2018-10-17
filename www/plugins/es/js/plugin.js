@@ -11,6 +11,8 @@ angular.module('cesium.es.plugin', [
     'cesium.es.profile.controllers',
     'cesium.es.message.controllers',
     'cesium.es.notification.controllers',
-    'cesium.es.registry.controllers'
+    'cesium.es.registry.controllers',
+    'cesium.es.subscription.controllers',
+    'cesium.es.document.controllers'
   ])
 ;

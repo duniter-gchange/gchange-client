@@ -1,0 +1,21 @@
+{
+  "NETWORK": {
+    "VIEW": {
+      "BTN_GRAPH": "Statistieken"
+    }
+  },
+  "GRAPH": {
+    "COMMON": {
+      "LINEAR_SCALE" : "Lineaire schaal",
+      "LOGARITHMIC_SCALE" : "Logaritmische schaal",
+      "BTN_SHOW_STATS": "Zie statistieken",
+      "BTN_SHOW_DETAILED_STATS": "Gedetailleerde statistieken",
+      "RANGE_DURATION_DIVIDER": "Stap eenheid:",
+      "RANGE_DURATION": {
+        "HOUR": "Groep per <b>uur</b>",
+        "DAY": "Groep per <b>dag</b>",
+        "MONTH": "Groep per <b>maand</b>"
+      }
+    }
+  }
+}

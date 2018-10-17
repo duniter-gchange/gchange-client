@@ -1,0 +1,71 @@
+{
+   "NETWORK": {
+     "VIEW": {
+       "BTN_GRAPH": "Statistiche"
+     }
+   },
+   "GRAPH": {
+     "COMMON": {
+       "LINEAR_SCALE" : "Scala lineare",
+       "LOGARITHMIC_SCALE" : "Scala logaritmica",
+       "BTN_SHOW_STATS": "Vedere le statistiche",
+       "BTN_SHOW_DETAILED_STATS": "Statistiche dettagliate",
+       "RANGE_DURATION_DIVIDER": "Unità di tempo :",
+       "RANGE_DURATION": {
+         "HOUR": "Ora",
+         "DAY": "Giorno",
+         "MONTH": "Mese"
+       }
+     },
+     "PEER": {
+       "VIEW": {
+         "BLOCK_COUNT_LABEL": "Numero di blocchi calcolati",
+         "BLOCK_COUNT": "{{count}} blocchi",
+         "NO_BLOCK": "Nessun blocco"
+       }
+     },
+     "DOC_STATS": {
+       "TITLE": "Statistiche di stoccaggio",
+       "USER": {
+         "TITLE": "Numero di documenti legati ad un conto",
+         "USER_PROFILE": "Profili dell'utente",
+         "USER_SETTINGS": "Impostazioni salvate",
+       },
+       "MESSAGE": {
+         "TITLE": "Numero di documenti legati alla conversazione",
+         "MESSAGE_INBOX": "Messaggi in arrivo",
+         "MESSAGE_OUTBOX": "Messaggi inviati salvati",
+         "INVITATION_CERTIFICATION": "Invitazioni da certificare"
+       },
+       "SOCIAL": {
+         "TITLE": "Numero di pagine o gruppi",
+         "PAGE_COMMENT": "Commenti",
+         "PAGE_RECORD": "Pagine",
+         "GROUP_RECORD": "Gruppi",
+       },
+       "OTHER": {
+         "TITLE": "Altri documenti",
+         "HISTORY_DELETE": "Cronologia eliminazione documenti",
+       }
+     },
+     "SYNCHRO": {
+       "TITLE": "Statistiche di sincronizzazioni",
+       "COUNT": {
+         "TITLE": "Volume sincronizzato",
+         "INSERTS": "Inserimenti",
+         "UPDATES": "Aggiornamenti",
+         "DELETES": "Eliminazioni"
+       },
+       "PEER": {
+         "TITLE": "Nodi interrogati",
+         "ES_USER_API": "Nodi dati utenti",
+         "ES_SUBSCRIPTION_API": "Noeuds servizi online"
+       },
+       "PERFORMANCE": {
+         "TITLE": "Prestazioni (performance) di esecuzione",
+         "DURATION": "Tempo di esecuzione (ms)"
+       }
+     }
+   }
+ }
+ 

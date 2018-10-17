@@ -356,11 +356,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
     function removeRecord(index, type) {
       return function(id) {
-        if (!csWallet.isLogin()) {
-          var deferred = $q.defer();
-          deferred.reject('Wallet must be login before sending record to ES node');
-          return deferred.promise;
-        }
+        if (!csWallet.isLogin()) return $q.reject('Wallet must be login before sending record to ES node');
 
         var keypair = $rootScope.walletData.keypair;
         var obj = {

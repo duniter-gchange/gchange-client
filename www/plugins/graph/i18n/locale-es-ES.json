@@ -1,0 +1,28 @@
+{
+  "NETWORK": {
+    "VIEW": {
+      "BTN_GRAPH": "Estadística"
+    }
+  },
+  "GRAPH": {
+    "COMMON": {
+      "LINEAR_SCALE" : "Escala lineal",
+      "LOGARITHMIC_SCALE" : "Escala logarítmica",
+      "BTN_SHOW_STATS": "Ver estadísticas",
+      "BTN_SHOW_DETAILED_STATS": "Estadísticas detalladas",
+      "RANGE_DURATION_DIVIDER": "Unidad de paso:",
+      "RANGE_DURATION": {
+        "HOUR": "Grupo por <b>hora</b>",
+        "DAY": "Grupo por <b>día</b>",
+        "MONTH": "Grupo por <b>mes</b>"
+      }
+    },
+    "PEER": {
+      "VIEW": {
+        "BLOCK_COUNT_LABEL": "Número de bloques calculados",
+        "BLOCK_COUNT": "{{count}} bloques",
+        "NO_BLOCK": "Ningún bloque"
+      }
+    }
+  }
+}
