@@ -19,8 +19,10 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     var
       that = this,
       constants = {
+        ES_USER_API: 'ES_USER_API',
         ES_USER_API_ENDPOINT: 'ES_USER_API( ([a-z_][a-z0-9-_.]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))',
-        MAX_UPLOAD_BODY_SIZE: csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.maxUploadBodySize || 2097152 /*=2M*/
+        MAX_UPLOAD_BODY_SIZE: csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.maxUploadBodySize || 2097152 /*=2M*/,
+        GCHANGE_API: 'GCHANGE_API'
       },
       regexp = {
         IMAGE_SRC: exact('data:([A-Za-z//]+);base64,(.+)'),
@@ -481,6 +483,9 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       node: {
         summary: that.get('/node/summary'),
         parseEndPoint: parseEndPoint
+      },
+      network: {
+        peering: that.get('/network/peering')
       },
       record: {
         post: postRecord,

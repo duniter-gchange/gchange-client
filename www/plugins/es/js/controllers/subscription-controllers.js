@@ -77,9 +77,13 @@ function ViewSubscriptionsController($scope, $q, $ionicHistory, csWot, csWallet,
           UIUtils.loading.hide();
           return $scope.load();
         })
+        .then(function() {
+          $scope.showFab('fab-add-subscription-record');
+        })
         .catch(function(err){
           if (err == 'CANCELLED') {
             UIUtils.loading.hide(10);
+            $scope.loading=true; // reset for force reload next time
             $ionicHistory.goBack();
             return;
           }
@@ -290,6 +294,16 @@ function ModalEmailSubscriptionsController($scope, Modals, csSettings, esHttp, c
       $scope.recipient = {pubkey: $scope.formData.recipient};
       return csWot.extendAll([$scope.recipient]);
     }
+    else {
+      return esHttp.network.peering()
+        .then(function(res){
+          if (!res) return;
+          console.log(res);
+          $scope.formData.recipient = res.pubkey;
+          $scope.recipient = {pubkey: $scope.formData.recipient};
+          return csWot.extendAll([$scope.recipient]);
+        })
+    }
   });
 
   // Submit
@@ -320,7 +334,7 @@ function ModalEmailSubscriptionsController($scope, Modals, csSettings, esHttp, c
   $scope.showNetworkLookup = function() {
     return Modals.showNetworkLookup({
       enableFilter: true,
-      endpointFilter: esHttp.constants.ES_USER_API_ENDPOINT
+      endpointFilter: esHttp.constants.GCHANGE_API
     })
       .then(function (peer) {
         if (peer) {
