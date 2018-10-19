@@ -41,7 +41,7 @@
   font-size: 12px !important;
   font-weight: 300 !important;
   width: initial !important;
-  min-width: 38px !important;
+  min-width: 44px !important;
   max-width: 90px !important;
 }
 .bar .button.button-clear:first-child {
@@ -55,6 +55,9 @@
 
 #transfer .list .item {
   border-bottom: solid 1px #ccc;
+}
+#transfer .list .item.item-no-border {
+  border-bottom: 0;
 }
 
 #transfer .item.item-icon-right input {
@@ -138,29 +141,39 @@
     display:none;
 }
 
-.item-peer {
-    padding-top: 9px;
-    padding-bottom: 3px;
-}
-
-.item-peer .badge {
-    top: 14px;
-    right: 6%;
-}
-
-.item-peer:hover .badge.badge-energized,
-.item-peer:hover .badge.badge-balanced
-{
-    color: #fff !important;
-}
-
 .settings .item-divider {
     background-color: #f5f5f5;
 }
 
-
 .no-margin {
   margin: 0 !important;
+}
+
+/**********
+   Network/Peer items
+**********/
+
+.list .item-peer {
+  padding-top: 9px;
+  padding-bottom: 3px;
+}
+
+.list .item-peer .badge {
+  top: 14px;
+  right: 6%;
+}
+
+.list .item-peer:hover .badge.badge-energized,
+.list .item-peer:hover .badge.badge-balanced
+{
+  color: #fff !important;
+}
+
+.list .item-peer .badge.badge-secondary,
+.list .item-peer .badge .badge-secondary {
+  top: 31px;
+  font-size: 10px;
+  padding-right: 6px;
 }
 
 /**********

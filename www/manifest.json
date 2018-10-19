@@ -1,7 +1,7 @@
 {
   "short_name": "ğchange",
   "name": "ğchange",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "version": "0.7.5",
   "default_locale": "fr",
   "description": "A market place for Ğ1 libre currency",
@@ -27,8 +27,9 @@
       "type": "image/svg"
     }
   ],
-  "start_url": "index.html/#/app/home",
+  "start_url": "/#/app/home",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#1A237E",
   "theme_color": "#1A237E"
 }

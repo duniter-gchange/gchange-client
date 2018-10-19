@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="./img/logo_180px.png">
   <link rel="apple-touch-icon" sizes="152x152" href="./img/logo_152px.png">
   <link rel="apple-touch-icon" sizes="167x167" href="./img/logo_167px.png">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <!-- build:css dist_css/gchange.css -->
   <!--removeIf(no-plugin)-->
   <link rel="stylesheet" type="text/css" href="css/leaflet.app.min.css">
@@ -27,6 +27,25 @@
   <!--endRemoveIf(device)-->
 
   <!-- endbuild -->
+
+  <!--removeIf(device)-->
+
+  <!-- Open graph tags -->
+  <meta property="og:title" content="ğchange" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Make exchanges in the libre currency Ğ1!" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="./img/logo_256px.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:height" content="256" />
+  <meta property="og:image:width" content="256" />
+  <meta property="og:site_name" content="ğchange" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="en_GB" />
+  <meta property="og:locale:alternate" content="fr_FR" />
+
+  <!--endRemoveIf(device)-->
+
 
 </head>
 <body ng-app="gchange" id="gchange" ng-strict-di="">
@@ -52,8 +71,6 @@
   <script src="js/vendor/underscore.js"></script>
   <script src="js/vendor/Chart.js"></script>
   <script src="js/vendor/converse.js"></script>
-
-  <!--<script src="js/vendor/qrcode.min.js"></script>-->
 
   <!-- ionic/angularjs js -->
   <script src="lib/ionic/js/ionic.bundle.js"></script>
@@ -84,6 +101,8 @@
   <script src="js/vendor/leaflet.search.min.js"></script>
   <script src="js/vendor/leaflet.easy-button.js"></script>
   <script src="js/vendor/leaflet.loading.js"></script>
+  <script src="js/vendor/leaflet.markercluster.js"></script>
+  <script src="js/vendor/leaflet.featuregroup.subgroup-src.js"></script>
   <!--endRemoveIf(no-plugin)-->
   <!-- endbuild -->
 

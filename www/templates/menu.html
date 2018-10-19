@@ -1,7 +1,7 @@
-<ion-side-menus enable-menu-with-back-views="true">
+<ion-side-menus enable-menu-with-back-views="true"
+                bind-notifier="{locale:$root.settings.locale.id}">
   <!-- HEADER -->
-  <ion-side-menu-content
-    >
+  <ion-side-menu-content>
     <ion-nav-bar class="bar-dark" title-align="left">
       <ion-nav-back-button class="no-text">
       </ion-nav-back-button>
@@ -63,8 +63,8 @@
         </div>
         <!-- logout -->
         <a ng-if="login" class="button-icon"
-           ng-click="logout({askConfirm: true})" style="position: absolute; top: 5px; left: 5px;">
-          <i class="icon light ion-log-out"></i>
+           ng-click="logout({askConfirm: true})" style="position: absolute; top: 5px; left: 5px; z-index: 999;">
+          <i class="icon stable ion-android-exit"></i>
         </a>
       </div>
     </ion-header-bar>
@@ -77,7 +77,7 @@
                   active-link-path-prefix="#/app/home"
                   active-link="active">
           <i class="icon ion-home"></i>
-          <span translate>MENU.HOME</span>
+          {{:locale:'MENU.HOME'|translate}}
         </ion-item>
 
         <!-- Allow extension here -->
@@ -101,7 +101,7 @@
            ng-click="loginAndGo('app.view_wallet')"
            ng-class="{'item-menu-disable': !login}">
           <i class="icon ion-person"></i>
-          <span translate>MENU.ACCOUNT</span>
+          {{:locale:'MENU.ACCOUNT'|translate}}
         </a>
         <a id="helptip-menu-btn-account"></a>
 
@@ -114,7 +114,7 @@
            active-link-path-prefix="#/app/settings"
            ui-sref="app.settings">
           <i class="icon ion-android-settings"></i>
-          <span translate>MENU.SETTINGS</span>
+          {{:locale:'MENU.SETTINGS'|translate}}
         </a>
         <a id="helptip-menu-btn-settings"></a>
 
@@ -124,9 +124,9 @@
 
     <!-- removeIf(device) -->
     <ion-footer-bar class="bar-stable footer hidden-xs hidden-sm" >
-      <a class="pull-left icon-help" menu-toggle="left" title="{{'HOME.BTN_HELP'|translate}}" ui-sref="app.help"></a>
+      <a class="pull-left icon-help" menu-toggle="left" title="{{:locale:'HOME.BTN_HELP'|translate}}" ui-sref="app.help"></a>
 
-      <a class="title gray" ng-click="showAboutModal()" title="{{'HOME.BTN_ABOUT'|translate}}">
+      <a class="title gray" ng-click="showAboutModal()" title="{{:locale:'HOME.BTN_ABOUT'|translate}}">
         <!-- version -->
         <span translate="COMMON.APP_VERSION" translate-values="{version: config.version}"></span>
         |

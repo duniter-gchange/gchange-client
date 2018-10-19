@@ -75,8 +75,12 @@ $screen-lg:                       1200px;
 //
 // Source: http://timkadlec.com/2013/01/windows-phone-8-and-device-width/
 //
-// >>Autre doc http://getbootstrap.com/css/#responsive-utilities-classes
+// Additional doc: http://getbootstrap.com/css/#responsive-utilities-classes
 //
+
+// ----------------------------------
+// Smaller device: Phones (<401px)
+// ----------------------------------
 @media screen and (max-width: $screen-xxs-max) {
   @-ms-viewport{
     width: 320px;
@@ -87,7 +91,9 @@ $screen-lg:                       1200px;
   }
 }
 
+// ----------------------------------
 // Extra small device: Phones (<767px)
+// ----------------------------------
 @media screen and (max-width: $screen-xs-max) {
   .hidden-xs {
       display: none !important;
@@ -168,7 +174,10 @@ $screen-lg:                       1200px;
         margin: inherit;
     }
 }
+
+// ----------------------------------
 // Small devices: Tablets (≥768px)
+// ----------------------------------
 @media screen and (max-width: $screen-sm-max) and (min-width: $screen-sm){
     .hidden-sm, .row-header.hidden-sm {
         display: none !important;
@@ -233,7 +242,9 @@ $screen-lg:                       1200px;
 
 }
 
+// ----------------------------------
 // Medium devices: Desktops (≥992px)
+// ----------------------------------
 @media screen and (min-width: $screen-md) and (max-width: $screen-md-max) {
   .hidden-md {
       display: none !important;
@@ -281,8 +292,9 @@ $screen-lg:                       1200px;
   }
 }
 
-
+// ----------------------------------
 // Large devices: Desktops (≥1200px)
+// ----------------------------------
 @media screen and (min-width: $screen-lg) {
   .hidden-lg {
       display: none !important;
@@ -329,10 +341,16 @@ $screen-lg:                       1200px;
 
 @media screen and (min-width: $screen-md) {
   html, body, .scroll, .disable-user-behavior {
-    -webkit-user-selectuser-select: auto !important;
+    -webkit-user-select: auto !important;
     -moz-user-select: auto !important;
     -ms-user-select: auto !important;
     user-select: auto !important;
+    -webkit-touch-callout: default !important;
+    -webkit-tap-highlight-color: $positive;
+    -webkit-user-drag: none !important;
+    touch-action: auto !important;
+    -ms-touch-action: auto !important;
+    -ms-content-zooming: none !important;
   }
 }
 
@@ -388,6 +406,28 @@ $screen-menu:                     845px;
     }
 }
 
+/**********
+   Fix or extend generic CSS
+**********/
+
+.item.item-icon-right.item-select,
+.item.item-icon-right .item-select {
+  select {
+    right: 48px;
+    padding: 0 20px 0 16px;
+  }
+}
+
+.item.item-icon-right.item-select:after,
+.item.item-icon-right .item-select:after {
+  right: 56px;
+}
+
+/**********
+   Unit popover
+**********/
+
+.popover-unit .item.selected,
 #unitPopover .item.selected {
   background-color: $stable;
 }
@@ -483,8 +523,8 @@ $screen-menu:                     845px;
 **********/
 
 
+.popover-light,
 .popover-notification {
-  min-width: 280px;
 
   .bar-header, .bar-footer {
     height: 30px;
@@ -623,8 +663,6 @@ $screen-menu:                     845px;
   right: 5px;
 }
 
-
-
 .button-icon {
   border-color: transparent;
   box-shadow: none !important;
@@ -683,7 +721,7 @@ $screen-menu:                     845px;
   display: inline-block;
 }
 
-// FIXME: same confg here to min size of CSS
+// FIXME: same config here to min size of CSS
 #home .logo {
   height: 70px;
   background-image: url('../img/logo_64px.png');
@@ -691,7 +729,6 @@ $screen-menu:                     845px;
 }
 
 @media screen and (max-width: $screen-xs-max) {
-
   #home .footer {
     display:none;
   }
@@ -758,7 +795,7 @@ $screen-menu:                     845px;
   }
 }
 
-.gray, .positive{
+.gray, .positive {
   a {
     color: inherit;
   }
@@ -789,6 +826,10 @@ $screen-menu:                     845px;
 .avatar-wallet {
   background-image: url('../img/card.png');
 }
+
+/**************
+ Item icons
+**************/
 
 .item.item-icon-left > i.avatar:first-child {
   position: absolute;
@@ -984,10 +1025,21 @@ $screen-menu:                     845px;
 /******
 * Wallet TX view
 *******/
-.view-wallet-tx {
-  .hero {
-    height: 100px;
+@media screen and (max-width: $screen-sm-max) {
+  .view-wallet-tx {
+    .hero {
+      height: 100px;
+    }
   }
+}
+@media screen and (min-width: $screen-md) {
+  .view-wallet-tx {
+    .hero {
+      height: 140px;
+    }
+  }
+}
+.view-wallet-tx {
   /* set 'ion-refresher' background color */
   .refresher-top-bg {
     @extend .refresher-light;
@@ -1021,6 +1073,40 @@ $screen-menu:                     845px;
 .stable-100-bg{
   background-color: $stable-100-bg !important;
 }
+
+/******
+* TX view (wallet or identity)
+*******/
+
+.item-tx .badge-energized {
+  background-color: rgba(255,201,0,0.3);
+  color: #888 !important;
+}
+
+/******
+* Identity view
+*******/
+
+.view-identity {
+  .hero,
+  .refresher-top-bg:before {
+    @extend .dark-bg;
+    height: 200px;
+  }
+  .member .hero,
+  .member.refresher-top-bg:before {
+    @extend .positive-900-bg;
+  }
+  .refresher-top-bg {
+    @extend .refresher-light;
+  }
+
+}
+
+/******
+* Cards
+*******/
+
 
 .card .card-header,
 .card .card-header{
@@ -1166,6 +1252,10 @@ a.underline:hover,
   margin-bottom: 15px !important;
   float: left;
   display: block;
+
+  img {
+    max-height: 150px;
+  }
 }
 
 .gallery.gallery-small .card-gallery img,
@@ -1203,8 +1293,11 @@ a.underline:hover,
     }
   }
 
+  // checkbox
   .item.item-avatar.item-checkbox .item-content {
     padding-left: 47px;
+    min-height: auto !important;
+    height: auto !important;
   }
 }
 
@@ -1255,27 +1348,16 @@ a.underline:hover,
   border: solid 1px #D9D9D9;
   overflow: hidden !important;
   font-size: 45px !important;
-  /*padding-left: 0px;
-  padding-top: 0px;
-  text-align: center;
-  vertical-align: middle;*/
   line-height: 56px;
   width: 100% !important;
-  /*display: block !important;*/
   max-height: 56px !important;
   max-width: 56px !important;
   top: 12px !important;
-  //left: 12px !important;
 }
 
 .item-avatar > .icon:first-child:before ,
 .item-avatar .icon.item-image:first-child:before,
 .item-avatar .item-content > .icon:first-child:before,
-//.item-avatar .item-content .icon.item-image:first-child:before
-//.item-avatar-left > .icon:first-child:before,
-//.item-avatar-left .icon.item-image:first-child:before,
-//.item-avatar-left .item-content > .icon:first-child:before,
-//.item-avatar-left .item-content .icon.item-image:first-child:before,
 .item-avatar.item-icon-right .icon:first-child:before,
 .item-avatar.item-icon-right .icon-help:first-child:before,
 .item-avatar.item-icon-right .icon-alert:first-child:before,
@@ -1368,10 +1450,13 @@ a.underline:hover,
   border-bottom: 2px solid red !important;
 }
 
-/*
-* Badge
-*/
+/**********
+   Badge
+**********/
 
+/*
+ Badge inside an item
+*/
 .item.item-icon-right .badge,
 .item.item-button-right .badge
 {
@@ -1388,6 +1473,10 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   @extend .ion;
   content: $ionicon-var-badge-editable;
 }
+
+/*
+ Badge inside toolbar's button
+*/
 
 .bar {
   .badge-button {
@@ -1560,11 +1649,6 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
     }
   }
 
-  body.platform-android #menu .item-icon-left .icon,
-  .item-icon-right .icon:last-child {
-    top: 5px;
-  }
-
 }
 
 // other screen
@@ -1589,21 +1673,21 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   #menu .bar-header {
     background-color: $positive-900-bg;
     color: #fff;
-    height: 175px;
+    height: 150px;
     padding-right: 0px !important;
 
     .hero {
-      height: 175px;
+      height: 150px;
       box-shadow: none; // not need (define in bar-header)
 
       .content {
-        bottom: 5px;
+        bottom: 0px;
       }
     }
   }
 
   #menu .has-header {
-    top: 175px;
+    top: 150px;
   }
 }
 
@@ -1890,6 +1974,10 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   top: -7px;
 }
 
+/**********
+   Drop zone component
+**********/
+
 div[dropzone] {
   border: 2px dashed #bbb;
   border-radius: 5px;
@@ -1898,7 +1986,17 @@ div[dropzone] {
   font: 20pt bold;
   color: #bbb;
   margin-bottom: 20px;
+  cursor: pointer;
+
+  .list .item,
+  .item {
+    text-align: left;
+  }
 }
+div[dropzone]:hover {
+  background-color: $stable-100-bg;
+}
+
 
 .hero .button-fab-top-right,
 .hero .button-fab-top-left {
@@ -1932,7 +2030,7 @@ div[dropzone] {
 
 .popover-locked-outputs {
   .item .badge {
-    right: 16px;
+    right: 16px !important;
   }
 }
 
