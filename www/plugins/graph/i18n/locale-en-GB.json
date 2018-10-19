@@ -28,8 +28,8 @@
       "TITLE": "Data storage statistics",
       "MARKET": {
         "TITLE": "Number of Ads",
-        "OFFER": "Offers",
-        "NEED": "Needs"
+        "AD": "Ads",
+        "COMMENT": "Comments"
       },
       "USER": {
         "TITLE": "Number of documents linked to an account",

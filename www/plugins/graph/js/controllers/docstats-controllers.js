@@ -42,13 +42,23 @@ function GpDocStatsController($scope, $state, $controller, $q, $translate, gpCol
       title: 'GRAPH.DOC_STATS.MARKET.TITLE',
       series: [
         {
-          key: 'message_inbox',
-          label: 'GRAPH.DOC_STATS.MARKET.OFFER',
+          key: 'market_record',
+          label: 'GRAPH.DOC_STATS.MARKET.AD',
           color: gpColor.rgba.royal(),
           pointHoverBackgroundColor: gpColor.rgba.royal(),
           clickState: {
             name: 'app.document_search',
             params: {index:'market', type: 'record'}
+          }
+        },
+        {
+          key: 'market_comment',
+          label: 'GRAPH.DOC_STATS.MARKET.COMMENT',
+          color: gpColor.rgba.gray(0.5),
+          pointHoverBackgroundColor: gpColor.rgba.gray(),
+          clickState: {
+            name: 'app.document_search',
+            params: {index:'market', type: 'comment'}
           }
         }
       ]
@@ -164,7 +174,7 @@ function GpDocStatsController($scope, $state, $controller, $q, $translate, gpCol
       title: 'GRAPH.DOC_STATS.SUBSCRIPTION.TITLE',
       series: [
         {
-          key: 'message_inbox',
+          key: 'subscription_record',
           label: 'GRAPH.DOC_STATS.SUBSCRIPTION.EMAIL',
           color: gpColor.rgba.royal(),
           pointHoverBackgroundColor: gpColor.rgba.royal(),
@@ -264,6 +274,8 @@ function GpDocStatsController($scope, $state, $controller, $q, $translate, gpCol
       result = result[1];
       if (!result || !result.times) return; // no data
       $scope.times = result.times;
+
+      console.debug(result);
 
       // Labels
       var labelPattern = datePatterns[$scope.formData.rangeDuration];

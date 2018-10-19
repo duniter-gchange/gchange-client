@@ -28,8 +28,8 @@
       "TITLE": "Statistiques de stockage",
       "MARKET": {
         "TITLE": "Nombre d'annonces",
-        "OFFER": "Offres",
-        "NEED": "Demandes"
+        "AD": "Annonces",
+        "COMMENT": "Commentaires"
       },
       "USER": {
         "TITLE": "Nombre de documents liés à un compte",
