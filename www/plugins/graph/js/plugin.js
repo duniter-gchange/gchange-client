@@ -4,7 +4,6 @@ angular.module('cesium.graph.plugin', [
     'cesium.graph.services',
     // Controllers
     'cesium.graph.common.controllers',
-    'cesium.graph.account.controllers',
     'cesium.graph.docstats.controllers',
     'cesium.graph.synchro.controllers'
   ])

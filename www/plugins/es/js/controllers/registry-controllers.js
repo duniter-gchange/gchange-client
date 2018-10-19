@@ -943,8 +943,8 @@ function ESRegistryRecordViewController($scope, $rootScope, $state, $q, $timeout
   $scope.showSharePopover = function(event) {
     $scope.hideActionsPopover();
     var title = $scope.formData.title;
-    // Use shareBasePath (fix #530) or rootPath (fix #390)
-    var url = (csConfig.shareBaseUrl || $rootScope.rootPath) + $state.href('app.view_page', {title: title, id: $scope.id});
+    // Use pod share URL - see issue #69
+    var url = esHttp.getUrl('/page/record/' + $scope.id + '/_share');
     // Override default position, is small screen - fix #545
     if (UIUtils.screen.isSmall()) {
       event = angular.element(document.querySelector('#registry-share-anchor-'+$scope.id)) || event;

@@ -305,8 +305,8 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     $scope.hideActionsPopover();
 
     var title = $scope.formData.title;
-    // Use shareBasePath (fix #21) or rootPath
-    var url = (csConfig.shareBaseUrl || $rootScope.rootPath) + $state.href('app.market_view_record', {title: title, id: $scope.id});
+    // Use pod share URL - see issue #69
+    var url = esHttp.getUrl('/market/record/' + $scope.id + '/_share');
 
     // Override default position, is small screen - fix #25
     if (UIUtils.screen.isSmall()) {

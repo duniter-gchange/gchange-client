@@ -22,8 +22,9 @@ angular.module('cesium.wallet.controllers', ['cesium.services'])
 
 ;
 
-function WalletController($scope, $rootScope, $q, $ionicPopup, $timeout, $state,
-                          UIUtils, csConfig, csWallet, $translate, $ionicPopover, Modals, csSettings) {
+function WalletController($scope, $q, $ionicPopup, $timeout, $state,
+                          UIUtils, csWallet, $translate, $ionicPopover, Modals, csSettings,
+                          esHttp) {
   'ngInject';
 
   $scope.loading = true;
@@ -457,8 +458,9 @@ function WalletController($scope, $rootScope, $q, $ionicPopup, $timeout, $state,
     $scope.hideActionsPopover();
 
     var title = $scope.formData.name || $scope.formData.uid || $scope.formData.pubkey;
-    // Use shareBasePath (fix #530) or rootPath (fix #390)
-    var url = (csConfig.shareBaseUrl || $rootScope.rootPath) + $state.href('app.wot_identity', {pubkey: $scope.formData.pubkey, uid: $scope.formData.name || $scope.formData.uid});
+
+    // Use pod share URL - see issue #69
+    var url = esHttp.getUrl('/user/profile/' + $scope.formData.pubkey + '/_share');
 
     // Override default position, is small screen - fix #25
     if (UIUtils.screen.isSmall()) {
