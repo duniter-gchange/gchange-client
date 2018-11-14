@@ -357,13 +357,15 @@ function ESSocialsEditController($scope, $focus, $filter, UIUtils, SocialUtils) 
     'ngInject';
 
     $scope.socialData = {
-        url: null
+        url: null,
+        reorder: false
     };
 
     $scope.addSocialNetwork = function() {
         if (!$scope.socialData.url || $scope.socialData.url.trim().length === 0) {
             return;
         }
+
         $scope.formData.socials = $scope.formData.socials || [];
         var url = $scope.socialData.url.trim();
 
@@ -396,6 +398,12 @@ function ESSocialsEditController($scope, $focus, $filter, UIUtils, SocialUtils) 
         $focus('socialUrl');
     };
 
+    $scope.reorderSocialNetwork = function(social, fromIndex, toIndex) {
+        if (!social || fromIndex == toIndex) return; // no changes
+        $scope.formData.socials.splice(fromIndex, 1);
+        $scope.formData.socials.splice(toIndex, 0, social);
+    };
+
     $scope.filterFn = function(social) {
         return !social.recipient || social.valid;
     };
@@ -405,6 +413,7 @@ function ESSocialsViewController($scope)  {
     'ngInject';
 
     $scope.openSocial = function(event, social) {
+        event.stopPropagation();
         return $scope.openLink(event, social.url, {
             type: social.type
         });
@@ -509,7 +518,6 @@ function ESPositionEditController($scope, csConfig, esGeo, ModalUtils) {
                 .catch(function(err) {
                     console.error(err); // Silent
                     loadingCurrentPosition = false;
-                    //$scope.form.geoPoint.$setValidity('required', false);
                 });
         }
 
@@ -536,11 +544,13 @@ function ESPositionEditController($scope, csConfig, esGeo, ModalUtils) {
 
     $scope.onCityChanged = function() {
         if ($scope.loading) return;
-        if ($scope.form) {
-            $scope.form.$valid = undefined;
-        }
         if ($scope.formPosition.enable) {
-            return $scope.tryToLocalize();
+          if ($scope.formData.geoPoint) {
+            // Invalidate the position
+            $scope.formData.geoPoint.lat = undefined;
+            $scope.formData.geoPoint.lon = undefined;
+          }
+          return $scope.tryToLocalize();
         }
     };
 
@@ -548,8 +558,8 @@ function ESPositionEditController($scope, csConfig, esGeo, ModalUtils) {
         if ($scope.loading) return;
         if (!$scope.formPosition.enable) {
             if ($scope.formData.geoPoint) {
-                $scope.formData.geoPoint = null;
-                //$scope.form.geoPoint.$setValidity('required', true);
+                $scope.formData.geoPoint.lat = undefined;
+                $scope.formData.geoPoint.lon = undefined;
                 $scope.dirty = true;
             }
         }
@@ -723,7 +733,7 @@ function ESLookupPositionController($scope, $q, csConfig, esGeo, ModalUtils) {
   };
 }
 
-function ESSearchPositionItemController($scope, $q, $timeout, ModalUtils, csConfig, esGeo) {
+function ESSearchPositionItemController($scope, $timeout, ModalUtils, csConfig, esGeo) {
   'ngInject';
 
   // The default country used for address localisation
