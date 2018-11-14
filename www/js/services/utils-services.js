@@ -114,13 +114,30 @@ angular.module('cesium.utils.services', [])
       return $translate('COMMON.LOADING')
         .then(function(translation){
           loadingTextCache = translation;
-          return showLoading();
+          return showLoading(options);
         });
     }
     options = options || {};
     options.template = options.template||loadingTextCache;
 
     return $ionicLoading.show(options);
+  }
+
+  function updateLoading(options) {
+    return $ionicLoading._getLoader().then(function(loader) {
+      if (!loader || !loader.isShown) return;
+      // Translate template (if exists)
+      if (options && options.template) {
+        return $translate(options && options.template)
+          .then(function(template) {
+            options.template = template;
+            return loader;
+          });
+      }
+    })
+      .then(function(loader) {
+        if (loader && loader.isShown) return showLoading(options);
+      });
   }
 
   function showToast(message, duration, position) {
@@ -454,8 +471,8 @@ angular.module('cesium.utils.services', [])
           popover.isResolved = false;
 
           popover.scope.closePopover = function(result) {
-            var autoremove = popover.options.autoremove;
-            delete popover.options.autoremove; // remove to avoid to trigger 'popover.hidden'
+            var autoremove = popover.options && popover.options.autoremove;
+            if (popover.options) delete popover.options.autoremove; // remove to avoid to trigger 'popover.hidden'
             popover.hide()
               .then(function() {
                 if (autoremove) {
@@ -526,7 +543,10 @@ angular.module('cesium.utils.services', [])
   }
 
   function showHelptip(id, options) {
-    var element = (typeof id == 'string') ? $window.document.getElementById(id) : id;
+    var element = (typeof id == 'string') && id ? $window.document.getElementById(id) : id;
+    if (!id && !element && options.selector) {
+      element = $window.document.querySelector(options.selector);
+    }
 
     options = options || {};
     var deferred = options.deferred || $q.defer();
@@ -762,7 +782,8 @@ angular.module('cesium.utils.services', [])
     },
     loading: {
       show: showLoading,
-      hide: hideLoading
+      hide: hideLoading,
+      update: updateLoading
     },
     toast: {
       show: showToast
