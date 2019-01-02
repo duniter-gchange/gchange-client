@@ -302,7 +302,7 @@ function ModalEmailSubscriptionsController($scope, Modals, csSettings, esHttp, c
           $scope.formData.recipient = res.pubkey;
           $scope.recipient = {pubkey: $scope.formData.recipient};
           return csWot.extendAll([$scope.recipient]);
-        })
+        });
     }
   });
 
