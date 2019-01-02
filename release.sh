@@ -5,17 +5,28 @@ branch=`git rev-parse --abbrev-ref HEAD`
 if [[ ! "$branch" = "master" ]];
 then
   echo ">> This script must be run under \`master\` branch"
-  exit
+  exit -1
 fi
 
 DIRNAME=`pwd`
 
-### Releasing
+### Get current version (package.json)
 current=`grep -oP "version\": \"\d+.\d+.\d+((a|b)[0-9]+)?" package.json | grep -oP "\d+.\d+.\d+((a|b)[0-9]+)?"`
+if [[ "_$current" == "_" ]]; then
+  echo "Unable to get current version. Please check version format is: x.y.z (x and y should be an integer)."
+  exit -1;
+fi
 echo "Current version: $current"
+
+### Get current version for Android
 currentAndroid=`grep -oP "android-versionCode=\"[0-9]+\"" config.xml | grep -oP "\d+"`
+if [[ "_$currentAndroid" == "_" ]]; then
+  echo "Unable to get current Android version. Please check version format is an integer."
+  exit -1;
+fi
 echo "Current Android version: $currentAndroid"
 
+### Releasing
 if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
 
   echo "new build version: $2"
@@ -37,18 +48,36 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
       ;;
     *)
       echo "No task given"
+      exit -1
       ;;
   esac
 
   # Load env.sh if exists
   if [[ -f "${DIRNAME}/env.sh" ]]; then
-    . ${DIRNAME}/env.sh
+    source ${DIRNAME}/env.sh $*
   fi
+
+  # Check the Java version
+  JAVA_VERSION=`java -version 2>&1 | grep "java version" | awk '{print $3}' | tr -d \"`
+  if [[ $? -ne 0 ]]; then
+    echo "No Java JRE 1.8 found in machine. This is required for Android artifacts."
+    exit -1
+  fi
+  JAVA_MINOR_VERSION=`echo ${JAVA_VERSION} | awk '{split($0, array, ".")} END{print array[2]}'`
+  if [[ ${JAVA_MINOR_VERSION} -ne 8 ]]; then
+    echo "Require a Java JRE in version 1.8, but found ${JAVA_VERSION}. You can override your default JAVA_HOME in 'env.sh'."
+    exit -1
+  fi
+  echo "Java: $JAVA_VERSION"
+
 
   # force nodejs version to 5
   if [[ -d "$NVM_DIR" ]]; then
     . $NVM_DIR/nvm.sh
     nvm use 5
+    if [[ $? -ne 0 ]]; then
+      exit -1
+    fi
   else
     echo "nvm (Node version manager) not found (directory $NVM_DIR not found). Please install, and retry"
     exit -1
@@ -66,6 +95,9 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   echo "- Building Android artifact..."
   echo "----------------------------------"
   ionic build android --release
+  if [[ $? -ne 0 ]]; then
+    exit -1
+  fi
 
   echo "----------------------------------"
   echo "- Building web artifact..."
@@ -74,13 +106,16 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   # Update config file
   gulp config --env default
   gulp build:web --release
-  cd $DIRNAME
+  if [[ $? -ne 0 ]]; then
+    exit -1
+  fi
 
   echo "----------------------------------"
   echo "- Executing git push, with tag: v$2"
   echo "----------------------------------"
 
   # Commit
+  cd $DIRNAME
   git reset HEAD
   git add package.json config.xml install.sh www/js/config.js www/manifest.json
   git commit -m "v$2"
@@ -106,13 +141,14 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
       fi
 
       echo "----------------------------------"
-      echo "- Building desktop versions..."
+      echo "- Building desktop artifacts..."
       echo "----------------------------------"
 
       # Remove old vagrant virtual machines
-      rm -rf ~/.vagrant.d/*
+      #rm -rf ~/.vagrant.d/*
 
-      git submodule update --init
+      #FIXME: ceci empêche d'etre sur le master/origin de gchange-desktop
+      #git submodule update --init
       git submodule sync
       cd platforms/desktop
 

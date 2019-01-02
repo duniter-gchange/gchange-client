@@ -14,6 +14,7 @@ var ngConstant = require('gulp-ng-constant');
 var fs = require("fs");
 var argv = require('yargs').argv;
 var header = require('gulp-header');
+var footer = require('gulp-footer');
 var removeCode = require('gulp-remove-code');
 var removeHtml = require('gulp-html-remove');
 var templateCache = require('gulp-angular-templatecache');
@@ -34,6 +35,7 @@ var htmlmin = require('gulp-htmlmin');
 var jshint = require('gulp-jshint');
 var sourcemaps = require('gulp-sourcemaps');
 var concatCss = require('gulp-concat-css');
+var markdown = require('gulp-markdown');
 
 var paths = {
   sass: ['./scss/**/*.scss'],
@@ -50,11 +52,11 @@ var paths = {
 
 gulp.task('serve:before', ['sass',
   'templatecache',
-  'ng_translate',
   'ng_annotate',
+  'ng_translate',
   'templatecache_plugin',
-  'ng_translate_plugin',
   'ng_annotate_plugin',
+  'ng_translate_plugin',
   'css_plugin'
 ]);
 
@@ -459,6 +461,7 @@ gulp.task('optimize-files:web', ['debug-files:web'], function(done) {
   var jsFilter = filter(["**/*.js", '!**/config.js'], { restore: true });
   var cssFilter = filter("**/*.css", { restore: true });
   var revFilesFilter = filter(['**/*', '!**/index.html', '!**/config.js'], { restore: true });
+  var uglifyOptions = {beautify: false};
 
   // Process index.html
   gulp.src(tmpPath + '/index.html')
@@ -466,7 +469,7 @@ gulp.task('optimize-files:web', ['debug-files:web'], function(done) {
 
     // Process JS
     .pipe(jsFilter)
-    .pipe(uglify())             // Minify any javascript sources
+    .pipe(uglify(uglifyOptions))             // Minify any javascript sources
     .pipe(jsFilter.restore)
 
     // Process CSS
