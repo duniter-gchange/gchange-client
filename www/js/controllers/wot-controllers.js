@@ -852,7 +852,7 @@ function WotIdentityAbstractController($scope, $rootScope, $state, $translate, $
   $scope.showSharePopover = function(event) {
     var title = $scope.formData.name || $scope.formData.uid || $scope.formData.pubkey;
     // Use pod share URL - see issue #69
-    var url = esHttp.getUrl('/market/record/' + $scope.id + '/_share');
+    var url = esHttp.getUrl('/user/profile/' + $scope.formData.pubkey + '/_share');
 
     // Override default position, is small screen - fix #25
     if (UIUtils.screen.isSmall()) {

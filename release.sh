@@ -41,12 +41,12 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   esac
 
   # Load env.sh if exists
-  if [ -f "${DIRNAME}/env.sh" ]; then
+  if [[ -f "${DIRNAME}/env.sh" ]]; then
     . ${DIRNAME}/env.sh
   fi
 
   # force nodejs version to 5
-  if [ -d "$NVM_DIR" ]; then
+  if [[ -d "$NVM_DIR" ]]; then
     . $NVM_DIR/nvm.sh
     nvm use 5
   else
@@ -86,7 +86,7 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
   git commit -m "v$2"
   git tag "v$2"
   git push
-  if [ $? -ne 0 ]; then
+  if [[ $? -ne 0 ]]; then
     exit -1
   fi
 
@@ -101,7 +101,7 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ && $3 =~ ^[0-9]+$ ]]; then
       echo "**********************************"
 
       ./github.sh $1 ''"$description"''
-      if [ $? -ne 0 ]; then
+      if [[ $? -ne 0 ]]; then
         exit -1
       fi
 
@@ -122,7 +122,7 @@ gchange-desktop-v$2-linux-x64.tar.gz"
       export EXPECTED_ASSETS
 
       ./release.sh $2
-      if [ $? -ne 0 ]; then
+      if [[ $? -ne 0 ]]; then
           exit -1
       fi
 

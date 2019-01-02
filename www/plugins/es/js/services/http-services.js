@@ -133,7 +133,10 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     that.isAlive = function() {
       return that.node.summary()
         .then(function(json) {
-          return json && json.duniter && json.duniter.software == 'duniter4j-elasticsearch';
+          var software = json && json.duniter && json.duniter.software || 'unknown';
+          if (software === "gchange-pod" || software === "cesium-plus-pod") return true;
+          console.error("[ES] [http] Not a Gchange Pod, but a {0} node. Please check '/sumary/node'".format(software));
+          return false;
         })
         .catch(function() {
           return false;

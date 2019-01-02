@@ -59,8 +59,8 @@
     "plugins": {
       "es": {
         "enable": true,
-        "host": "data.gchange.fr",
-        "port": "443",
+        "host": "test.data.gchange.fr",
+        "port": "80",
         "maxUploadBodySize": 5242880,
         "defaultCountry": "France"
       },
