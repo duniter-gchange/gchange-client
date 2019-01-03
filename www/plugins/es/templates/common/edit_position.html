@@ -1,6 +1,6 @@
 <div class="item item-divider" translate>LOCATION.LOCATION_DIVIDER</div>
 
-<!-- address -->
+<!-- street -->
 <ion-item class="item-input item-floating-label item-button-right">
   <span class="input-label">{{'LOCATION.ADDRESS' | translate}}</span>
   <textarea placeholder="{{'LOCATION.ADDRESS_HELP' | translate}}"
@@ -15,8 +15,10 @@
      ng-class="{'item-input-error': form.$submitted && form.geoPoint.$invalid}">
   <span class="input-label" translate>LOCATION.CITY</span>
   <input type="text" placeholder="{{'LOCATION.CITY_HELP'|translate}}"
+         name="city"
          ng-model="formData.city"
          ng-model-options="{ updateOn: 'blur' }"
+         required-if="formData.address"
          ng-change="onCityChanged()">
 </div>
 <input type="hidden"
@@ -24,6 +26,13 @@
        ng-model="formData.geoPoint"
        required-if="formPosition.enable"
        geo-point>
+<div class="form-errors"
+     ng-show="form.$submitted && form.city.$error"
+     ng-messages="form.city.$error">
+  <div class="form-error" ng-message="required">
+    <span translate="LOCATION.ERROR.CITY_REQUIRED_IF_STREET"></span>
+  </div>
+</div>
 <div class="form-errors"
      ng-show="form.$submitted && form.geoPoint.$error"
      ng-messages="form.geoPoint.$error">
