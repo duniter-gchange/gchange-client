@@ -298,7 +298,6 @@ function ModalEmailSubscriptionsController($scope, Modals, csSettings, esHttp, c
       return esHttp.network.peering()
         .then(function(res){
           if (!res) return;
-          console.log(res);
           $scope.formData.recipient = res.pubkey;
           $scope.recipient = {pubkey: $scope.formData.recipient};
           return csWot.extendAll([$scope.recipient]);

@@ -63,12 +63,12 @@ angular.module('cesium.es.wallet.services', ['ngResource', 'cesium.platform', 'c
     csWallet.events.cleanByContext('esWallet');
 
     // If membership pending, but not enough certifications: suggest to fill user profile
-    if (!data.name && data.requirements.pendingMembership && data.requirements.needCertificationCount > 0) {
-      csWallet.events.add({type:'info', message: 'ACCOUNT.EVENT.MEMBER_WITHOUT_PROFILE', context: 'esWallet'});
-    }
+    //if (!data.name && data.requirements.pendingMembership && data.requirements.needCertificationCount > 0) {
+    //  csWallet.events.add({type:'info', message: 'ACCOUNT.EVENT.MEMBER_WITHOUT_PROFILE', context: 'esWallet'});
+    //}
 
     console.debug('[ES] [wallet] Loading full user profile...');
-    var now = new Date().getTime();
+    var now = Date.now();
 
     // Load full profile
     esProfile.get(data.pubkey)
@@ -81,7 +81,7 @@ angular.module('cesium.es.wallet.services', ['ngResource', 'cesium.platform', 'c
           // Override HTML description
           data.profile.description = profile.description;
 
-          console.debug('[ES] [wallet] Loaded full user profile in '+ (new Date().getTime()-now) +'ms');
+          console.debug('[ES] [wallet] Loaded full user profile in '+ (Date.now()-now) +'ms');
         }
         deferred.resolve();
       });
