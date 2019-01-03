@@ -223,10 +223,13 @@
     }
   },
   "PROFILE": {
-    "PROFILE_DIVIDER": "Perfil Cesium+",
+    "PROFILE_DIVIDER": "Perfil ğchange",
+    "PROFILE_DIVIDER_HELP": "Se trata de datos auxiliares, almacenados en la red de intercambio.",
     "NO_PROFILE_DEFINED": "Ningún perfil Cesium+",
     "BTN_ADD": "Ingresar mi perfil",
     "BTN_EDIT": "Editar mi perfil",
+    "BTN_DELETE": "Borrar mi perfil",
+    "BTN_REORDER": "Reordenar",
     "UID": "Seudónimo",
     "TITLE": "Nombre, Apellido",
     "TITLE_HELP": "Nombre, Apellido",
@@ -243,13 +246,18 @@
       "RESIZE_HELP": "<b>Encuadra la imagen</b>, si es necesario. Un clic mantenido sobre la imagen permite desplazarla. Hace un clic sobre la zona abajo a la izquierda para hacer zoom.",
       "RESULT_HELP": "<b>Aquí está el resultado</b> tal como está visible sobre su perfil :"
     },
+    "CONFIRM": {
+      "DELETE": "¿Está seguro de que desea <b>eliminar su perfil de ğchange?</b><br/><br/>Esta operación es irreversible."
+    },
     "ERROR": {
+      "REMOVE_PROFILE_FAILED": "Error de eliminación de perfil",
       "LOAD_PROFILE_FAILED": "Fracaso en la carga del perfil usuario.",
       "SAVE_PROFILE_FAILED": "Fracaso durante el respaldo",
       "INVALID_SOCIAL_NETWORK_FORMAT": "Formato no tomado en cuenta : por favor, indica una dirección válida.<br/><br/>Ejemplos :<ul><li>- Una página Facebook (https://www.facebook.com/user)</li><li>- Una página web (http://www.misitio.es)</li><li>- Una dirección email (joe@dalton.com)</li></ul>",
       "IMAGE_RESIZE_FAILED": "Fracaso durante el redimensionamiento de la imagen"
     },
     "INFO": {
+      "PROFILE_REMOVED": "Perfil eliminado",
       "PROFILE_SAVED": "Perfil respaldado"
     },
     "HELP": {
@@ -266,7 +274,10 @@
     "CITY": "Ciudad",
     "CITY_HELP": "Ciudad, País",
     "DISTANCE": "Distancia máxima alrededor de la ciudad",
-    "DISTANCE_OPTION": "{{value}} km",
+    "DISTANCE_UNIT": "km",
+    "DISTANCE_OPTION": "{{value}} {{'LOCATION.DISTANCE_UNIT'|translate}}",
+    "SEARCH_HELP": "Ciudad, País",
+    "PROFILE_POSITION": "Posición del perfil",
     "MODAL": {
       "TITLE": "Búsqueda de dirección",
       "SEARCH_HELP": "Ciudad, País",
@@ -331,9 +342,14 @@
       "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado su comentario sobre su referencia : <b>{{params[2]}}</b>",
       "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> ha contestado a su comentario sobre el referencia : <b>{{params[2]}}</b>",
       "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado la repuesta a su comentario sobre el referencia : <b>{{params[2]}}</b>"
+    },
+    "CONFIRM": {
+      "ES_USE_FALLBACK_NODE": "Nodo de datos <b>{{old}}</b> dirección inaccesible o no válida.<br/><br/>¿Desea utilizar temporalmente el nodo de datos <b>{{new}}</b>?"
     }
   },
   "ERROR": {
-    "ES_MAX_UPLOAD_BODY_SIZE": "El volumen de datos a enviar excede el límite establecido por el servidor.<br/><br/>Por favor, inténtelo de nuevo después, por ejemplo, borrando fotos."
+    "ES_CONNECTION_ERROR": "Nodo de datos <b>{{server}}</b> dirección no válida o no válida.<br/><br/>Verifique su conexión a Internet o cambie el nodo de datos en <a class=\"positive\" ng-click=\"doQuickFix('settings')\">configuración avanzada</a>.",
+    "ES_MAX_UPLOAD_BODY_SIZE": "El volumen de datos a enviar excede el límite establecido por el servidor.<br/><br/>Por favor, inténtelo de nuevo después, por ejemplo, borrando fotos.",
+    "INVALID_PUBKEY": "Llave pública inválida"
   }
 }
