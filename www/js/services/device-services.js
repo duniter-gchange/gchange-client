@@ -220,7 +220,7 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
         if (!angular.isDefined(cache.isDesktop)) {
           try {
             // Should have NodeJs and NW
-            cache.isDesktop = !exports.enable && !!process && !!App;
+            cache.isDesktop = !exports.enable && !!process && !!nw && !!nw.App;
           } catch (err) {
             cache.isDesktop = false;
           }
