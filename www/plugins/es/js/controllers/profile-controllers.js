@@ -28,7 +28,8 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
   'ngInject';
 
   // Initialize the super class and extend it.
-  angular.extend(this, $controller('ESPositionEditCtrl', {$scope: $scope}));
+  // Not need, because already call inside the template
+  //angular.extend(this, $controller('ESPositionEditCtrl', {$scope: $scope}));
 
   $scope.formData = {
     title: null,
