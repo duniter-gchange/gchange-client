@@ -60,7 +60,7 @@
       "es": {
         "enable": true,
         "host": "test.data.gchange.fr",
-        "port": "80",
+        "port": "443",
         "maxUploadBodySize": 5242880,
         "defaultCountry": "France"
       },
