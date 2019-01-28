@@ -157,7 +157,7 @@ angular.module('cesium.modal.services', [])
     delete parameters.templateUrl;
     delete parameters.controller;
     return ModalUtils.show(
-        options && options.templateUrl || 'templates/modal_login.html',
+        options && options.templateUrl || 'templates/login/modal_login.html',
         options && options.controller  || 'LoginModalCtrl',
       parameters, {focusFirstInput: true});
   }
