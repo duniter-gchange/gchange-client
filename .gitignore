@@ -12,6 +12,7 @@
 /plugins/
 .idea/
 /*.iml
+.local
 
 /www/lib/*
 /www/locale
