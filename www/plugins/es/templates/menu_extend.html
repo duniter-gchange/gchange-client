@@ -1,7 +1,8 @@
 
 <!-- Main section -->
-<ng-if ng-if="enable && extensionPoint === 'menu-main' && expertMode">
+<ng-if ng-if="enable && extensionPoint === 'menu-main'">
   <ion-item menu-close
+            ng-if="$root.settings.expertMode"
             class="item item-icon-left"
             active-link="active"
             active-link-path-prefix="#/app/network"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd platforms/desktop
+cd ../platforms/desktop
 
 
 VERSION=0.8.3
