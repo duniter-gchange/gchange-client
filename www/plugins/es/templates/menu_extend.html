@@ -1,5 +1,11 @@
 
 <!-- Main section -->
+<ng-if ng-if="enable && extensionPoint === 'menu-main'">
+
+
+</ng-if>
+
+<!-- Toolbar section -->
 <ng-if ng-if="enable && extensionPoint === 'nav-buttons-right'">
 
   <!-- messages -->
@@ -27,7 +33,7 @@
 </ng-if>
 
 <!-- User section -->
-<ng-if ng-if="enable && extensionPoint === 'menu-user'" class="visible-xs visible-sm">
+<ng-if ng-if="enable && extensionPoint === 'menu-user'">
 
   <!--<div menu-close class="item item-icon-left" active-link="active"
             active-link-path-prefix="#/app/user/message"
@@ -38,15 +44,26 @@
     <span class="badge badge-positive"
           ng-if="$root.walletData.messages.unreadCount">{{$root.walletData.messages.unreadCount}}</span>
   </div>-->
+  <ion-item menu-close
+            class="item item-icon-left"
+            active-link="active"
+            active-link-path-prefix="#/app/network"
+            ui-sref="app.network">
+    <i class="icon ion-cloud"></i>
+    <span translate>MENU.NETWORK</span>
+  </ion-item>
+  <a id="helptip-menu-btn-network"></a>
 
-  <div menu-close class="item item-icon-left" active-link="active"
-       active-link-path-prefix="#/app/notifications"
-       ng-class="{'item-menu-disable': !login}"
-       ng-click="loginAndGo('app.view_notifications')">
-    <i class="icon ion-android-notifications"></i>
-    <span translate>MENU.NOTIFICATIONS</span>
-    <span class="badge badge-positive"
-          ng-if="$root.walletData.notifications.unreadCount">{{$root.walletData.notifications.unreadCount}}</span>
+  <div class="visible-xs visible-sm">
+    <div menu-close class="item item-icon-left" active-link="active"
+         active-link-path-prefix="#/app/notifications"
+         ng-class="{'item-menu-disable': !login}"
+         ng-click="loginAndGo('app.view_notifications')">
+      <i class="icon ion-android-notifications"></i>
+      <span translate>MENU.NOTIFICATIONS</span>
+      <span class="badge badge-positive"
+            ng-if="$root.walletData.notifications.unreadCount">{{$root.walletData.notifications.unreadCount}}</span>
+    </div>
   </div>
 
 </ng-if>

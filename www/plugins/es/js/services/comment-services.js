@@ -193,19 +193,14 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
         });
 
         // Open websocket
-        var time = new Date().getTime();
+        var now = Date.now();
         console.info("[ES] [comment] Starting websocket to listen comments on [{0}/record/{1}]".format(index, recordId.substr(0,8)));
-        var wsChanges = exports.raw.wsChanges();
+        var wsChanges = esHttp.websocket.changes(index + '/comment');
         return wsChanges.open()
-
-          // Define source filter
-          .then(function(sock) {
-            return sock.send(index + '/comment');
-          })
 
           // Listen changes
           .then(function(){
-            console.debug("[ES] [comment] Websocket opened in {0} ms".format(new Date().getTime() - time));
+            console.debug("[ES] [comment] Websocket opened in {0} ms".format(Date.now() - now));
             wsChanges.on(function(change) {
               if (!change) return;
               scope.$applyAsync(function() {

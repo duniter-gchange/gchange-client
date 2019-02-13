@@ -354,6 +354,7 @@
       "BTN_ACTIONS": "Actions",
       "SEARCH_HELP": "issuer:AAA*, time:1508406169",
       "LAST_DOCUMENTS": "Last documents",
+      "LAST_DOCUMENTS_DOTS": "Last documents :",
       "SHOW_QUERY": "Show query",
       "HIDE_QUERY": "Hide query",
       "HEADER_TIME": "Time/Hour",
@@ -361,6 +362,8 @@
       "HEADER_RECIPIENT": "Recipient",
       "READ": "Read",
       "BTN_REMOVE": "Delete this document",
+      "BTN_COMPACT": "Compact",
+      "HAS_REGISTERED": "a create or edit his profile",
       "POPOVER_ACTIONS": {
         "TITLE": "Actions",
         "REMOVE_ALL": "Delete these documents..."
@@ -382,6 +385,7 @@
   "ES_SETTINGS": {
     "PLUGIN_NAME": "Cesium+",
     "PLUGIN_NAME_HELP": "User profiles, notifications, private messages",
+    "ENABLE_TOGGLE": "Enable extension?",
     "ENABLE_MESSAGE_TOGGLE": "Enable messages?",
     "ENABLE_SETTINGS_TOGGLE": "Enable remote storage for settings?",
     "PEER": "Data peer address",
@@ -407,6 +411,10 @@
     "ERROR": {
       "RECIPIENT_IS_MANDATORY": "A recipient is required for encryption."
     }
+  },
+  "ES_PEER": {
+    "DOCUMENTS": "Documents",
+    "SOFTWARE": "Software"
   },
   "EVENT": {
     "NODE_STARTED": "Your node ES API <b>{{params[0]}}</b> is UP",

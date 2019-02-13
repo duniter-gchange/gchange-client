@@ -154,7 +154,6 @@ function ESCommentsController($scope, $filter, $state, $focus, $timeout, $anchor
     $scope.comments = {};
 
     $scope.$on('$recordView.enter', function(e, state) {
-
         // First enter
         if ($scope.loading) {
             $scope.anchor = state && state.stateParams.anchor;
@@ -172,8 +171,10 @@ function ESCommentsController($scope, $filter, $state, $focus, $timeout, $anchor
         if ($scope.id) {
             $scope.load($scope.id)
               .then(function() {
-                  // Scroll to anchor
-                  $scope.scrollToAnchor();
+                  return $timeout(function() {
+                      // Scroll to anchor
+                      $scope.scrollToAnchor();
+                  }, 500);
               });
         }
     });

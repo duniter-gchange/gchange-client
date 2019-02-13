@@ -28,6 +28,41 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
         searchText: esHttp.get('/:index/:type/_search?q=:text')
       };
 
+    function _initOptions(options) {
+      if (!options || !options.index || !options.type) throw new Error('Missing mandatory options [index, type]');
+
+      var side = 'desc';
+      if (options.type == 'peer') {
+        if (!options.sort || options.sort.time) {
+          side = options.sort && options.sort.time || side;
+          options.sort = {
+            'stats.medianTime': {
+              nested_path: 'stats',
+              order: side
+            }
+          };
+        }
+        options._source = fields.peer;
+        options.getTimeFunction = function(doc) {
+          doc.time = doc.stats && doc.stats.medianTime;
+          return doc.time;
+        };
+      }
+      else if (options.type == 'movement') {
+        if (!options.sort || options.sort.time) {
+          side = options.sort && options.sort.time || side;
+          options.sort = {'medianTime': side};
+        }
+        options._source = options._source || fields.movement;
+        options.getTimeFunction = function(doc) {
+          doc.time = doc.medianTime;
+          return doc.time;
+        };
+      }
+
+      return options;
+    }
+
     function _readSearchHits(res, options) {
       options.issuerField = options.issuerField || 'pubkey';
 
@@ -36,8 +71,9 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
         doc.index = hit._index;
         doc.type = hit._type;
         doc.id = hit._id;
-        doc.pubkey = doc.issuer || options.issuerField && doc[options.issuerField]; // need to call csWot.extendAll()
-        doc.time = doc.time || options.getTimeFunction && options.getTimeFunction(doc);
+        doc.pubkey = doc.issuer || options.issuerField && doc[options.issuerField] || doc.pubkey; // need to call csWot.extendAll()
+        doc.time = options.getTimeFunction && options.getTimeFunction(doc) || doc.time;
+        doc.thumbnail = esHttp.image.fromHit(hit, 'thumbnail');
         return res.concat(doc);
       }, []);
 
@@ -62,54 +98,25 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
         });
     }
 
+    function readSearchHit(hit) {
+      var options = _initOptions({
+        index: hit._index,
+        type: hit._type
+      });
+
+      return _readSearchHits({
+          hits: {
+            hits: [hit]
+          }
+        }, options)
+        .then(function(res) {
+           return res.hits[0];
+        });
+    }
+
     function search(options) {
-      options = options || {};
+      options = _initOptions(options);
 
-      var sortParts, side;
-      if (options.type == 'movement') {
-        if (!options.sort) {
-          options.sort = 'stats.medianTime:desc';
-        }
-        else {
-          sortParts = options.sort.split(':');
-          side = sortParts.length > 1 ? sortParts[1] : 'desc';
-
-          options.sort = [
-            {'stats.medianTime': {
-              nested_path : 'stats',
-              order: side
-            }}
-          ];
-          options._source = fields.peer;
-          options.getTimeFunction = function(doc) {
-            doc.time = doc.stats && doc.stats.medianTime;
-            return doc.time;
-          };
-        }
-      }
-      else if (options.type == 'movement') {
-        if (!options.sort) {
-          options.sort = 'medianTime:desc';
-        }
-        else {
-          sortParts = options.sort.split(':');
-          side = sortParts.length > 1 ? sortParts[1] : 'desc';
-
-          options.sort = [
-            {'medianTime': {
-              order: side
-            }}
-          ];
-          options._source = fields.movement;
-          options.getTimeFunction = function(doc) {
-            doc.time = doc.medianTime;
-            return doc.time;
-          };
-        }
-      }
-
-
-      if (!options || !options.index || !options.type) throw new Error('Missing mandatory options [index, type]');
       var request = {
         from: options.from || 0,
         size: options.size || constants.DEFAULT_LOAD_SIZE,
@@ -189,7 +196,8 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
       removeAll: removeAll,
       fields: {
         commons: fields.commons
-      }
+      },
+      fromHit: readSearchHit
     };
   })
 ;

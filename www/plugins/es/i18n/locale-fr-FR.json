@@ -354,6 +354,7 @@
       "BTN_ACTIONS": "Actions",
       "SEARCH_HELP": "issuer:AAA*, time:1508406169",
       "LAST_DOCUMENTS": "Derniers documents",
+      "LAST_DOCUMENTS_DOTS": "Derniers documents :",
       "SHOW_QUERY": "Voir la requête",
       "HIDE_QUERY": "Masquer la requête",
       "HEADER_TIME": "Date/Heure",
@@ -361,6 +362,8 @@
       "HEADER_RECIPIENT": "Destinataire",
       "READ": "Lu",
       "BTN_REMOVE": "Supprimer ce document",
+      "BTN_COMPACT": "Compacter",
+      "HAS_REGISTERED": "a créé ou modifié son profile",
       "POPOVER_ACTIONS": {
         "TITLE": "Actions",
         "REMOVE_ALL": "Supprimer ces documents..."
@@ -408,6 +411,10 @@
     "ERROR": {
       "RECIPIENT_IS_MANDATORY": "Un destinataire est obligatoire pour le chiffrement."
     }
+  },
+  "ES_PEER": {
+    "DOCUMENTS": "Documents",
+    "SOFTWARE": "Logiciel"
   },
   "EVENT": {
     "NODE_STARTED": "Votre noeud ES API <b>{{params[0]}}</b> est démarré",

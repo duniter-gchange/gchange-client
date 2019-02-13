@@ -191,7 +191,7 @@ function ESMessageListController($scope, $state, $translate, $ionicHistory, $ion
         content = content ? content +'\n' : null;
         return esModals.showMessageCompose({
           destPub: message.issuer,
-          destUid: message.name||message.uid,
+          destUid: message.name,
           title: prefix + message.title,
           content: content,
           isReply: true
@@ -306,8 +306,8 @@ function ESMessageComposeController($scope, $controller, UIUtils) {
     if (state.stateParams) {
       if (state.stateParams.pubkey) {
         $scope.formData.destPub = state.stateParams.pubkey;
-        if (state.stateParams.uid) {
-          $scope.destUid = state.stateParams.uid;
+        if (state.stateParams.name) {
+          $scope.destUid = state.stateParams.name;
           $scope.destPub = '';
         }
         else {
@@ -402,8 +402,8 @@ function ESMessageComposeModalController($scope, Modals, UIUtils, csWallet, esHt
     Modals.showWotLookup()
       .then(function(result){
         if (result) {
-          if (result.uid) {
-            $scope.destUid = result.uid;
+          if (result.name) {
+            $scope.destUid = result.name;
             $scope.destPub = '';
           }
           else {

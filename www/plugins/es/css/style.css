@@ -236,7 +236,19 @@
   height: 60px;
 }
 
+/**********
+   Dicument
+**********/
 
+.item-document.compacted {
+  min-height: 16px !important;
+  max-height: 16px !important;
+  border-bottom: 0px !important;
+}
+
+.item-document.compacted .col{
+  padding-top: 1px;
+}
 
 /**********
    Add specific Icons

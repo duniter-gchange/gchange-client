@@ -29,7 +29,7 @@
     <div class="col">
       <a
         ng-if=":rebind:login && doc.pubkey==walletData.pubkey"
-        ng-click="remove($index)"
+        ng-click="remove($event, $index)"
         class="gray pull-right"
          title="{{'DOCUMENT.LOOKUP.BTN_REMOVE'|translate}}">
         <i class="ion-trash-a"></i>

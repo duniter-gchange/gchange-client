@@ -212,10 +212,10 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
     that.isAlive = function() {
       return csHttp.get(that.host, that.port, '/node/summary', that.useSsl)()
         .then(function(json) {
-          var isDuniter = json && json.duniter && json.duniter.software == 'duniter' && json.duniter.version;
+          var isDuniter = json && json.duniter && json.duniter.software && json.duniter.version && true;
           var isCompatible = isDuniter && csHttp.version.isCompatible(csSettings.data.minVersion, json.duniter.version);
           if (isDuniter && !isCompatible) {
-            console.error('[BMA] Uncompatible version [{0}] - expected at least [{1}]'.format(json.duniter.version, csSettings.data.minVersion));
+            console.error('[BMA] Incompatible version [{0}] - expected at least [{1}]'.format(json.duniter.version, csSettings.data.minVersion));
           }
           return isCompatible;
         })
@@ -280,7 +280,7 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
         console.debug('[BMA] Starting [{0}]...'.format(that.server));
       }
 
-      var now = new Date().getTime();
+      var now = Date.now();
 
       that._startPromise = $q.all([
           csSettings.ready,
@@ -299,7 +299,7 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
           if (!listeners || listeners.length === 0) {
             addListeners();
           }
-          console.debug('[BMA] Started in '+(new Date().getTime()-now)+'ms');
+          console.debug('[BMA] Started in '+(Date.now()-now)+'ms');
 
           that.api.node.raise.start();
           that.started = true;
@@ -368,7 +368,11 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
           self: get('/network/peering'),
           peers: get('/network/peering/peers')
         },
-        peers: get('/network/peers')
+        peers: get('/network/peers'),
+        ws2p: {
+          info: get('/network/ws2p/info'),
+          heads: get('/network/ws2p/heads')
+        }
       },
       wot: {
         lookup: get('/wot/lookup/:search'),

@@ -44,10 +44,10 @@
         ng-if="search.type=='newcomers'" translate>
         WOT.LOOKUP.NEWCOMERS
       </h4>
-      <h4
-        ng-if="search.type=='pending'" translate>
-        WOT.LOOKUP.PENDING
-      </h4>
+      <!--<h4-->
+        <!--ng-if="search.type=='pending'" translate>-->
+        <!--WOT.LOOKUP.PENDING-->
+      <!--</h4>-->
       <h4
         ng-if="search.type=='text'" translate>
         COMMON.RESULTS_LIST
@@ -63,13 +63,13 @@
         {{'WOT.LOOKUP.BTN_NEWCOMERS' | translate}}
       </a>
       &nbsp;
-      <a ng-if="enableFilter"
-         class="button button-text button-small"
-         ng-class="{'button-text-positive': search.type=='pending'}"
-         ng-click="doGetPending()" class="badge-balanced">
-        <i class="icon ion-clock"></i>
-        {{'WOT.LOOKUP.BTN_PENDING' | translate}}
-      </a>
+      <!--<a ng-if="enableFilter"-->
+         <!--class="button button-text button-small"-->
+         <!--ng-class="{'button-text-positive': search.type=='pending'}"-->
+         <!--ng-click="doGetPending()" class="badge-balanced">-->
+        <!--<i class="icon ion-clock"></i>-->
+        <!--{{'WOT.LOOKUP.BTN_PENDING' | translate}}-->
+      <!--</a>-->
       &nbsp;
       <button class="button button-small button-stable ink"
               ng-click="doSearch()">
@@ -104,7 +104,7 @@
       can-swipe="true">
 
       <ion-item
-        ng-repeat="identity in search.results track by identity.id"
+        ng-repeat="identity in search.results"
         id="helptip-wot-search-result-{{$index}}"
         class="item item-border-large item-avatar item-icon-right ink" ng-click="::select(identity)">
 
@@ -123,7 +123,7 @@
       class="list {{::motion.ionListClass}}">
 
       <div
-        ng-repeat="identity in search.results track by identity.id"
+        ng-repeat="identity in search.results"
         id="helptip-wot-search-result-{{$index}}"
         class="item item-border-large item-avatar item-icon-right ink" ng-click="::select(identity)">
 
@@ -140,7 +140,7 @@
       class="list {{::motion.ionListClass}}">
 
       <ion-checkbox
-        ng-repeat="identity in search.results track by identity.id"
+        ng-repeat="identity in search.results"
         ng-model="identity.checked"
         class="item item-border-large item-avatar ink"
         ng-click="toggleCheck($index, $event)">

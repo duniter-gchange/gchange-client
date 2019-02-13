@@ -18,6 +18,7 @@ angular.module('cesium.market.plugin', [
     'cesium.market.wallet.controllers',
     'cesium.market.category.controllers',
     'cesium.market.wot.controllers',
+    'cesium.market.document.controllers',
 
     // Services
     'cesium.market.services'

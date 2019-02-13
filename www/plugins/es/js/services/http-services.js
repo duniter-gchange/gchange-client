@@ -3,8 +3,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 /**
  * Elastic Search Http
  */
-.factory('esHttp', function($q, $timeout, $rootScope, $state, $sce, $window, $filter,
-                            CryptoUtils, csHttp, csConfig, csSettings, BMA, csWallet, csPlatform, Api) {
+.factory('esHttp', function($q, $timeout, $rootScope, $state, $sce, $translate, $window, $filter,
+                            CryptoUtils, UIUtils, csHttp, csConfig, csSettings, BMA, csWallet, csPlatform, Api) {
   'ngInject';
 
   // Allow to force SSL connection with port different from 443
@@ -21,6 +21,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       constants = {
         ES_USER_API: 'ES_USER_API',
         ES_USER_API_ENDPOINT: 'ES_USER_API( ([a-z_][a-z0-9-_.]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))',
+        ANY_API_ENDPOINT: '([A-Z_]+)(?:[ ]+([a-z_][a-z0-9-_.ğĞ]*))?(?:[ ]+([0-9.]+))?(?:[ ]+([0-9a-f:]+))?(?:[ ]+([0-9]+))(?:\\/[^\\/]+)?',
         MAX_UPLOAD_BODY_SIZE: csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.maxUploadBodySize || 2097152 /*=2M*/,
         GCHANGE_API: 'GCHANGE_API'
       },
@@ -29,12 +30,20 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         URL: match('(www\\.|https?:\/\/(www\\.)?)[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)'),
         HASH_TAG: match('(?:^|[\t\n\r\s ])#([\\wḡĞǦğàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)'),
         USER_TAG: match('(?:^|[\t\n\r\s ])@('+BMA.constants.regexp.USER_ID+')'),
-        ES_USER_API_ENDPOINT: exact(constants.ES_USER_API_ENDPOINT)
+        ES_USER_API_ENDPOINT: exact(constants.ES_USER_API_ENDPOINT),
+        API_ENDPOINT: exact(constants.ANY_API_ENDPOINT),
       },
+      fallbackNodeIndex = 0,
+      listeners,
+      defaultSettingsNode,
       truncUrlFilter = $filter('truncUrl');
 
+    that.data = {
+      isFallback: false
+    };
     that.cache = _emptyCache();
     that.api = new Api(this, "esHttp");
+    that.started = false;
     that.init = init;
 
     init(host, port, wsPort, useSsl);
@@ -56,6 +65,35 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       that.server = csHttp.getServer(host, port);
     }
 
+    function isSameNodeAsSettings(data) {
+      data = data || csSettings.data;
+      if (!data.plugins || !data.plugins.es) return false;
+
+      var host = data.plugins.es.host;
+      var useSsl = data.plugins.es.port == 443 || data.plugins.es.useSsl || forceUseSsl;
+      var port = data.plugins.es.port || (useSsl ? 443 : 80);
+      var wsPort = data.plugins.es.wsPort || port;
+
+      return isSameNode(host, port, wsPort, useSsl);
+    }
+
+    function isSameNode(host, port, wsPort, useSsl) {
+      return (that.host == host) &&
+        (that.port == port) &&
+        (!wsPort || that.wsPort == wsPort) &&
+        (angular.isUndefined(useSsl) || useSsl == that.useSsl);
+    }
+
+    // Say if the ES node is a fallback node or the configured node
+    function isFallbackNode() {
+      return that.data.isFallback;
+    }
+
+    // Set fallback flag (e.g. called by ES settings, when resetting settings)
+    function setIsFallbackNode(isFallback) {
+      that.data.isFallback = isFallback;
+    }
+
     function exact(regexpContent) {
       return new RegExp('^' + regexpContent + '$');
     }
@@ -71,6 +109,24 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       };
     }
 
+    function onSettingsReset(data, deferred) {
+      deferred = deferred || $q.defer();
+
+      if (that.data.isFallback) {
+        // Force a restart
+        if (that.started) {
+          that.stop();
+        }
+      }
+
+      // Reset to default values
+      that.data.isFallback = false;
+      defaultSettingsNode = null;
+
+      deferred.resolve(data);
+      return deferred.promise;
+    }
+
     that.cleanCache = function() {
       console.debug('[ES] [http] Cleaning requests cache...');
       _.keys(that.cache.wsByPath).forEach(function(key) {
@@ -81,11 +137,14 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     };
 
     that.copy = function(otherNode) {
-      that.init(otherNode.host, otherNode.port, otherNode.wsPort, otherNode.useSsl);
-      return that.restart();
+      if (that.started) that.stop();
+      that.init(otherNode.host, otherNode.port, otherNode.wsPort, otherNode.useSsl || otherNode.port == 443);
+      that.data.isTemporary = false; // reset temporary flag
+      return that.start(true /*skipInit*/);
     };
 
     // Get time (UTC)
+    // TODO: Allow to get an offset, from the server
     that.date = { now : csHttp.date.now };
 
     that.byteCount = function (s) {
@@ -98,7 +157,18 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     };
 
     that.get = function (path) {
-      return function(params) {
+
+      var getRequest = function(params) {
+        if (!that.started) {
+          if (!that._startPromise) {
+            console.error('[ES] [http] Trying to get [{0}] before start()...'.format(path));
+          }
+          return that.ready().then(function(start) {
+            if (!start) return $q.reject('ERROR.ES_CONNECTION_ERROR');
+            return getRequest(params); // loop
+          });
+        }
+
         var request = that.cache.getByPath[path];
         if (!request) {
           request =  csHttp.get(that.host, that.port, path, that.useSsl);
@@ -106,10 +176,22 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         }
         return request(params);
       };
+
+      return getRequest;
     };
 
     that.post = function(path) {
-      return function(obj, params) {
+      var postRequest = function(obj, params) {
+        if (!that.started) {
+          if (!that._startPromise) {
+            console.error('[ES] [http] Trying to post [{0}] before start()...'.format(path));
+          }
+          return that.ready().then(function(start) {
+            if (!start) return $q.reject('ERROR.ES_CONNECTION_ERROR');
+            return postRequest(obj, params); // loop
+          });
+        }
+
         var request = that.cache.postByPath[path];
         if (!request) {
           request =  csHttp.post(that.host, that.port, path, that.useSsl);
@@ -117,6 +199,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         }
         return request(obj, params);
       };
+      return postRequest;
     };
 
     that.ws = function(path) {
@@ -130,12 +213,24 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       };
     };
 
+    that.wsChanges = function(source) {
+      var wsChanges = that.ws('/ws/_changes')();
+      if (!source) return wsChanges;
+      var oldOpen = wsChanges.open;
+      wsChanges.open = function() {
+        return oldOpen.call(wsChanges).then(function(sock) {
+          sock && sock.send(source);
+        });
+      };
+      return wsChanges;
+    };
+
     that.isAlive = function() {
-      return that.node.summary()
+      return csHttp.get(that.host, that.port, '/node/summary', that.useSsl)()
         .then(function(json) {
           var software = json && json.duniter && json.duniter.software || 'unknown';
           if (software === "gchange-pod" || software === "cesium-plus-pod") return true;
-          console.error("[ES] [http] Not a Gchange Pod, but a {0} node. Please check '/sumary/node'".format(software));
+          console.error("[ES] [http] Not a Gchange Pod, but a {0} node. Please check '/summary/node'".format(software));
           return false;
         })
         .catch(function() {
@@ -143,32 +238,120 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         });
     };
 
-    that.start = function() {
+    // Alert user if node not reached - fix issue #
+    that.checkNodeAlive = function(alive) {
+      if (alive) {
+        setIsFallbackNode(!isSameNodeAsSettings());
+        return true;
+      }
+      if (angular.isUndefined(alive)) {
+        return that.isAlive().then(that.checkNodeAlive);
+      }
 
-      return csPlatform.ready()
-        .then(that.init)
+      var settings = csSettings.data.plugins && csSettings.data.plugins.es || {};
+
+      // Remember the default node
+      defaultSettingsNode = defaultSettingsNode || {
+        host: settings.host,
+        port: settings.port,
+        wsPort: settings.wsPort
+      };
+
+      var fallbackNode = settings.fallbackNodes && fallbackNodeIndex < settings.fallbackNodes.length && settings.fallbackNodes[fallbackNodeIndex++];
+      if (!fallbackNode) {
+        $translate('ERROR.ES_CONNECTION_ERROR', {server: that.server})
+          .then(UIUtils.alert.info);
+        return false; // stop the loop
+      }
+      var newServer = csHttp.getServer(fallbackNode.host, fallbackNode.port);
+      UIUtils.loading.hide();
+      return $translate('CONFIRM.ES_USE_FALLBACK_NODE', {old: that.server, new: newServer})
+        .then(UIUtils.alert.confirm)
+        .then(function (confirm) {
+          if (!confirm) return false; // stop the loop
+
+          that.cleanCache();
+
+          that.init(fallbackNode.host, fallbackNode.port, fallbackNode.wsPort, fallbackNode.useSsl || fallbackNode.port == 443);
+
+          // check is alive then loop
+          return that.isAlive().then(that.checkNodeAlive);
+        });
+    };
+
+    that.isStarted = function() {
+      return that.started;
+    };
+
+    that.ready = function() {
+      if (that.started) return $q.when(true);
+      return that._startPromise || that.start();
+    };
+
+    that.start = function(skipInit) {
+      if (that._startPromise) return that._startPromise;
+      if (that.started) return $q.when(that.alive);
+
+      that._startPromise = csPlatform.ready()
         .then(function() {
-          console.debug('[ES] [http] Starting on [{0}]...'.format(that.server));
-          var now = new Date().getTime();
-          return that.isAlive()
+
+          if (!skipInit) {
+            // Init with defaults settings
+            that.init();
+          }
+        })
+        .then(function() {
+          console.debug('[ES] [http] Starting on [{0}]{1}...'.format(
+            that.server,
+            (that.useSsl ? ' (SSL on)' : '')
+          ));
+          var now = Date.now();
+
+          return that.checkNodeAlive()
             .then(function(alive) {
               that.alive = alive;
               if (!alive) {
                 console.error('[ES] [http] Could not start [{0}]: node unreachable'.format(that.server));
+                that.started = true;
+                delete that._startPromise;
+                fallbackNodeIndex = 0; // reset the fallback node counter
                 return false;
               }
-              console.debug('[ES] [http] Started in '+(new Date().getTime()-now)+'ms');
+
+              // Add listeners
+              addListeners();
+
+              console.debug('[ES] [http] Started in '+(Date.now()-now)+'ms');
               that.api.node.raise.start();
+
+
+              that.started = true;
+              delete that._startPromise;
+              fallbackNodeIndex = 0; // reset the fallback node counter
+
+
               return true;
             });
         });
+      return that._startPromise;
     };
 
     that.stop = function() {
       console.debug('[ES] [http] Stopping...');
-      that.alive = false;
-      that.cleanCache();
-      that.api.node.raise.stop();
+
+      removeListeners();
+
+      setIsFallbackNode(false); // will be re-computed during start phase
+      delete that._startPromise;
+      if (that.alive) {
+        that.cleanCache();
+        that.alive = false;
+        that.started = false;
+        that.api.node.raise.stop();
+      }
+      else {
+        that.started = false;
+      }
       return $q.when();
     };
 
@@ -313,10 +496,12 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
           deferred.reject('Wallet must be login before sending record to ES node');
           return deferred.promise;
         }
-
+        if (options.creationTime && !record.creationTime) {
+          record.creationTime = moment().utc().unix();
+        }
         // Always update the time - fix Cesium #572
         // Make sure time is always > previous (required by ES node)
-        var now = that.date.now();
+        var now = moment().utc().unix();
         record.time = (!record.time || record.time < now) ? now : (record.time+1);
 
         var keypair = $rootScope.walletData.keypair;
@@ -370,7 +555,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
           type: type,
           id: id,
           issuer: $rootScope.walletData.pubkey,
-          time: that.date.now()
+          time: moment().utc().unix()
         };
         var str = JSON.stringify(obj);
         return CryptoUtils.util.hash(str)
@@ -458,13 +643,15 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     };
 
     function parseEndPoint(endpoint) {
-      var matches = regexp.ES_USER_API_ENDPOINT.exec(endpoint);
+      var matches = regexp.API_ENDPOINT.exec(endpoint);
       if (!matches) return;
       return {
+        "api": matches[1] || '',
         "dns": matches[2] || '',
-        "ipv4": matches[4] || '',
-        "ipv6": matches[6] || '',
-        "port": matches[8] || 80
+        "ipv4": matches[3] || '',
+        "ipv6": matches[4] || '',
+        "port": matches[5] || 80,
+        "path": matches[6] || ''
       };
     }
 
@@ -478,6 +665,21 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       };
     }
 
+    function addListeners() {
+      // Watch some service events
+      listeners = [
+        csSettings.api.data.on.reset($rootScope, onSettingsReset, that)
+      ];
+    }
+
+    function removeListeners() {
+      _.forEach(listeners, function(remove){
+        remove();
+      });
+      listeners = [];
+    }
+
+    // Define events
     that.api.registerEvent('node', 'start');
     that.api.registerEvent('node', 'stop');
 
@@ -485,10 +687,26 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       getServer: csHttp.getServer,
       node: {
         summary: that.get('/node/summary'),
-        parseEndPoint: parseEndPoint
+        parseEndPoint: parseEndPoint,
+        same: isSameNode,
+        sameAsSettings: isSameNodeAsSettings,
+        isFallback: isFallbackNode
+      },
+      websocket: {
+        changes: that.wsChanges,
+        block: that.ws('/ws/block'),
+        peer: that.ws('/ws/peer')
+      },
+      wot: {
+        member: {
+          uids : that.get('/wot/members')
+        }
       },
       network: {
-        peering: that.get('/network/peering')
+        peering: {
+          self: that.get('/network/peering')
+        },
+        peers: that.get('/network/peers')
       },
       record: {
         post: postRecord,
@@ -517,6 +735,28 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
   service.instance = function(host, port, wsPort, useSsl) {
     return new Factory(host, port, wsPort, useSsl);
+  };
+
+  service.lightInstance = function(host, port, useSsl, timeout) {
+    port = port || 80;
+    useSsl = angular.isDefined(useSsl) ? useSsl : (port == 443);
+    return {
+      host: host,
+      port: port,
+      useSsl: useSsl,
+      node: {
+        summary: csHttp.getWithCache(host, port, '/node/summary', useSsl, csHttp.cache.LONG, false, timeout)
+      },
+      network: {
+        peering: {
+          self: csHttp.get(host, port, '/network/peering', useSsl, timeout)
+        },
+        peers: csHttp.get(host, port, '/network/peers', useSsl, timeout)
+      },
+      blockchain: {
+        current: csHttp.get(host, port, '/blockchain/current', useSsl, timeout)
+      }
+    };
   };
 
   return service;

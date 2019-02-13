@@ -487,7 +487,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         return exports.record.search(request)
             .then(function(res) {
                 // Filter, to keep only record with pictures
-                return res.reduce(function(res, record) {
+                return (res.hits || []).reduce(function(res, record) {
                     if (!record.pictures || !record.pictures.length) return res;
 
                     // Replace thumbnail with the first picture (full quality)

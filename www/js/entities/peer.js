@@ -9,26 +9,31 @@ function Peer(json) {
   });
 
   that.endpoints = that.endpoints || [];
-  that.statusTS = that.statusTS || 0;
 }
 
 
-Peer.prototype.regex = {
+Peer.prototype.regexp = {
   BMA: /^BASIC_MERKLED_API[ ]?/,
   BMAS: /^BMAS[ ]?/,
-  BMA_REGEXP: /^BASIC_MERKLED_API([ ]+([a-z_][a-z0-9-_.]*))?([ ]+([0-9.]+))?([ ]+([0-9a-f:]+))?([ ]+([0-9]+))$/,
-  BMAS_REGEXP: /^BMAS([ ]+([a-z_][a-z0-9-_.]*))?([ ]+([0-9.]+))?([ ]+([0-9a-f:]+))?([ ]+([0-9]+))$/,
+  WS2P: /^WS2P[ ]?/,
+  BMA_REGEXP: /^BASIC_MERKLED_API([ ]+([a-z_][a-z0-9-_.ğĞ]*))?([ ]+([0-9.]+))?([ ]+([0-9a-f:]+))?([ ]+([0-9]+))$/,
+  BMAS_REGEXP: /^BMAS([ ]+([a-z_][a-z0-9-_.ğĞ]*))?([ ]+([0-9.]+))?([ ]+([0-9a-f:]+))?([ ]+([0-9]+))$/,
+  WS2P_REGEXP: /^WS2P[ ]+([a-z0-9]+)([ ]+([a-z_][a-z0-9-_.ğĞ]*))?([ ]+([0-9.]+))?([ ]+([0-9a-f:]+))?([ ]+([0-9]+))([ ]+([a-z0-9/.&#!]+))?$/,
   LOCAL_IP_ADDRESS: /^127[.]0[.]0.|192[.]168[.]|10[.]0[.]0[.]|172[.]16[.]/
 };
+Peer.prototype.regex = Peer.prototype.regexp; // for backward compat
 
 Peer.prototype.keyID = function () {
   var bma = this.bma || this.getBMA();
-  return [this.pubkey || "Unknown", bma.dns, bma.ipv4, bma.ipv6, bma.port, bma.useSsl].join('-');
+  if (bma.useBma) {
+    return [this.pubkey || "Unknown", bma.dns, bma.ipv4, bma.ipv6, bma.port, bma.useSsl, bma.path].join('-');
+  }
+  return [this.pubkey || "Unknown", bma.ws2pid, bma.path].join('-');
 };
 
 Peer.prototype.copyValues = function(to) {
   var obj = this;
-  ["version", "currency", "pub", "endpoints", "hash", "status", "statusTS", "block", "signature"].forEach(function (key) {
+  ["version", "currency", "pub", "endpoints", "hash", "status", "block", "signature"].forEach(function (key) {
     to[key] = obj[key];
   });
 };
@@ -78,7 +83,7 @@ Peer.prototype.getEndpoints = function(regex) {
 
 Peer.prototype.hasEndpoint = function(endpoint){
   //console.debug('testing if hasEndpoint:' + endpoint);
-  var regExp = this.regex[endpoint] || new RegExp('^' + endpoint);
+  var regExp = this.regexp[endpoint] || new RegExp('^' + endpoint);
   var endpoints = this.getEndpoints(regExp);
   if (!endpoints.length) return false;
   else return true;
@@ -129,7 +134,7 @@ Peer.prototype.getServer = function() {
 Peer.prototype.hasValid4 = function(bma) {
   return bma.ipv4 &&
     /* exclude private address - see https://fr.wikipedia.org/wiki/Adresse_IP */
-    !bma.ipv4.match(this.regex.LOCAL_IP_ADDRESS) ?
+    !bma.ipv4.match(this.regexp.LOCAL_IP_ADDRESS) ?
     true : false;
 };
 
@@ -140,4 +145,20 @@ Peer.prototype.isReachable = function () {
 Peer.prototype.isSsl = function() {
   var bma = this.bma || this.getBMA();
   return bma.useSsl;
+};
+
+Peer.prototype.isTor = function() {
+  var bma = this.bma || this.getBMA();
+  return bma.useTor;
+};
+
+
+Peer.prototype.isWs2p = function() {
+  var bma = this.bma || this.getBMA();
+  return bma.useWs2p;
+};
+
+Peer.prototype.isBma = function() {
+  var bma = this.bma || this.getBMA();
+  return !bma.useWs2p && !bma.useTor;
 };

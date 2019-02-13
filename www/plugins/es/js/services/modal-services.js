@@ -55,11 +55,17 @@ angular.module('cesium.es.modal.services', ['cesium.modal.services', 'cesium.es.
         });
   }
 
+  function showNetworkLookup(parameters) {
+    return ModalUtils.show('plugins/es/templates/network/modal_network.html', 'NetworkLookupModalCtrl',
+      parameters, {focusFirstInput: true});
+  }
+
   return {
     showMessageCompose: showMessageCompose,
     showNotifications: showNotificationsPopover,
     showNewInvitation: showNewInvitation,
-    showNewPage: showNewPage
+    showNewPage: showNewPage,
+    showNetworkLookup: showNetworkLookup
   };
 
 });

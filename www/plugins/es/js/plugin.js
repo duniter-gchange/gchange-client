@@ -13,6 +13,7 @@ angular.module('cesium.es.plugin', [
     'cesium.es.notification.controllers',
     'cesium.es.registry.controllers',
     'cesium.es.subscription.controllers',
-    'cesium.es.document.controllers'
+    'cesium.es.document.controllers',
+    'cesium.es.network.controllers'
   ])
 ;

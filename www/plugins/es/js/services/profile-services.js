@@ -140,6 +140,125 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     }
   }
 
+  function _fillSearchResultsFromHits(datas, res, dataByPubkey, pubkeyAtributeName) {
+    if (!res || !res.hits || !res.hits.total) return datas;
+    var indices = {};
+    dataByPubkey = dataByPubkey || {};
+    pubkeyAtributeName = pubkeyAtributeName || 'pubkey';
+    var values;
+    _.forEach(res.hits.hits, function (hit) {
+
+      var avatarFieldName = 'avatar';
+      // User profile
+      if (hit._index == "user") {
+        values = dataByPubkey && dataByPubkey[hit._id];
+        if (!values) {
+          var value = {};
+          value[pubkeyAtributeName] = hit._id;
+          values = [value];
+          datas.push(value);
+        }
+      }
+
+      // Page or group
+      else if (hit._index != "user") {
+        if (!indices[hit._index]) {
+          indices[hit._index] = true;
+          // add a separator
+          datas.push({
+            id: 'divider-' + hit._index,
+            divider: true,
+            index: hit._index
+          });
+        }
+        var item = {
+          id: hit._index + '-' + hit._id, // unique id in list
+          index: hit._index,
+          templateUrl: 'plugins/es/templates/wot/lookup_item_{0}.html'.format(hit._index),
+          state: 'app.view_{0}'.format(hit._index),
+          stateParams: {id: hit._id, title: hit._source.title},
+          creationTime: hit._source.creationTime,
+          memberCount: hit._source.memberCount,
+          type: hit._source.type
+        };
+        values = [item];
+        datas.push(item);
+        avatarFieldName = 'thumbnail';
+      }
+
+      avatar = esHttp.image.fromHit(hit, avatarFieldName);
+
+      _.forEach(values, function (data) {
+        data.avatar = avatar;
+        _fillSearchResultFromHit(data, hit);
+      });
+    });
+
+    // Add divider on top
+    if (_.keys(indices).length) {
+      datas.splice(0, 0, {
+        id: 'divider-identities',
+        divider: true,
+        index: 'profile'
+      });
+    }
+  }
+
+  function search(options) {
+    return searchText(undefined, options);
+  }
+
+  function searchText(text, options) {
+    options = options || {};
+    var request = {
+      highlight: {fields : {title : {}, tags: {}}},
+      from: options.from || 0,
+      size: options.size || 100,
+      _source: options._source || ["title", "avatar._content_type", "time", "city"]
+    };
+
+    if (!text) {
+      delete request.highlight; // highlight not need
+      request.sort = {time: 'desc'};
+    }
+    else {
+      request.query = {};
+      request.query.bool = {
+        should: [
+          {match: {title: {
+                query: text,
+                boost: 2
+              }}},
+          {prefix: {title: text}}
+        ]
+      };
+      var tags = text ? esHttp.util.parseTags(text) : undefined;
+      if (tags) {
+        request.query.bool.should.push({terms: {tags: tags}});
+      }
+    }
+
+    if (options.mixedSearch) {
+      console.debug("[ES] [profile] Mixed search: enable");
+      if (text) {
+        request.indices_boost = {
+          "user" : 100,
+          "page" : 1,
+          "group" : 0.01
+        };
+      }
+      request._source = request._source.concat(["description","creationTime", "membersCount", "type"]);
+    }
+
+    var search = options.mixedSearch ? that.raw.mixedSearch : that.raw.search;
+    return search(request)
+      .then(function(res) {
+        var result = [];
+        _fillSearchResultsFromHits(result, res);
+        return result;
+      });
+  }
+
   function onWotSearch(text, datas, pubkeyAtributeName, deferred) {
     deferred = deferred || $q.defer();
     if (!text && (!datas || !datas.length)) {
@@ -240,73 +359,10 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       };
     }
 
-    var hits;
-
     var search = mixedSearch ? that.raw.mixedSearch : that.raw.search;
     search(request)
       .then(function(res) {
-        hits = res.hits;
-        if (hits.total > 0) {
-          var indices = {};
-          var values;
-          _.forEach(hits.hits, function(hit) {
-
-            var avatarFieldName = 'avatar';
-            // User profile
-            if (hit._index == "user") {
-              values = dataByPubkey && dataByPubkey[hit._id];
-              if (!values) {
-                var value = {};
-                value[pubkeyAtributeName] = hit._id;
-                values=[value];
-                datas.push(value);
-              }
-
-              avatar = esHttp.image.fromHit(hit, 'avatar');
-            }
-
-            // Page or group
-            else if (hit._index != "user") {
-              if (!indices[hit._index]) {
-                indices[hit._index] = true;
-                // add a separator
-                datas.push({
-                  id: 'divider-' + hit._index,
-                  divider: true,
-                  index: hit._index
-                });
-              }
-              var item = {
-                id: hit._index + '-' + hit._id, // unique id in list
-                index: hit._index,
-                templateUrl: 'plugins/es/templates/wot/lookup_item_{0}.html'.format(hit._index),
-                state: 'app.view_{0}'.format(hit._index),
-                stateParams: {id: hit._id, title: hit._source.title},
-                creationTime: hit._source.creationTime,
-                memberCount: hit._source.memberCount,
-                type: hit._source.type
-              };
-              values=[item];
-              datas.push(item);
-              avatarFieldName = 'thumbnail';
-            }
-
-            avatar = esHttp.image.fromHit(hit, avatarFieldName);
-            _.forEach(values, function(data) {
-              data.avatar= avatar;
-              _fillSearchResultFromHit(data, hit);
-            });
-          });
-
-          // Add divider on top
-          if (_.keys(indices).length) {
-            datas.splice(0,0, {
-              id: 'divider-identities',
-              divider: true,
-              index: 'profile'
-            });
-          }
-        }
+        _fillSearchResultsFromHits(datas, res, dataByPubkey, pubkeyAtributeName);
         deferred.resolve(datas);
       })
       .catch(function(err){
@@ -390,10 +446,12 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
   });
 
   return {
+    search: search,
+    searchText: searchText,
     getAvatarAndName: getAvatarAndName,
     get: getProfile,
-    add: esHttp.record.post('/user/profile', {tagFields: ['title', 'description']}),
-    update: esHttp.record.post('/user/profile/:id/_update', {tagFields: ['title', 'description']}),
+    add: esHttp.record.post('/user/profile', {tagFields: ['title', 'description'], creationTime: true}),
+    update: esHttp.record.post('/user/profile/:id/_update', {tagFields: ['title', 'description'], creationTime: true}),
     avatar: esHttp.get('/user/profile/:id?_source=avatar'),
     fillAvatars: fillAvatars
   };
