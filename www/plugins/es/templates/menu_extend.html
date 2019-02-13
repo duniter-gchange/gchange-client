@@ -1,7 +1,15 @@
 
 <!-- Main section -->
-<ng-if ng-if="enable && extensionPoint === 'menu-main'">
-
+<ng-if ng-if="enable && extensionPoint === 'menu-main' && expertMode">
+  <ion-item menu-close
+            class="item item-icon-left"
+            active-link="active"
+            active-link-path-prefix="#/app/network"
+            ui-sref="app.network">
+    <i class="icon ion-cloud"></i>
+    <span translate>MENU.NETWORK</span>
+  </ion-item>
+  <a id="helptip-menu-btn-network"></a>
 
 </ng-if>
 
@@ -35,26 +43,17 @@
 <!-- User section -->
 <ng-if ng-if="enable && extensionPoint === 'menu-user'">
 
-  <!--<div menu-close class="item item-icon-left" active-link="active"
-            active-link-path-prefix="#/app/user/message"
-            ng-class="{'item-menu-disable': !login}"
-            ng-click="loginAndGo('app.user_message')">
-    <i class="icon ion-email"></i>
-    <span translate>MENU.MESSAGES</span>
-    <span class="badge badge-positive"
-          ng-if="$root.walletData.messages.unreadCount">{{$root.walletData.messages.unreadCount}}</span>
-  </div>-->
-  <ion-item menu-close
-            class="item item-icon-left"
-            active-link="active"
-            active-link-path-prefix="#/app/network"
-            ui-sref="app.network">
-    <i class="icon ion-cloud"></i>
-    <span translate>MENU.NETWORK</span>
-  </ion-item>
-  <a id="helptip-menu-btn-network"></a>
-
   <div class="visible-xs visible-sm">
+    <div menu-close class="item item-icon-left" active-link="active"
+         active-link-path-prefix="#/app/user/message"
+         ng-class="{'item-menu-disable': !login}"
+         ng-click="loginAndGo('app.user_message')">
+      <i class="icon ion-email"></i>
+      <span translate>MENU.MESSAGES</span>
+      <span class="badge badge-positive"
+            ng-if="$root.walletData.messages.unreadCount">{{$root.walletData.messages.unreadCount}}</span>
+    </div>
+
     <div menu-close class="item item-icon-left" active-link="active"
          active-link-path-prefix="#/app/notifications"
          ng-class="{'item-menu-disable': !login}"

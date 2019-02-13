@@ -234,14 +234,18 @@ function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
       .then(function(){
         console.debug("[ES] [document] Websocket opened in {0} ms".format(Date.now()- now));
         wsChanges.on(function(change) {
-          if (!$scope.search.last) return; // ignore
-          return esDocument.fromHit(change)
+          if (!$scope.search.last || !change) return; // ignore
+          esDocument.fromHit(change)
             .then(function(doc) {
-              if (change._operation === 'DELETE') $scope.onDeleteDocument(doc)
-              else $scope.onNewDocument(doc)
-          })
+              if (change._operation === 'DELETE') {
+                $scope.onDeleteDocument(doc);
+              }
+              else {
+                $scope.onNewDocument(doc);
+              }
+          });
         });
-    })
+    });
   };
 
   $scope.onNewDocument = function(document) {
