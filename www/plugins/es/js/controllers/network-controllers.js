@@ -567,8 +567,8 @@ function PeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHttp)
           // find the current peer
           var peers = (res && res.peers || []).reduce(function(res, json) {
             var peer = new EsPeer(json);
-            return (peer.getEndpoints('ES_CORE_API') || []).reduce(function(res, ep) {
-              var ep = esHttp.node.parseEndPoint(ep);
+            return (peer.getEndpoints('ES_CORE_API') || []).reduce(function(res, epStr) {
+              var ep = esHttp.node.parseEndPoint(epStr);
               if((ep.dns == node.host || ep.ipv4 == node.host || ep.ipv6 == node.host) && (
                 ep.port == node.port)) {
                 peer.ep = ep;
