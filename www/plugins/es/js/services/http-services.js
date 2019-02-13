@@ -219,7 +219,12 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       var oldOpen = wsChanges.open;
       wsChanges.open = function() {
         return oldOpen.call(wsChanges).then(function(sock) {
-          sock && sock.send(source);
+          if(sock) {
+            sock.send(source);
+          }
+          else {
+            console.warn('Trying to access ws changes, but no sock anymore... already open ?');
+          }
         });
       };
       return wsChanges;

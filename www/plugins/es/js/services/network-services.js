@@ -372,7 +372,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
                 peer.software = '?';
                 peer.version = '?';
                 return peer; // continue
-              })
+              });
           });
       },
 
