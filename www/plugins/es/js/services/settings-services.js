@@ -20,14 +20,25 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
       excludes: ['newIssueVersion', 'timeout', 'cacheTimeMs', 'time', 'login', 'build'],
       plugins: {
         es: {
-          excludes: ['enable', 'host', 'port', 'wsPort', 'fallbackNodes']
+          excludes: ['enable', 'host', 'port', 'wsPort', 'fallbackNodes', 'minVersion', 'document']
         }
       },
       helptip: {
         excludes: ['installDocUrl']
       }
     },
-    defaultSettings = angular.merge({
+    fixedSettings = {
+      plugins: {
+        es: {
+          minVersion: "1.2.0",
+          document: {
+            index: 'user',
+            type: 'profile'
+          }
+        }
+      }
+    },
+    defaultSettings = angular.extend({
         plugins: {
           es: {
             askEnable: false,
@@ -50,7 +61,10 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
             geoDistance: '20km'
           }
         }
-    }, {plugins: {es: csConfig.plugins && csConfig.plugins.es || {}}}),
+    },
+      fixedSettings,
+      {plugins: {es: csConfig.plugins && csConfig.plugins.es || {}}}
+    ),
     that = this,
     api = new Api('esSettings'),
     previousRemoteData,
@@ -105,7 +119,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
 
   // Load settings
   function loadSettings(pubkey, keypair) {
-    var now = new Date().getTime();
+    var now = Date.now();
     return $q.all([
         CryptoUtils.box.keypair.fromSignKeypair(keypair),
         that.get({id: pubkey})
@@ -126,7 +140,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
         var record = res._source;
         // Do not apply if same version
         if (record.time === csSettings.data.time) {
-          console.debug('[ES] [settings] Loaded user settings in '+ (new Date().getTime()-now) +'ms (no update need)');
+          console.debug('[ES] [settings] Loaded user settings in '+ (Date.now()-now) +'ms (no update need)');
           return;
         }
         var nonce = CryptoUtils.util.decode_base58(record.nonce);
@@ -135,7 +149,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
           .then(function(json) {
             var settings = JSON.parse(json || '{}');
             settings.time = record.time;
-            console.debug('[ES] [settings] Loaded user settings in '+ (new Date().getTime()-now) +'ms');
+            console.debug('[ES] [settings] Loaded user settings in '+ (Date.now()-now) +'ms');
             //console.debug(settings);
 
             return settings;

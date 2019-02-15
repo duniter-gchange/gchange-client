@@ -128,7 +128,13 @@
 
       <a class="title gray" ng-click="showAboutModal()" title="{{:locale:'HOME.BTN_ABOUT'|translate}}">
         <!-- version -->
-        <span translate="COMMON.APP_VERSION" translate-values="{version: config.version}"></span>
+        <span title="{{:locale:'HOME.BTN_ABOUT'|translate}}"
+              ng-class="{'assertive': $root.newRelease}">
+          <!-- warning icon, if new version available -->
+          <i ng-if="$root.newRelease" class="ion-alert-circled assertive"></i>
+
+          {{:locale:'COMMON.APP_VERSION'|translate:{version: config.version} }}
+        </span>
         |
         <!-- about -->
         <span translate>HOME.BTN_ABOUT</span>

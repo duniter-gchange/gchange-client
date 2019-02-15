@@ -42,12 +42,12 @@
 
         <div class="item">
           <h2 class="gray">
-            <a ng-if="formData.city" ui-sref="app.wot_lookup.tab_registry({location:formData.city})">
+            <a ng-if="formData.city" ui-sref="app.registry_lookup({location:formData.city})">
               <i class="icon ion-location"></i>
               <span ng-bind-html="formData.city"></span>
             </a>
             <span ng-if="formData.city && formData.type">&nbsp;|&nbsp;</span>
-            <a ng-if="formData.type" ui-sref="app.wot_lookup.tab_registry({type:formData.type})">
+            <a ng-if="formData.type" ui-sref="app.registry_lookup({type:formData.type})">
               <i class="cion-page-{{formData.type}}"></i>
               {{'REGISTRY.TYPE.ENUM.'+formData.type|upper|translate}}
             </a>
@@ -106,7 +106,7 @@
         <ion-item ng-if="formData.category || formData.address">
           <h4 ng-if="formData.category">
             <span class="gray" translate>REGISTRY.VIEW.CATEGORY</span>
-            <a class="positive" ng-if="formData.category" ui-sref="app.wot_lookup.tab_registry({category:formData.category.id})">
+            <a class="positive" ng-if="formData.category" ui-sref="app.registry_lookup({category:formData.category.id})">
               <span ng-bind-html="formData.category.name"></span>
             </a>
           </h4>

@@ -25,12 +25,14 @@
           <span class="input-label hidden-xs" translate>LOGIN.SALT</span>
           <input ng-if="!showSalt"
                  name="username" type="password" placeholder="{{'LOGIN.SALT_HELP' | translate}}"
+                 autocomplete="off"
                  ng-model="formData.username"
                  ng-model-options="{ debounce: 650 }"
                  class="highlight-light"
                  required >
           <input ng-if="showSalt"
                  name="username" type="text" placeholder="{{'LOGIN.SALT_HELP' | translate}}"
+                 autocomplete="off"
                  ng-model="formData.username"
                  ng-model-options="{ debounce: 650 }"
                  class="highlight-light"

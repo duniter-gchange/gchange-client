@@ -285,7 +285,8 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
         cleanEventsByContext('requirements');
 
         // Get requirements
-        BMA.wot.requirements({pubkey: data.pubkey})
+        $q.when({})
+        //BMA.wot.requirements({pubkey: data.pubkey})
         .then(function(res){
           if (!res.identities || res.identities.length === 0) {
             resetRequirements();

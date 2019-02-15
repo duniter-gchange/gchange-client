@@ -25,7 +25,7 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
       },
       raw = {
         search: esHttp.post('/:index/:type/_search'),
-        searchText: esHttp.get('/:index/:type/_search?q=:text')
+        searchText: esHttp.get('/:index/:type/_search?q=:text&_source=:source')
       };
 
     function _initOptions(options) {
@@ -147,7 +147,7 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
         from: options.from || 0,
         size: options.size || constants.DEFAULT_LOAD_SIZE,
         sort: options.sort || 'time:desc',
-        _source: options._source || fields.commons.join(',')
+        source: options._source && options._source.join(',') || fields.commons.join(',')
       };
 
       console.debug('[ES] [wallet] [document] [{0}/{1}] Loading documents...'.format(

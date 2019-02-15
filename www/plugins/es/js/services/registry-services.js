@@ -216,7 +216,7 @@ angular.module('cesium.es.registry.services', ['ngResource', 'cesium.services', 
       // parse description as Html
       if (!options.raw) {
         record.description = esHttp.util.parseAsHtml(record.description, {
-          tagState: 'app.wot_lookup.tab_registry'
+          tagState: 'app.registry_lookup'
         });
       }
 

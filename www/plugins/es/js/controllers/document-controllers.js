@@ -45,6 +45,7 @@ function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
   $scope.defaultSizeLimit = $scope.defaultSizeLimit || (UIUtils.screen.isSmall() ? 50 : 100);
   $scope.helptipPrefix = 'helptip-document';
   $scope.compactMode = angular.isDefined($scope.compactMode) ? $scope.compactMode : true;
+  $scope._source = $scope._source || ["issuer", "hash", "time", "creationTime", "title", "message"];
 
   /**
    * Enter into the view
@@ -78,8 +79,12 @@ function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
       options.sort[$scope.search.sort] = (!$scope.search.asc ? "desc" : "asc");
     }
     else { // default sort
-      options.sort = {creationTime:'desc', time:'desc'};
+      options.sort = {time:'desc'};
     }
+
+    // Included fields
+    options._source = options._source || $scope._source;
+
     return options;
   };
 
@@ -320,7 +325,7 @@ function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
     delete $scope.search.limit;
   };
 
-  csWallet.api.data.on.unauth($scope, $scope.resetData);
+  csWallet.api.data.on.logout($scope, $scope.resetData);
 
   // for DEV only
   /*$timeout(function() {

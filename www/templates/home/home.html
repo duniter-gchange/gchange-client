@@ -14,7 +14,7 @@
 
       <h4>
         <span class="hidden-xs" translate>HOME.MESSAGE</span>
-        <!--<br class="hidden-xs"/>-->
+
         <span ng-show="!loading" ng-bind-html="'HOME.MESSAGE_CURRENCY'|translate:{currency: $root.currency.name}"></span>
       </h4>
 
@@ -40,6 +40,7 @@
 
         <!-- Help tour (NOT ready yet for small device)
         <button type="button"
+                ng-show="login"
                 class="button button-block button-stable button-raised icon-left icon ion-easel ink-dark hidden-xs"
                 ng-click="startHelpTour()" >
           {{'COMMON.BTN_HELP_TOUR'|translate}}
@@ -48,24 +49,23 @@
         <cs-extension-point name="buttons"></cs-extension-point>
 
         <button type="button"
-                class="button button-block button-positive button-raised icon icon-left ion-locked ink-dark"
-                ng-click="loginAndGo('app.view_wallet')" ng-show="!login" translate>COMMON.BTN_LOGIN</button>
+                class="button button-block button-positive button-raised icon ink-dark"
+                ng-click="showJoinModal()" ng-if="!login" translate>LOGIN.CREATE_FREE_ACCOUNT</button>
 
         <button type="button"
                 class="button button-block button-positive button-raised icon icon-left ion-person ink-dark"
                 ui-sref="app.view_wallet" ng-show="login" translate>MENU.ACCOUNT</button>
 
         <br class="visible-xs visible-sm"/>
-        <div class="text-center no-padding "
-             ng-show="!login">
+        <!-- login link -->
+        <div class="text-center no-padding" ng-show="!login">
           <br class="visible-xs visible-sm"/>
-          {{'LOGIN.NO_ACCOUNT_QUESTION'|translate}}
+          {{'LOGIN.HAVE_ACCOUNT_QUESTION'|translate}}
           <b>
-            <a class="assertive hidden-xs hidden-sm" ng-click="showJoinModal()" translate>
-              LOGIN.CREATE_ACCOUNT
+            <a class="positive hidden-xs hidden-sm" ng-click="loginAndGo('app.view_wallet')" translate>
+              COMMON.BTN_LOGIN
             </a>
           </b>
-
         </div>
 
         <!-- disconnect link -->
@@ -77,8 +77,8 @@
         </div>
 
         <button type="button"
-              class="button button-block button-calm button-raised icon icon-left ion-wand ink-dark visible-xs visible-sm"
-              ng-click="showJoinModal()" ng-show="!login" translate>LOGIN.CREATE_ACCOUNT</button>
+                class="button button-block button-calm button-raised icon icon-left ion-wand ink-dark visible-xs visible-sm"
+                ng-click="showJoinModal()" ng-show="!login" translate>LOGIN.CREATE_ACCOUNT</button>
 
       </div>
 

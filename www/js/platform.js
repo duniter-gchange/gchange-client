@@ -1,6 +1,92 @@
 
 angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
 
+  // Translation i18n
+  .config(function ($translateProvider, csConfig) {
+    'ngInject';
+
+    $translateProvider
+      .uniformLanguageTag('bcp47')
+      .determinePreferredLanguage()
+      // Cela fait bugger les placeholder (pb d'affichage des accents en FR)
+      //.useSanitizeValueStrategy('sanitize')
+      .useSanitizeValueStrategy(null)
+      .fallbackLanguage([csConfig.fallbackLanguage ? csConfig.fallbackLanguage : 'en'])
+      .useLoaderCache(true);
+  })
+
+  .config(function($httpProvider, csConfig) {
+    'ngInject';
+
+    // Set default timeout
+    $httpProvider.defaults.timeout = !!csConfig.timeout ? csConfig.timeout : 300000 /* default timeout */;
+
+    //Enable cross domain calls
+    $httpProvider.defaults.useXDomain = true;
+
+    //Remove the header used to identify ajax call  that would prevent CORS from working
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+    // removeIf(no-device)
+    // Group http request response processing (better performance when many request)
+    $httpProvider.useApplyAsync(true);
+    // endRemoveIf(no-device)
+  })
+
+
+  .config(function($compileProvider, csConfig) {
+    'ngInject';
+
+    $compileProvider.debugInfoEnabled(!!csConfig.debug);
+  })
+
+  .config(function($animateProvider) {
+    'ngInject';
+
+    $animateProvider.classNameFilter( /\banimate-/ );
+  })
+
+  // Configure cache (used by HTTP requests) default max age
+  .config(function (CacheFactoryProvider, csConfig) {
+    'ngInject';
+    angular.extend(CacheFactoryProvider.defaults, { maxAge: csConfig.cacheTimeMs || 60 * 5000 /*5min*/});
+  })
+
+  // Configure screen size detection
+  .config(function(screenmatchConfigProvider) {
+    'ngInject';
+
+    screenmatchConfigProvider.config.rules = 'bootstrap';
+  })
+
+  .config(function($ionicConfigProvider) {
+    'ngInject';
+
+    // JS scrolling need for iOs (see http://blog.ionic.io/native-scrolling-in-ionic-a-tale-in-rhyme/)
+    var enableJsScrolling = ionic.Platform.isIOS();
+    $ionicConfigProvider.scrolling.jsScrolling(enableJsScrolling);
+
+    // Configure the view cache
+    $ionicConfigProvider.views.maxCache(5);
+  })
+
+  .config(function(IdleProvider, csConfig) {
+    'ngInject';
+
+    IdleProvider.idle(csConfig.logoutIdle||10*60/*10min*/);
+    IdleProvider.timeout(csConfig.logoutTimeout||15); // display warning during 15s
+  })
+
+  .factory('$exceptionHandler', function() {
+    'ngInject';
+
+    return function(exception, cause) {
+      if (cause) console.error(exception, cause);
+      else console.error(exception);
+    };
+  })
+
+
   .factory('csPlatform', function (ionicReady, $rootScope, $q, $state, $translate, $timeout, UIUtils,
                                    BMA, Device, csHttp, csConfig, csSettings, csCurrency, csWallet) {
 
@@ -48,28 +134,71 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
 
       var fallbackNode = csSettings.data.fallbackNodes && fallbackNodeIndex < csSettings.data.fallbackNodes.length && csSettings.data.fallbackNodes[fallbackNodeIndex++];
       if (!fallbackNode) {
-        throw 'PEER_CONNECTION_ERROR';
+        throw 'ERROR.CHECK_NETWORK_CONNECTION';
       }
       var newServer = fallbackNode.host + ((!fallbackNode.port && fallbackNode.port != 80 && fallbackNode.port != 443) ? (':' + fallbackNode.port) : '');
-      return $translate('CONFIRM.USE_FALLBACK_NODE', {old: BMA.server, new: newServer})
-        .then(function(msg) {
-          return UIUtils.alert.confirm(msg);
+
+      // Skip is same as actual node
+      if (BMA.node.same(fallbackNode.host, fallbackNode.port)) {
+        console.debug('[platform] Skipping fallback node [{0}]: same as actual node'.format(newServer));
+        return checkBmaNodeAlive(); // loop (= go to next node)
+      }
+
+      // Try to get summary
+      return csHttp.get(fallbackNode.host, fallbackNode.port, '/node/summary', fallbackNode.port==443 || BMA.node.forceUseSsl)()
+        .catch(function(err) {
+          console.error('[platform] Could not reach fallback node [{0}]: skipping'.format(newServer));
+          // silent, but return no result (will loop to the next fallback node)
         })
-        .then(function (confirm) {
-          if (!confirm) return;
+        .then(function(res) {
+          if (!res) return checkBmaNodeAlive(); // Loop
 
-          csSettings.data.node = fallbackNode;
-          csSettings.data.node.temporary = true;
-          csHttp.cache.clear();
+          return $translate('CONFIRM.USE_FALLBACK_NODE', {old: BMA.server, new: newServer})
+            .then(function(msg) {
+              return UIUtils.alert.confirm(msg);
+            })
+            .then(function (confirm) {
+              if (!confirm) return;
 
-          // loop
-          return BMA.copy(fallbackNode)
-            .then(checkBmaNodeAlive);
+              // Only change BMA node in settings
+              csSettings.data.node = fallbackNode;
+
+              // Add a marker, for UI
+              csSettings.data.node.temporary = true;
+
+              csHttp.cache.clear();
+
+              // loop
+              return BMA.copy(fallbackNode)
+                .then(checkBmaNodeAlive);
+            });
         });
     }
 
     function isStarted() {
       return started;
+    }
+
+    function getLatestRelease() {
+      var latestRelease = csSettings.data.latestReleaseUrl && csHttp.uri.parse(csSettings.data.latestReleaseUrl);
+      if (latestRelease) {
+        return csHttp.get(latestRelease.host, latestRelease.protocol == 'https:' ? 443 : latestRelease.port, "/" + latestRelease.pathname)()
+          .then(function (json) {
+            if (json && json.name && json.tag_name && json.html_url) {
+              return {
+                version: json.name,
+                url: json.html_url,
+                isNewer: (csHttp.version.compare(csConfig.version, json.name) < 0)
+              };
+            }
+          })
+          .catch(function(err) {
+            // silent (just log it)
+            console.error('[platform] Failed to get Cesium latest version', err);
+          })
+          ;
+      }
+      return $q.when();
     }
 
     function addListeners() {
@@ -153,10 +282,10 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
       BMA.stop();
 
       return $timeout(function() {
-          enableChangeState();
-          started = false;
-          startPromise = null;
-        }, 500);
+        enableChangeState();
+        started = false;
+        startPromise = null;
+      }, 500);
     }
 
     return  {
@@ -165,7 +294,125 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
       ready: ready,
       restart: restart,
       start: start,
-      stop: stop
+      stop: stop,
+      version: {
+        latest: getLatestRelease
+      }
     };
   })
+
+  .run(function($rootScope, $translate, $state, $window, $urlRouter, ionicReady,
+                Device, UIUtils, $ionicConfig, PluginService, csPlatform, csWallet, csSettings, csConfig, csCurrency) {
+    'ngInject';
+
+    // Allow access to service data, from HTML templates
+    $rootScope.config = csConfig;
+    $rootScope.settings = csSettings.data;
+    $rootScope.currency = csCurrency.data;
+    $rootScope.walletData = csWallet.data;
+    $rootScope.device = Device;
+
+    // Compute the root path
+    var hashIndex = $window.location.href.indexOf('#');
+    $rootScope.rootPath = (hashIndex != -1) ? $window.location.href.substr(0, hashIndex) : $window.location.href;
+    console.debug('[app] Root path is [' + $rootScope.rootPath + ']');
+
+    // removeIf(device)
+    // -- Automatic redirection to HTTPS
+    if ((csConfig.httpsMode === true || csConfig.httpsMode == 'true' ||csConfig.httpsMode === 'force') &&
+      $window.location.protocol != 'https:') {
+      $rootScope.$on('$stateChangeStart', function (event, next, nextParams, fromState) {
+        var path = 'https' + $rootScope.rootPath.substr(4) + $state.href(next, nextParams);
+        if (csConfig.httpsModeDebug) {
+          console.debug('[app] [httpsMode] --- Should redirect to: ' + path);
+          // continue
+        }
+        else {
+          $window.location.href = path;
+        }
+      });
+    }
+    // endRemoveIf(device)
+
+    // We use 'ionicReady()' instead of '$ionicPlatform.ready()', because this one is callable many times
+    ionicReady().then(function() {
+
+      // Keyboard
+      if (Device.keyboard.enable) {
+        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+        // for form inputs)
+        Device.keyboard.hideKeyboardAccessoryBar(true);
+
+        // iOS: do not push header up when opening keyboard
+        // (see http://ionicframework.com/docs/api/page/keyboard/)
+        if (ionic.Platform.isIOS()) {
+          Device.keyboard.disableScroll(true);
+        }
+      }
+
+      // Ionic Platform Grade is not A, disabling views transitions
+      if (ionic.Platform.grade.toLowerCase() != 'a') {
+        console.info('[app] Disabling UI effects, because plateform\'s grade is [' + ionic.Platform.grade + ']');
+        UIUtils.setEffects(false);
+      }
+
+      // Status bar style
+      if (window.StatusBar) {
+        // org.apache.cordova.statusbar required
+        StatusBar.styleDefault();
+      }
+
+      // Get latest release
+      csPlatform.version.latest()
+        .then(function(release) {
+          if (release && release.isNewer) {
+            console.info('[app] New release detected [{0}]'.format(release.version));
+            $rootScope.newRelease = release;
+          }
+          else {
+            console.info('[app] Current version [{0}] is the latest release'.format(csConfig.version));
+          }
+        });
+
+      // Make sure platform is started
+      return csPlatform.ready();
+    });
+  })
 ;
+
+// Workaround to add "".startsWith() if not present
+if (typeof String.prototype.startsWith !== 'function') {
+  console.debug("Adding String.prototype.startsWith() -> was missing on this platform");
+  String.prototype.startsWith = function(prefix, position) {
+    return this.indexOf(prefix, position) === 0;
+  };
+}
+
+// Workaround to add "".startsWith() if not present
+if (typeof String.prototype.trim !== 'function') {
+  console.debug("Adding String.prototype.trim() -> was missing on this platform");
+  // Make sure we trim BOM and NBSP
+  var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+  String.prototype.trim = function() {
+    return this.replace(rtrim, '');
+  };
+}
+
+// Workaround to add Math.trunc() if not present - fix #144
+if (Math && typeof Math.trunc !== 'function') {
+  console.debug("Adding Math.trunc() -> was missing on this platform");
+  Math.trunc = function(number) {
+    return (number - 0.5).toFixed();
+  };
+}
+
+// Workaround to add "".format() if not present
+if (typeof String.prototype.format !== 'function') {
+  console.debug("Adding String.prototype.format() -> was missing on this platform");
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) {
+      return typeof args[number] != 'undefined' ? args[number] : match;
+    });
+  };
+}

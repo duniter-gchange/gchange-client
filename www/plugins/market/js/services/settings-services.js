@@ -19,7 +19,7 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
         plugins: {
           market: {
             enable: true,
-            geoDistance: "20km"
+            geoDistance: "100km"
           },
           converse: {
             jid : "anonymous.duniter.org",
@@ -153,6 +153,9 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
       data.plugins.market = angular.copy(defaultSettings.plugins.market);
     }
 
+    data.plugins.es.document = data.plugins.es.document || {};
+    data.plugins.es.document.index = 'user,page,group,market';
+    data.plugins.es.document.type = 'profile,record,comment';
     // Init currencies
     _initCurrencies(data);
 

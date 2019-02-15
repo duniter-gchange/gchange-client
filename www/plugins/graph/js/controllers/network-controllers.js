@@ -16,27 +16,8 @@ angular.module('cesium.graph.network.controllers', ['chart.js', 'cesium.graph.se
             }
           }
         })
-
-        .extendState('app.view_peer', {
-          points: {
-            'general': {
-              templateUrl: "plugins/graph/templates/network/view_peer_extend.html",
-              controller: 'GpPeerViewExtendCtrl'
-            }
-          }
-        })
       ;
 
-      $stateProvider
-        .state('app.view_peer_stats', {
-          url: "/network/peer/:pubkey/stats",
-          views: {
-            'menuContent': {
-              templateUrl: "plugins/graph/templates/network/view_peer_stats.html",
-              controller: 'GpBlockchainTxCountCtrl'
-            }
-          }
-        });
     }
   })
 

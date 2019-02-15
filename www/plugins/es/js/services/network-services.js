@@ -1,7 +1,7 @@
 
 angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'])
 
-.factory('esNetwork', function($rootScope, $q, $interval, $timeout, $window, csConfig, esHttp, Api, BMA) {
+.factory('esNetwork', function($rootScope, $q, $interval, $timeout, $window, csSettings, csConfig, esHttp, Api, BMA) {
   'ngInject';
 
   factory = function(id) {
@@ -32,10 +32,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
         expertMode: false,
         knownBlocks: [],
         mainBlock: null,
-        uidsByPubkeys: null,
         searchingPeersOnNetwork: false,
-        difficulties: null,
-        ws2pHeads: null,
         timeout: csConfig.timeout
       },
 
@@ -57,15 +54,16 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
           asc: true
         };
         data.expertMode = false;
-        data.memberPeersCount = 0;
         data.knownBlocks = [];
         data.mainBlock = null;
-        data.uidsByPubkeys = {};
         data.loading = true;
         data.searchingPeersOnNetwork = false;
-        data.difficulties = null;
-        data.ws2pHeads = null;
         data.timeout = csConfig.timeout;
+
+        data.document = {
+          index : csSettings.data.plugins.es && csSettings.data.plugins.es.document && csSettings.data.plugins.es.document.index || 'user',
+          type: csSettings.data.plugins.es && csSettings.data.plugins.es.document && csSettings.data.plugins.es.document.type || 'profile'
+        };
       },
 
       hasPeers = function() {
@@ -110,24 +108,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
           }
         }, 1000);
 
-        var initJobs = [
-          // Load uids
-          data.pod.wot.member.uids()
-            .then(function(uids) {
-              data.uidsByPubkeys = uids;
-            })
-            .catch(function(err) {
-              data.uidsByPubkeys = {};
-              //throw err;
-            })
-        ];
-
-        // Get difficulties (expert mode only)
-        if (data.expertMode) {
-          //initJobs.push(loadDifficulties());
-        }
-
-        return $q.all(initJobs)
+        return $q.when()
           .then(function(){
             // online nodes
             if (data.filter.online) {
@@ -178,7 +159,8 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
         if (!data.filter) return true;
 
         // Filter on endpoints
-        if (data.filter.endpointFilter && !peer.hasEndpoint(data.filter.endpointFilter)) {
+        if (data.filter.endpointFilter &&
+          (peer.ep && peer.ep.api && peer.ep.api !== data.filter.endpointFilter || !peer.hasEndpoint(data.filter.endpointFilter))) {
           return false;
         }
 
@@ -242,7 +224,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
                   }
                   else if (refreshedPeer && (refreshedPeer.online === data.filter.online || data.filter.online === 'all')) {
                     console.debug("[network] {0} endpoint [{1}] is {2}".format(
-                      refreshedPeer.api = refreshedPeer.ep.api || '',
+                      refreshedPeer.ep && refreshedPeer.ep.api || '',
                       refreshedPeer.server,
                       refreshedPeer.online ? 'UP' : 'DOWN'
                     ));
@@ -287,7 +269,6 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
         peer.server = peer.getServer();
         peer.dns = peer.getDns();
         peer.blockNumber = peer.block && peer.block.replace(/-.+$/, '');
-        peer.uid = peer.pubkey && data.uidsByPubkeys[peer.pubkey];
         peer.id = peer.keyID();
         return [peer];
       },
@@ -303,7 +284,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
         }
 
         // App running in SSL: Do not try to access not SSL node,
-        if (isHttpsMode && !peer.ep.useSsl) {
+        if (isHttpsMode && !peer.isSsl()) {
           peer.online = (peer.status === 'UP');
           peer.buid = constants.UNKNOWN_BUID;
           delete peer.version;
@@ -315,6 +296,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
         if (peer.ep.useTor) {
           peer.online = (peer.status == 'UP');
           peer.buid = constants.UNKNOWN_BUID;
+          delete peer.software;
           delete peer.version;
           return $q.when(peer);
         }
@@ -354,26 +336,51 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
             peer.online=false;
             peer.currentNumber = null;
             peer.buid = null;
-            peer.uid = data.uidsByPubkeys[peer.pubkey];
             return peer;
           })
           .then(function(peer) {
-            // Exit if offline, or not expert mode or too small device
-            if (!data.filter.online || !peer || !peer.online || !data.expertMode) return peer;
+            // Exit if offline
+            if (!data.filter.online || !peer || !peer.online) return peer;
 
-            // Get Version
-            return peer.api.node.summary()
-              .then(function(res){
-                peer.software = res && res.duniter && res.duniter.software;
-                peer.version = res && res.duniter && res.duniter.version;
-                return peer;
-              })
-              .catch(function() {
-                peer.software = '?';
-                peer.version = '?';
-                return peer; // continue
-              });
-          });
+            peer.docCount = {};
+
+            return $q.all([
+              // Get summary (software and version) - expert mode only
+              !data.expertMode ? $q.when() : peer.api.node.summary()
+                .then(function(res){
+                  peer.software = res && res.duniter && res.duniter.software || undefined;
+                  peer.version = res && res.duniter && res.duniter.version || '?';
+                })
+                .catch(function() {
+                  peer.software = undefined;
+                  peer.version = '?';
+                }),
+
+              // Count documents
+              peer.api.record.count(data.document.index,data.document.type)
+                .then(function(count){
+                  peer.docCount.record = count;
+                })
+                .catch(function() {
+                  peer.docCount.record = undefined;
+                }),
+
+              // Count email subscription
+              peer.api.subscription.count({recipient: peer.pubkey, type: 'email'})
+                .then(function(res){
+                  peer.docCount.emailSubscription = res;
+                })
+                .catch(function() {
+                  peer.docCount.emailSubscription = undefined; // continue
+                })
+            ])
+
+        })
+        .then(function() {
+          // Clean the instance
+          delete peer.api;
+          return peer;
+        });
       },
 
       flushNewPeersAndSort = function(newPeers, updateMainBuid) {
@@ -415,7 +422,6 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
       sortPeers = function(updateMainBuid) {
         // Construct a map of buid, with peer count and medianTime
         var buids = {};
-        data.memberPeersCount = 0;
         _.forEach(data.peers, function(peer){
           if (peer.buid) {
             var buid = buids[peer.buid];
@@ -435,7 +441,6 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
               buid.count++;
             }
           }
-          data.memberPeersCount += peer.uid ? 1 : 0;
         });
         // Compute pct of use, per buid
         _.forEach(_.values(buids), function(buid) {
@@ -458,13 +463,13 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
           var score = 0;
           if (data.sort.type) {
             var sortScore = 0;
-            sortScore += (data.sort.type == 'uid' ? computeScoreAlphaValue(peer.uid||peer.pubkey, 3, data.sort.asc) : 0);
+            sortScore += (data.sort.type == 'name' ? computeScoreAlphaValue(peer.name, 10, data.sort.asc) : 0);
+            sortScore += (data.sort.type == 'software' ? computeScoreAlphaValue(peer.software, 10, data.sort.asc) : 0);
             sortScore += (data.sort.type == 'api') &&
               ((peer.hasEndpoint('ES_SUBSCRIPTION_API') && (data.sort.asc ? 1 : -1) || 0) +
               (peer.hasEndpoint('ES_USER_API') && (data.sort.asc ? 0.01 : -0.01) || 0) +
               (peer.isSsl() && (data.sort.asc ? 0.75 : -0.75) || 0)) || 0;
-            sortScore += (data.sort.type == 'difficulty' ? (peer.difficulty ? (data.sort.asc ? (10000-peer.difficulty) : peer.difficulty): 0) : 0);
-            sortScore += (data.sort.type == 'current_block' ? (peer.currentNumber ? (data.sort.asc ? (1000000000 - peer.currentNumber) : peer.currentNumber) : 0) : 0);
+            sortScore += (data.sort.type == 'doc_count' ? (peer.docCount ? (data.sort.asc ? (1000000000 - peer.docCount) : peer.docCount) : 0) : 0);
             score += (10000000000 * sortScore);
           }
           score += (1000000000 * (peer.online ? 1 : 0));
@@ -574,8 +579,8 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
         if (data.pod) {
           console.info('[network-service] Stopping...');
           removeListeners();
-          resetData();
         }
+        resetData();
       },
 
       isStarted = function() {

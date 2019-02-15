@@ -1,7 +1,7 @@
 
 angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
 
-.factory('csCurrency', function($rootScope, $q, $timeout, BMA, Api) {
+.factory('csCurrency', function($rootScope, $q, $timeout, BMA, Api, csSettings) {
   'ngInject';
 
   function factory(id, BMA) {
@@ -10,7 +10,8 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
         // Avoid to many call on well known currencies
         WELL_KNOWN_CURRENCIES: {
           g1: {
-            firstBlockTime: 1488987127
+            firstBlockTime: 1488987127,
+            medianTimeOffset: 3600
           }
         }
       },
@@ -33,6 +34,7 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
       data.cache = {};
       data.node = BMA;
       data.currentUD = null;
+      data.medianTimeOffset = 0;
       started = false;
       startPromise = undefined;
       api.data.raise.reset(data);
@@ -67,6 +69,7 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
         .then(function(res){
           data.name = res.currency;
           data.parameters = res;
+          data.medianTimeOffset = res.avgGenTime * res.medianTimeBlocks / 2;
           return res;
         });
     }
@@ -97,24 +100,13 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
 
     function loadCurrentUD() {
       return BMA.blockchain.stats.ud()
-        .then(function(res){
+        .then(function(res) {
           // Special case for currency init
           if (!res.result.blocks.length) {
             data.currentUD = data.parameters ? data.parameters.ud0 : -1;
             return data.currentUD ;
           }
-          else {
-            var lastBlockWithUD = res.result.blocks[res.result.blocks.length - 1];
-            return BMA.blockchain.block({ block: lastBlockWithUD })
-              .then(function(block){
-                data.currentUD = powBase(block.dividend, block.unitbase);
-                return data.currentUD;
-              })
-              .catch(function(err) {
-                data.currentUD = null;
-                throw err;
-              });
-          }
+          return _safeLoadCurrentUD(res, res.result.blocks.length - 1);
         })
         .catch(function(err) {
           data.currentUD = null;
@@ -122,7 +114,40 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
         });
     }
 
+    /**
+     * Load the last UD, with a workaround if last block with UD is not found in the node
+     * @param res
+     * @param blockIndex
+     * @returns {*}
+     * @private
+     */
+    function _safeLoadCurrentUD(res, blockIndex) {
+      // Special case for currency init
+      if (!res.result.blocks.length || blockIndex < 0) {
+        data.currentUD = data.parameters ? data.parameters.ud0 : -1;
+        return data.currentUD ;
+      }
+      else {
+        var lastBlockWithUD = res.result.blocks[blockIndex];
+        return BMA.blockchain.block({ block: lastBlockWithUD })
+          .then(function(block){
+            data.currentUD = powBase(block.dividend, block.unitbase);
+            return data.currentUD;
+          })
+          .catch(function(err) {
+            console.error("[currency] Unable to load last block with UD, with number {0}".format(lastBlockWithUD));
+            if (blockIndex > 0) {
+              console.error("[currency] Retrying to load UD from a previous block...");
+              return _safeLoadCurrentUD(res, blockIndex-1);
+            }
+            data.currentUD = null;
+            throw err;
+          });
+      }
+    }
+
     function getData() {
+
       if (started) { // load only once
         return $q.when(data);
       }
@@ -147,10 +172,12 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
 
     function onBlock(json) {
       var block = new Block(json);
-      block.cleanData(); // keep only count values
-      console.debug('[currency] Received new block', block);
+      block.cleanData(); // Remove unused content (arrays...) and keep items count
+
+      console.debug('[currency] Received new block [' + block.number + '-' + block.hash + ']');
 
       data.currentBlock = block;
+      data.currentBlock.receivedAt = moment().utc().unix();
 
       data.medianTime = block.medianTime;
       data.membersCount = block.membersCount;
@@ -165,14 +192,11 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
     }
 
     function addListeners() {
-      /* open web socket on block
-      var wsBlock = BMA.websocket.block();
-      wsBlock.on(onBlock);*/
-
       listeners = [
         // Listen if node changed
-        BMA.api.node.on.restart($rootScope, restart, this)
-        //,wsBlock.close
+        BMA.api.node.on.restart($rootScope, restart, this),
+        // open web socket on block
+        BMA.websocket.block().onListener(onBlock)
       ];
     }
 
@@ -201,7 +225,7 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
 
     function start() {
       console.debug('[currency] Starting...');
-      var now = new Date().getTime();
+      var now = Date.now();
 
       startPromise = BMA.ready()
 
@@ -212,7 +236,7 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
         .then(function() {
           addListeners();
 
-          console.debug('[currency] Started in ' + (new Date().getTime() - now) + 'ms');
+          console.debug('[currency] Started in ' + (Date.now() - now) + 'ms');
 
           started = true;
           startPromise = null;
@@ -225,6 +249,61 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
         });
 
       return startPromise;
+    }
+
+    var currentBlockField = getDataField('currentBlock');
+
+    function getCurrent(cache) {
+      // Get field (and make sure service is started)
+      return currentBlockField()
+
+        .then(function(currentBlock) {
+
+          var now = moment().utc().unix();
+
+          if (cache) {
+            if (currentBlock && (now - currentBlock.receivedAt) < 60/*1min*/) {
+              //console.debug('[currency] Use current block #'+ currentBlock.number +' from cache (age='+ (now - currentBlock.receivedAt) + 's)');
+              return currentBlock;
+            }
+
+            if (!currentBlock) {
+              // Should never occur, if websocket /ws/block works !
+              console.warn('[currency] No current block in cache: get it from network. Websocket [/ws/block] may not be started ?');
+            }
+          }
+
+          return BMA.blockchain.current()
+            .catch(function(err){
+              // Special case for currency init (root block not exists): use fixed values
+              if (err && err.ucode == BMA.errorCodes.NO_CURRENT_BLOCK) {
+                return {number: 0, hash: BMA.constants.ROOT_BLOCK_HASH, medianTime: moment().utc().unix()};
+              }
+              throw err;
+            })
+            .then(function(current) {
+              data.currentBlock = current;
+              data.currentBlock.receivedAt = now;
+              return current;
+            });
+        });
+    }
+
+    function getLastValidBlock() {
+      if (csSettings.data.blockValidityWindow <= 0) {
+        return getCurrent(true);
+      }
+
+      return getCurrent(true)
+        .then(function(current) {
+          var number = current.number - csSettings.data.blockValidityWindow;
+          return (number > 0) ? BMA.blockchain.block({block: number}) : current;
+        });
+    }
+
+    // Get time in second (UTC - medianTimeOffset)
+    function getDateNow() {
+      return moment().utc().unix() - (data.medianTimeOffset || constants.WELL_KNOWN_CURRENCIES.g1.medianTimeOffset);
     }
 
     // TODO register new block event, to get new UD value
@@ -247,10 +326,16 @@ angular.module('cesium.currency.services', ['ngApi', 'cesium.bma.services'])
       stop: stop,
       data: data,
       get: getData,
+      name: getDataField('name'),
       parameters: getDataField('parameters'),
       currentUD: getDataField('currentUD'),
+      medianTimeOffset: getDataField('medianTimeOffset'),
       blockchain: {
-        current: getDataField('currentBlock')
+        current: getCurrent,
+        lastValid: getLastValidBlock
+      },
+      date: {
+        now: getDateNow
       },
       // api extension
       api: api,

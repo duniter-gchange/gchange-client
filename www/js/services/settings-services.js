@@ -47,23 +47,30 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
   constants = {
     STORAGE_KEY: 'GCHANGE_SETTINGS'
   },
-  defaultSettings = angular.merge({
-    timeout : 4000,
-    cacheTimeMs: 60000, /*1 min*/
-    useRelative: false,
+  // Settings that user cannot change himself (only config can override this values)
+  fixedSettings = {
     timeWarningExpireMembership: 2592000 * 2 /*=2 mois*/,
     timeWarningExpire: 2592000 * 3 /*=3 mois*/,
+    timeout : 4000,
+    cacheTimeMs: 60000, /*1 min*/
+    latestReleaseUrl: "https://api.github.com/repos/duniter-gchange/gchange-client/releases/latest",
+    newIssueUrl: "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug",
+    userForumUrl: "https://forum.gchange.fr",
+    minVersion: '1.2.0', // min duniter version
+    httpsMode: false
+  },
+  defaultSettings = angular.extend(
+    {
+    useRelative: false,
     useLocalStorage: true, // override to false if no device
     walletHistoryTimeSecond: 30 * 24 * 60 * 60 /*30 days*/,
     walletHistorySliceSecond: 5 * 24 * 60 * 60 /*download using 5 days slice*/,
     rememberMe: true, // override to false if no device
     showLoginSalt: false,
-    httpsMode: false,
     expertMode: false,
     decimalCount: 2,
     uiEffects: true,
-    minVersion: '0.1.0', // TODO update this if need
-    newIssueUrl: "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug",
+    blockValidityWindow: 6,
     helptip: {
       enable: false,
       installDocUrl: "https://github.com/duniter-gchange/gchange-client/blob/master/README.md",
@@ -83,7 +90,9 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
     locale: {
       id: fixLocaleWithLog(csConfig.defaultLanguage || $translate.use()) // use config locale if set, or browser default
     }
-  }, csConfig),
+  },
+    fixedSettings,
+    csConfig),
 
   data = {},
   previousData,
@@ -163,12 +172,23 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
     // Apply stored settings
     angular.merge(data, newData);
 
-    // Always force the usage of deffault settings
-    // This is a workaround for DEV (TODO: implement edition in settings ?)
-    data.timeWarningExpire = defaultSettings.timeWarningExpire;
-    data.timeWarningExpireMembership = defaultSettings.timeWarningExpireMembership;
-    data.cacheTimeMs = defaultSettings.cacheTimeMs;
-    data.timeout = defaultSettings.timeout;
+    // Force some fixed settings
+    _.keys(fixedSettings).forEach(function(key) {
+      data[key] = defaultSettings[key]; // This will apply fixed value (override by config.js file)
+    });
+
+    // Replace OLD default duniter node, by gchange node
+    if ((data.plugins && data.plugins.es.host && data.plugins.es.port) &&
+        (!data.node || (data.node.host !== data.plugins.es.host))) {
+      var oldBmaNode = data.node.host;
+      var newBmaNode = data.plugins.es.host;
+      console.warn("[settings] Replacing duniter node {{0}} with gchange pod {{1}}".format(oldBmaNode, newBmaNode));
+      data.node = {
+        host: newBmaNode,
+        port: data.plugins.es.port,
+        useSsl: data.plugins.es.useSsl
+      };
+    }
 
     // Apply the new locale (only if need)
     if (localeChanged) {

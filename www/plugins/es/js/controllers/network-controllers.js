@@ -510,13 +510,19 @@ function PeerInfoPopoverController($scope, $q, csSettings, csCurrency, csHttp, e
   $scope.load();
 }
 
-function PeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHttp) {
+function PeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHttp, csHttp, csSettings) {
   'ngInject';
 
   $scope.node = {};
   $scope.loading = true;
   $scope.isHttps = ($window.location.protocol === 'https:');
   $scope.isReachable = true;
+  $scope.options = {
+    document: {
+      index : csSettings.data.plugins.es && csSettings.data.plugins.es.document && csSettings.data.plugins.es.document.index || 'user',
+      type: csSettings.data.plugins.es && csSettings.data.plugins.es.document && csSettings.data.plugins.es.document.type || 'profile'
+    }
+  };
 
   $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
     // Enable back button (workaround need for navigation outside tabs - https://stackoverflow.com/a/35064602)
@@ -551,6 +557,7 @@ function PeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHttp)
       node.port = serverParts[1];
       node.wsPort = serverParts[2] || serverParts[1];
     }
+    node.url = csHttp.getUrl(node.host, node.port, undefined/*path*/, node.useSsl);
 
     angular.merge($scope.node,
       useTor ?
@@ -567,15 +574,14 @@ function PeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHttp)
           // find the current peer
           var peers = (res && res.peers || []).reduce(function(res, json) {
             var peer = new EsPeer(json);
-            return (peer.getEndpoints('ES_CORE_API') || []).reduce(function(res, epStr) {
-              var ep = esHttp.node.parseEndPoint(epStr);
-              if((ep.dns == node.host || ep.ipv4 == node.host || ep.ipv6 == node.host) && (
-                ep.port == node.port)) {
-                peer.ep = ep;
-                return res.concat(peer);
-              }
-              return res;
-            }, res);
+            if (!peer.hasEndpoint('GCHANGE_API')) return res;
+            var ep = esHttp.node.parseEndPoint(peer.getEndpoints('GCHANGE_API')[0]);
+            if((ep.dns == node.host || ep.ipv4 == node.host || ep.ipv6 == node.host) && (
+              ep.port == node.port)) {
+              peer.ep = ep;
+              return res.concat(peer);
+            }
+            return res;
           }, []);
           var peer = peers.length && peers[0];
 
@@ -600,18 +606,26 @@ function PeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHttp)
           $scope.node.currency = json.currency;
         }),
 
+      // Get node doc count
+      $scope.node.record.count($scope.options.document.index, $scope.options.document.type)
+        .then(function(count) {
+          $scope.node.docCount = count;
+        }),
+
       // Get known peers
       $scope.node.network.peers()
         .then(function(json) {
-          var peers = json.peers.map(function (p) {
+          var peers = json.peers.reduce(function (res, p) {
             var peer = new EsPeer(p);
+            if (!peer.hasEndpoint('GCHANGE_API')) return res;
             peer.online = p.status == 'UP';
             peer.blockNumber = peer.block.replace(/-.+$/, '');
+            peer.ep = esHttp.node.parseEndPoint(peer.getEndpoints('GCHANGE_API')[0]);
             peer.dns = peer.getDns();
             peer.id = peer.keyID();
             peer.server = peer.getServer();
-            return peer;
-          });
+            return res.concat(peer);
+          }, []);
 
           // Extend (add uid+name+avatar)
           return csWot.extendAll([$scope.node].concat(peers))
@@ -621,7 +635,7 @@ function PeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHttp)
                 var score = 1;
                 score += 10000 * (p.online ? 1 : 0);
                 score += 1000  * (p.hasMainConsensusBlock ? 1 : 0);
-                score += 100   * (p.uid ? 1 : 0);
+                score += 100   * (p.name ? 1 : 0);
                 return -score;
               });
               $scope.motion.show({selector: '.item-peer'});
@@ -638,8 +652,8 @@ function PeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHttp)
   };
 
   $scope.selectPeer = function(peer) {
-    // Skipp offline or WS2P node
-    if (!peer.online || peer.isWs2p()) return;
+    // Skip offline
+    if (!peer.online ) return;
 
     var stateParams = {server: peer.getServer()};
     if (peer.isSsl()) {
@@ -654,10 +668,10 @@ function PeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHttp)
   /* -- manage link to raw document -- */
 
   $scope.openRawPeering = function(event) {
-    return $scope.openLink(event, $scope.node.url + '/network/peering');
+    return $scope.openLink(event, $scope.node.url + '/network/peering?pretty');
   };
 
   $scope.openRawCurrentBlock = function(event) {
-    return $scope.openLink(event, $scope.node.url + '/blockchain/current');
+    return $scope.openLink(event, $scope.node.url + '/network/peering?pretty');
   };
 }

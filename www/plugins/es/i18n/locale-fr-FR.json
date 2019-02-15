@@ -361,12 +361,23 @@
       "HEADER_ISSUER": "Emetteur",
       "HEADER_RECIPIENT": "Destinataire",
       "READ": "Lu",
+      "DOCUMENT_TYPE": "Type",
+      "DOCUMENT_TITLE": "Titre",
       "BTN_REMOVE": "Supprimer ce document",
       "BTN_COMPACT": "Compacter",
       "HAS_REGISTERED": "a créé ou modifié son profile",
       "POPOVER_ACTIONS": {
         "TITLE": "Actions",
         "REMOVE_ALL": "Supprimer ces documents..."
+      },
+      "TYPE": {
+        "USER_PROFILE": "Profile",
+        "MARKET_RECORD": "Annonce",
+        "MARKET_COMMENT": "Commentaire sur une annonce",
+        "PAGE_RECORD": "Page",
+        "PAGE_COMMENT": "Commentaire sur une page",
+        "GROUP_RECORD": "Groupe",
+        "GROUP_COMMENT": "Commentaire sur un groupe"
       }
     },
     "INFO": {
@@ -413,8 +424,11 @@
     }
   },
   "ES_PEER": {
+    "NAME": "Nom",
     "DOCUMENTS": "Documents",
-    "SOFTWARE": "Logiciel"
+    "SOFTWARE": "Logiciel",
+    "DOCUMENT_COUNT": "Nombre de documents",
+    "EMAIL_SUBSCRIPTION_COUNT": "{{emailSubscription}} abonnés aux notifications par email"
   },
   "EVENT": {
     "NODE_STARTED": "Votre noeud ES API <b>{{params[0]}}</b> est démarré",

@@ -49,17 +49,11 @@
               <div class="item item-input"
                    ng-class="{ 'item-input-error': saltForm.$submitted && saltForm.username.$invalid}">
                 <span class="input-label" translate>LOGIN.SALT</span>
-                <input ng-if="!showUsername"
-                       name="username" type="password" placeholder="{{'LOGIN.SALT_HELP' | translate}}"
+                <input name="username" type="text" placeholder="{{'LOGIN.SALT_HELP' | translate}}"
+                       autocomplete="off"
                        ng-change="formDataChanged()"
                        ng-model="formData.username"
-                       ng-minlength="4"
-                       required>
-                <input ng-if="showUsername"
-                       name="username" type="text" placeholder="{{'LOGIN.SALT_HELP' | translate}}"
-                       ng-change="formDataChanged()"
-                       ng-model="formData.username"
-                       ng-minlength="4"
+                       ng-minlength="8"
                        required>
               </div>
               <div class="form-errors"
@@ -77,13 +71,8 @@
               <div class="item item-input"
                    ng-class="{ 'item-input-error': saltForm.$submitted && saltForm.confirmSalt.$invalid}">
                 <span class="input-label pull-right" translate>ACCOUNT.NEW.SALT_CONFIRM</span>
-                <input ng-if="!showUsername"
-                       name="confirmUsername" type="password"
-                       placeholder="{{'ACCOUNT.NEW.SALT_CONFIRM_HELP' | translate}}"
-                       ng-model="formData.confirmUsername"
-                       compare-to="formData.username">
-                <input ng-if="showUsername"
-                       name="confirmUsername" type="text"
+                <input name="confirmUsername" type="text"
+                       autocomplete="off"
                        placeholder="{{'ACCOUNT.NEW.SALT_CONFIRM_HELP' | translate}}"
                        ng-model="formData.confirmUsername"
                        compare-to="formData.username">
@@ -94,17 +83,6 @@
                 <div class="form-error" ng-message="compareTo">
                   <span translate="ERROR.SALT_NOT_CONFIRMED"></span>
                 </div>
-              </div>
-
-              <!-- Show values -->
-              <div class="item item-toggle dark">
-                <span translate>COMMON.SHOW_VALUES</span>
-                <label class="toggle toggle-royal">
-                  <input type="checkbox" ng-model="showUsername">
-                  <div class="track">
-                    <div class="handle"></div>
-                  </div>
-                </label>
               </div>
 
               <div class="padding hidden-xs text-right">
@@ -141,13 +119,14 @@
                        name="password" type="password" placeholder="{{'LOGIN.PASSWORD_HELP' | translate}}"
                        ng-model="formData.password"
                        ng-change="formDataChanged()"
-                       ng-minlength="6"
+                       ng-minlength="8"
                        required>
                 <input ng-if="showPassword"
                        name="text" type="text" placeholder="{{'LOGIN.PASSWORD_HELP' | translate}}"
+                       autocomplete="off"
                        ng-model="formData.password"
                        ng-change="formDataChanged()"
-                       ng-minlength="6"
+                       ng-minlength="8"
                        required>
               </div>
               <div class="form-errors"
@@ -172,6 +151,7 @@
                        compare-to="formData.password">
                 <input ng-if="showPassword"
                        name="confirmPassword" type="text"
+                       autocomplete="off"
                        placeholder="{{'ACCOUNT.NEW.PASSWORD_CONFIRM_HELP' | translate}}"
                        ng-model="formData.confirmPassword"
                        compare-to="formData.password">
@@ -228,6 +208,7 @@
                    ng-class="{'item-input-error': profileForm.$submitted && profileForm.title.$invalid}">
                 <span class="input-label" translate>MARKET.JOIN.PROFILE.TITLE</span>
                 <input name="title" type="text" placeholder="{{'MARKET.JOIN.PROFILE.TITLE_HELP' | translate}}"
+                       autocomplete="off"
                        ng-model="formData.title"
                        ng-minlength="4"
                        ng-maxlength="100"
@@ -283,15 +264,7 @@
               <div class="dark pull-right padding-right" ng-if="formData.computing">
                 <ion-spinner icon="android"></ion-spinner>
               </div>
-              <span class="input-label" translate>COMMON.PUBKEY</span>
-              <span class="gray text-no-wrap" ng-if="formData.computing" translate>
-                ACCOUNT.NEW.COMPUTING_PUBKEY
-              </span>
-              <span class="gray text-no-wrap" ng-if="formData.pubkey">
-                {{formData.pubkey}}
-              </span>
             </ion-item>
-
           </div>
 
           <div class="padding hidden-xs text-right">

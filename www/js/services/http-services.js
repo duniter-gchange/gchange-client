@@ -164,11 +164,13 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
       if (self.delegate.readyState == 3) {
         return $q.reject('Unable to connect to websocket ['+self.delegate.url+']');
       }
-      console.debug('[http] Waiting websocket ['+self.path+'] opening...');
 
       if (self.waitDuration >= timeout) {
-        console.debug("[http] Will retry openning websocket later...");
-        self.waitRetryDelay = 2000; // 2 seconds
+        self.waitRetryDelay = self.waitRetryDelay && Math.min(self.waitRetryDelay + 2000, 30000) || 2000; // add 2 seconds, until 30s)
+        console.debug("[http] Will retry websocket [{0}] in {1}s...".format(self.path, Math.round(self.waitRetryDelay/1000)));
+      }
+      else if (Math.round(self.waitDuration / 1000) % 10 === 0){
+        console.debug('[http] Waiting websocket ['+self.path+']...');
       }
 
       return $timeout(function(){
@@ -198,9 +200,9 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
           self.delegate.onopen = function(e) {
             console.debug('[http] Listening on websocket ['+self.path+']...');
             sockets.push(self);
-            self.delegate.openTime = new Date().getTime();
+            self.delegate.openTime = Date.now();
           };
-          self.delegate.onclose = function() {
+          self.delegate.onclose = function(closeEvent) {
 
             // Remove from sockets arrays
             var index = _.findIndex(sockets, function(socket){return socket.path === self.path;});
@@ -215,12 +217,24 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
 
             // If unexpected close event, reopen the socket (fix #535)
             else {
-              console.debug('[http] Unexpected close of websocket ['+path+'] (open '+ (new Date().getTime() - self.delegate.openTime) +'ms ago): re-opening...');
+              if (self.delegate.openTime) {
+                console.debug('[http] Unexpected close of websocket [{0}] (open {1} ms ago): re-opening...', path, (Date.now() - self.delegate.openTime));
 
-              self.delegate = null;
+                // Force new connection
+                self.delegate = null;
 
-              // Loop, but without the already registered callback
-              _open(self, null, params);
+                // Loop, but without the already registered callback
+                _open(self, null, params);
+              }
+              else if (closeEvent) {
+                console.debug('[http] TODO -- Unexpected close of websocket [{0}]: error code: '.format(path), closeEvent);
+
+                // Force new connection
+                self.delegate = null;
+
+                // Loop, but without the already registered callback
+                _open(self, null, params);
+              }
             }
           };
         });
@@ -340,6 +354,17 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
         uri = parts.protocol + uri;
       }
 
+      // On desktop, open into external tool
+      if (parts.protocol == 'mailto:'  && Device.isDesktop()) {
+        try {
+          nw.Shell.openExternal(uri);
+          return;
+        }
+        catch(err) {
+          console.error("[http] Failed not open 'mailto:' URI into external tool.");
+        }
+      }
+
       // Check if device is enable, on special tel: or mailto: protocole
       var validProtocol = (parts.protocol == 'mailto:' || parts.protocol == 'tel:') && Device.enable;
       if (!validProtocol) {
@@ -349,18 +374,37 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
         return;
       }
     }
+
     // Note: If device enable, then target=_system will use InAppBrowser cordova plugin
     var openTarget = (options.target || (Device.enable ? '_system' : '_blank'));
 
+    // If desktop, try to open into external browser
+    if (openTarget === '_blank' || openTarget === '_system'  && Device.isDesktop()) {
+      try {
+        nw.Shell.openExternal(uri);
+        return;
+      }
+      catch(err) {
+        console.error("[http] Failed not open URI into external browser.");
+      }
+    }
+
     // If desktop, should always open in new window (no tabs)
     var openOptions;
-    if (openTarget == '_blank' && Device.isDesktop()) {
+    if (openTarget === '_blank' && Device.isDesktop()) {
+
+      if (nw && nw.Shell) {
+        nw.Shell.openExternal(uri);
+        return false;
+      }
+      // Override default options
       openOptions= "location=1,titlebar=1,status=1,menubar=1,toolbar=1,resizable=1,scrollbars=1";
       // Add width/height
       if ($window.screen && $window.screen.width && $window.screen.height) {
         openOptions += ",width={0},height={1}".format(Math.trunc($window.screen.width/2), Math.trunc($window.screen.height/2));
       }
     }
+
     var win = $window.open(uri,
       openTarget,
       openOptions);
@@ -370,17 +414,78 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
       win.moveTo($window.screen.width/2/2, $window.screen.height/2/2);
       win.focus();
     }
+
   }
 
-  // Get time (UTC)
+  // Get time in second (UTC)
   function getDateNow() {
-    return Math.floor(moment().utc().valueOf() / 1000);
+    return moment().utc().unix();
+  }
+
+  function isPositiveInteger(x) {
+    // http://stackoverflow.com/a/1019526/11236
+    return /^\d+$/.test(x);
+  }
+
+  /**
+   * Compare two software version numbers (e.g. 1.7.1)
+   * Returns:
+   *
+   *  0 if they're identical
+   *  negative if v1 < v2
+   *  positive if v1 > v2
+   *  Nan if they in the wrong format
+   *
+   *  E.g.:
+   *
+   *  assert(version_number_compare("1.7.1", "1.6.10") > 0);
+   *  assert(version_number_compare("1.7.1", "1.7.10") < 0);
+   *
+   *  "Unit tests": http://jsfiddle.net/ripper234/Xv9WL/28/
+   *
+   *  Taken from http://stackoverflow.com/a/6832721/11236
+   */
+  function compareVersionNumbers(v1, v2){
+    var v1parts = v1.split('.');
+    var v2parts = v2.split('.');
+
+    // First, validate both numbers are true version numbers
+    function validateParts(parts) {
+      for (var i = 0; i < parts.length; ++i) {
+        if (!isPositiveInteger(parts[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (!validateParts(v1parts) || !validateParts(v2parts)) {
+      return NaN;
+    }
+
+    for (var i = 0; i < v1parts.length; ++i) {
+      if (v2parts.length === i) {
+        return 1;
+      }
+
+      if (v1parts[i] === v2parts[i]) {
+        continue;
+      }
+      if (v1parts[i] > v2parts[i]) {
+        return 1;
+      }
+      return -1;
+    }
+
+    if (v1parts.length != v2parts.length) {
+      return -1;
+    }
+
+    return 0;
   }
 
   function isVersionCompatible(minVersion, actualVersion) {
-    // TODO: add implementation
-    console.debug('[http] TODO: implement check version [{0}] compatible with [{1}]'.format(actualVersion, minVersion));
-    return true;
+    console.debug('[http] Checking actual version [{0}] is compatible with min expected version [{1}]'.format(actualVersion, minVersion));
+    return compareVersionNumbers(minVersion, actualVersion) <= 0;
   }
 
   var cache = angular.copy(csCache.constants);
@@ -405,6 +510,7 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
       now: getDateNow
     },
     version: {
+      compare: compareVersionNumbers,
       isCompatible: isVersionCompatible
     },
     cache: cache

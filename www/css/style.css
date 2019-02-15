@@ -159,7 +159,7 @@
 }
 
 .list .item-peer .badge {
-  top: 14px;
+  top: 10px;
   right: 6%;
 }
 
@@ -171,10 +171,13 @@
 
 .list .item-peer .badge.badge-secondary,
 .list .item-peer .badge .badge-secondary {
-  top: 31px;
+  top: 29px;
   font-size: 10px;
-  padding-right: 6px;
+  padding: 1px 4px;
+  padding-right: 0px;
+  font-style: normal;
 }
+
 
 /**********
    Block items

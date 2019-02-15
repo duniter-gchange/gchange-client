@@ -14,7 +14,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
     console.debug('[ES] [https] Enable SSL (forced by config or detected in URL)');
   }
 
-  function Factory(host, port, wsPort, useSsl) {
+  function EsHttp(host, port, wsPort, useSsl) {
 
     var
       that = this,
@@ -549,6 +549,13 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       };
     }
 
+    function countRecord(index, type) {
+      return that.get("/{0}/{1}/_search?size=0".format(index, type))
+        .then(function(res) {
+          return res && res.hits && res.hits.total;
+        });
+    }
+
     function removeRecord(index, type) {
       return function(id) {
         if (!csWallet.isLogin()) return $q.reject('Wallet must be login before sending record to ES node');
@@ -656,7 +663,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         "ipv4": matches[3] || '',
         "ipv6": matches[4] || '',
         "port": matches[5] || 80,
-        "path": matches[6] || ''
+        "path": matches[6] || '',
+        "useSsl": matches[5] == 443
       };
     }
 
@@ -715,7 +723,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       },
       record: {
         post: postRecord,
-        remove: removeRecord
+        remove: removeRecord,
+        count : countRecord
       },
       image: {
         fromAttachment: imageFromAttachment,
@@ -736,15 +745,34 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
   }
 
 
-  var service = new Factory();
+  var service = new EsHttp();
 
   service.instance = function(host, port, wsPort, useSsl) {
-    return new Factory(host, port, wsPort, useSsl);
+    return new EsHttp(host, port, wsPort, useSsl);
   };
 
   service.lightInstance = function(host, port, useSsl, timeout) {
     port = port || 80;
     useSsl = angular.isDefined(useSsl) ? useSsl : (port == 443);
+
+    function countHits(path, params) {
+      return csHttp.get(host, port, path)(params)
+        .then(function(res) {
+          return res && res.hits && res.hits.total;
+        });
+    }
+
+    function countRecords(index, type) {
+      return countHits("/{0}/{1}/_search?size=0".format(index, type));
+    }
+
+    function countSubscriptions(params) {
+      var queryString = _.keys(params||{}).reduce(function(res, key) {
+        return (res && (res + " AND ") || "") + key + ":" + params[key];
+      }, '');
+      return countHits("/subscription/record/_search?size=0&q=" + queryString);
+    }
+
     return {
       host: host,
       port: port,
@@ -759,7 +787,13 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         peers: csHttp.get(host, port, '/network/peers', useSsl, timeout)
       },
       blockchain: {
-        current: csHttp.get(host, port, '/blockchain/current', useSsl, timeout)
+        current: csHttp.get(host, port, '/blockchain/current?_source=number,hash,medianTime', useSsl, timeout)
+      },
+      record: {
+        count: countRecords
+      },
+      subscription: {
+        count: countSubscriptions
       }
     };
   };

@@ -54,8 +54,8 @@ EsPeer.prototype.getEP = function() {
   if (this.ep) return this.ep;
   var ep = null;
   var epRegex = this.regexp.API_REGEXP;
-  this.endpoints.forEach(function(ep){
-    var matches = !ep && epRegex.exec(ep);
+  this.endpoints.forEach(function(epStr){
+    var matches = !ep && epRegex.exec(epStr);
     if (matches) {
       ep = {
         "api": matches[1] || '',
@@ -63,27 +63,35 @@ EsPeer.prototype.getEP = function() {
         "ipv4": matches[3] || '',
         "ipv6": matches[4] || '',
         "port": matches[5] || 80,
-        "path": matches[6] || ''
+        "path": matches[6] || '',
+        "useSsl": matches[5] == 443
       };
     }
   });
   return ep || {};
 };
 
-EsPeer.prototype.getEndpoints = function(regex) {
-  if (!regex) return this.endpoints;
+EsPeer.prototype.getEndpoints = function(regexp) {
+  if (!regexp) return this.endpoints;
+  if (typeof regexp === 'string') regexp = new RegExp('^' + regexp);
     return this.endpoints.reduce(function(res, ep){
-      return ep.match(regex) ?  res.concat(ep) : res;
+      return ep.match(regexp) ?  res.concat(ep) : res;
     }, []);
 };
 
 EsPeer.prototype.hasEndpoint = function(endpoint){
-  //console.debug('testing if hasEndpoint:' + endpoint);
   var regExp = this.regexp[endpoint] || new RegExp('^' + endpoint);
   var endpoints = this.getEndpoints(regExp);
-  if (!endpoints.length) return false;
-  else return true;
+  return endpoints && endpoints.length > 0;
+};
 
+EsPeer.prototype.hasEsEndpoint = function() {
+  var endpoints = this.getEsEndpoints();
+  return endpoints && endpoints.length > 0;
+};
+
+EsPeer.prototype.getEsEndpoints = function() {
+  return this.getEndpoints(/^(ES_CORE_API|ES_USER_API|ES_SUBSCRIPTION_API|GCHANGE_API)/);
 };
 
 EsPeer.prototype.getDns = function() {
@@ -152,3 +160,4 @@ EsPeer.prototype.isHttp = function() {
   var ep = this.ep || this.getEP();
   return !bma.useTor;
 };
+

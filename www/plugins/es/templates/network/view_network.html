@@ -16,8 +16,6 @@
         <div class="padding padding-xs" style="display: block; height: 60px;">
           <div class="pull-left">
             <h4>
-              <span ng-if="enableFilter && search.type=='member'" translate>PEER.MEMBERS</span>
-              <span ng-if="enableFilter && search.type=='mirror'" translate>PEER.MIRRORS</span>
               <span ng-if="enableFilter && search.type=='offline'" translate>PEER.OFFLINE</span>
               <span ng-if="!enableFilter || !search.type" translate>PEER.ALL_PEERS</span>
               <span ng-if="search.results.length">({{search.results.length}})</span>

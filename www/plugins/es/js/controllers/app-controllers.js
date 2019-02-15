@@ -13,7 +13,7 @@ angular.module('cesium.es.app.controllers', ['ngResource', 'cesium.es.services']
              templateUrl: "plugins/es/templates/menu_extend.html",
              controller: "ESMenuExtendCtrl"
            },
-           'menu-main': {
+           'menu-discover': {
              templateUrl: "plugins/es/templates/menu_extend.html",
              controller: "ESMenuExtendCtrl"
            },

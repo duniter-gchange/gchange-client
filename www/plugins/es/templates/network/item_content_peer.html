@@ -26,19 +26,10 @@
           <span ng-if=":rebind:peer.isSsl()" title="SSL">
             <i class="ion-locked"></i><small class="hidden-md"> SSL</small>
           </span>
-          <span ng-if=":rebind:peer.isBma()" title="BMA">
-            <i class="ion-cloud"></i><small class="hidden-md"> BMA</small>
+          <span ng-if=":rebind:peer.hasEndpoint('ES_SUBSCRIPTION_API')"
+               title="{{'ES_PEER.EMAIL_SUBSCRIPTION_COUNT'|translate: peer.docCount }}">
+            <i class="ion-email"></i> {{:rebind:peer.docCount.emailSubscription || '?'}}
           </span>
-          <span ng-if=":rebind:peer.isWs2p()"
-                ng-click="showWs2pPopover($event, peer)"
-                title="WS2P">
-            <i class="ion-arrow-swap"></i><small class="hidden-md"> WS2P</small>
-          </span>
-        </div>
-        <div ng-if=":rebind:peer.hasEndpoint('ES_SUBSCRIPTION_API')"
-             ng-click="showEndpointsPopover($event, peer, 'ES_SUBSCRIPTION_API')"
-             title="{{'SUBSCRIPTION.SUBSCRIPTION_DIVIDER'|translate}}">
-          <i class="ion-email"></i>
         </div>
         <div ng-if=":rebind:peer.isTor()">
           <i class="ion-bma-tor-api"></i>
@@ -47,22 +38,32 @@
           <i class="ion-bma-tor-api"></i>
         </div>
       </div>
+      <div class="col col-20 no-padding text-center" ng-if="::!expertMode && search.type != 'offline'">
+        <div style="min-width: 50px; padding-top: 5px;" ng-if=":rebind:peer.docCount.emailSubscription!==undefined">
+          <span ng-if=":rebind:peer.hasEndpoint('ES_SUBSCRIPTION_API')"
+              title="{{'ES_PEER.EMAIL_SUBSCRIPTION_COUNT'|translate: peer.docCount }}">
+            <i class="ion-email"></i> {{:rebind:peer.docCount.emailSubscription || '?'}}
+          </span>
+        </div>
+      </div>
       <div class="col col-20 no-padding text-center" ng-if="::expertMode && search.type != 'offline'">
         <h4 class="hidden-sm hidden-xs gray">
           {{:rebind:peer.software||'?'}}
         </h4>
         <h4 class="hidden-sm hidden-xs gray">{{:rebind: peer.version ? ('v'+peer.version) : ''}}</h4>
       </div>
-      <div class="col col-20 no-padding text-center">
-        <span id="{{$index === 0 ? helptipPrefix + '-peer-0-block' : ''}}"
-            class="badge" ng-class=":rebind:{'badge-balanced': peer.hasMainConsensusBlock, 'badge-energized': peer.hasConsensusBlock, 'ng-hide': !peer.currentNumber }">
-
-          {{:rebind:peer.currentNumber|formatInteger}}
-          {{::!expertMode ? ('ES_PEER.DOCUMENTS'|translate|lowercase) : '' }}
+      <div class="col col-20 no-padding text-center" id="{{$index === 0 ? helptipPrefix + '-peer-0-block' : ''}}">
+        <span class="badge badge-stable">
+          {{:rebind:peer.docCount.record !== undefined ? (peer.docCount.record|formatInteger) : '?'}}
+          <span ng-if=":rebind:!expertMode && peer.docCount.record!==undefined">
+            {{::'ES_PEER.DOCUMENTS'|translate|lowercase }}
+          </span>
         </span>
-        <span class="badge badge-secondary" ng-if=":rebind:peer.consensusBlockDelta && expertMode">
-          <i class="ion-clock"></i>&nbsp;
-          {{:rebind:peer.currentNumber}}</span>
+        <span class="badge badge-secondary"
+              ng-class=":rebind:{'balanced': peer.hasMainConsensusBlock, 'energized': peer.hasConsensusBlock, 'ng-hide': !peer.currentNumber }"
+              ng-if="::expertMode">
+          {{:rebind:'BLOCKCHAIN.VIEW.TITLE'|translate: {number:peer.currentNumber} }}
+        </span>
 
       </div>
     </div>

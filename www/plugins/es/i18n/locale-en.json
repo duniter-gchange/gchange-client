@@ -361,12 +361,23 @@
       "HEADER_ISSUER": "Issuer",
       "HEADER_RECIPIENT": "Recipient",
       "READ": "Read",
+      "DOCUMENT_TYPE": "Type",
+      "DOCUMENT_TITLE": "Title",
       "BTN_REMOVE": "Delete this document",
       "BTN_COMPACT": "Compact",
       "HAS_REGISTERED": "a create or edit his profile",
       "POPOVER_ACTIONS": {
         "TITLE": "Actions",
         "REMOVE_ALL": "Delete these documents..."
+      },
+      "TYPE": {
+        "USER_PROFILE": "Profile",
+        "MARKET_RECORD": "Ad",
+        "MARKET_COMMENT": "Comment on a ad",
+        "PAGE_RECORD": "Page",
+        "PAGE_COMMENT": "Comment on a page",
+        "GROUP_RECORD": "Group",
+        "GROUP_COMMENT": "Comment on a group"
       }
     },
     "INFO": {
@@ -413,8 +424,11 @@
     }
   },
   "ES_PEER": {
+    "NAME": "Name",
     "DOCUMENTS": "Documents",
-    "SOFTWARE": "Software"
+    "SOFTWARE": "Software",
+    "DOCUMENT_COUNT": "Number of documents",
+    "EMAIL_SUBSCRIPTION_COUNT": "{{emailSubscription}} subscribers to email notification"
   },
   "EVENT": {
     "NODE_STARTED": "Your node ES API <b>{{params[0]}}</b> is UP",
