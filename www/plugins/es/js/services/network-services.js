@@ -373,7 +373,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
                 .catch(function() {
                   peer.docCount.emailSubscription = undefined; // continue
                 })
-            ])
+            ]);
 
         })
         .then(function() {
