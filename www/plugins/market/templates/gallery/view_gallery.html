@@ -62,7 +62,9 @@
 
                 <a class="item item-list-detail">
                     <ion-scroll direction="x">
-                        <img ng-repeat="picture in cat.pictures track by picture.id" ng-src="{{picture.src}}" ng-click="showPicturesModal(catIndex, $index, true)" class="image-list-thumb"/>
+                        <img ng-repeat="picture in cat.pictures track by picture.id" ng-src="{{::picture.src}}"
+                             title="{{::picture.title}}{{::picture.price ? (' (' + (picture.price | formatAmount:picture) +')') : '' }}"
+                             ng-click="showPicturesModal(catIndex, $index, true)" class="image-list-thumb"/>
                     </ion-scroll>
                 </a>
             </ng-repeat>

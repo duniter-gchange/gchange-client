@@ -69,7 +69,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   $scope.loading = true;
   $scope.motion = UIUtils.motion.fadeSlideInRight;
   $scope.smallscreen = UIUtils.screen.isSmall();
-  $scope.smallpictures = !$scope.smallscreen;
+  $scope.smallpictures = false;
 
   // Screen options
   $scope.options = $scope.options || angular.merge({

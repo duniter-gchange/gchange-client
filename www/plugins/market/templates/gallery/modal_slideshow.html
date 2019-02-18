@@ -23,30 +23,40 @@
 
     <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="activeSlide" class="has-header">
         <ion-slide ng-repeat="record in activeCategory.pictures">
-            <div class="row light no-padding">
-                <div class="col item no-border text-center">
-                    <h1>
+
+
+            <div class="image" ng-style="::{'background-image': record.src ? ('url('+record.src+')') : '' }">
+                <div class="item no-border item-text-wrap dark padding-left">
+                    <h1 class="item-text-wrap" ng-class="{'col-75': record.price && record.type='offer' || record.type='need'}">
                         {{record.title}}
                     </h1>
-                    <span class="badge badge-stable badge-price dark"
-                          ng-if="record.price"
+                    <h3 ng-if="::record.city && record.stock'" >
+                        <i class="ion-location"></i> {{options.location.prefix|translate}} {{record.city}}
+                    </h3>
+
+                    <div class="badge badge-balanced badge-price"
+                          ng-if="::record.price && record.type='offer'"
                           ng-class="{'sold': !record.stock}">
                         {{record.price|formatAmount:record }}
-                    </span>
-                    <span class="badge badge-secondary" ng-if="record.location && record.stock" >
-                        <i class="ion-location"></i> {{options.location.prefix|translate}} {{record.location}}
-                    </span>
-                    <span class="badge badge-assertive badge-secondary" ng-if="!record.stock" translate>
+                    </div>
+                    <div class="badge badge-energized badge-price" ng-if="record.type=='need'">
+                        <i class="cion-market-need"></i>
+                        <span translate>MARKET.TYPE.NEED_SHORT</span>
+                    </div>
+                    <span class="badge badge-assertive badge-secondary" ng-if="::!record.stock" translate>
                         MARKET.COMMON.SOLD
                     </span>
                 </div>
+
+                <div class="card card-description light"
+                     ng-if="::record.src && record.description && true">
+                    <div class="item item-text-wrap">
+                        <i class="ion-quote"></i>
+                        <span ng-bind-html="record.description"></span>
+                    </div>
+                </div>
             </div>
 
-            <div class="image" ng-if="record.src" style="background-image: url( {{record.src}} )"></div>
-
-            <div ng-if="!record.src">
-                {{record.description}}
-            </div>
 
 
         </ion-slide>

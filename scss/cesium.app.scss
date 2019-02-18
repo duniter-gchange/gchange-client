@@ -1253,15 +1253,13 @@ a.underline:hover,
   float: left;
   display: block;
 
-  img {
-    max-height: 150px;
-  }
 }
 
 .gallery.gallery-small .card-gallery img,
 .gallery.gallery-small .card.card-gallery img{
-  max-height: 150px;
+  max-height: 100px;
 }
+
 
 .gallery .card-gallery-new {
   max-height: 199px;

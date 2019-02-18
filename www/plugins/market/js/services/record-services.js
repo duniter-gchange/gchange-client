@@ -436,7 +436,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         var request = {
             from: options.from||0,
             size: options.size||20,
-            _source: options._source || ["category", "title", "price", "unit", "currency", "location", "city", "pictures", "stock"]
+            _source: options._source || ["category", "title", "price", "unit", "currency", "city", "pictures", "stock", "unitbase", "description", "type"]
         };
 
         var matches = [];

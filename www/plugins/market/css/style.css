@@ -50,17 +50,6 @@
     font-weight: normal !important;
 }
 
-.modal-pictures .badge-price  {
-    font-size: 45px !important;
-    line-height: 45px;
-    padding: 12px !important;
-}
-
-.modal-pictures .badge-price.sold  {
-    text-decoration-color: #ef473a;
-    text-decoration-line: line-through;
-    text-decoration-style: solid;
-}
 
 /**
 * Market lookup screen
@@ -180,7 +169,7 @@
     height: 100%;
     top: 0 !important;
     left: 0 !important;
-    background: rgba(0,0,0,0.7);
+    background-color: #000 !important;
 }
 
 .modal-pictures .transparent {
@@ -201,8 +190,39 @@
     height: 600px;
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: center, center;
+    background-position-x: center;
+    background-position-y: top;
 }
+
+.modal-pictures .image > .item {
+    background-color: rgba(255,255,255,0.9) !important;
+}
+
+.modal-pictures .image > .item h3 {
+    margin-top: -10px;
+    font-size: 10pt;
+}
+
+.modal-pictures .badge-price.sold  {
+    text-decoration-color: #ef473a;
+    text-decoration-line: line-through;
+    text-decoration-style: solid;
+}
+
+.modal-pictures .card-description {
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    max-height: 50%;
+    min-height: 150px;
+}
+.modal-pictures .card.card-description {
+    background-color: rgba(0,0,0,0.8) !important;
+}
+.modal-pictures .card.card-description .item {
+    background: transparent;
+}
+
 
 @media screen and (min-width: 768px) {
     .modal-pictures .image {
@@ -225,6 +245,15 @@
         top: 80px;
     }
 
+    .modal-pictures .image {
+        background-position: center, center;
+    }
+
+    .modal-pictures .badge-price  {
+        font-size: 45px !important;
+        line-height: 45px;
+        padding: 12px !important;
+    }
 
     .modal-pictures .badge.badge-secondary {
         font-size: 20px;
@@ -242,6 +271,18 @@
         line-height: 100px;
         height: 110px;
         margin: 0;
+    }
+
+    .modal-pictures .card.card-description {
+        padding: 16px;
+        max-width: 50%;
+    }
+    .modal-pictures .card.card-description .item {
+        font-size: 17pt;
+    }
+    .modal-pictures .image > .item h3 {
+        margin-top: -35px;
+        font-size: 15pt;
     }
 }
 
