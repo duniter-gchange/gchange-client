@@ -333,7 +333,7 @@ function ModalEmailSubscriptionsController($scope, Modals, csSettings, esHttp, c
   $scope.showNetworkLookup = function() {
     return esModals.showNetworkLookup({
       enableFilter: true,
-      endpointFilter: esHttp.constants.ES_USER_API
+      endpointFilter: esHttp.constants.ES_SUBSCRIPTION_API
     })
       .then(function (peer) {
         if (peer) {
