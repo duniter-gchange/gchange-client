@@ -65,6 +65,15 @@
     </platform>
     <platform name="ios">
         <preference name="StatusBarOverlaysWebView" value="true" />
+        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+            <string>To scan QRCode</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
+            <string>To choose a profile picture</string>
+        </edit-config>
+        <config-file mode="add" parent="ITSAppUsesNonExemptEncryption" target="*-Info.plist">
+            <false />
+        </config-file>
         <icon height="20" src="resources/ios/icon/Icon-App-20x20@1x.png" width="20" />
         <icon height="40" src="resources/ios/icon/Icon-App-20x20@2x.png" width="40" />
         <icon height="60" src="resources/ios/icon/Icon-App-20x20@3x.png" width="60" />
