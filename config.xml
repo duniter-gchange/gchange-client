@@ -64,6 +64,28 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
+        <preference name="StatusBarOverlaysWebView" value="true" />
+        <icon height="20" src="resources/ios/icon/Icon-App-20x20@1x.png" width="20" />
+        <icon height="40" src="resources/ios/icon/Icon-App-20x20@2x.png" width="40" />
+        <icon height="60" src="resources/ios/icon/Icon-App-20x20@3x.png" width="60" />
+        <icon height="29" src="resources/ios/icon/Icon-App-29x29@1x.png" width="29" />
+        <icon height="58" src="resources/ios/icon/Icon-App-29x29@2x.png" width="58" />
+        <icon height="87" src="resources/ios/icon/Icon-App-29x29@3x.png" width="87" />
+        <icon height="40" src="resources/ios/icon/Icon-App-40x40@1x.png" width="40" />
+        <icon height="80" src="resources/ios/icon/Icon-App-40x40@2x.png" width="80" />
+        <icon height="120" src="resources/ios/icon/Icon-App-40x40@3x.png" width="120" />
+        <icon height="50" src="resources/ios/icon/Icon-App-40x40@2x.png" width="50" />
+        <icon height="100" src="resources/ios/icon/Icon-App-60x60@2x.png" width="100" />
+        <icon height="57" src="resources/ios/icon/Icon-App-40x40@2x.png" width="57" />
+        <icon height="114" src="resources/ios/icon/Icon-App-60x60@2x.png" width="114" />
+        <icon height="120" src="resources/ios/icon/Icon-App-60x60@2x.png" width="120" />
+        <icon height="180" src="resources/ios/icon/Icon-App-60x60@3x.png" width="180" />
+        <icon height="72" src="resources/ios/icon/Icon-App-76x76@1x.png" width="72" />
+        <icon height="144" src="resources/ios/icon/Icon-App-76x76@2x.png" width="144" />
+        <icon height="76" src="resources/ios/icon/Icon-App-76x76@1x.png" width="76" />
+        <icon height="152" src="resources/ios/icon/Icon-App-76x76@2x.png" width="152" />
+        <icon height="167" src="resources/ios/icon/Icon-App-83.5x83.5@2x.png" width="167" />
+        <icon height="1024" src="resources/ios/icon/ItunesArtwork@2x.png" width="1024" />
     </platform>
     <plugin name="cordova-plugin-camera" spec="^2.4.1" />
     <plugin name="cordova-plugin-console" spec="^1.0.7" />
@@ -72,7 +94,7 @@
     <plugin name="cordova-plugin-minisodium" spec="^1.0.0" />
     <plugin name="cordova-plugin-secure-storage" spec="^2.6.8" />
     <plugin name="cordova-plugin-splashscreen" spec="^3.2.2" />
-    <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-plugin-vibration" spec="^2.1.5" />
     <plugin name="cordova-plugin-websocket" spec="^0.12.2" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />

@@ -410,6 +410,19 @@ $screen-menu:                     845px;
    Fix or extend generic CSS
 **********/
 
+.platform-ios.platform-cordova {
+  .view-container.nav-view-content {
+    height: calc(100% + constant(safe-area-inset-top));
+    height: calc(100% + env(safe-area-inset-top));
+  }
+
+  .button-fab-bottom-right,
+  .button-fab-bottom-left {
+  bottom: 30px;
+}
+
+}
+
 .item.item-icon-right.item-select,
 .item.item-icon-right .item-select {
   select {
@@ -1674,9 +1687,17 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
     height: 150px;
     padding-right: 0px !important;
 
+    .platform-ios.platform-cordova & {
+      height: calc(env(safe-area-inset-top) + 180px);
+    }
+
     .hero {
       height: 150px;
       box-shadow: none; // not need (define in bar-header)
+
+      .platform-ios.platform-cordova & {
+        height: calc(env(safe-area-inset-top) + 160px);
+      }
 
       .content {
         bottom: 0px;
@@ -1686,6 +1707,10 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
 
   #menu .has-header {
     top: 150px;
+
+    .platform-ios.platform-cordova & {
+      top: calc(env(safe-area-inset-top) + 180px);
+    }
   }
 }
 
