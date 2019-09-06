@@ -256,10 +256,6 @@ angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services',
 
               console.debug('[device] Ionic platform ready, with [camera: {0}] [barcode scanner: {1}] [keyboard: {2}] [clipboard: {3}]'
                 .format(exports.camera.enable, exports.barcode.enable, exports.keyboard.enable, exports.clipboard.enable));
-
-              if (cordova.InAppBrowser) {
-                console.debug('[device] Enabling InAppBrowser');
-              }
             }
             else {
               console.debug('[device] Ionic platform ready - no device detected.');
