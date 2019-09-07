@@ -24,13 +24,13 @@ angular.module('cesium.storage.services', [ 'cesium.config'])
     };
 
     exports.getObject = function(key) {
-      return $q.when(JSON.parse(exports.storage[key] || '{}'));
+      return $q.when(JSON.parse(exports.storage[key] || 'null'));
     };
 
     return exports;
   })
 
-  .factory('localStorage', function($window, $q, sessionStorage) {
+  .factory('localStorage', function($window, $q, $log, sessionStorage) {
     'ngInject';
 
     var
@@ -55,7 +55,12 @@ angular.module('cesium.storage.services', [ 'cesium.config'])
     /* -- Use standard browser implementation -- */
 
     exports.standard.put = function(key, value) {
-      exports.standard.storage[key] = value;
+      if (angular.isDefined(value) && value != null) {
+        exports.standard.storage[key] = value;
+      }
+      else {
+        exports.standard.storage.removeItem(key);
+      }
       return $q.when();
     };
 
@@ -69,58 +74,84 @@ angular.module('cesium.storage.services', [ 'cesium.config'])
     };
 
     exports.standard.getObject = function(key) {
-      return $q.when(JSON.parse(exports.standard.storage[key] || '{}'));
+      return $q.when(JSON.parse(exports.standard.storage[key] || 'null'));
     };
 
     /* -- Use secure storage (using a cordova plugin) -- */
 
     // Set a value to the secure storage (or remove if value is not defined)
     exports.secure.put = function(key, value) {
-      var deferred = $q.defer();
-      if (angular.isDefined(value)) {
-        exports.secure.storage.set(
-          function (key) { deferred.resolve(); },
-          function (err) { deferred.reject(err); },
-          key, value);
-      }
-      // Remove
-      else {
-        exports.secure.storage.remove(
-          function (key) { deferred.resolve(); },
-          function (err) { deferred.reject(err); },
-          key);
-      }
-      return deferred.promise;
+      return $q(function(resolve, reject) {
+        if (value !== undefined && value !== null) {
+          exports.secure.storage.set(
+            function (key) {
+              resolve();
+            },
+            function (err) {
+              $log.error(err);
+              reject(err);
+            },
+            key, value);
+        }
+        // Remove
+        else {
+          exports.secure.storage.remove(
+            function () {
+              resolve();
+            },
+            function (err) {
+              $log.error(err);
+              resolve(); // Error = not found
+            },
+            key);
+        }
+      });
     };
 
     // Get a value from the secure storage
     exports.secure.get = function(key, defaultValue) {
-      var deferred = $q.defer();
-      exports.secure.storage.get(
-        function (value) {
-          if (!value && defaultValue) {
-            deferred.resolve(defaultValue);
-          }
-          else {
-            deferred.resolve(value);
-          }
-        },
-        function (err) { deferred.reject(err); },
-        key);
-      return deferred.promise;
+      return $q(function(resolve, reject) {
+        exports.secure.storage.get(
+          function (value) {
+            if (!value && defaultValue) {
+              resolve(defaultValue);
+            }
+            else {
+              resolve(value);
+            }
+          },
+          function (err) {
+            $log.error(err);
+            resolve(); // Error = not found
+          },
+          key);
+      });
     };
 
     // Set a object to the secure storage
     exports.secure.setObject = function(key, value) {
-      return exports.secure.put(key, value ? JSON.stringify(value) : undefined);
+      $log.debug("[storage] Setting object into secure storage, using key=" + key);
+      return $q(function(resolve, reject){
+        exports.secure.storage.set(
+          resolve,
+          reject,
+          key,
+          value ? JSON.stringify(value) : undefined);
+      });
     };
 
     // Get a object from the secure storage
     exports.secure.getObject = function(key) {
-      return exports.secure.storage.get(key)
-        .then(function(value) {
-          return (value && JSON.parse(value)) || {};
-        });
+      $log.debug("[storage] Getting object from secure storage, using key=" + key);
+      return $q(function(resolve, reject){
+        exports.secure.storage.get(
+          function(value) {resolve(JSON.parse(value||'null'));},
+          function(err) {
+            $log.error(err);
+            resolve(); // Error = not found
+          },
+          key);
+      });
     };
 
     function initStandardStorage() {
@@ -187,11 +218,10 @@ angular.module('cesium.storage.services', [ 'cesium.config'])
     function start() {
       if (startPromise) return startPromise;
 
-      var now = new Date().getTime();
+      var now = Date.now();
 
       // Use Cordova secure storage plugin
       if (isDevice) {
-        console.debug("[storage] Starting secure storage...");
         startPromise = initSecureStorage();
       }
 
@@ -202,7 +232,7 @@ angular.module('cesium.storage.services', [ 'cesium.config'])
 
       return startPromise
         .then(function() {
-          console.debug('[storage] Started in ' + (new Date().getTime() - now) + 'ms');
+          console.debug('[storage] Started in ' + (Date.now() - now) + 'ms');
           started = true;
           startPromise = null;
         });
