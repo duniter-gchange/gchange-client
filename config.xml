@@ -64,7 +64,7 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
-        <preference name="StatusBarBackgroundColor" value="#ffffff" />
+        <preference name="StatusBarOverlaysWebView" value="true" />
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
             <string>To scan QRCode</string>
         </edit-config>
