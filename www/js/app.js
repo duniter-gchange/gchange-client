@@ -71,10 +71,8 @@ angular.module('gchange', ['ionic', 'ionic-material', 'ngMessages', 'pascalprech
     ionicReady().then(function() {
       if (ionic.Platform.isIOS()) {
         if(window.StatusBar) {
-          // needed to fix Xcode 9 / iOS 11 issue with blank space at bottom of webview
-          // https://github.com/meteor/meteor/issues/9041
-          StatusBar.overlaysWebView(false);
-          StatusBar.overlaysWebView(true);
+          // fix font color not white on iOS 11+
+          StatusBar.styleLightContent();
         }
       }
     });
