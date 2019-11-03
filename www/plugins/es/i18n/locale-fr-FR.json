@@ -36,10 +36,10 @@
       "ORGANIZATION_ACCOUNT_HELP": "Si vous représentez une entreprise, une association, etc.<br/>Aucun dividende universel ne sera créé par ce compte."
     },
     "EVENT": {
-      "MEMBER_WITHOUT_PROFILE": "Pour obtenir vos certifications plus rapidement, completez <a ui-sref=\"app.user_edit_profile\">votre profil utilisateur</a>. Les membres accorderont plus facilement leur confiance à une identité vérifiable."
+      "MEMBER_WITHOUT_PROFILE": "Pour obtenir vos certifications plus rapidement, complétez <a ui-sref=\"app.user_edit_profile\">votre profil utilisateur</a>. Les membres accorderont plus facilement leur confiance à une identité vérifiable."
     },
     "ERROR": {
-      "WS_CONNECTION_FAILED": "Cesium ne peut pas recevoir les notifications, à cause d'une erreur technique (connexion au noeud de données ğchange).<br/><br/>Si le problème persiste, veuillez <b>choisir un autre noeud de données</b> dans les paramètres+."
+      "WS_CONNECTION_FAILED": "ğchange ne peut pas recevoir les notifications à cause d'une erreur technique (connexion au noeud de données ğchange).<br/><br/>Si le problème persiste, veuillez <b>choisir un autre noeud de données</b> dans les paramètres."
     }
   },
   "WOT": {
@@ -98,7 +98,7 @@
       "MESSAGE_RECEIVED": "Vous avez <b>reçu un message</b><br/>de"
     },
     "LIST": {
-      "INBOX": "Boite de réception",
+      "INBOX": "Boîte de réception",
       "OUTBOX": "Messages envoyés",
       "LAST_INBOX": "Nouveaux messages",
       "LAST_OUTBOX": "Messages envoyés",
@@ -137,7 +137,7 @@
     },
     "INFO": {
       "MESSAGE_REMOVED": "Message supprimé",
-      "All_MESSAGE_REMOVED": "Tous les messages ont été supprimé",
+      "All_MESSAGE_REMOVED": "Tous les messages ont été supprimés",
       "MESSAGE_SENT": "Message envoyé"
     },
     "ERROR": {
@@ -152,7 +152,7 @@
       "MARK_AS_READ_FAILED": "Impossible de marquer le message comme 'lu'.",
       "LOAD_NOTIFICATIONS_FAILED": "Erreur lors de la récupération des notifications de messages.",
       "REMOVE_All_MESSAGES_FAILED": "Erreur lors de la suppression de tous les messages.",
-      "MARK_ALL_AS_READ_FAILED": "Erreur lors du marquage des message comme lu.",
+      "MARK_ALL_AS_READ_FAILED": "Erreur lors du marquage des messages comme lu.",
       "RECIPIENT_IS_MANDATORY": "Le destinataire est obligatoire."
     }
   },
@@ -229,7 +229,7 @@
     "ERROR": {
       "LOAD_CATEGORY_FAILED": "Erreur de chargement de la liste des activités",
       "LOAD_RECORD_FAILED": "Erreur lors du chargement de la page",
-      "LOOKUP_RECORDS_FAILED": "Erreur lors de l'execution de la recherche.",
+      "LOOKUP_RECORDS_FAILED": "Erreur lors de l'exécution de la recherche.",
       "REMOVE_RECORD_FAILED": "Erreur de la suppression de la page",
       "SAVE_RECORD_FAILED": "Erreur lors de la sauvegarde",
       "RECORD_NOT_EXISTS": "Page inexistante",
@@ -265,7 +265,7 @@
       "RESULT_HELP": "<b>Voici le résultat</b> tel que visible sur votre profil :"
     },
     "CONFIRM": {
-      "DELETE": "Êtes-vous sur de vouloir <b>supprimer votre profif Cesium+ ?</b><br/><br/>Cette opération est irréversible."
+      "DELETE": "Êtes-vous sur de vouloir <b>supprimer votre profil ğchange ?</b><br/><br/>Cette opération est irréversible."
     },
     "ERROR": {
       "REMOVE_PROFILE_FAILED": "Erreur de suppression du profil",
@@ -318,7 +318,7 @@
     "NO_SUBSCRIPTION": "Aucun service utilisé",
     "SUBSCRIPTION_COUNT": "Services / Abonnements",
     "EDIT": {
-      "TITLE": "Services en lignes",
+      "TITLE": "Services en ligne",
       "HELP_TEXT": "Gérer ici vos abonnements et autres services en ligne",
       "PROVIDER": "Prestataire :"
     },
@@ -337,9 +337,9 @@
       "DELETE_SUBSCRIPTION_FAILED": "Erreur lors de la suppression de l'abonnement"
     },
     "MODAL_EMAIL": {
-      "TITLE" : "Notification par email",
-      "HELP" : "Remplissez ce formulaire pour <b>être notifié par email</b> des événements de votre compte.<br/>Votre adresse email sera chiffrée pour n'être visible que par le prestataire de service.",
-      "EMAIL_LABEL" : "Votre email :",
+      "TITLE": "Notification par email",
+      "HELP": "Remplissez ce formulaire pour <b>être notifié par email</b> des événements de votre compte.<br/>Votre adresse email sera chiffrée pour n'être visible que par le prestataire de service.",
+      "EMAIL_LABEL": "Votre email :",
       "EMAIL_HELP": "jean.dupond@domaine.com",
       "FREQUENCY_LABEL": "Fréquence des notifications :",
       "FREQUENCY_DAILY": "Journalier",
@@ -365,13 +365,13 @@
       "DOCUMENT_TITLE": "Titre",
       "BTN_REMOVE": "Supprimer ce document",
       "BTN_COMPACT": "Compacter",
-      "HAS_REGISTERED": "a créé ou modifié son profile",
+      "HAS_REGISTERED": "a créé ou modifié son profil",
       "POPOVER_ACTIONS": {
         "TITLE": "Actions",
         "REMOVE_ALL": "Supprimer ces documents..."
       },
       "TYPE": {
-        "USER_PROFILE": "Profile",
+        "USER_PROFILE": "Profil",
         "MARKET_RECORD": "Annonce",
         "MARKET_COMMENT": "Commentaire sur une annonce",
         "PAGE_RECORD": "Page",
@@ -399,7 +399,7 @@
     "ENABLE_TOGGLE": "Activer l'extension ?",
     "ENABLE_MESSAGE_TOGGLE": "Activer les messages privés ?",
     "ENABLE_SETTINGS_TOGGLE": "Activer le stockage distant des paramètres ?",
-    "PEER": "Addresse du nœud de données",
+    "PEER": "Adresse du nœud de données",
     "POPUP_PEER": {
       "TITLE" : "Nœud de données",
       "HELP" : "Saisissez l'adresse du nœud que vous voulez utiliser :",
@@ -408,7 +408,7 @@
     "NOTIFICATIONS": {
       "DIVIDER": "Notifications",
       "HELP_TEXT": "Activez les types de notifications que vous souhaitez recevoir :",
-      "ENABLE_TX_SENT": "Notifier les <b>paiement émis</b> ?",
+      "ENABLE_TX_SENT": "Notifier les <b>paiements émis</b> ?",
       "ENABLE_TX_RECEIVED": "Notifier les <b>paiements reçus</b> ?",
       "ENABLE_CERT_SENT": "Notifier les <b>certifications émises</b> ?",
       "ENABLE_CERT_RECEIVED": "Notifier les <b>certifications reçues</b> ?"
@@ -456,7 +456,7 @@
     "ES_USE_FALLBACK_NODE": "Nœud de données <b>{{old}}</b> injoignable ou adresse invalide.<br/><br/>Voulez-vous temporairement utiliser le nœud de données <b>{{new}}</b> ?"
   },
   "ERROR": {
-    "ES_CONNECTION_ERROR": "Nœud de données <b>{{server}}</b> injoignable ou adresse invalide.<br/><br/>Vérifiez votre connection Internet, ou changer de nœud de données dans les <a class=\"positive\" ng-click=\"doQuickFix('settings')\">paramètres avancées</a>.",
+    "ES_CONNECTION_ERROR": "Nœud de données <b>{{server}}</b> injoignable ou adresse invalide.<br/><br/>Vérifiez votre connexion Internet, ou changer de nœud de données dans les <a class=\"positive\" ng-click=\"doQuickFix('settings')\">paramètres avancés</a>.",
     "ES_MAX_UPLOAD_BODY_SIZE": "Le volume des données à envoyer dépasse la limite fixée par le serveur.<br/>Veuillez ré-essayer après avoir, par exemple, supprimer des photos.",
     "INVALID_PUBKEY": "Clé publique invalide"
   }
