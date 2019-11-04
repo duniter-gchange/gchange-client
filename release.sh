@@ -11,10 +11,10 @@ fi
 DIRNAME=`pwd`
 
 ### Get current version (package.json)
-current=`grep -oP "version\": \"\d+.\d+.\d+((a|b)[0-9]+)?" package.json | grep -oP "\d+.\d+.\d+((a|b)[0-9]+)?"`
+current=`grep -oP "version\": \"\d+.\d+.\d+((a|b)[0-9]+)?" package.json | grep -m 1 -oP "\d+.\d+.\d+((a|b)[0-9]+)?"`
 if [[ "_$current" == "_" ]]; then
   echo "Unable to get current version. Please check version format is: x.y.z (x and y should be an integer)."
-  exit -1;
+  exit 1;
 fi
 echo "Current version: $current"
 
@@ -22,7 +22,7 @@ echo "Current version: $current"
 currentAndroid=`grep -oP "android-versionCode=\"[0-9]+\"" config.xml | grep -oP "\d+"`
 if [[ "_$currentAndroid" == "_" ]]; then
   echo "Unable to get current Android version. Please check version format is an integer."
-  exit -1;
+  exit 1;
 fi
 echo "Current Android version: $currentAndroid"
 
