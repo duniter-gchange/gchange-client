@@ -2,6 +2,7 @@
   "MAP": {
     "COMMON": {
       "SEARCH_DOTS": "Rechercher...",
+      "BTN_LOCALIZE_ME": "Me localiser"
     },
     "NETWORK": {
       "LOOKUP": {
@@ -12,7 +13,7 @@
         "TITLE": "Carte des noeuds",
         "LAYER": {
           "MEMBER": "Nœuds membre",
-          "MIRROR": "Nœuds mirroir",
+          "MIRROR": "Nœuds miroir",
           "OFFLINE": "Nœuds hors ligne"
         }
       }
