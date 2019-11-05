@@ -1,0 +1,42 @@
+{
+  "MAP": {
+    "COMMON": {
+      "SEARCH_DOTS": "Traserĉi...",
+      "BTN_LOCALIZE_ME": "Lokalizi min"
+    },
+    "NETWORK": {
+      "LOOKUP": {
+        "BTN_MAP": "Mapo",
+        "BTN_MAP_HELP": "Malfermi la mapon pri nodoj"
+      },
+      "VIEW": {
+        "TITLE": "Mapo pri nodoj",
+        "LAYER": {
+          "MEMBER": "Membro-nodoj",
+          "MIRROR": "Spegul-nodoj",
+          "OFFLINE": "Nekonektitaj nodoj"
+        }
+      }
+    },
+    "WOT": {
+      "LOOKUP": {
+        "BTN_MAP": "Mapo",
+        "BTN_MAP_HELP": "Malfermi la mapon pri membroj"
+      },
+      "VIEW": {
+        "TITLE": "Mapo pri membroj",
+        "LAYER": {
+          "MEMBER": "Membroj",
+          "PENDING": "Aliĝoj atendantaj",
+          "WALLET": "Simplaj monujoj"
+        }
+      }
+    },
+    "PROFILE": {
+      "MARKER_HELP": "<b>Ŝovu-demetu</b> tiun ĉi markilon por <b>aktualigi<br/> vian lokon</b> sur la mapo, aŭ uzu la serĉo-butonon<br/>super la mapo."
+    },
+    "ERROR": {
+      "LOCALIZE_ME_FAILED": "Neeblas ricevi vian nunan lokon"
+    }
+  }
+}
