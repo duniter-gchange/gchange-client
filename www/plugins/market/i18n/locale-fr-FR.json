@@ -13,14 +13,14 @@
     },
     "JOIN": {
       "PROFILE": {
-        "WARNING": "Il vous reste maintenant à compléter votre profile utilisateur.<br/><br/>Il s'agit <b>d'informations publiques</b>, accessible par tous.",
+        "WARNING": "Il vous reste maintenant à compléter votre profil utilisateur.<br/><br/>Il s'agit <b>d'informations publiques</b>, accessibles par tous.",
         "TITLE": "Nom, Prénom",
         "TITLE_HELP": "Nom, Prénom ou pseudonyme",
         "DESCRIPTION": "A propos de moi",
-        "DESCRIPTION_HELP": "Dites quelques chose à propos de vous..."
+        "DESCRIPTION_HELP": "Dites quelque chose à propos de vous..."
       },
       "LAST_SLIDE_CONGRATULATION": "Vous avez saisi toutes les informations nécessaires : Bravo !<br/>Vous pouvez maintenant <b>envoyer la demande de création</b> de compte.<br/><br/>N'oubliez pas vos identifiants, vous ne pourrez pas en changer !",
-      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant et le mot de passe ne pourront plus être modifiés.<br/><br/><b>Assurez-vous de toujours vous en rappeller !</b><br/><br/><b>Etes-vous sûr</b> de vouloir continuer avec ces identifiants ?",
+      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant et le mot de passe ne pourront plus être modifiés.<br/><br/><b>Assurez-vous de toujours vous en rappeler !</b><br/><br/><b>Etes-vous sûr</b> de vouloir continuer avec ces identifiants ?",
     },
     "PROFILE": {
       "DEFAULT_TITLE": "Utilisateur {{pubkey|formatPubkey}}"
@@ -36,7 +36,7 @@
       "EMAIL_OR_PHONE_HELP": "Email ou numéro de téléphone",
       "REMEMBER_ME": "Se souvenir de moi ?",
       "ERROR": {
-        "INVALID_USERNAME": "Email ou du téléphone non valide"
+        "INVALID_USERNAME": "Email ou numéro de téléphone non valide"
       }
     },
     "HOME": {
@@ -53,7 +53,7 @@
     },
     "SEARCH": {
       "TITLE": "Annonces",
-      "CATEGORY": "Catégorie: ",
+      "CATEGORY": "Catégorie : ",
       "SEARCH_HELP": "Recherche (vélo, rollers...)",
       "BY": "par",
       "BTN_ADD": "Nouveau",
@@ -119,14 +119,14 @@
     },
     "LOCAL_SALE": {
       "LOCATION": "Numéro du stand",
-      "LOCATION_HELP": "Numéro du stand: 1, 2, ...",
+      "LOCATION_HELP": "Numéro du stand : 1, 2, ...",
       "LOCATION_PREFIX": "Stand n°"
     },
     "EDIT": {
       "TITLE": "Edition",
       "TITLE_NEW": "Nouvelle annonce",
       "RECORD_TITLE": "Titre",
-      "RECORD_TITLE_HELP": "Titre: vélo, livre...",
+      "RECORD_TITLE_HELP": "Titre : vélo, livre...",
       "RECORD_DESCRIPTION": "Description",
       "RECORD_DESCRIPTION_HELP": "Description",
       "RECORD_LOCATION": "Ville",
@@ -149,19 +149,19 @@
       }
     },
     "ERROR": {
-      "INVALID_LOGIN_CREDENTIALS": "Identifiant ou mot de passe invalide.<br/><br/>Vérifiez qu'ils correspondent bien à compte <b>créé sur ğchange</b>.",
+      "INVALID_LOGIN_CREDENTIALS": "Identifiant ou mot de passe invalide.<br/><br/>Vérifiez qu'ils correspondent bien à un compte <b>créé sur ğchange</b>.",
       "FAILED_SAVE_RECORD": "Erreur lors de l'enregistrement de l'annonce",
       "FAILED_UPDATE_RECORD": "Erreur lors de la mise à jour de l'annonce",
       "LOAD_CATEGORY_FAILED": "Erreur d'initialisation des catégories",
-      "LOOKUP_RECORDS_FAILED": "Erreur lors de l'execution de la recherche.",
-      "LOAD_RECORD_FAILED": "Erreur lors du chargement de l'annonce.",
+      "LOOKUP_RECORDS_FAILED": "Erreur lors de l'exécution de la recherche",
+      "LOAD_RECORD_FAILED": "Erreur lors du chargement de l'annonce",
       "REMOVE_RECORD_FAILED": "Erreur de la suppression de l'annonce",
       "SOLD_RECORD_FAILED": "Erreur lors de la fermeture de l'annonce",
       "REOPEN_RECORD_FAILED": "Erreur lors de la réouverture de l'annonce",
       "FAILED_SAVE_COMMENT": "Erreur lors de la sauvegarde du commentaire",
       "FAILED_REMOVE_COMMENT": "Erreur lors de la suppression du commentaire",
       "RECORD_NOT_EXISTS": "Annonce inexistante",
-      "RECORD_EXCEED_UPLOAD_SIZE": "Il semble que votre annonce <b>soit trop volumineuse</b> pour être acceptée par le noeud de données.<br/><br/>Vous pouvez supprimer par exemple <b>supprimer des photos</b>, puis essayer à nouveau.",
+      "RECORD_EXCEED_UPLOAD_SIZE": "Il semble que votre annonce <b>soit trop volumineuse</b> pour être acceptée par le noeud de données.<br/><br/>Vous pouvez par exemple <b>supprimer des photos</b>, puis essayer à nouveau.",
       "GEO_LOCATION_NOT_FOUND": "Ville ou code postal non trouvé"
     },
     "INFO": {
@@ -174,8 +174,8 @@
     "MARKET": {
       "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a commenté votre annonce : <b>{{params[2]}}</b>",
       "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié son commentaire sur votre annonce : <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a répondu votre commentaire sur l'annonce : <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié la réponse à votre commentaire, sur l'annonce : <b>{{params[2]}}</b>"
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a répondu à votre commentaire sur l'annonce : <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié la réponse à votre commentaire sur l'annonce : <b>{{params[2]}}</b>"
     }
   }
 }
