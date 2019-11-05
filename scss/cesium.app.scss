@@ -409,6 +409,13 @@ $screen-menu:                     845px;
 /**********
    Fix or extend generic CSS
 **********/
+html, body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
 
 .item.item-icon-right.item-select,
 .item.item-icon-right .item-select {
@@ -1674,6 +1681,11 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
     height: 150px;
     padding-right: 0px !important;
 
+    .platform-ios.platform-cordova & {
+      height: calc(constant(safe-area-inset-top) + 150px);
+      height: calc(env(safe-area-inset-top) + 150px);
+    }
+
     .hero {
       height: 150px;
       box-shadow: none; // not need (define in bar-header)
@@ -1686,6 +1698,11 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
 
   #menu .has-header {
     top: 150px;
+
+    .platform-ios.platform-cordova & {
+      top: calc(constant(safe-area-inset-top) + 150px);
+      top: calc(env(safe-area-inset-top) + 150px);
+    }
   }
 }
 

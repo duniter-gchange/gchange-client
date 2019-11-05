@@ -67,5 +67,18 @@ angular.module('gchange', ['ionic', 'ionic-material', 'ngMessages', 'pascalprech
 
     // Start plugins eager services
     PluginService.start();
+    
+    ionicReady().then(function() {
+      if (ionic.Platform.isIOS()) {
+        if(window.StatusBar) {
+          // fix font color not white on iOS 11+
+          StatusBar.styleLightContent();
+        }
+      }
+    });
   })
 ;
+
+window.ionic.Platform.ready(function() {
+  angular.bootstrap(document, ['gchange']);
+});

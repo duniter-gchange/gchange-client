@@ -16,14 +16,14 @@ To build Cesium, you will have to:
 
 > Then reload your terminal, for instance by executing the commande `bash`
 
-  - Configure NodeJS to use a version 8:
+  - Configure NodeJS to use a version 6:
 ```
-  nvm install 5
+  nvm install 6
 ```
       
   - Installing node.js build tools:
 ```
-   npm install -g gulp bower@1.8.0 cordova@6.5.0 ionic@1.7.16
+   npm install -g gulp bower@1.8.0 cordova@9.0.0 ionic@1.7.16
 ```
 
 ## Get the source code
