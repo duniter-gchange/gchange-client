@@ -1,0 +1,79 @@
+{
+  "NETWORK": {
+    "VIEW": {
+      "BTN_GRAPH": "Statistikoj"
+    }
+  },
+  "GRAPH": {
+    "COMMON": {
+      "LINEAR_SCALE" : "Lineara skalo",
+      "LOGARITHMIC_SCALE" : "Logaritma skalo",
+      "BTN_SHOW_STATS": "Vidi la statistikojn",
+      "BTN_SHOW_DETAILED_STATS": "Detalaj statistikoj",
+      "RANGE_DURATION_DIVIDER": "Tempo-unuo:",
+      "RANGE_DURATION": {
+        "HOUR": "Horo",
+        "DAY": "Tago",
+        "MONTH": "Monato"
+      }
+    },
+    "PEER": {
+      "VIEW": {
+        "BLOCK_COUNT_LABEL": "Nombro de blokoj kalkulitaj",
+        "BLOCK_COUNT": "{{count}} blokoj",
+        "NO_BLOCK": "Neniu bloko"
+      }
+    },
+    "DOC_STATS": {
+      "TITLE": "Statistikoj pri stokado",
+      "MARKET": {
+        "TITLE": "Nombro de anoncoj",
+        "AD": "Anoncoj",
+        "COMMENT": "Komentoj"
+      },
+      "USER": {
+        "TITLE": "Nombro de dokumentoj ligitaj al konto",
+        "USER_PROFILE": "Uzanto-profiloj",
+        "USER_SETTINGS": "Parametroj konservitaj"
+      },
+      "MESSAGE": {
+        "TITLE": "Nombro de dokumentoj ligitaj al komunikado",
+        "MESSAGE_INBOX": "Mesaĝoj en ricevujo",
+        "MESSAGE_OUTBOX": "Senditaj mesaĝoj konservitaj",
+        "INVITATION_CERTIFICATION": "Invitoj atestotaj"
+      },
+      "SOCIAL": {
+        "TITLE": "Nombro de paĝoj aŭ grupoj",
+        "PAGE_COMMENT": "Komentoj",
+        "PAGE_RECORD": "Paĝoj",
+        "GROUP_RECORD": "Grupoj"
+      },
+      "SUBSCRIPTION": {
+        "TITLE": "Nombro de abonoj",
+        "EMAIL": "Avizoj per retmesaĝoj"
+      },
+      "OTHER": {
+        "TITLE": "Aliaj dokumentoj",
+        "HISTORY_DELETE": "Forigoj de dokumentoj"
+      }
+    },
+    "SYNCHRO": {
+      "TITLE": "Statistikoj pri sinkronigoj",
+      "COUNT": {
+        "TITLE": "Kvanto sinkronigita",
+        "INSERTS": "Enmetoj",
+        "UPDATES": "Ĝisdatigoj",
+        "DELETES": "Forigoj"
+      },
+      "PEER": {
+        "TITLE": "Nodoj informpetitaj",
+        "ES_USER_API": "Nodoj pri datenoj de uzantoj",
+        "ES_SUBSCRIPTION_API": "Nodoj pri retaj servoj"
+      },
+      "PERFORMANCE": {
+        "TITLE": "Efikecoj pri efektiviĝo",
+        "DURATION": "Tempo por efektiviĝo (ms)"
+      }
+    }
+  }
+}
