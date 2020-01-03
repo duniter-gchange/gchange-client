@@ -54,7 +54,7 @@ function LoginModalController($scope, $timeout, CryptoUtils, UIUtils, Modals, cs
     $timeout(function() {
       var salt = $scope.formData.username;
       var pwd = $scope.formData.password;
-      CryptoUtils.connect(salt, pwd).then(
+      CryptoUtils.scryptKeypair(salt, pwd).then(
         function (keypair) {
           // form has changed: retry
           if (salt !== $scope.formData.username || pwd !== $scope.formData.password) {
@@ -91,11 +91,12 @@ function LoginModalController($scope, $timeout, CryptoUtils, UIUtils, Modals, cs
   };
 
 
+  /*
   // TODO : for DEV only
-  /*$timeout(function() {
+  $timeout(function() {
     $scope.formData = {
-      username: 'benoit.lavenier@e-is.pro',
-      password: ''
+      username: 'abc',
+      password: 'def',
     };
     //$scope.form = {$valid:true};
   }, 900);*/

@@ -100,7 +100,7 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
     },
 
     login = function(salt, password) {
-      return CryptoUtils.connect(salt, password)
+      return CryptoUtils.scryptKeypair(salt, password)
         .then(function(keypair) {
           // Copy result to properties
           data.pubkey = CryptoUtils.util.encode_base58(keypair.signPk);
@@ -502,7 +502,7 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
           loadCurrency(),
 
           // Get requirements
-          loadRequirements(),
+          //loadRequirements(),
 
           // Get TX and sources
           //loadTxAndSources(),
@@ -1130,7 +1130,7 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
         var nbCharSalt = Math.round(record.answer.length / 2);
         var salt = record.answer.substr(0, nbCharSalt);
         var pwd = record.answer.substr(nbCharSalt);
-        return CryptoUtils.connect(salt, pwd)
+        return CryptoUtils.scryptKeypair(salt, pwd)
           .then(function (keypair) {
             record.pubkey = CryptoUtils.util.encode_base58(keypair.signPk);
             record.keypair = keypair;

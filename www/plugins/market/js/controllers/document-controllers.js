@@ -7,72 +7,31 @@ angular.module('cesium.market.document.controllers', ['cesium.es.services'])
 function MkLastDocumentsController($scope, $controller, $timeout, $state, $filter) {
   'ngInject';
 
-  $scope.search = {
-    loading: true,
-    hasMore: true,
-    text: undefined,
-    index: 'user,page,group,market', type: 'profile,record,comment',
-    //index: 'user', type: 'profile',
-    //index: 'market', type: 'record',
-    //index: 'market', type: 'comment',
-    results: undefined,
-    sort: 'time',
-    asc: false
-  };
-  $scope.expertMode = false;
-  $scope.defaultSizeLimit = 20;
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESLastDocumentsCtrl', {$scope: $scope}));
+
+  $scope.search.index = 'user,page,group,market';
+  $scope.search.type = 'profile,record,comment';
   $scope._source = ["issuer", "hash", "time", "creationTime", "title", "price", "unit", "currency", "picturesCount", "thumbnail._content_type", "city", "message", "record"];
 
-  // Initialize the super class and extend it.
-  angular.extend(this, $controller('ESDocumentLookupCtrl', {$scope: $scope}));
-  $scope.$on('$ionicParentView.enter', $scope.enter);
-
+  $scope.inheritedSelectDocument = $scope.selectDocument;
   $scope.selectDocument = function(event, doc) {
+    // Call super function
+    if (doc.index !== "market") {
+      $scope.inheritedSelectDocument.call(event, doc);
+      return;
+    }
+
+    // Manage click on a market document
     if (!doc || !event || event.defaultPrevented) return;
     event.stopPropagation();
 
-    if (doc.index=="user" && doc.type=="profile") {
-      $state.go('app.wot_identity', {pubkey: doc.pubkey, uid: doc.name});
-    }
-    else if (doc.index=="market" && doc.type=="record") {
+    if (doc.index === "market" && doc.type === "record") {
       $state.go('app.market_view_record', {id: doc.id, title: doc.title});
     }
-    else if (doc.index=="market" && doc.type=="comment") {
+    else if (doc.index === "market" && doc.type === "comment") {
       var anchor = $filter('formatHash')(doc.id);
       $state.go('app.market_view_record_anchor', {id: doc.record, anchor: anchor});
     }
-    else if (doc.index=="page" && doc.type=="record") {
-      // TODO
-    }
-    else if (doc.index=="group" && doc.type=="record") {
-      // TODO
-    }
   };
-
-  // Override parent function computeOptions
-  var inheritedComputeOptions = $scope.computeOptions;
-  $scope.computeOptions = function(offset, size){
-    // Cal inherited function
-    var options = inheritedComputeOptions(offset, size);
-
-    if (!options.sort || options.sort.time) {
-      var side = options.sort && options.sort.time || side;
-      options.sort = [
-        //{'creationTime': side},
-        {'time': side}
-      ];
-    }
-
-    options._source = options._source || $scope._source;
-    options.getTimeFunction = function(doc) {
-      doc.time = doc.creationTime || doc.time;
-      return doc.time;
-    };
-    return options;
-  };
-
-  // Listen for changes
-  $timeout(function() {
-    $scope.startListenChanges();
-  }, 1000);
 }

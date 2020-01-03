@@ -19,6 +19,10 @@
         "DESCRIPTION": "A propos de moi",
         "DESCRIPTION_HELP": "Dites quelque chose à propos de vous..."
       },
+      "SUBSCRIPTION": {
+        "EMAIL": "Email",
+        "EMAIL_HELP": "Email (optionnel)"
+      },
       "LAST_SLIDE_CONGRATULATION": "Vous avez saisi toutes les informations nécessaires : Bravo !<br/>Vous pouvez maintenant <b>envoyer la demande de création</b> de compte.<br/><br/>N'oubliez pas vos identifiants, vous ne pourrez pas en changer !",
       "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant et le mot de passe ne pourront plus être modifiés.<br/><br/><b>Assurez-vous de toujours vous en rappeler !</b><br/><br/><b>Etes-vous sûr</b> de vouloir continuer avec ces identifiants ?",
     },

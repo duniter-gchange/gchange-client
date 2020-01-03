@@ -1,249 +1,259 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="viewport-fit=cover, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width, minimal-ui">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>ğchange</title>
-  <link rel="icon" href="./img/favicon.ico">
-  <link rel="apple-touch-icon" href="./img/logo_128px.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="./img/logo_180px.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="./img/logo_152px.png">
-  <link rel="apple-touch-icon" sizes="167x167" href="./img/logo_167px.png">
-  <link rel="manifest" href="./manifest.json">
-  <!-- build:css dist_css/gchange.css -->
-  <!--removeIf(no-plugin)-->
-  <link rel="stylesheet" type="text/css" href="css/leaflet.app.min.css">
-  <link rel="stylesheet" type="text/css" href="dist/dist_css/plugins/es/css/style.css">
-  <link rel="stylesheet" type="text/css" href="dist/dist_css/plugins/market/css/style.css">
-  <link rel="stylesheet" type="text/css" href="css/converse.app.min.css">
-  <!--endRemoveIf(no-plugin)-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes, width=device-width, minimal-ui">
 
-  <link rel="stylesheet" type="text/css" href="css/ionic.app.min.css">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <link rel="stylesheet" type="text/css" href="css/angular-image-crop.css">
-  <!--removeIf(device)-->
-  <link rel="stylesheet" type="text/css" href="css/style-no-device.css">
-  <!--endRemoveIf(device)-->
+    <title>ğchange</title>
+    <link rel="icon" href="./img/favicon.ico">
 
-  <!-- endbuild -->
+    <meta name="theme-color" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <!--removeIf(device)-->
+    <link rel="apple-touch-icon" href="./img/logo_128px.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/logo_180px.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="./img/logo_152px.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="./img/logo_167px.png">
 
-  <!-- Open graph tags -->
-  <meta property="og:title" content="ğchange" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="Make exchanges in the libre currency Ğ1!" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="./img/logo_256px.png" />
-  <meta property="og:image:type" content="image/png" />
-  <meta property="og:image:height" content="256" />
-  <meta property="og:image:width" content="256" />
-  <meta property="og:site_name" content="ğchange" />
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:locale:alternate" content="en_GB" />
-  <meta property="og:locale:alternate" content="fr_FR" />
+    <link rel="manifest" href="./manifest.json">
+    <!-- build:css dist_css/gchange.css -->
+    <!-- removeIf(device) -->
+    <link rel="stylesheet" type="text/css" href="css/style-no-device.css">
+    <!-- endRemoveIf(device) -->
 
-  <!--endRemoveIf(device)-->
+    <link rel="stylesheet" type="text/css" href="css/leaflet.app.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/chart.js/dist/Chart.min.css">
+    <link rel="stylesheet" type="text/css" href="dist/dist_css/plugins/es/css/style.css">
+    <link rel="stylesheet" type="text/css" href="dist/dist_css/plugins/graph/css/style.css">
+    <link rel="stylesheet" type="text/css" href="dist/dist_css/plugins/map/css/style.css">
+    <link rel="stylesheet" type="text/css" href="dist/dist_css/plugins/market/css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/converse.app.css">
 
+    <link rel="stylesheet" type="text/css" href="css/ionic.app.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="lib/angular-image-crop/image-crop-styles.css">
 
-</head>
-<body id="gchange" ng-strict-di="">
-  <ion-nav-view>
-    <h3 style="text-align: center; margin-top: 44px;">
-      ğ<b>change</b>
-    </h3>
-    <h4 style="text-align: center; margin-top: 10px;">Chargement en cours. Veuillez patienter...</h4>
-  </ion-nav-view>
+    <!-- endbuild -->
 
-  <!-- build:js dist_js/vendor.js -->
-  <!-- vendor js -->
-  <script src="js/vendor/moment.min.js"></script>
-  <script src="js/vendor/moment.fr.js"></script>
-  <script src="js/vendor/moment.nl.js"></script>
-  <script src="js/vendor/moment.es.js"></script>
-  <script src="js/vendor/numeral.js"></script>
-  <script src="js/vendor/numeral.fr.js"></script>
-  <script src="js/vendor/numeral.en.js"></script>
-  <script src="js/vendor/numeral.nl.js"></script>
-  <script src="js/vendor/numeral.es.js"></script>
-  <script src="js/vendor/socket-io.js"></script>
-  <script src="js/vendor/underscore.js"></script>
-  <script src="js/vendor/Chart.js"></script>
-  <script src="js/vendor/converse.js"></script>
+    <!--removeIf(device)-->
+    <!-- Add open graph tags (for social networks) -->
 
-  <!-- ionic/angularjs js -->
-  <script src="lib/ionic/js/ionic.bundle.js"></script>
-  <script src="lib/ionic/js/ionic.material.js"></script>
-  <script src="lib/ionic/js/angular/angular-resource.js"></script>
-  <script src="lib/ionic/js/angular/angular-translate.js"></script>
-  <script src="lib/ionic/js/angular/angular-messages.js"></script>
-  <script src="lib/ionic/js/angular/angular-api.js"></script>
-  <script src="lib/ionic/js/angular/angular-cache.js"></script>
-  <script src="lib/ionic/js/angular/angular-screenmatch.min.js"></script>
-  <script src="lib/ionic/js/angular/angular-bind-notifier.min.js"></script>
-  <script src="lib/ionic/js/angular/angular-image-crop.js"></script>
-  <script src="lib/ionic/js/angular/angular-file-saver.bundle.js"></script>
-  <script src="lib/ionic/js/angular/angular-idle.js"></script>
-  <script src="lib/ionic/js/angular/angular-simple-logger.light.js"></script>
-  <script src="lib/ionic/js/angular/ui-leaflet.js"></script>
-  <script src="lib/ionic/js/angular/angular-chart.min.js"></script>
+    <meta property="og:title" content="ğchange" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="Make exchanges in the libre currency Ğ1!" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./img/logo_256px.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:height" content="256" />
+    <meta property="og:image:width" content="256" />
+    <meta property="og:site_name" content="ğchange" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta property="og:locale:alternate" content="fr_FR" />
 
-  <script src="js/vendor/base58.js" async></script>
-  <!--removeIf(no-device)-->
-  <script src="js/vendor/sha256.min.js" async></script>
-  <script src="js/vendor/ng-cordova.min.js"></script>
-  <!--endRemoveIf(no-device)-->
-
-  <!--removeIf(no-plugin)-->
-  <script src="js/vendor/leaflet.js"></script>
-  <script src="js/vendor/leaflet.awesome-markers.min.js"></script>
-  <script src="js/vendor/leaflet.search.min.js"></script>
-  <script src="js/vendor/leaflet.easy-button.js"></script>
-  <script src="js/vendor/leaflet.loading.js"></script>
-  <script src="js/vendor/leaflet.markercluster.js"></script>
-  <script src="js/vendor/leaflet.featuregroup.subgroup-src.js"></script>
-  <!--endRemoveIf(no-plugin)-->
-  <!-- endbuild -->
-
-  <!--removeIf(no-device)-->
-  <script src="cordova.js"></script>
-  <!--endRemoveIf(no-device)-->
-
-  <!-- build:js dist_js/gchange.js -->
-  <!-- services -->
-  <script src="dist/dist_js/app/services/settings-services.js"></script>
-  <script src="dist/dist_js/app/services/crypto-services.js"></script>
-  <script src="dist/dist_js/app/services/utils-services.js"></script>
-  <script src="dist/dist_js/app/services/cache-services.js"></script>
-  <script src="dist/dist_js/app/services/modal-services.js"></script>
-  <script src="dist/dist_js/app/services/http-services.js"></script>
-  <script src="dist/dist_js/app/services/storage-services.js"></script>
-  <script src="dist/dist_js/app/services/device-services.js"></script>
-  <script src="dist/dist_js/app/services/currency-services.js"></script>
-  <script src="dist/dist_js/app/services/bma-services.js"></script>
-  <script src="dist/dist_js/app/services/wot-services.js"></script>
-  <script src="dist/dist_js/app/services/tx-services.js"></script>
-  <script src="dist/dist_js/app/services/wallet-services.js"></script>
-  <script src="dist/dist_js/app/services/plugin-services.js"></script>
-  <script src="dist/dist_js/app/services.js"></script>
-
-  <!-- entities -->
-  <script src="dist/dist_js/app/entities/block.js"></script>
-
-  <!-- controllers -->
-  <script src="dist/dist_js/app/controllers/app-controllers.js"></script>
-  <script src="dist/dist_js/app/controllers/join-controllers.js"></script>
-  <script src="dist/dist_js/app/controllers/login-controllers.js"></script>
-  <script src="dist/dist_js/app/controllers/help-controllers.js"></script>
-  <script src="dist/dist_js/app/controllers/wallet-controllers.js"></script>
-  <script src="dist/dist_js/app/controllers/wot-controllers.js"></script>
-  <script src="dist/dist_js/app/controllers/settings-controllers.js"></script>
-  <script src="dist/dist_js/app/controllers.js"></script>
-
-  <!-- templates -->
-  <script src="dist/dist_js/app/templates.js"></script>
-  <script src="dist/dist_js/app/translations.js"></script>
-
-  <!--removeIf(no-plugin)-->
-  <!-- Plugins -->
-  <script src="dist/dist_js/app/plugins.js"></script>
-  <script src="dist/dist_js/plugins/translations.js"></script>
-  <script src="dist/dist_js/plugins/templates.js"></script>
-
-  <!-- ES plugin -->
-  <script src="dist/dist_js/plugins/es/js/plugin.js"></script>
-  <script src="dist/dist_js/plugins/es/js/entities/peer.js"></script>
-  <script src="dist/dist_js/plugins/es/js/entities/notification.js"></script>
-  <script src="dist/dist_js/plugins/es/js/entities/comment.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/comment-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/http-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/settings-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/social-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/crypto-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/profile-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/notification-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/message-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/modal-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/wallet-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/geo-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/subscription-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/document-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/services/network-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/common-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/app-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/settings-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/wallet-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/wot-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/profile-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/message-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/notification-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/subscription-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/document-controllers.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/network-controllers.js"></script>
-
-  <script src="dist/dist_js/plugins/es/js/services/registry-services.js"></script>
-  <script src="dist/dist_js/plugins/es/js/controllers/registry-controllers.js"></script>
-
-  <!-- Market plugin -->
-  <script src="dist/dist_js/plugins/market/js/plugin.js"></script>
-  <script src="dist/dist_js/plugins/market/js/services/modal-services.js"></script>
-  <script src="dist/dist_js/plugins/market/js/services/record-services.js"></script>
-  <script src="dist/dist_js/plugins/market/js/services/wallet-services.js"></script>
-  <script src="dist/dist_js/plugins/market/js/services/settings-services.js"></script>
-  <script src="dist/dist_js/plugins/market/js/services/converse-services.js"></script>
-  <script src="dist/dist_js/plugins/market/js/controllers/app-controllers.js"></script>
-  <script src="dist/dist_js/plugins/market/js/controllers/join-controllers.js"></script>
-  <script src="dist/dist_js/plugins/market/js/controllers/login-controllers.js"></script>
-  <script src="dist/dist_js/plugins/market/js/controllers/search-controllers.js"></script>
-  <script src="dist/dist_js/plugins/market/js/controllers/record-controllers.js"></script>
-  <script src="dist/dist_js/plugins/market/js/controllers/wallet-controllers.js"></script>
-  <script src="dist/dist_js/plugins/market/js/controllers/category-controllers.js"></script>
-  <script src="dist/dist_js/plugins/market/js/controllers/wot-controllers.js"></script>
-  <script src="dist/dist_js/plugins/market/js/controllers/document-controllers.js"></script>
-
-  <!-- Graph plugin -->
-  <script src="dist/dist_js/plugins/graph/js/plugin.js"></script>
-  <script src="dist/dist_js/plugins/graph/js/services.js"></script>
-  <script src="dist/dist_js/plugins/graph/js/services/data-services.js"></script>
-  <script src="dist/dist_js/plugins/graph/js/services/color-services.js"></script>
-  <script src="dist/dist_js/plugins/graph/js/controllers/common-controllers.js"></script>
-  <script src="dist/dist_js/plugins/graph/js/controllers/docstats-controllers.js"></script>
-  <script src="dist/dist_js/plugins/graph/js/controllers/synchro-controllers.js"></script>
-  <script src="dist/dist_js/plugins/graph/js/controllers/network-controllers.js"></script>
-
-  <!-- Map plugin -->
-  <script src="dist/dist_js/plugins/map/js/plugin.js"></script>
-  <script src="dist/dist_js/plugins/map/js/services.js"></script>
-  <script src="dist/dist_js/plugins/map/js/services/utils-services.js"></script>
-  <script src="dist/dist_js/plugins/map/js/controllers/user-controllers.js"></script>
-
-  <!--endRemoveIf(no-plugin)-->
-
-  <!-- App -->
-  <script src="dist/dist_js/app/app.js"></script>
-  <script src="dist/dist_js/app/components.js"></script>
-  <script src="dist/dist_js/app/directives.js"></script>
-  <script src="dist/dist_js/app/filters.js"></script>
-  <script src="dist/dist_js/app/platform.js"></script>
-  <!-- endbuild -->
-
-  <!--removeIf(android)-->
-  <!--removeIf(ios)-->
-  <!-- build:js dist_js/crypto.js -->
-  <script src="js/vendor/nacl_factory.js" async></script>
-  <script src="js/vendor/scrypt-em.js" async></script>
-  <script src="js/vendor/base64.js" async></script>
-  <!-- endbuild -->
-  <!--endRemoveIf(ios)-->
-  <!--endRemoveIf(android)-->
+    <!--endRemoveIf(device)-->
 
 
-  <!-- build:js config.js -->
-  <!-- config  -->
-  <script src="dist/dist_js/app/config.js"></script>
-  <!-- endbuild -->
+  </head>
+  <body id="gchange" ng-strict-di="true"
+        ng-class="{'nobackdrop': $root.tour, 'expert-mode': $root.settings.expertMode}">
+    <ion-nav-view>
+      <div class="loader">
+        <h3 style="text-align: center; padding-top: 25px; "><b>ğchange</b></h3>
+        <h4 style="text-align: center;"><i class="icon ion-load-a"></i></h4>
+      </div>
+    </ion-nav-view>
 
-</body>
+    <!-- build:js dist_js/vendor.js -->
+    <!-- vendor js -->
+    <script src="lib/moment/min/moment-with-locales.min.js"></script>
+
+    <script src="lib/numeral/numeral.js"></script>
+    <script src="lib/numeral/languages/fr.js"></script>
+    <script src="lib/numeral/languages/en-gb.js"></script>
+    <script src="lib/numeral/languages/nl-nl.js"></script>
+    <script src="lib/numeral/languages/es.js"></script>
+    <script src="lib/numeral/languages/it.js"></script>
+    <script src="js/vendor/numeral.eo.js"></script>
+    <script src="lib/socket.io-client/dist/socket.io.min.js"></script>
+    <script src="lib/underscore/underscore-min.js"></script>
+    <script src="lib/qrcode.js/qrcode.js"></script>
+    <script src="lib/aes-js/index.js"></script>
+    <script src="lib/chart.js/dist/Chart.min.js"></script>
+    <script src="lib/converse/dist/converse.js"></script>
+
+    <!-- ionic/angular js -->
+    <script src="lib/ionic/js/ionic.js"></script>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-animate/angular-animate.js"></script>
+    <script src="lib/angular-sanitize/angular-sanitize.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="lib/ionic/js/ionic-angular.js"></script>
+    <script src="lib/ionic-material/dist/ionic.material.js"></script>
+    <script src="lib/angular-resource/angular-resource.js"></script>
+    <script src="lib/angular-translate/angular-translate.js"></script>
+    <script src="lib/angular-messages/angular-messages.js"></script>
+    <script src="lib/angular-api/angular-api.js"></script>
+    <script src="lib/angular-cache/dist/angular-cache.js"></script>
+    <script src="lib/angular-screenmatch/dist/angular-screenmatch.min.js"></script>
+    <script src="lib/angular-bind-notifier/dist/angular-bind-notifier.min.js"></script>
+    <script src="lib/angular-image-crop/image-crop.js"></script>
+    <script src="lib/angular-file-saver/dist/angular-file-saver.bundle.js"></script>
+    <script src="lib/ng-idle/angular-idle.js"></script>
+    <script src="lib/angular-simple-logger/dist/angular-simple-logger.light.js"></script>
+    <script src="lib/ui-leaflet/dist/ui-leaflet.js"></script>
+    <script src="lib/ion-digit-keyboard/dist/ion-digit-keyboard.min.js"></script>
+    <script src="lib/angular-chart.js/dist/angular-chart.min.js"></script>
+    <script src="lib/angular-fullscreen/src/angular-fullscreen.js"></script>
+
+    <script src="js/vendor/base58.js" async></script>
+    <!--removeIf(android)-->
+    <!--removeIf(ios)-->
+    <script src="lib/js-nacl/lib/nacl_factory.js" async></script>
+    <script src="lib/js-scrypt/browser/scrypt.js" async></script>
+    <script src="js/vendor/base64.js" async></script>
+    <!--endRemoveIf(ios)-->
+    <!--endRemoveIf(android)-->
+    <!--removeIf(no-device)-->
+    <script src="js/vendor/sha256.min.js" async></script>
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
+    <!--endRemoveIf(no-device)-->
+
+    <script src="lib/leaflet/dist/leaflet.js"></script>
+    <script src="lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js"></script>
+    <script src="lib/leaflet-search/dist/leaflet-search.src.js"></script>
+    <script src="lib/Leaflet.EasyButton/src/easy-button.js"></script>
+    <script src="lib/leaflet.loading/src/Control.Loading.js"></script>
+    <script src="lib/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="lib/Leaflet.FeatureGroup.SubGroup/leaflet.featuregroup.subgroup-src.js"></script>
+
+    <!-- endbuild -->
+
+    <!--removeIf(no-device)-->
+    <script src="cordova.js"></script>
+    <!--endRemoveIf(no-device)-->
+
+    <!-- build:js dist_js/gchange.js -->
+    <!-- services -->
+    <script src="dist/dist_js/app/services/settings-services.js"></script>
+    <script src="dist/dist_js/app/services/crypto-services.js"></script>
+    <script src="dist/dist_js/app/services/utils-services.js"></script>
+    <script src="dist/dist_js/app/services/cache-services.js"></script>
+    <script src="dist/dist_js/app/services/modal-services.js"></script>
+    <script src="dist/dist_js/app/services/http-services.js"></script>
+    <script src="dist/dist_js/app/services/storage-services.js"></script>
+    <script src="dist/dist_js/app/services/device-services.js"></script>
+    <script src="dist/dist_js/app/services/currency-services.js"></script>
+    <script src="dist/dist_js/app/services/bma-services.js"></script>
+    <script src="dist/dist_js/app/services/wot-services.js"></script>
+    <script src="dist/dist_js/app/services/tx-services.js"></script>
+    <script src="dist/dist_js/app/services/wallet-services.js"></script>
+    <script src="dist/dist_js/app/services/plugin-services.js"></script>
+    <script src="dist/dist_js/app/services.js"></script>
+
+    <!-- entities -->
+    <script src="dist/dist_js/app/entities/block.js"></script>
+
+    <!-- controllers -->
+    <script src="dist/dist_js/app/controllers/app-controllers.js"></script>
+    <script src="dist/dist_js/app/controllers/join-controllers.js"></script>
+    <script src="dist/dist_js/app/controllers/login-controllers.js"></script>
+    <script src="dist/dist_js/app/controllers/help-controllers.js"></script>
+    <script src="dist/dist_js/app/controllers/wallet-controllers.js"></script>
+    <script src="dist/dist_js/app/controllers/wot-controllers.js"></script>
+    <script src="dist/dist_js/app/controllers/settings-controllers.js"></script>
+    <script src="dist/dist_js/app/controllers.js"></script>
+
+    <!-- templates -->
+    <script src="dist/dist_js/app/templates.js"></script>
+    <script src="dist/dist_js/app/translations.js"></script>
+
+    <!-- Plugins -->
+    <script src="dist/dist_js/app/plugins.js"></script>
+    <script src="dist/dist_js/plugins/translations.js"></script>
+    <script src="dist/dist_js/plugins/templates.js"></script>
+
+    <!-- ES plugin -->
+    <script src="dist/dist_js/plugins/es/js/plugin.js"></script>
+    <script src="dist/dist_js/plugins/es/js/entities/peer.js"></script>
+    <script src="dist/dist_js/plugins/es/js/entities/notification.js"></script>
+    <script src="dist/dist_js/plugins/es/js/entities/comment.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/comment-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/http-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/settings-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/social-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/crypto-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/profile-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/notification-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/message-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/modal-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/wallet-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/geo-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/subscription-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/document-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/services/network-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/common-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/app-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/settings-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/wallet-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/wot-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/profile-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/message-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/notification-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/subscription-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/document-controllers.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/network-controllers.js"></script>
+
+    <script src="dist/dist_js/plugins/es/js/services/registry-services.js"></script>
+    <script src="dist/dist_js/plugins/es/js/controllers/registry-controllers.js"></script>
+
+    <!-- Market plugin -->
+    <script src="dist/dist_js/plugins/market/js/plugin.js"></script>
+    <script src="dist/dist_js/plugins/market/js/services/modal-services.js"></script>
+    <script src="dist/dist_js/plugins/market/js/services/record-services.js"></script>
+    <script src="dist/dist_js/plugins/market/js/services/wallet-services.js"></script>
+    <script src="dist/dist_js/plugins/market/js/services/settings-services.js"></script>
+    <script src="dist/dist_js/plugins/market/js/services/converse-services.js"></script>
+    <script src="dist/dist_js/plugins/market/js/controllers/app-controllers.js"></script>
+    <script src="dist/dist_js/plugins/market/js/controllers/join-controllers.js"></script>
+    <script src="dist/dist_js/plugins/market/js/controllers/login-controllers.js"></script>
+    <script src="dist/dist_js/plugins/market/js/controllers/search-controllers.js"></script>
+    <script src="dist/dist_js/plugins/market/js/controllers/record-controllers.js"></script>
+    <script src="dist/dist_js/plugins/market/js/controllers/wallet-controllers.js"></script>
+    <script src="dist/dist_js/plugins/market/js/controllers/category-controllers.js"></script>
+    <script src="dist/dist_js/plugins/market/js/controllers/wot-controllers.js"></script>
+    <script src="dist/dist_js/plugins/market/js/controllers/document-controllers.js"></script>
+
+    <!-- Graph plugin -->
+    <script src="dist/dist_js/plugins/graph/js/plugin.js"></script>
+    <script src="dist/dist_js/plugins/graph/js/services.js"></script>
+    <script src="dist/dist_js/plugins/graph/js/services/data-services.js"></script>
+    <script src="dist/dist_js/plugins/graph/js/services/color-services.js"></script>
+    <script src="dist/dist_js/plugins/graph/js/controllers/common-controllers.js"></script>
+    <script src="dist/dist_js/plugins/graph/js/controllers/docstats-controllers.js"></script>
+    <script src="dist/dist_js/plugins/graph/js/controllers/synchro-controllers.js"></script>
+    <script src="dist/dist_js/plugins/graph/js/controllers/network-controllers.js"></script>
+
+    <!-- Map plugin -->
+    <script src="dist/dist_js/plugins/map/js/plugin.js"></script>
+    <script src="dist/dist_js/plugins/map/js/services.js"></script>
+    <script src="dist/dist_js/plugins/map/js/services/utils-services.js"></script>
+    <script src="dist/dist_js/plugins/map/js/controllers/user-controllers.js"></script>
+
+    <!-- App -->
+    <script src="dist/dist_js/app/app.js"></script>
+    <script src="dist/dist_js/app/components.js"></script>
+    <script src="dist/dist_js/app/directives.js"></script>
+    <script src="dist/dist_js/app/filters.js"></script>
+    <script src="dist/dist_js/app/platform.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js config.js -->
+    <!-- config  -->
+    <script src="dist/dist_js/app/config.js"></script>
+    <!-- endbuild -->
+
+  </body>
 </html>

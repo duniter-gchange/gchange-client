@@ -365,7 +365,7 @@
       "DOCUMENT_TITLE": "Title",
       "BTN_REMOVE": "Delete this document",
       "BTN_COMPACT": "Compact",
-      "HAS_REGISTERED": "a create or edit his profile",
+      "HAS_REGISTERED": "create or edit his profile",
       "POPOVER_ACTIONS": {
         "TITLE": "Actions",
         "REMOVE_ALL": "Delete these documents..."

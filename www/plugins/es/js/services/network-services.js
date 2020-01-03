@@ -165,7 +165,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
         }
 
         // Filter on status
-        if (!data.filter.online && peer.status == 'UP') {
+        if (!data.filter.online && peer.status === 'UP') {
           return false;
         }
 
@@ -562,7 +562,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
             data.sort = options.sort ? angular.merge(data.sort, options.sort) : data.sort;
             data.expertMode = angular.isDefined(options.expertMode) ? options.expertMode : data.expertMode;
             data.timeout = angular.isDefined(options.timeout) ? options.timeout : csConfig.timeout;
-            console.info('[network] Starting network from [{0}]'.format(pod.server));
+            console.info('[network] Starting network from [{0}]'.format(data.pod.server));
             var now = Date.now();
 
             addListeners();

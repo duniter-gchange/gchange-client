@@ -1,25 +1,12 @@
 
 angular.module('cesium.device.services', ['ngResource', 'cesium.utils.services', 'cesium.settings.services'])
 
-  // Replace the '$ionicPlatform.ready()', to enable multiple calls
-  // See http://stealthcode.co/multiple-calls-to-ionicplatform-ready/
-  .factory('ionicReady', function($ionicPlatform) {
-    var readyPromise;
-
-    return function () {
-      if (!readyPromise) {
-        readyPromise = $ionicPlatform.ready();
-      }
-      return readyPromise;
-    };
-  })
-
   .factory('Device',
     function($translate, $ionicPopup, $q,
       // removeIf(no-device)
       $cordovaClipboard, $cordovaBarcodeScanner, $cordovaCamera,
       // endRemoveIf(no-device)
-      ionicReady, csSettings) {
+      ionicReady) {
       'ngInject';
 
       var

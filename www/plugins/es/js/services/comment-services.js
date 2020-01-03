@@ -259,7 +259,7 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
         // Preparing JSON to sent
         var id = comment.id;
         var json = {
-          creationTime: id ? comment.creationTime || comment.time/*for compat*/ : esHttp.date.now(),
+          creationTime: id ? comment.creationTime || comment.time/*for compat*/ : moment().utc().unix(),
           message: comment.message,
           record: recordId,
           issuer: csWallet.data.pubkey
@@ -337,7 +337,7 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
     }
 
     return {
-       instance: EsComment
-     };
+      instance: EsComment
+    };
   })
 ;

@@ -61,8 +61,7 @@ function ESPluginSettingsController ($scope, $q,  $translate, $ionicPopup, UIUti
       angular.copy(csSettings.data.plugins.es) : {
       enable: false,
       host: null,
-      port: null,
-      wsPort: null
+      port: null
     };
     $scope.loading = false;
   };
@@ -77,8 +76,7 @@ function ESPluginSettingsController ($scope, $q,  $translate, $ionicPopup, UIUti
     $scope.showNodePopup(node || $scope.formData)
     .then(function(newNode) {
       if (newNode.host == $scope.formData.host &&
-        newNode.port == $scope.formData.port &&
-        newNode.wsPort == $scope.formData.wsPort) {
+        newNode.port == $scope.formData.port) {
         UIUtils.loading.hide();
         return; // same node = nothing to do
       }
@@ -98,7 +96,6 @@ function ESPluginSettingsController ($scope, $q,  $translate, $ionicPopup, UIUti
           UIUtils.loading.hide();
           $scope.formData.host = newNode.host;
           $scope.formData.port = newNode.port;
-          $scope.formData.wsPort = newNode.wsPort;
 
           esHttp.copy(newEsNode);
         });
@@ -109,11 +106,7 @@ function ESPluginSettingsController ($scope, $q,  $translate, $ionicPopup, UIUti
   $scope.showNodePopup = function(node) {
     return $q(function(resolve, reject) {
       var parts = [node.host];
-      if (node.wsPort && node.wsPort != (node.port||80)) {
-        parts.push(node.port||80);
-        parts.push(node.wsPort);
-      }
-      else if (node.port && node.port != 80) {
+      if (node.port && node.port != 80) {
         parts.push(node.port);
       }
       $scope.popupData.newNode = parts.join(':');
@@ -153,8 +146,7 @@ function ESPluginSettingsController ($scope, $q,  $translate, $ionicPopup, UIUti
             var parts = node.split(':');
             resolve({
               host: parts[0],
-              port: parts[1] || 80,
-              wsPort: parts[2] || parts[1] || 80
+              port: parts[1] || 80
             });
           });
         });
@@ -210,7 +202,6 @@ function ESPluginSettingsController ($scope, $q,  $translate, $ionicPopup, UIUti
   $scope.$watch('formData', $scope.onFormChanged, true);
 
   $scope.getServer = function() {
-    var server = csHttp.getServer($scope.formData.host, $scope.formData.port != 80 ? $scope.formData.port : undefined);
-    return server + ($scope.formData.wsPort && $scope.formData.wsPort != $scope.formData.port ? ':' + $scope.formData.wsPort : '');
+    return csHttp.getServer($scope.formData.host, $scope.formData.port != 80 ? $scope.formData.port : undefined);
   };
 }

@@ -72,6 +72,26 @@ angular.module('cesium.graph.data.services', ['cesium.es.http.services'])
       var from = moment.unix(options.startTime).utc().startOf(options.rangeDuration);
       var to = moment.unix(options.endTime).utc().startOf(options.rangeDuration);
       var ranges = [];
+
+      var processSearchResult = function (res) {
+        var aggs = res.aggregations;
+        return (aggs.range && aggs.range.buckets || []).reduce(function (res, agg) {
+          var item = {
+            from: agg.from,
+            to: agg.to
+          };
+          _.forEach(agg.index && agg.index.buckets || [], function (agg) {
+            var index = agg.key;
+            _.forEach(agg.type && agg.type.buckets || [], function (agg) {
+              var key = (index + '_' + agg.key);
+              item[key] = agg.max.value;
+              if (!indices[key]) indices[key] = true;
+            });
+          });
+          return res.concat(item);
+        }, []);
+      };
+
       while(from.isBefore(to)) {
 
         ranges.push({
@@ -122,31 +142,13 @@ angular.module('cesium.graph.data.services', ['cesium.es.http.services'])
           ranges = [];
           var indices = {};
 
-          if (jobs.length == 10) {
+          if (jobs.length === 10) {
             console.error('Too many parallel jobs!');
             from = moment.unix(options.endTime).utc(); // stop while
           }
           else {
             jobs.push(
-              exports.raw.docstat.search(request)
-                .then(function (res) {
-                  var aggs = res.aggregations;
-                  return (aggs.range && aggs.range.buckets || []).reduce(function (res, agg) {
-                    var item = {
-                      from: agg.from,
-                      to: agg.to
-                    };
-                    _.forEach(agg.index && agg.index.buckets || [], function (agg) {
-                      var index = agg.key;
-                      _.forEach(agg.type && agg.type.buckets || [], function (agg) {
-                        var key = (index + '_' + agg.key);
-                        item[key] = agg.max.value;
-                        if (!indices[key]) indices[key] = true;
-                      });
-                    });
-                    return res.concat(item);
-                  }, []);
-                })
+              exports.raw.docstat.search(request).then(processSearchResult)
             );
           }
         }
@@ -185,6 +187,27 @@ angular.module('cesium.graph.data.services', ['cesium.es.http.services'])
       var from = moment.unix(options.startTime).utc().startOf(options.rangeDuration);
       var to = moment.unix(options.endTime).utc().startOf(options.rangeDuration);
       var ranges = [];
+      var processSearchResult = function (res) {
+        var aggs = res.aggregations;
+
+        return (aggs.range && aggs.range.buckets || []).reduce(function (res, agg) {
+          var item = {
+            from: agg.from,
+            to: agg.to,
+            inserts: agg.result.inserts.value,
+            updates: agg.result.inserts.value,
+            deletes: agg.result.deletes.value,
+            duration: agg.duration.value
+          };
+          _.forEach(agg.api && agg.api.buckets || [], function (api) {
+            item[api.key] = api.peer_count && api.peer_count.value || 0;
+            if (!apis[api.key]) apis[api.key] = true;
+          });
+
+          return res.concat(item);
+        }, []);
+      };
+
       while(from.isBefore(to)) {
 
         ranges.push({
@@ -254,33 +277,14 @@ angular.module('cesium.graph.data.services', ['cesium.es.http.services'])
           ranges = [];
           var apis = {};
 
-          if (jobs.length == 10) {
+          if (jobs.length === 10) {
             console.error('Too many parallel jobs!');
             from = moment.unix(options.endTime).utc(); // stop while
           }
           else {
             jobs.push(
               exports.raw.synchro.search(request, {currency: options.currency})
-                .then(function (res) {
-                  var aggs = res.aggregations;
-
-                  return (aggs.range && aggs.range.buckets || []).reduce(function (res, agg) {
-                    var item = {
-                      from: agg.from,
-                      to: agg.to,
-                      inserts: agg.result.inserts.value,
-                      updates: agg.result.inserts.value,
-                      deletes: agg.result.deletes.value,
-                      duration: agg.duration.value
-                    };
-                    _.forEach(agg.api && agg.api.buckets || [], function (api) {
-                      item[api.key] = api.peer_count && api.peer_count.value || 0;
-                      if (!apis[api.key]) apis[api.key] = true;
-                    });
-
-                    return res.concat(item);
-                  }, []);
-                })
+                .then(processSearchResult)
             );
           }
         }

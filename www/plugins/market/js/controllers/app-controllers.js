@@ -132,7 +132,7 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
                 })
                 .catch(function(err) {
                   console.error(err);
-                  return $state.go('app.market_lookup', stateParams);
+                  return $state.go('app.market_lookup');
                 });
         }
 
@@ -145,7 +145,9 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
               lon: $scope.search.geoPoint && $scope.search.geoPoint.lon,
               location: locationShortName
           };
-          return $state.go('app.market_lookup', stateParams);
+          return UIUtils.screen.isSmall() ?
+              $state.go('app.market_lookup', stateParams) :
+              $state.go('app.market_lookup_lg', stateParams);
       }
       else {
         $scope.search.geoPoint = undefined;

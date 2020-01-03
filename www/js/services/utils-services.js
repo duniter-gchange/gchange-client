@@ -1,10 +1,26 @@
 angular.module('cesium.utils.services', [])
 
-.factory('UIUtils', function($ionicLoading, $ionicPopup, $ionicConfig, $translate, $q, ionicMaterialInk, ionicMaterialMotion, $window, $timeout,
+// Replace the '$ionicPlatform.ready()', to enable multiple calls
+// See http://stealthcode.co/multiple-calls-to-ionicplatform-ready/
+.factory('ionicReady', function($ionicPlatform) {
+  'ngInject';
+
+  var readyPromise;
+
+  return function () {
+    if (!readyPromise) {
+      readyPromise = $ionicPlatform.ready();
+    }
+    return readyPromise;
+  };
+})
+
+.factory('UIUtils', function($ionicLoading, $ionicPopup, $ionicConfig, $ionicHistory, $translate, $q,
+                             ionicMaterialInk, ionicMaterialMotion, $window, $timeout, Fullscreen,
                              // removeIf(no-device)
                              $cordovaToast,
                              // endRemoveIf(no-device)
-                             $ionicPopover, $state, $rootScope, screenmatch, csSettings) {
+                             $ionicPopover, $state, $rootScope, screenmatch) {
   'ngInject';
 
 
@@ -21,7 +37,7 @@ angular.module('cesium.utils.services', [])
     },
     exports,
     raw = {}
-  ;
+    ;
 
   function alertError(err, subtitle) {
     if (!err) {
@@ -30,45 +46,45 @@ angular.module('cesium.utils.services', [])
 
     return $q(function(resolve) {
       $translate([err, subtitle, 'ERROR.POPUP_TITLE', 'ERROR.UNKNOWN_ERROR', 'COMMON.BTN_OK'])
-      .then(function (translations) {
-        var message = err.message || translations[err];
-        return $ionicPopup.show({
-          template: '<p>' + (message || translations['ERROR.UNKNOWN_ERROR']) + '</p>',
-          title: translations['ERROR.POPUP_TITLE'],
-          subTitle: translations[subtitle],
-          buttons: [
-            {
-              text: '<b>'+translations['COMMON.BTN_OK']+'</b>',
-              type: 'button-assertive',
-              onTap: function(e) {
-                resolve(e);
+        .then(function (translations) {
+          var message = err.message || translations[err];
+          return $ionicPopup.show({
+            template: '<p>' + (message || translations['ERROR.UNKNOWN_ERROR']) + '</p>',
+            title: translations['ERROR.POPUP_TITLE'],
+            subTitle: translations[subtitle],
+            buttons: [
+              {
+                text: '<b>'+translations['COMMON.BTN_OK']+'</b>',
+                type: 'button-assertive',
+                onTap: function(e) {
+                  resolve(e);
+                }
               }
-            }
-          ]
+            ]
+          });
         });
-      });
     });
   }
 
   function alertInfo(message, subtitle) {
     return $q(function(resolve) {
       $translate([message, subtitle, 'INFO.POPUP_TITLE', 'COMMON.BTN_OK'])
-      .then(function (translations) {
-        $ionicPopup.show({
-          template: '<p>' + translations[message] + '</p>',
-          title: translations['INFO.POPUP_TITLE'],
-          subTitle: translations[subtitle],
-          buttons: [
-            {
-              text: translations['COMMON.BTN_OK'],
-              type: 'button-positive',
-              onTap: function(e) {
-                resolve(e);
+        .then(function (translations) {
+          $ionicPopup.show({
+            template: '<p>' + translations[message] + '</p>',
+            title: translations['INFO.POPUP_TITLE'],
+            subTitle: translations[subtitle],
+            buttons: [
+              {
+                text: translations['COMMON.BTN_OK'],
+                type: 'button-positive',
+                onTap: function(e) {
+                  resolve(e);
+                }
               }
-            }
-          ]
+            ]
+          });
         });
-      });
     });
   }
 
@@ -228,18 +244,18 @@ angular.module('cesium.utils.services', [])
   function getSelectionText(){
     var selectedText = "";
     if (window.getSelection){ // all modern browsers and IE9+
-        selectedText = $window.getSelection().toString();
+      selectedText = $window.getSelection().toString();
     }
     return selectedText;
   }
 
   function imageOnLoadResize(resolve, reject, thumbnail) {
     return function(event) {
-       var width = event.target.width,
-         height = event.target.height,
-         maxWidth = (thumbnail ? CONST.THUMB_MAX_WIDTH : CONST.MAX_WIDTH),
-         maxHeight = (thumbnail ? CONST.THUMB_MAX_HEIGHT : CONST.MAX_HEIGHT)
-       ;
+      var width = event.target.width,
+        height = event.target.height,
+        maxWidth = (thumbnail ? CONST.THUMB_MAX_WIDTH : CONST.MAX_WIDTH),
+        maxHeight = (thumbnail ? CONST.THUMB_MAX_HEIGHT : CONST.MAX_HEIGHT)
+        ;
 
       var canvas = document.createElement("canvas");
       var ctx;
@@ -399,7 +415,6 @@ angular.module('cesium.utils.services', [])
     options.scope = options.scope || $rootScope;
     options.scope.popovers = options.scope.popovers || {};
     options.autoselect = options.autoselect || false;
-    options.bindings = options.bindings || {};
     options.autoremove = angular.isDefined(options.autoremove) ? options.autoremove : true;
     options.backdropClickToClose = angular.isDefined(options.backdropClickToClose) ? options.backdropClickToClose : true;
     options.focusFirstInput = angular.isDefined(options.focusFirstInput) ? options.focusFirstInput : false;
@@ -410,37 +425,39 @@ angular.module('cesium.utils.services', [])
       popover.deferred=deferred;
       popover.options=options;
       // Fill the popover scope
-      angular.merge(popover.scope, options.bindings);
+      if (options.bindings) {
+        angular.merge(popover.scope, options.bindings);
+      }
       $timeout(function() { // This is need for Firefox
         popover.show(event)
-        .then(function() {
-          var element;
-          // Auto select text
-          if (options.autoselect) {
-            element = document.querySelectorAll(options.autoselect)[0];
-            if (element) {
-              if ($window.getSelection && !$window.getSelection().toString()) {
-                element.setSelectionRange(0, element.value.length);
-                element.focus();
-              }
-              else {
-                element.focus();
+          .then(function() {
+            var element;
+            // Auto select text
+            if (options.autoselect) {
+              element = document.querySelectorAll(options.autoselect)[0];
+              if (element) {
+                if ($window.getSelection && !$window.getSelection().toString()) {
+                  element.setSelectionRange(0, element.value.length);
+                  element.focus();
+                }
+                else {
+                  element.focus();
+                }
               }
             }
-          }
-          else {
-            // Auto focus on a element
-            if (options.autofocus) {
-              element = document.querySelectorAll(options.autofocus)[0];
-              if (element) element.focus();
+            else {
+              // Auto focus on a element
+              if (options.autofocus) {
+                element = document.querySelectorAll(options.autofocus)[0];
+                if (element) element.focus();
+              }
             }
-          }
 
-          popover.scope.$parent.$emit('popover.shown');
+            popover.scope.$parent.$emit('popover.shown');
 
-          // Callback 'afterShow'
-          if (options.afterShow) options.afterShow(popover);
-        });
+            // Callback 'afterShow'
+            if (options.afterShow) options.afterShow(popover);
+          });
       });
     };
 
@@ -450,9 +467,9 @@ angular.module('cesium.utils.services', [])
         delete options.scope.popovers[options.templateUrl];
         // Remove the popover
         popover.remove()
-          // Workaround for issue #244
-          // See also https://github.com/driftyco/ionic-v1/issues/71
-          // and https://github.com/driftyco/ionic/issues/9069
+        // Workaround for issue #244
+        // See also https://github.com/driftyco/ionic-v1/issues/71
+        // and https://github.com/driftyco/ionic/issues/9069
           .then(function() {
             var bodyEl = angular.element($window.document.querySelectorAll('body')[0]);
             bodyEl.removeClass('popover-open');
@@ -677,9 +694,10 @@ angular.module('cesium.utils.services', [])
     if (exports.motion.enable === enable) return; // same
     console.debug('[UI] [effects] ' + (enable ? 'Enable' : 'Disable'));
 
+    exports.motion.enable = enable;
     if (enable) {
       $ionicConfig.views.transition('platform');
-      exports.motion = raw.motion;
+      angular.merge(exports.motion, raw.motion);
     }
     else {
       $ionicConfig.views.transition('none');
@@ -687,7 +705,7 @@ angular.module('cesium.utils.services', [])
         class: undefined,
         show: function(){}
       };
-      exports.motion = {
+      angular.merge(exports.motion, {
         enable : false,
         default: nothing,
         fadeSlideIn: nothing,
@@ -699,8 +717,10 @@ angular.module('cesium.utils.services', [])
         fadeIn: nothing,
         toggleOn: toggleOn,
         toggleOff: toggleOff
-      };
+      });
+      $rootScope.motion = nothing;
     }
+    $ionicHistory.clearCache();
   }
 
   raw.motion = {
@@ -714,8 +734,8 @@ angular.module('cesium.utils.services', [])
     ripple: motionDelegate(ionicMaterialMotion.ripple, 'animate-ripple'),
     slideUp: motionDelegate(ionicMaterialMotion.slideUp, 'slide-up'),
     fadeIn: motionDelegate(function(options) {
-        toggleOn(options);
-      }, 'fade-in'),
+      toggleOn(options);
+    }, 'fade-in'),
     toggleOn: toggleOn,
     toggleOff: toggleOff
   };
@@ -769,10 +789,6 @@ angular.module('cesium.utils.services', [])
     }, timeout || 900);
   }
 
-  csSettings.api.data.on.changed($rootScope, function(data) {
-   setEffects(data.uiEffects);
-  });
-
   exports = {
     alert: {
       error: alertError,
@@ -790,7 +806,8 @@ angular.module('cesium.utils.services', [])
     },
     onError: onError,
     screen: {
-      isSmall: isSmallScreen
+      isSmall: isSmallScreen,
+      fullscreen: Fullscreen
     },
     ink: ionicMaterialInk.displayEffect,
     motion: raw.motion,

@@ -67,6 +67,16 @@
           <i class="icon stable ion-android-exit"></i>
         </a>
       </div>
+
+      <!-- Fullscreen button -->
+      <!-- removeIf(device) -->
+      <a ng-if="::$root.device.isWeb()"
+         ng-click="toggleFullscreen()"
+         class="button-icon visible-sm visible-xs"
+         style="position: absolute; top: 5px; right: 5px; z-index: 999;">
+        <i class="icon ion-arrow-expand light" ng-class="{'ion-arrow-shrink': fullscreen}"></i>
+      </a>
+      <!-- endRemoveIf(device) -->
     </ion-header-bar>
 
     <ion-content scroll="false">

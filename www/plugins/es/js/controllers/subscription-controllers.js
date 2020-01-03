@@ -81,7 +81,7 @@ function ViewSubscriptionsController($scope, $q, $ionicHistory, csWot, csWallet,
           $scope.showFab('fab-add-subscription-record');
         })
         .catch(function(err){
-          if (err == 'CANCELLED') {
+          if (err === 'CANCELLED') {
             UIUtils.loading.hide(10);
             $scope.loading=true; // reset for force reload next time
             $ionicHistory.goBack();
@@ -146,7 +146,7 @@ function ViewSubscriptionsController($scope, $q, $ionicHistory, csWot, csWallet,
         if (!cat) return;
         type = cat.id;
         // get subscription parameters
-        if (type == 'email') {
+        if (type === 'email') {
           return $scope.showEmailModal();
         }
         else {
@@ -173,7 +173,7 @@ function ViewSubscriptionsController($scope, $q, $ionicHistory, csWot, csWallet,
     // get subscription parameters
     var promise;
     var oldRecord = angular.copy(record);
-    if (record.type == 'email') {
+    if (record.type === 'email') {
       promise = $scope.showEmailModal(record);
     }
     if (!promise) return;
@@ -185,8 +185,8 @@ function ViewSubscriptionsController($scope, $q, $ionicHistory, csWot, csWallet,
         return esSubscription.record.update(record, wallet)
           .then(function() {
             // If recipient change, update in results
-            if (oldRecord.type != record.type ||
-              oldRecord.recipient != record.recipient) {
+            if (oldRecord.type !== record.type ||
+              oldRecord.recipient !== record.recipient) {
               $scope.removeFromUI(oldRecord);
               return $scope.addToUI(record);
             }
@@ -295,7 +295,7 @@ function ModalEmailSubscriptionsController($scope, Modals, csSettings, esHttp, c
       return csWot.extendAll([$scope.recipient]);
     }
     else {
-      return esHttp.network.peering()
+      return esHttp.network.peering.self()
         .then(function(res){
           if (!res) return;
           $scope.formData.recipient = res.pubkey;

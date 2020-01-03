@@ -7,6 +7,7 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
 
   function BMA(host, port, useSsl, useCache) {
 
+    var pubkey = "[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{43,44}";
     var
       // TX output conditions
       SIG = "SIG\\(([0-9a-zA-Z]{43,44})\\)",
@@ -18,18 +19,29 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
       OUTPUT_FUNCTIONS = OUTPUT_FUNCTION+'([ ]*' + OUTPUT_OPERATOR + '[ ]*' + OUTPUT_FUNCTION +')*',
       OUTPUT_OBJ = 'OBJ\\(([0-9]+)\\)',
       OUTPUT_OBJ_OPERATOR = OUTPUT_OBJ + '[ ]*' + OUTPUT_OPERATOR + '[ ]*' + OUTPUT_OBJ,
-      REGEX_ENDPOINT_PARAMS = "( ([a-z_][a-z0-9-_./]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))",
+      REGEX_ENDPOINT_PARAMS = "( ([a-z_][a-z0-9-_.ğĞ]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))( (.+))?",
+      api = {
+        BMA: 'BASIC_MERKLED_API',
+        BMAS: 'BMAS',
+        WS2P: 'WS2P',
+        BMATOR: 'BMATOR',
+        WS2PTOR: 'WS2PTOR'
+      },
       regexp = {
-        USER_ID: "[A-Za-z0-9_-]+",
-        CURRENCY: "[A-Za-z0-9_-]+",
-        PUBKEY: "[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{43,44}",
+        USER_ID: "[0-9a-zA-Z-_]+",
+        CURRENCY: "[0-9a-zA-Z-_]+",
+        PUBKEY: pubkey,
+        PUBKEY_WITH_CHECKSUM: "(" + pubkey +"):([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{3})",
         COMMENT: "[ a-zA-Z0-9-_:/;*\\[\\]()?!^\\+=@&~#{}|\\\\<>%.]*",
+        INVALID_COMMENT_CHARS: "[^ a-zA-Z0-9-_:/;*\\[\\]()?!^\\+=@&~#{}|\\\\<>%.]*",
         // duniter://[uid]:[pubkey]@[host]:[port]
-        URI_WITH_AT: "duniter://(?:([A-Za-z0-9_-]+):)?([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{43,44})@([a-zA-Z0-9-.]+.[ a-zA-Z0-9-_:/;*?!^\\+=@&~#|<>%.]+)",
-        URI_WITH_PATH: "duniter://([a-zA-Z0-9-.]+.[a-zA-Z0-9-_:.]+)/([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{43,44})(?:/([A-Za-z0-9_-]+))?",
-        BMA_ENDPOINT: "BASIC_MERKLED_API" + REGEX_ENDPOINT_PARAMS,
-        BMAS_ENDPOINT: "BMAS" + REGEX_ENDPOINT_PARAMS,
-        BMATOR_ENDPOINT: "BMATOR" + "( ([a-z0-9-_.]+.onion))( ([0-9]+))?"
+        URI_WITH_AT: "duniter://(?:([A-Za-z0-9_-]+):)?("+pubkey+"@([a-zA-Z0-9-.]+.[ a-zA-Z0-9-_:/;*?!^\\+=@&~#|<>%.]+)",
+        URI_WITH_PATH: "duniter://([a-zA-Z0-9-.]+.[a-zA-Z0-9-_:.]+)/("+pubkey+")(?:/([A-Za-z0-9_-]+))?",
+        BMA_ENDPOINT: api.BMA + REGEX_ENDPOINT_PARAMS,
+        BMAS_ENDPOINT: api.BMAS + REGEX_ENDPOINT_PARAMS,
+        WS2P_ENDPOINT: api.WS2P + " ([a-f0-9]{8})"+ REGEX_ENDPOINT_PARAMS,
+        BMATOR_ENDPOINT: api.BMATOR + " ([a-z0-9-_.]*|[0-9.]+|[0-9a-f:]+.onion)(?: ([0-9]+))?",
+        WS2PTOR_ENDPOINT: api.WS2PTOR + " ([a-f0-9]{8}) ([a-z0-9-_.]*|[0-9.]+|[0-9a-f:]+.onion)(?: ([0-9]+))?(?: (.+))?"
       },
       errorCodes = {
         REVOCATION_ALREADY_REGISTERED: 1002,
@@ -43,6 +55,9 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
         MEMBERSHIP_ALREADY_SEND: 2007,
         NO_CURRENT_BLOCK: 2010,
         BLOCK_NOT_FOUND: 2011,
+        SOURCE_ALREADY_CONSUMED: 2015,
+        TX_INPUTS_OUTPUTS_NOT_EQUAL: 2024,
+        TX_OUTPUT_SUM_NOT_EQUALS_PREV_DELTAS: 2025,
         TX_ALREADY_PROCESSED: 2030
       },
       constants = {
@@ -50,16 +65,22 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
         ROOT_BLOCK_HASH: 'E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855',
         LIMIT_REQUEST_COUNT: 5, // simultaneous async request to a Duniter node
         LIMIT_REQUEST_DELAY: 1000, // time (in second) to wait between to call of a rest request
-        regex: regexp, // deprecated
-        regexp: regexp
+        regexp: regexp,
+        api: api
       },
       listeners,
       that = this;
 
-    that.date = {now: csHttp.date.now};
     that.api = new Api(this, 'BMA-' + that.server);
     that.started = false;
     that.init = init;
+
+    // Allow to force SSL connection with port different from 443
+    that.forceUseSsl = (csConfig.httpsMode === 'true' || csConfig.httpsMode === true || csConfig.httpsMode === 'force') ||
+    ($window.location && $window.location.protocol === 'https:') ? true : false;
+    if (that.forceUseSsl) {
+      console.debug('[BMA] Enable SSL (forced by config or detected in URL)');
+    }
 
     if (host) {
       init(host, port, useSsl, useCache);
@@ -71,18 +92,12 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
       that.alive = false;
       that.cache = _emptyCache();
 
-      // Allow to force SSL connection with port different from 443
-      var forceUseSsl = (csConfig.httpsMode === 'true' || csConfig.httpsMode === true || csConfig.httpsMode === 'force') ||
-        ($window.location && $window.location.protocol === 'https:') ? true : false;
-      if (forceUseSsl) {
-        console.debug('[BMA] Enable SSL (forced by config or detected in URL)');
-      }
       // Use settings as default, if exists
       if (csSettings.data && csSettings.data.node) {
         host = host || csSettings.data.node.host;
         port = port || csSettings.data.node.port;
 
-        useSsl = angular.isDefined(useSsl) ? useSsl : (port == 443 || csSettings.data.node.useSsl || forceUseSsl);
+        useSsl = angular.isDefined(useSsl) ? useSsl : (port == 443 || csSettings.data.node.useSsl || that.forceUseSsl);
         useCache =  angular.isDefined(useCache) ? useCache : true;
       }
 
@@ -91,7 +106,7 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
       }
       that.host = host;
       that.port = port || 80;
-      that.useSsl = angular.isDefined(useSsl) ? useSsl : (that.port == 443 || forceUseSsl);
+      that.useSsl = angular.isDefined(useSsl) ? useSsl : (that.port == 443 || that.forceUseSsl);
       that.useCache = angular.isDefined(useCache) ? useCache : false;
       that.server = csHttp.getServer(host, port);
       that.url = csHttp.getUrl(host, port, ''/*path*/, useSsl);
@@ -114,8 +129,10 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
     }
 
     function closeWs() {
+      if (!that.cache) return;
+
       console.warn('[BMA] Closing all websockets...');
-      _.keys(that.cache.wsByPath).forEach(function(key) {
+      _.keys(that.cache.wsByPath||{}).forEach(function(key) {
         var sock = that.cache.wsByPath[key];
         sock.close();
       });
@@ -133,14 +150,14 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
       cacheTime = that.useCache && cacheTime;
       var cacheKey = path + (cacheTime ? ('#'+cacheTime) : '');
 
-      var getRequest = function(params) {
+      var getRequestFn = function(params) {
 
         if (!that.started) {
           if (!that._startPromise) {
-            console.error('[BMA] Trying to get [{0}] before start()...'.format(path));
+            console.warn('[BMA] Trying to get [{0}] before start(). Waiting...'.format(path));
           }
           return that.ready().then(function() {
-            return getRequest(params);
+            return getRequestFn(params);
           });
         }
 
@@ -154,14 +171,34 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
           }
           that.cache.getByPath[cacheKey] = request;
         }
-        return request(params);
+        var execCount = 1;
+        return request(params)
+          .catch(function(err){
+            // If node return too many requests error
+            if (err && err.ucode == exports.errorCodes.HTTP_LIMITATION) {
+              // If max number of retry not reach
+              if (execCount <= exports.constants.LIMIT_REQUEST_COUNT) {
+                if (execCount === 1) {
+                  console.warn("[BMA] Too many HTTP requests: Will wait then retry...");
+                  // Update the loading message (if exists)
+                  UIUtils.loading.update({template: "COMMON.LOADING_WAIT"});
+                }
+                // Wait 1s then retry
+                return $timeout(function() {
+                  execCount++;
+                  return request(params);
+                }, exports.constants.LIMIT_REQUEST_DELAY);
+              }
+            }
+            throw err;
+          });
       };
 
-      return getRequest;
+      return getRequestFn;
     };
 
     post = function(path) {
-      postRequest = function(obj, params) {
+      var postRequest = function(obj, params) {
         if (!that.started) {
           if (!that._startPromise) {
             console.error('[BMA] Trying to post [{0}] before start()...'.format(path));
@@ -185,25 +222,15 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
     ws = function(path) {
       return function() {
         var sock = that.cache.wsByPath[path];
-        if (!sock) {
+        if (!sock || sock.isClosed()) {
           sock =  csHttp.ws(that.host, that.port, path, that.useSsl);
 
-          // Override close methods (add a usage counter)
-          sock._counter = 1;
-          var close = sock.close;
-          sock.close = function() {
-            sock._counter--;
-            if (sock._counter <= 0) {
-              console.debug('[BMA] Stopping websocket ['+path+']');
-              close();
-              delete that.cache.wsByPath[path];
-            }
+          // When close, remove from cache
+          sock.onclose = function() {
+            delete that.cache.wsByPath[path];
           };
 
           that.cache.wsByPath[path] = sock;
-        }
-        else {
-          sock._counter++;
         }
         return sock;
       };
@@ -214,15 +241,16 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
         .then(function(json) {
           var software = json && json.duniter && json.duniter.software;
           var isCompatible = true;
-          // duniter
-          if (software === 'duniter' && json.duniter.version && csSettings.data.minVersion) {
+
+          // Check duniter min version
+          if (software === 'duniter' && json.duniter.version && csSettings.data.minVersion && true) {
             isCompatible = csHttp.version.isCompatible(csSettings.data.minVersion, json.duniter.version);
           }
           // gchange-pod
-          else if (software === 'gchange-pod' && json.duniter.version && csSettings.data.plugins.es.minVersion) {
+          else if (software === 'gchange-pod' && json.duniter.version && csSettings.data.plugins.es.minVersion && true) {
             isCompatible = csHttp.version.isCompatible(csSettings.data.plugins.es.minVersion, json.duniter.version);
           }
-          // TODO: check other software (DURS, Juniter, etc.)
+          // TODO: check version of other software (DURS, Juniter, etc.)
           else {
             console.debug('[BMA] Unknown node software [{0} v{1}]: could not check compatibility.'.format(software || '?', json.duniter.version || '?'));
           }
@@ -354,11 +382,14 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
         USER_ID: exact(regexp.USER_ID),
         COMMENT: exact(regexp.COMMENT),
         PUBKEY: exact(regexp.PUBKEY),
+        PUBKEY_WITH_CHECKSUM: exact(regexp.PUBKEY_WITH_CHECKSUM),
         CURRENCY: exact(regexp.CURRENCY),
         URI: exact(regexp.URI),
         BMA_ENDPOINT: exact(regexp.BMA_ENDPOINT),
         BMAS_ENDPOINT: exact(regexp.BMAS_ENDPOINT),
+        WS2P_ENDPOINT: exact(regexp.WS2P_ENDPOINT),
         BMATOR_ENDPOINT: exact(regexp.BMATOR_ENDPOINT),
+        WS2PTOR_ENDPOINT: exact(regexp.WS2PTOR_ENDPOINT),
         // TX output conditions
         TX_OUTPUT_SIG: exact(SIG),
         TX_OUTPUT_FUNCTION: test(OUTPUT_FUNCTION),
@@ -372,8 +403,9 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
       node: {
         summary: get('/node/summary', csHttp.cache.LONG),
         same: function(host2, port2) {
-          return host2 == that.host && ((!that.port && !port2) || (that.port == port2||80));
-        }
+          return host2 === that.host && ((!that.port && !port2) || (that.port == port2||80)) && (that.useSsl == (port2 && port2 === 443));
+        },
+        forceUseSsl: that.forceUseSsl
       },
       network: {
         peering: {
@@ -387,39 +419,61 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
         }
       },
       wot: {
-        lookup: get('/wot/lookup/:search'),
+        lookup: get('/wot/lookup/:search', csHttp.cache.MEDIUM),
         certifiedBy: get('/wot/certified-by/:pubkey'),
         certifiersOf: get('/wot/certifiers-of/:pubkey'),
         member: {
           all: get('/wot/members', csHttp.cache.LONG),
           pending: get('/wot/pending', csHttp.cache.SHORT)
         },
-        requirements: get('/wot/requirements/:pubkey'),
+        requirements: function(params, withCache) {
+          // No cache by default
+          if (withCache !== true) return exports.raw.wot.requirements(params);
+          return exports.raw.wot.requirementsWithCache(params);
+        },
         add: post('/wot/add'),
         certify: post('/wot/certify'),
         revoke: post('/wot/revoke')
       },
       blockchain: {
-        parameters: get('/blockchain/parameters', csHttp.cache.LONG),
+        parameters: get('/blockchain/parameters', csHttp.cache.VERY_LONG),
         block: get('/blockchain/block/:block', csHttp.cache.SHORT),
         blocksSlice: get('/blockchain/blocks/:count/:from'),
-        current: get('/blockchain/current'),
+        current: get('/blockchain/current', csHttp.cache.SHORT),
         membership: post('/blockchain/membership'),
         stats: {
-          ud: get('/blockchain/with/ud', csHttp.cache.SHORT),
+          ud: get('/blockchain/with/ud', csHttp.cache.MEDIUM),
           tx: get('/blockchain/with/tx'),
-          newcomers: get('/blockchain/with/newcomers'),
+          newcomers: get('/blockchain/with/newcomers', csHttp.cache.MEDIUM),
           hardship: get('/blockchain/hardship/:pubkey'),
           difficulties: get('/blockchain/difficulties')
         }
       },
       tx: {
-        sources: get('/tx/sources/:pubkey'),
+        sources: get('/tx/sources/:pubkey', csHttp.cache.SHORT),
         process: post('/tx/process'),
         history: {
-          all: get('/tx/history/:pubkey'),
-          times: get('/tx/history/:pubkey/times/:from/:to', csHttp.cache.LONG),
-          timesNoCache: get('/tx/history/:pubkey/times/:from/:to'),
+          all: function(params) {
+            return exports.raw.tx.history.all(params)
+              .then(function(res) {
+                res.history = res.history || {};
+                // Clean sending and pendings, because already returned by tx/history/:pubkey/pending
+                res.history.sending = [];
+                res.history.pendings = [];
+                return res;
+              });
+          },
+          times: function(params, withCache) {
+            // No cache by default
+            return ((withCache !== true) ? exports.raw.tx.history.times(params) : exports.raw.tx.history.timesWithCache(params))
+              .then(function(res) {
+                res.history = res.history || {};
+                // Clean sending and pendings, because already returned by tx/history/:pubkey/pending
+                res.history.sending = [];
+                res.history.pendings = [];
+                return res;
+              });
+          },
           blocks: get('/tx/history/:pubkey/blocks/:from/:to', csHttp.cache.LONG),
           pending: get('/tx/history/:pubkey/pending')
         }
@@ -428,11 +482,21 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
         history: get('/ud/history/:pubkey')
       },
       uri: {},
+      version: {},
       raw: {
-
+        wot: {
+          requirementsWithCache: get('/wot/requirements/:pubkey', csHttp.cache.LONG),
+          requirements: get('/wot/requirements/:pubkey')
+        },
+        tx: {
+          history: {
+            timesWithCache: get('/tx/history/:pubkey/times/:from/:to', csHttp.cache.LONG),
+            times: get('/tx/history/:pubkey/times/:from/:to'),
+            all: get('/tx/history/:pubkey')
+          }
+        },
       }
     };
-    exports.regex = exports.regexp; // deprecated
 
     exports.tx.parseUnlockCondition = function(unlockCondition) {
 
@@ -529,7 +593,7 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
       };
     };
 
-    exports.node.parseEndPoint = function(endpoint) {
+    exports.node.parseEndPoint = function(endpoint, epPrefix) {
       // Try BMA
       var matches = exports.regexp.BMA_ENDPOINT.exec(endpoint);
       if (matches) {
@@ -538,7 +602,9 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
           "ipv4": matches[4] || '',
           "ipv6": matches[6] || '',
           "port": matches[8] || 80,
-          "useSsl": matches[8] && matches[8] == 443
+          "useSsl": matches[8] && matches[8] == 443,
+          "path": matches[10],
+          "useBma": true
         };
       }
       // Try BMAS
@@ -549,25 +615,78 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
           "ipv4": matches[4] || '',
           "ipv6": matches[6] || '',
           "port": matches[8] || 80,
-          "useSsl": true
+          "useSsl": true,
+          "path": matches[10],
+          "useBma": true
         };
       }
       // Try BMATOR
       matches = exports.regexp.BMATOR_ENDPOINT.exec(endpoint);
       if (matches) {
         return {
-          "dns": matches[2] || '',
-          "port": matches[4] || 80,
+          "dns": matches[1] || '',
+          "port": matches[2] || 80,
           "useSsl": false,
-          "useTor": true
+          "useTor": true,
+          "useBma": true
         };
       }
+      // Try WS2P
+      matches = exports.regexp.WS2P_ENDPOINT.exec(endpoint);
+      if (matches) {
+        return {
+          "ws2pid": matches[1] || '',
+          "dns": matches[3] || '',
+          "ipv4": matches[5] || '',
+          "ipv6": matches[7] || '',
+          "port": matches[9] || 80,
+          "useSsl": matches[9] && matches[9] == 443,
+          "path": matches[11] || '',
+          "useWs2p": true
+        };
+      }
+      // Try WS2PTOR
+      matches = exports.regexp.WS2PTOR_ENDPOINT.exec(endpoint);
+      if (matches) {
+        return {
+          "ws2pid": matches[1] || '',
+          "dns": matches[2] || '',
+          "port": matches[3] || 80,
+          "path": matches[4] || '',
+          "useSsl": false,
+          "useTor": true,
+          "useWs2p": true
+        };
+      }
+
+      // Use generic match
+      if (epPrefix) {
+        matches = exact(epPrefix + REGEX_ENDPOINT_PARAMS).exec(endpoint);
+        if (matches) {
+          return {
+            "dns": matches[2] || '',
+            "ipv4": matches[4] || '',
+            "ipv6": matches[6] || '',
+            "port": matches[8] || 80,
+            "useSsl": matches[8] && matches[8] == 443,
+            "path": matches[10],
+            "useBma": false
+          };
+        }
+      }
+
     };
 
     exports.copy = function(otherNode) {
-      if (that.started) that.stop();
-      that.init(otherNode.host, otherNode.port, otherNode.useSsl, that.useCache/*keep original value*/);
-      return that.start();
+      var wasStarted = that.started;
+
+      var server = csHttp.getUrl(otherNode.host, otherNode.port, ''/*path*/, otherNode.useSsl);
+      var hasChanged = (server !== that.url);
+      if (hasChanged) {
+        that.init(otherNode.host, otherNode.port, otherNode.useSsl, that.useCache/*keep original value*/);
+        // Restart (only if was already started)
+        return wasStarted ? that.restart() : $q.when();
+      }
     };
 
     exports.wot.member.uids = function() {
@@ -611,10 +730,10 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
      * @param blockNumbers a rray of block number
      */
     exports.network.peering.peersByLeaves = function(leaves){
-      return exports.raw.getHttpRecursive(exports.network.peering.peers, 'leaf', leaves, 0, 10, callbackFlush);
+      return exports.raw.getHttpRecursive(exports.network.peering.peers, 'leaf', leaves, 0, 10);
     };
 
-    exports.raw.getHttpRecursive = function(httpGetRequest, paramName, paramValues, offset, size, callbackFlush) {
+    exports.raw.getHttpRecursive = function(httpGetRequest, paramName, paramValues, offset, size) {
       offset = angular.isDefined(offset) ? offset : 0;
       size = size || exports.constants.LIMIT_REQUEST_COUNT;
       return $q(function(resolve, reject) {
@@ -694,17 +813,34 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
 
     exports.uri.parse = function(uri) {
       return $q(function(resolve, reject) {
+        var pubkey;
+
         // If pubkey: not need to parse
         if (exact(regexp.PUBKEY).test(uri)) {
           resolve({
             pubkey: uri
-
-
           });
+        }
+        // If pubkey+checksum
+        else if (exact(regexp.PUBKEY_WITH_CHECKSUM).test(uri)) {
+          console.debug("[BMA.parse] Detecting a pubkey with checksum: " + uri);
+          var matches = exports.regexp.PUBKEY_WITH_CHECKSUM.exec(uri);
+          pubkey = matches[1];
+          var checksum = matches[2];
+          console.debug("[BMA.parse] Detecting a pubkey {"+pubkey+"} with checksum {" + checksum + "}");
+          var expectedChecksum = csCrypto.util.pkChecksum(pubkey);
+          console.debug("[BMA.parse] Expecting checksum for pubkey is {" + expectedChecksum + "}");
+          if (checksum != expectedChecksum) {
+            reject( {message: 'ERROR.PUBKEY_INVALID_CHECKSUM'});
+          }
+          else {
+            resolve({
+              pubkey: pubkey
+            });
+          }
         }
         else if(uri.startsWith('duniter://')) {
           var parser = csHttp.uri.parse(uri),
-            pubkey,
             uid,
             currency = parser.host.indexOf('.') === -1 ? parser.host : null,
             host = parser.host.indexOf('.') !== -1 ? parser.host : null;
@@ -747,6 +883,7 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
                 });
               })
               .catch(function(err) {
+                console.error(err);
                 reject({message: 'Could not get node parameter. Currency could not be retrieve'});
               });
             }
@@ -775,30 +912,71 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
                   host: host,
                   currency: currency
                 });
+              })
+              .catch(function(err) {
+                console.error(err);
+                reject({message: 'Could not get node parameter. Currency could not be retrieve'});
               });
           }
         }
         else {
-          throw {message: 'Bad URI format: ' + uri};
+          console.debug("[BMA.parse] Could not parse URI: " + uri);
+          reject({message: 'ERROR.UNKNOWN_URI_FORMAT'});
         }
       })
 
       // Check values against regex
       .then(function(result) {
+        if (!result) return;
         if (result.pubkey && !(exact(regexp.PUBKEY).test(result.pubkey))) {
-          reject({message: "Invalid pubkey format [" + result.pubkey + "]"}); return;
+          throw {message: "Invalid pubkey format [" + result.pubkey + "]"};
         }
         if (result.uid && !(exact(regexp.USER_ID).test(result.uid))) {
-          reject({message: "Invalid uid format [" + result.uid + "]"}); return;
+          throw {message: "Invalid uid format [" + result.uid + "]"};
         }
         if (result.currency && !(exact(regexp.CURRENCY).test(result.currency))) {
-          reject({message: "Invalid currency format ["+result.currency+"]"}); return;
+          throw {message: "Invalid currency format ["+result.currency+"]"};
         }
         return result;
       });
     };
 
+    // Define get latest release (or fake function is no URL defined)
+    var duniterLatestReleaseUrl = csSettings.data.duniterLatestReleaseUrl && csHttp.uri.parse(csSettings.data.duniterLatestReleaseUrl);
+    exports.raw.getLatestRelease = duniterLatestReleaseUrl ?
+      csHttp.getWithCache(duniterLatestReleaseUrl.host,
+        duniterLatestReleaseUrl.port,
+        "/" + duniterLatestReleaseUrl.pathname,
+        /*useSsl*/ (+(duniterLatestReleaseUrl.port) === 443 || duniterLatestReleaseUrl.protocol === 'https:' || that.forceUseSsl),
+        csHttp.cache.LONG
+      ) :
+      // No URL define: use a fake function
+      function() {
+        return $q.when();
+      };
 
+    exports.version.latest = function() {
+      return exports.raw.getLatestRelease()
+        .then(function (json) {
+          if (!json) return;
+          if (json.name && json.html_url) {
+            return {
+              version: json.name,
+              url: json.html_url
+            };
+          }
+          if (json.tag_name && json.html_url) {
+            return {
+              version: json.tag_name.substring(1),
+              url: json.html_url
+            };
+          }
+        })
+        .catch(function(err) {
+          // silent (just log it)
+          console.error('[BMA] Failed to get Duniter latest version', err);
+        });
+    };
 
     exports.websocket = {
         block: ws('/ws/block'),
@@ -812,9 +990,7 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
   var service = new BMA(undefined, undefined, undefined, true);
 
   service.instance = function(host, port, useSsl, useCache) {
-    var bma = new BMA();
-    bma.init(host, port, useSsl, useCache);
-    return bma;
+    return new BMA(host, port, useSsl, useCache);
   };
 
   service.lightInstance = function(host, port, useSsl, timeout) {
@@ -824,6 +1000,7 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
       host: host,
       port: port,
       useSsl: useSsl,
+      url: csHttp.getUrl(host, port, ''/*path*/, useSsl),
       node: {
         summary: csHttp.getWithCache(host, port, '/node/summary', useSsl, csHttp.cache.LONG, false, timeout)
       },

@@ -16,8 +16,8 @@
         <div class="padding padding-xs" style="display: block; height: 60px;">
           <div class="pull-left">
             <h4>
-              <span ng-if="enableFilter && search.type=='offline'" translate>PEER.OFFLINE</span>
-              <span ng-if="!enableFilter || !search.type" translate>PEER.ALL_PEERS</span>
+              <span ng-if="enableFilter && !search.online" translate>PEER.OFFLINE_PEERS</span>
+              <span ng-if="!enableFilter || search.online" translate>PEER.ALL_PEERS</span>
               <span ng-if="search.results.length">({{search.results.length}})</span>
               <ion-spinner ng-if="search.loading" class="icon ion-spinner-small" icon="android"></ion-spinner>
             </h4>
@@ -28,8 +28,8 @@
             <div class="pull-right" ng-if="enableFilter">
 
               <a class="button button-text button-small hidden-xs hidden-sm ink"
-                 ng-class="{'button-text-positive': search.type=='offline', 'button-text-stable': search.type!='offline'}"
-                 ng-click="toggleSearchType('offline')" >
+                 ng-class="{'button-text-positive': !search.online, 'button-text-stable': search.online}"
+                 ng-click="toggleOnline(!search.online)" >
                 <i class="icon ion-close-circled light-gray"></i>
                 <span>{{'PEER.OFFLINE'|translate}}</span>
               </a>
@@ -71,7 +71,7 @@
           </div>
         </div>
 
-        <ng-include src="'plugins/market/templates/document/items_documents.html'"></ng-include>
+        <ng-include src="'plugins/market/templates/document/list_documents.html'"></ng-include>
 
       </div>
     </div>

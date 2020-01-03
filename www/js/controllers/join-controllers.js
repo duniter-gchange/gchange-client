@@ -76,7 +76,7 @@ function JoinModalController($scope, $state,  UIUtils, CryptoUtils, csSettings, 
 
   $scope.showAccountPubkey = function() {
     $scope.formData.computing=true;
-    CryptoUtils.connect($scope.formData.username, $scope.formData.password)
+     CryptoUtils.scryptKeypair($scope.formData.username, $scope.formData.password)
       .then(function(keypair) {
         $scope.formData.pubkey = CryptoUtils.util.encode_base58(keypair.signPk);
         $scope.formData.computing=false;
@@ -159,14 +159,13 @@ function JoinModalController($scope, $state,  UIUtils, CryptoUtils, csSettings, 
 
   // TODO: remove auto add account when done
   /*$timeout(function() {
-    //$scope.selectCurrency('test_net');
-    //$scope.selectAccountType('member');
     $scope.formData.username="azertypoi";
     $scope.formData.confirmUsername=$scope.formData.username;
     $scope.formData.password="azertypoi";
     $scope.formData.confirmPassword=$scope.formData.password;
     $scope.formData.pseudo="azertypoi";
-    //$scope.doNext();
-    //$scope.doNext();
-  }, 400);*/
+    $scope.doNext();
+    $scope.doNext();
+    //$scope.form = {$valid:true};
+  }, 2000);*/
 }

@@ -238,6 +238,32 @@
                 </textarea>
               </ion-item>
 
+              <!-- email -->
+              <div class="item item-input"
+                   ng-class="{'item-input-error': profileForm.$submitted && profileForm.email.$invalid}">
+                <span class="input-label" translate>MARKET.JOIN.SUBSCRIPTION.EMAIL</span>
+                <input name="email" type="text" placeholder="{{'MARKET.JOIN.SUBSCRIPTION.EMAIL_HELP' | translate}}"
+                       ng-model="formData.email"
+                       autocomplete="off"
+                       ng-pattern="emailPattern"
+                       ng-minlength="4"
+                       ng-maxlength="100"
+                       >
+              </div>
+              <div class="form-errors"
+                   ng-show="profileForm.$submitted && profileForm.email.$error"
+                   ng-messages="profileForm.email.$error">
+                <div class="form-error" ng-message="minlength">
+                  <span translate="ERROR.FIELD_TOO_SHORT_WITH_LENGTH" translate-values="{minLength: 3}"></span>
+                </div>
+                <div class="form-error" ng-message="maxlength">
+                  <span translate="ERROR.FIELD_TOO_LONG_WITH_LENGTH" translate-values="{maxLength: 100}"></span>
+                </div>
+                <div class="form-error" ng-message="pattern">
+                  <span translate="ERROR.FIELD_NOT_EMAIL"></span>
+                </div>
+              </div>
+
               <div class="padding hidden-xs text-right">
                 <button class="button button-clear button-dark ink" ng-click="closeModal()" type="button" translate>COMMON.BTN_CANCEL
                 </button>

@@ -2,7 +2,8 @@ $active: #56d67a !default;
 //$balanced: #33cd5f !default;
 $dark-balanced: #364016 !default;
 $balanced-active: #80e09b !default;
-// Include all of Ionic
+
+// Inherit Cesium SCSS
 @import "cesium.app";
 
 /**
@@ -49,7 +50,6 @@ $balanced-active: #80e09b !default;
   }
 }
 
-/* -- Override converse JS --*/
 
 // Hide control box
 #toggle-controlbox,#controlbox.chatbox,.chatroom-features{
@@ -109,4 +109,3 @@ $balanced-active: #80e09b !default;
     color: #fff;
   }
 }
-

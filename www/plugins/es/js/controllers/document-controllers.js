@@ -22,6 +22,7 @@ angular.module('cesium.es.document.controllers', ['cesium.es.services'])
 
   .controller('ESDocumentLookupCtrl', ESDocumentLookupController)
 
+  .controller('ESLastDocumentsCtrl', ESLastDocumentsController)
 ;
 
 function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
@@ -288,26 +289,20 @@ function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
   /* -- Popover -- */
 
   $scope.showActionsPopover = function(event) {
-    if (!$scope.actionsPopover) {
-      $ionicPopover.fromTemplateUrl('plugins/es/templates/document/lookup_popover_actions.html', {
-        scope: $scope
-      }).then(function(popover) {
+    UIUtils.popover.show(event, {
+      templateUrl: 'plugins/es/templates/document/lookup_popover_actions.html',
+      scope: $scope,
+      autoremove: true,
+      afterShow: function(popover) {
         $scope.actionsPopover = popover;
-        //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function() {
-          $scope.actionsPopover.remove();
-        });
-        $scope.actionsPopover.show(event);
-      });
-    }
-    else {
-      $scope.actionsPopover.show(event);
-    }
+      }
+    });
   };
 
   $scope.hideActionsPopover = function() {
     if ($scope.actionsPopover) {
       $scope.actionsPopover.hide();
+      $scope.actionsPopover = null;
     }
   };
 
@@ -332,4 +327,72 @@ function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
     // launch default action fo DEV
    }, 900);
    */
+}
+
+
+function ESLastDocumentsController($scope, $controller, $timeout, $state) {
+  'ngInject';
+
+  $scope.search =  {
+    loading: true,
+    hasMore: true,
+    text: undefined,
+    index: 'user,page,group', type: 'profile,record,comment',
+    results: undefined,
+    sort: 'time',
+    asc: false
+  };
+  $scope.expertMode = false;
+  $scope.defaultSizeLimit = 20;
+  $scope._source = ["issuer", "hash", "time", "creationTime", "title", "avatar._content_type", "city", "message", "record"];
+
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESDocumentLookupCtrl', {$scope: $scope}));
+  $scope.$on('$ionicParentView.enter', $scope.enter);
+
+  $scope.selectDocument = function(event, doc) {
+    if (!doc || !event || event.defaultPrevented) return;
+    event.stopPropagation();
+
+    if (doc.index === "user" && doc.type === "profile") {
+      $state.go('app.wot_identity', {pubkey: doc.pubkey, uid: doc.name});
+      return;
+    }
+    else if (doc.index === "page" && doc.type === "record") {
+      $state.go('app.view_page', {title: doc.title, id: doc.id});
+      return;
+    }
+    else if (doc.index === "group" && doc.type === "record") {
+      $state.go('app.view_group', {title: doc.title, id: doc.id});
+      return
+    }
+    console.warn("Click on this kind of document not implement yet!", doc)
+  };
+
+  // Override parent function computeOptions
+  var inheritedComputeOptions = $scope.computeOptions;
+  $scope.computeOptions = function(offset, size){
+    // Cal inherited function
+    var options = inheritedComputeOptions(offset, size);
+
+    if (!options.sort || options.sort.time) {
+      var side = options.sort && options.sort.time || side;
+      options.sort = [
+        //{'creationTime': side},
+        {'time': side}
+      ];
+    }
+
+    options._source = options._source || $scope._source;
+    options.getTimeFunction = function(doc) {
+      doc.time = doc.creationTime || doc.time;
+      return doc.time;
+    };
+    return options;
+  };
+
+  // Listen for changes
+  $timeout(function() {
+    $scope.startListenChanges();
+  }, 1000);
 }

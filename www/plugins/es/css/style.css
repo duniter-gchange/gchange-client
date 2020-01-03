@@ -231,19 +231,14 @@
 }
 
 
-.buttons-block {
-  display: block;
-  height: 60px;
-}
-
 /**********
-   Dicument
+   Document
 **********/
 
 .item-document.compacted {
   min-height: 16px !important;
   max-height: 16px !important;
-  border-bottom: 0px !important;
+  border-bottom: 0 !important;
 }
 
 .item-document.compacted .col{
@@ -292,5 +287,11 @@
 .ion-page-shop:before {
   font-family: "Ionicons";
   content: "\f110";
+}
+
+
+.buttons-block {
+  display: block;
+  height: 57px;
 }
 

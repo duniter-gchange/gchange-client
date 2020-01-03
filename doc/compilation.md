@@ -6,41 +6,38 @@ To build Cesium, you will have to:
  
   - Installing build tools:
 ```
- sudo apt-get install build-essential
+ sudo apt-get install git wget curl unzip build-essential software-properties-common ruby ruby-dev ruby-ffi gcc make
 ```
 
   - Installing [nvm](https://github.com/creationix/nvm)
 ```
-  wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+  wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | bash
 ```
 
 > Then reload your terminal, for instance by executing the commande `bash`
 
-  - Configure NodeJS to use a version 6:
+  - Configure NodeJS to use a version 10:
 ```
-  nvm install 6
+  nvm install 10
 ```
       
-  - Installing node.js build tools:
+  - Installing node.js build tools, as global dependencies:
 ```
-   npm install -g gulp bower@1.8.0 cordova@9.0.0 ionic@1.7.16
+   npm install -g yarn gulp cordova ionic
 ```
 
 ## Get the source code
    
   - Getting source and installing project dependencies:    
 ```
-  git clone https://github.com/duniter-gchange/gchange-client.git
+  git clone git@git.duniter.org:marketplaces/gchange-client.git
   cd gchange-client
-  git submodule update --init
-  git submodule sync
-  npm install
+  yarn
 ```
 
   - Installing Cordova plugins (need for platforms specific builds)   
 ```
-  ionic state restore
-  ionic browser add crosswalk@12.41.296.5
+  ionic cordova prepare
 ```
 
 
@@ -60,12 +57,12 @@ To build Cesium, you will have to:
  
   - Compiling and running Cesium:
 ```
-  npm start
+  ionic serve
 ```
  
-> or alternative: `ionic serve` 
+> or alternative: `yarn run start` or `npm start` 
 
-## Best pratices for development
+## Best practices for development
 
  ğchange could be run on phone devices. Please read [performance tips on AgularJS + Ionic ](http://julienrenaux.fr/2015/08/24/ultimate-angularjs-and-ionic-performance-cheat-sheet/)
  before starting to contribute.

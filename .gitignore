@@ -1,29 +1,35 @@
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
-/www/lib/ionic-material
-/www/lib/robotodraft
-# Specifies intentionally untracked files to ignore when using Git
-# http://git-scm.com/docs/gitignore
-
 /node_modules/
 /platforms/*
-!/platforms/desktop
+#!/platforms/android
+/resources/android/build/local.properties
+/resources/android/build/*.keystore
+/resources/android/build/release-signing.properties
 /plugins/
 .idea/
 .vscode/
-/*.iml
-.local
-
-/www/lib/*
-/www/locale
-/www/sounds
-!/www/lib/ionic
-/www/dist
-/hooks/playstore-config.json
-
+.local/
 .directory
+/*.iml
+/npm-debug.log
+/package-lock.json
+/yarn-error.log
+
+/dist/web
+/dist/android
+
+/hooks/uglify-config.json
+/hooks/after_prepare/uglify.js
+
 /www/js/config.js
+/www/dist
+/www/lib
+
+# Converse JS files
+/www/sounds
+/www/locale
 
 # Generated CSS
 /www/css/ionic.app.css
@@ -32,5 +38,10 @@
 # Leaflet generated files
 /www/css/leaflet.app.css
 /www/css/leaflet.app.min.css
+/www/css/converse.app.css
+/www/css/converse.app.min.css
 /www/img/layers*.png
 /www/img/marker*.png
+/www/img/loader.gif
+/www/img/search-icon.png
+/www/img/search-icon-mobile.png

@@ -674,6 +674,8 @@
     "POPUP_SECURITY_WARNING_TITLE": "<i class=\"icon ion-alert-circled\"></i> <b>Averto pri sekureco</b>",
     "CERTIFY_RULES_TITLE_UID": "Atesti {{uid}}",
     "CERTIFY_RULES": "<b class=\"assertive\">NE atestu</b> konton, se vi pensas ke:<br/><br/><ul><li>1.) ĝi ne rilatas al persono <b>fizika kaj vivanta</b>.<li>2.) ĝia posedanto <b>havas alian konton</b> jam atestitan.<li>3.) ĝia posedanto malobservas (vole aŭ ne) la regulon 1 aŭ 2 (ekzemple atestante falsajn kontojn aŭ duoblajn).</ul><br/><b>Ĉu vi certas,</b> ke vi tamen volas atesti tiun ĉi identecon?",
+    "FULLSCREEN": "Afiŝi la programon plen-ekrane?",
+    "EXIT_APP": "Fermi la programon?",
     "TRANSFER": "<b>Resumo de la elspezo</b> :<br/><br/><ul><li> - De: {{from}}</li><li> - Al: <b>{{to}}</b></li><li> - Sumo: <b>{{amount}} {{unit}}</b></li><li> - Komento: <i>{{comment}}</i></li></ul><br/><b>Ĉu vi certas, ke vi volas efektivigi tiun ĉi elspezon?</b>",
     "MEMBERSHIP_OUT": "Tiu ĉi ago estas <b>neinversigebla</b>.<br/></br/>Ĉu vi certas, ke vi volas <b>nuligi vian membro-konton</b>?",
     "MEMBERSHIP_OUT_2": "Tiu ĉi ago estas <b>neinversigebla</b> !<br/><br/>Ĉu vi vere certas, ke vi volas <b>nuligi vian aliĝon</b> kiel membron?",

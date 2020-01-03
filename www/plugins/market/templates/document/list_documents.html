@@ -1,0 +1,27 @@
+
+<ion-list class="list" ng-class="::motion.ionListClass">
+
+  <ng-repeat ng-repeat="doc in :rebind:search.results track by doc.id"
+             ng-switch on="doc.type">
+    <div ng-switch-when="record">
+      <ng-include src="::'plugins/market/templates/document/item_document_record.html'"></ng-include>
+    </div>
+    <div ng-switch-when="comment">
+      <ng-include src="::'plugins/market/templates/document/item_document_comment.html'"></ng-include>
+    </div>
+    <div ng-switch-when="profile">
+      <ng-include src="::'plugins/market/templates/document/item_document_profile.html'"></ng-include>
+    </div>
+    <div ng-switch-default>
+      <ng-include src="::'plugins/es/templates/document/item_document.html'"></ng-include>
+    </div>
+  </ng-repeat>
+
+</ion-list>
+
+<ion-infinite-scroll
+        ng-if="!search.loading && search.hasMore"
+        spinner="android"
+        on-infinite="showMore()"
+        distance="1%">
+</ion-infinite-scroll>

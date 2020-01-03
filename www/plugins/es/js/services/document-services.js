@@ -171,15 +171,15 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
         });
     }
 
-    function remove(document) {
+    function remove(document, options) {
       if (!document || !document.index || !document.type || !document.id) return $q.reject('Could not remove document: missing mandatory fields');
 
       if (!csWallet.isLogin()) return $q.reject('User not login');
 
-      return esHttp.record.remove(document.index, document.type)(document.id);
+      return esHttp.record.remove(document.index, document.type)(document.id, options);
     }
 
-    function removeAll(documents) {
+    function removeAll(documents, options) {
       if (!documents || !documents.length) return  $q.when();
       if (!csWallet.isLogin()) return $q.reject('User not login');
 

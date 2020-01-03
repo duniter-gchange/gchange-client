@@ -1,11 +1,16 @@
 
 angular.module('cesium.market.join.controllers', ['cesium.services', 'cesium.market.services'])
 
-  .controller('MkJoinModalCtrl', function ($scope, $timeout, $state,  UIUtils, CryptoUtils, csSettings, csWallet, csCurrency, mkWallet, mkModals) {
-  'ngInject';
+.controller('MkJoinModalCtrl', function ($scope, $timeout, $state,  UIUtils, CryptoUtils, csSettings, csWallet, csCurrency, mkWallet, mkModals) {
+'ngInject';
+
+  var EMAIL_REGEX = '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$';
+  $scope.emailPattern = EMAIL_REGEX;
 
   $scope.formData = {
-    pseudo: ''
+    pseudo: '',
+    description: undefined,
+    email: undefined
   };
   $scope.slides = {
     slider: null,
@@ -46,7 +51,7 @@ angular.module('cesium.market.join.controllers', ['cesium.services', 'cesium.mar
     if ($scope.formData.pubkey) return; // not changed
 
     $scope.formData.computing=true;
-    CryptoUtils.connect($scope.formData.username, $scope.formData.password)
+    CryptoUtils.scryptKeypair($scope.formData.username, $scope.formData.password)
       .then(function(keypair) {
         $scope.formData.pubkey = CryptoUtils.util.encode_base58(keypair.signPk);
         $scope.formData.computing=false;
@@ -135,12 +140,15 @@ angular.module('cesium.market.join.controllers', ['cesium.services', 'cesium.mar
     return mkModals.showHelp({anchor: helpAnchor});
   };
 
-  /*// TODO: remove auto add account when done
+  // TODO: remove auto add account when done
   $timeout(function() {
     $scope.formData.username="azertypoi";
     $scope.formData.confirmUsername=$scope.formData.username;
     $scope.formData.password="azertypoi";
     $scope.formData.confirmPassword=$scope.formData.password;
     $scope.formData.pseudo="azertypoi";
-  }, 400);*/
+    $scope.doNext();
+    $scope.doNext();
+    //$scope.form = {$valid:true};
+  }, 1000);
 });

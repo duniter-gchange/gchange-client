@@ -8,7 +8,7 @@ angular.module('cesium.graph.network.controllers', ['chart.js', 'cesium.graph.se
     if (enable) {
 
       PluginServiceProvider
-        .extendState('app.network', {
+        .extendState('app.es_network', {
           points: {
             'buttons': {
               templateUrl: "plugins/graph/templates/network/view_network_extend.html",
