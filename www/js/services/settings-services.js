@@ -6,9 +6,10 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
 
   // Define app locales
   var locales = [
-    {id:'en',    label:'English'},
-    {id:'en-GB', label:'English (UK)'},
-    {id:'fr-FR', label:'Français'}
+    {id:'en',    label:'English', country: 'us'},
+    {id:'en-GB', label:'English (UK)', country: 'gb'},
+    {id:'eo-EO', label:'Esperanto'},
+    {id:'fr-FR', label:'Français', country: 'fr'}
   ];
   var fallbackLocale = csConfig.fallbackLanguage ? fixLocale(csConfig.fallbackLanguage) : 'en';
 

@@ -3,6 +3,17 @@
 
   </ion-nav-title>
 
+  <ion-nav-buttons side="secondary" >
+    <!-- locales  -->
+    <button class="button button-clear hidden-xs hidden-sm gray"
+            ng-click="showLocalesPopover($event)" style="align-content: center">
+      <img ng-if=":locale:$root.settings.locale.country"
+           ng-src="https://www.countryflags.io/{{:locale:$root.settings.locale.country}}/shiny/32.png">
+      <span ng-if=":locale:!$root.settings.locale.country">{{:locale:$root.settings.locale.label}}&nbsp;</span>
+      <small class="ion-arrow-down-b"></small>
+    </button>
+  </ion-nav-buttons>
+
   <ion-content class="has-header text-center padding-xs bg-image-cover"
                style="background-image: url({{bgImage}})"
                scroll="false">
@@ -77,8 +88,11 @@
         </div>
 
         <button type="button"
-                class="button button-block button-calm button-raised icon icon-left ion-wand ink-dark visible-xs visible-sm"
-                ng-click="showJoinModal()" ng-show="!login" translate>LOGIN.CREATE_ACCOUNT</button>
+                class="button button-block button-stable button-raised ink visible-xs visible-sm"
+                ui-sref="app.view_wallet" ng-if="!login" translate>COMMON.BTN_LOGIN</button>
+        <button type="button"
+                class="button button-block button-assertive button-raised icon icon-left ion-log-out ink-dark visible-xs visible-sm"
+                ng-click="logout()" ng-if="login" translate>COMMON.BTN_LOGOUT</button>
 
       </div>
 
