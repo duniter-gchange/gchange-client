@@ -419,7 +419,15 @@ function webPluginCopyFiles() {
 
         // Copy CSS
         gulp.src(paths.css_plugin)
-            .pipe(gulp.dest(tmpPath + '/dist/dist_css/plugins'))
+            .pipe(gulp.dest(tmpPath + '/dist/dist_css/plugins')),
+
+        // Copy converse locale files
+        gulp.src('./www/locale/**/*.*')
+            .pipe(gulp.dest(tmpPath + '/locale')),
+
+        // Copy converse sounds files
+        gulp.src('./www/sounds/**/*.*')
+            .pipe(gulp.dest(tmpPath + '/sounds'))
     );
 }
 
@@ -615,7 +623,7 @@ function webZip() {
         .pipe(header('\ufeff'))
         .pipe(txtFilter.restore)
 
-        .pipe(zip('gchange-client-v'+version+'-web.zip'))
+        .pipe(zip('gchange-v'+version+'-web.zip'))
 
         .pipe(gulp.dest('./dist/web/build'));
 }

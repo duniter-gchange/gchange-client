@@ -15,7 +15,7 @@ fi;
 
 echo "Preparing project environment.."
 
-PROJECT_NAME="gchange-client"
+PROJECT_NAME="gchange"
 REPO="duniter-gchange/gchange-client"
 REPO_API_URL="https://api.github.com/repos/${REPO}"
 REPO_PUBLIC_URL="https://github.com/${REPO}"
