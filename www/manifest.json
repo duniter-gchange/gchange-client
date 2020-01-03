@@ -2,7 +2,7 @@
   "short_name": "ğchange",
   "name": "ğchange",
   "manifest_version": 3,
-  "version": "0.9.3",
+  "version": "1.0.0",
   "default_locale": "fr",
   "description": "A market place for Ğ1 libre currency",
   "icons": [
