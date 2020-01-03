@@ -1,5 +1,71 @@
 @charset "UTF-8";
+
+@import "./ionic.app";
+
 @import "../www/lib/converse/css/converse";
+//@import "../www/lib/converse/css/fonts";   // Backbone Collection and Models for chat boxes
 
-/* -- Override converse JS --*/
+/* -- Override default --*/
 
+#conversejs {
+  height: 55vh;
+}
+
+// Hide control box
+#toggle-controlbox,#controlbox.chatbox,.chatroom-features{
+  display: none!important;
+}
+#converse-embedded-chat .chatroom .box-flyout .chatroom-body .chatroom-form-container .button-primary,
+#conversejs .chatroom .box-flyout .chatroom-body .chatroom-form-container .button-primary,
+#converse-embedded-chat .chat-head-chatroom,
+#conversejs .chat-head-chatroom {
+  background-color: $balanced;
+}
+#conversejs .chat-head-chatroom {
+
+  height: 35px;
+
+  .chat-title:before{
+    @extend .ion-chatbubbles;
+    font-size: 14px;
+    color: #fff;
+  }
+  .chat-title{
+    color: #ddd;
+    .chatroom-name {
+      color: #fff;
+    }
+    .chatroom-description {
+      display: none!important;
+    }
+  }
+
+  .chatbox-btn.close-chatbox-button {
+    display: none !important;
+  }
+}
+
+#converse-embedded-chat .chatroom .sendXMPPMessage .chat-toolbar,
+#conversejs .chatroom .sendXMPPMessage .chat-toolbar{
+  background-color: $balanced-active;
+}
+
+#conversejs #minimized-chats #toggle-minimized-chats{
+  display: none !important;
+}
+
+#conversejs #minimized-chats .minimized-chats-flyout {
+  bottom: 6px;
+  height: 35px;
+  .chatbox-btn.close-chatbox-button {
+    display: inline-block !important;
+  }
+  a.restore-chat {
+    padding-top: 0.2em;
+  }
+  a.restore-chat:before {
+    @extend .ion-chatbubbles;
+    font-size: 18px;
+    color: #fff;
+  }
+}

@@ -55,7 +55,7 @@
         "@bower_components/angular-ui-router": "angular-ui/angular-ui-router-bower#^0.2.18",
         "@bower_components/blob-polyfill": "bjornstar/blob-polyfill#~1.0.20150320",
         "@bower_components/chart.js": "chartjs/Chart.js#^2.9.3",
-        "@bower_components/converse": "conversejs/converse#^3.3.4",
+        "@bower_components/converse": "conversejs/converse.js#~3.3.4",
         "@bower_components/file-saver.js": "Teleborder/FileSaver.js#~1.20150507.2",
         "@bower_components/ion-digit-keyboard": "skol-pro/ion-digit-keyboard#973b90c2fc",
         "@bower_components/ionic": "driftyco/ionic-bower#1.3.5",

@@ -257,7 +257,31 @@ function pluginSass() {
 
         // Copy converse sounds
         gulp.src('./www/lib/converse/sounds/**/*.*')
-            .pipe(gulp.dest('./www/sounds/'))
+            .pipe(gulp.dest('./www/sounds/')),
+
+        // Converse App style
+        gulp.src('./scss/converse.app.scss')
+            .pipe(sass()).on('error', sass.logError)
+            // Fix bad images path
+            .pipe(replace("url('../images/", "url('../img/"))
+            .pipe(replace("url(\"../images/", "url(\"../img/"))
+            .pipe(replace("url('images/", "url('../img/"))
+            .pipe(replace("url(\"images/", "url(\"../img/"))
+            .pipe(replace("url(images/", "url(../img/"))
+            .pipe(replace("url(\"../fonticons/fonts", "url(\"../fonts"))
+            // .pipe(base64({
+            //   baseDir: "./www/css/",
+            //   extensions: ['png', 'gif', /\.jpg#datauri$/i],
+            //   maxImageSize: 14 * 1024,
+            //   deleteAfterEncoding: true
+            // }))
+            .pipe(gulp.dest('./www/css/'))
+            .pipe(cleanCss({
+                keepSpecialComments: 0
+            }))
+            .pipe(sourcemaps.write())
+            .pipe(rename({ extname: '.min.css' }))
+            .pipe(gulp.dest('./www/css/'))
     );
 }
 

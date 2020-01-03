@@ -80,6 +80,7 @@ angular.module('cesium.market.converse.services', ['cesium.es.services'])
             "auto_away": 300,
             "auto_join_on_invite": true,
             "auto_reconnect": true,
+            "minimized": true,
             "auto_join_rooms": [
               "gchange@muc.duniter.org"
             ],
@@ -108,6 +109,8 @@ angular.module('cesium.market.converse.services', ['cesium.es.services'])
               }
             }
             room.nick = nickname;
+            // Minimized by default
+            room.minimized = true;
             return room;
           });
 
