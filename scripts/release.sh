@@ -166,23 +166,10 @@ fi
 echo "----------------------------------"
 echo "- Building desktop artifacts..."
 echo "----------------------------------"
-
-
-if [[ -d "${PROJECT_DIR}/dist/desktop" ]]; then
-  cd "${PROJECT_DIR}/dist/desktop"
-
-  # Fetch last updates
-  git fetch origin && git merge origin/master || exit 1
-
-  # Build desktop assets
-  ./release.sh $2
-  if [[ $? -ne 0 ]]; then
-      exit 1
-  fi
-else
-  echo "ERROR: dist/desktop not found -> Make sure git submodule has been init!"
-  exit 1
-fi;
+. ${PROJECT_DIR}/scripts/build-desktop.sh
+if [[ $? -ne 0 ]]; then
+    exit 1
+fi
 
 # Back to nodejs
 cd ${PROJECT_DIR}
