@@ -615,14 +615,14 @@ function webZip() {
         .pipe(header('\ufeff'))
         .pipe(txtFilter.restore)
 
-        .pipe(zip('cesium-v'+version+'-web.zip'))
+        .pipe(zip('gchange-client-v'+version+'-web.zip'))
 
         .pipe(gulp.dest('./dist/web/build'));
 }
 
 function webBuildSuccess(done) {
     var version = JSON.parse(fs.readFileSync('./package.json', 'utf8')).version;
-    log(colors.green("Build for web created at: 'dist/web/build/cesium-v" + version + "-web.zip'"));
+    log(colors.green("Build for web created at: 'dist/web/build/gchange-v" + version + "-web.zip'"));
     done();
 }
 
