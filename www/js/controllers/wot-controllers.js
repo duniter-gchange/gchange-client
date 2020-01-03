@@ -604,6 +604,8 @@ function WotIdentityViewController($scope, $rootScope, $controller, $timeout, UI
 
   $scope.doMotion = function() {
     $scope.motion.show({selector: '.view-identity .list .item'});
+
+    $scope.$broadcast('$csExtension.motion');
   };
 
 

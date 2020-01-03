@@ -673,10 +673,12 @@ function PopoverMessageController($scope, UIUtils, $state, csWallet, esHttp, esM
 
   $scope.showNewMessageModal = function(parameters) {
     $scope.closePopover();
-    return esModals.showMessageCompose(parameters)
-      .then(function(id) {
-        if (id) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
-      });
+    $timeout(function() {
+      esModals.showMessageCompose(parameters)
+          .then(function(id) {
+            if (id) UIUtils.toast.show('MESSAGE.INFO.MESSAGE_SENT');
+          });
+    }, 500); // Timeout need, to avoid freeze
   };
 
   /* -- listeners -- */

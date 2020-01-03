@@ -36,6 +36,8 @@ angular.module('cesium.es.app.controllers', ['ngResource', 'cesium.es.services']
     }
   })
 
+ .controller('ESExtensionCtrl', ESExtensionController)
+
  .controller('ESJoinCtrl', ESJoinController)
 
  .controller('ESMenuExtendCtrl', ESMenuExtendController)
@@ -44,6 +46,18 @@ angular.module('cesium.es.app.controllers', ['ngResource', 'cesium.es.services']
 
 ;
 
+/**
+ * Generic controller, that enable/disable depending on esSettings enable/disable
+ */
+function ESExtensionController($scope, esSettings, PluginService) {
+  'ngInject';
+  $scope.extensionPoint = PluginService.extensions.points.current.get();
+  $scope.enable = esSettings.isEnable();
+  esSettings.api.state.on.changed($scope, function(enable) {
+    $scope.enable = enable;
+    $scope.$broadcast('$$rebind::state');
+  });
+}
 
 /**
  * Control new account wizard extend view

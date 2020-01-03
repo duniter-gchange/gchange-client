@@ -16,7 +16,11 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
             'buttons': {
               templateUrl: "plugins/es/templates/wot/view_identity_extend.html",
               controller: 'ESWotIdentityViewCtrl'
-            }
+            },
+            'buttons-top-fab': {
+              templateUrl: "plugins/es/templates/wot/view_identity_extend.html",
+              controller: 'ESWotIdentityViewCtrl'
+            },
           }
         })
 
@@ -41,14 +45,11 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
 
 ;
 
-function ESWotIdentityViewController($scope, $ionicPopover, UIUtils, esSettings, PluginService, esModals) {
+function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils, esModals) {
   'ngInject';
 
-  $scope.extensionPoint = PluginService.extensions.points.current.get();
-  $scope.enable = esSettings.isEnable();
-  esSettings.api.state.on.changed($scope, function(enable) {
-    $scope.enable = enable;
-  });
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESExtensionCtrl', {$scope: $scope}));
 
   /* -- modals -- */
 
@@ -109,6 +110,15 @@ function ESWotIdentityViewController($scope, $ionicPopover, UIUtils, esSettings,
     }
   };
 
+  if ($scope.extensionPoint === 'buttons-top-fab') {
+    // Show fab button, when parent execute motions
+    $scope.$on('$csExtension.motion', function(event) {
+      var canCompose = !!$scope.formData.profile;
+      if (canCompose) {
+        $scope.showFab('fab-compose-' + $scope.formData.pubkey);
+      }
+    });
+  }
 
   // TODO : for DEV only
   /*$timeout(function() {
