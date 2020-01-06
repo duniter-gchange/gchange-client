@@ -18,7 +18,7 @@ function MkLastDocumentsController($scope, $controller, $timeout, $state, $filte
   $scope.selectDocument = function(event, doc) {
     // Call super function
     if (doc.index !== "market") {
-      $scope.inheritedSelectDocument.call(event, doc);
+      $scope.inheritedSelectDocument(event, doc);
       return;
     }
 

@@ -356,17 +356,24 @@ function ESLastDocumentsController($scope, $controller, $timeout, $state) {
 
     if (doc.index === "user" && doc.type === "profile") {
       $state.go('app.wot_identity', {pubkey: doc.pubkey, uid: doc.name});
-      return;
     }
     else if (doc.index === "page" && doc.type === "record") {
       $state.go('app.view_page', {title: doc.title, id: doc.id});
-      return;
+    }
+    else if (doc.index === "page" && doc.type === "comment") {
+      var anchor = $filter('formatHash')(doc.id);
+      $state.go('app.view_page_anchor', {title: doc.title, id: doc.record, anchor: anchor});
     }
     else if (doc.index === "group" && doc.type === "record") {
       $state.go('app.view_group', {title: doc.title, id: doc.id});
-      return
     }
-    console.warn("Click on this kind of document not implement yet!", doc)
+    else if (doc.index === "group" && doc.type === "comment") {
+      var anchor = $filter('formatHash')(doc.id);
+      $state.go('app.view_group_anchor', {title: doc.title, id: doc.record, anchor: anchor});
+    }
+    else {
+      console.warn("Click on this kind of document not implement yet!", doc)
+    }
   };
 
   // Override parent function computeOptions
