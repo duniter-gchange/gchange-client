@@ -11,8 +11,17 @@ angular.module('cesium.graph.network.controllers', ['chart.js', 'cesium.graph.se
         .extendState('app.es_network', {
           points: {
             'buttons': {
-              templateUrl: "plugins/graph/templates/network/view_network_extend.html",
+              templateUrl: "plugins/graph/templates/network/view_es_network_extend.html",
               controller: 'GpNetworkViewExtendCtrl'
+            }
+          }
+        })
+
+        .extendState('app.view_es_peer', {
+          points: {
+            'general': {
+              templateUrl: "plugins/graph/templates/network/view_es_peer_extend.html",
+              controller: 'ESExtensionCtrl'
             }
           }
         })

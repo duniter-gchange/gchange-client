@@ -11,7 +11,7 @@ angular.module('cesium.es.network.controllers', ['cesium.es.services'])
             cache: false, // fix #766
             views: {
               'menuContent': {
-                templateUrl: "plugins/es/templates/network/view_network.html",
+                templateUrl: "plugins/es/templates/network/view_es_network.html",
                 controller: 'ESNetworkLookupCtrl'
               }
             },
@@ -21,11 +21,11 @@ angular.module('cesium.es.network.controllers', ['cesium.es.services'])
           })
 
           .state('app.view_es_peer', {
-            url: "/data/network/peer/:server?ssl&tor",
+            url: "/network/data/peer/:server?ssl&tor",
             cache: false,
             views: {
               'menuContent': {
-                templateUrl: "plugins/es/templates/network/view_peer.html",
+                templateUrl: "plugins/es/templates/network/view_es_peer.html",
                 controller: 'ESPeerViewCtrl'
               }
             },
@@ -164,14 +164,10 @@ function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $w
             }
           }));
     }
-
-    // Show help tip
-    $scope.showHelpTip();
   };
 
   $scope.updateView = function(data) {
     console.debug("[peers] Updating UI");
-    $scope.$broadcast('$$rebind::' + 'rebind'); // force data binding
     $scope.search.results = data.peers;
     $scope.search.memberPeersCount = data.memberPeersCount;
     // Always tru if network not started (e.g. after leave+renter the view)
@@ -329,31 +325,6 @@ function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $w
                 }]
             }
           });
-        });
-  };
-
-
-
-  /* -- help tip -- */
-
-  // Show help tip
-  $scope.showHelpTip = function(index, isTour) {
-    index = angular.isDefined(index) ? index : csSettings.data.helptip.network;
-    isTour = angular.isDefined(isTour) ? isTour : false;
-    if (index < 0) return;
-
-    // Create a new scope for the tour controller
-    var helptipScope = $scope.createHelptipScope();
-    if (!helptipScope) return; // could be undefined, if a global tour already is already started
-    helptipScope.tour = isTour;
-
-    return helptipScope.startNetworkTour(index, false)
-        .then(function(endIndex) {
-          helptipScope.$destroy();
-          if (!isTour) {
-            csSettings.data.helptip.network = endIndex;
-            csSettings.store();
-          }
         });
   };
 }

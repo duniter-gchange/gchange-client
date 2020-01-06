@@ -74,6 +74,15 @@
           <h4 class="dark text-left">{{node.pubkey}}</h4>
         </ion-item>
 
+        <ion-item class="item item-icon-left item-text-wrap ink"
+                  ng-if="isReachable">
+          <i class="icon ion-cube"></i>
+          <span translate>BLOCKCHAIN.VIEW.TITLE_CURRENT</span>
+          <div class="badge badge-calm" ng-if="!loading">
+            {{current.number|formatInteger}}
+          </div>
+        </ion-item>
+
         <ion-item class="item item-icon-left item-text-wrap"
                   ng-if="isReachable">
           <i class="icon ion-document"></i>
@@ -83,23 +92,14 @@
           </div>
         </ion-item>
 
-        <!--<a class="item item-icon-left item-icon-right item-text-wrap ink"-->
-           <!--ng-if="isReachable"-->
-           <!--ui-sref="app.document_search(options.document)">-->
-          <!--<i class="icon ion-document" style="font-size: 25px;"></i>-->
-          <!--<i class="icon-secondary ion-clock" style="font-size: 18px; left: 33px; top: -12px;"></i>-->
-          <!--<span translate>DOCUMENT.LOOKUP.LAST_DOCUMENTS</span>-->
-          <!--<i class="gray icon ion-ios-arrow-right"></i>-->
-        <!--</a>-->
-
-        <ion-item class="item item-icon-left item-text-wrap ink"
-                  ng-if="isReachable">
-          <i class="icon ion-cube"></i>
-          <span translate>BLOCKCHAIN.VIEW.TITLE_CURRENT</span>
-          <div class="badge badge-calm" ng-if="!loading">
-            {{current.number|formatInteger}}
-          </div>
-        </ion-item>
+        <a class="item item-icon-left item-icon-right item-text-wrap ink"
+           ng-if="isReachable"
+           ui-sref="app.document_search(options.document)">
+          <i class="icon ion-document" style="font-size: 25px;"></i>
+          <i class="icon-secondary ion-clock" style="font-size: 18px; left: 33px; top: -12px;"></i>
+          <span translate>DOCUMENT.LOOKUP.LAST_DOCUMENTS</span>
+          <i class="gray icon ion-ios-arrow-right"></i>
+        </a>
 
         <!-- Allow extension here -->
         <cs-extension-point name="general"></cs-extension-point>
