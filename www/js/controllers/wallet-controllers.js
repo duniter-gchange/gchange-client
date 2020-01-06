@@ -344,13 +344,13 @@ function WalletController($scope, $q, $ionicPopup, $timeout, $state,
    * @param fix
    */
   $scope.doQuickFix = function(event) {
-    if (event == 'renew') {
+    if (event === 'renew') {
       $scope.renewMembership();
     }
-    else if (event == 'fixMembership') {
+    else if (event === 'fixMembership') {
       $scope.fixMembership();
     }
-    else if (event == 'fixIdentity') {
+    else if (event === 'fixIdentity') {
       $scope.fixIdentity();
     }
   };
