@@ -4,7 +4,14 @@
     "CATEGORY_SELECT_HELP": "Sélectionner",
     "CATEGORIES": "Catégories",
     "CATEGORY_SEARCH_HELP": "Recherche",
+    "COMMENT_HELP": "Commentaire",
     "LAST_MODIFICATION_DATE": "Mise à jour le",
+    "BTN_LIKE_HELP": "J'aime",
+    "LIKES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} aimé cette page",
+    "VIEWS_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} consulté cette page",
+    "ABUSES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} ont signalé cette page",
+    "BTN_REPORT_ABUSE_DOTS": "Signaler un problème, un abus, etc...",
+    "BTN_REMOVE_REPORTED_ABUSE": "Annuler mon signalement",
     "SUBMIT_BY": "Soumis par",
     "BTN_PUBLISH": "Publier",
     "BTN_PICTURE_DELETE": "Supprimer",
@@ -21,6 +28,15 @@
       "NO_RESULT": "Aucune notification",
       "SHOW_ALL": "Voir tout",
       "LOAD_NOTIFICATIONS_FAILED": "Erreur de chargement des notifications"
+    },
+    "REPORT_ABUSE": {
+      "TITLE": "Signaler un problème",
+      "SUB_TITLE": "Merci de nous expliquez succintement le problème :",
+      "REASON_HELP": "J'explique le problème...",
+      "ASK_DELETE": "Demander la suppression ?",
+      "CONFIRM": {
+        "SENT": "Signalement envoyé. Merci !"
+      }
     }
   },
   "MENU": {
@@ -256,6 +272,7 @@
     "SOCIAL_HELP": "http://...",
     "GENERAL_DIVIDER": "Informations générales",
     "SOCIAL_NETWORKS_DIVIDER": "Réseaux sociaux, sites web",
+    "STAR": "Niveau de confiance",
     "TECHNICAL_DIVIDER": "Informations techniques",
     "MODAL_AVATAR": {
       "TITLE": "Photo de profil",

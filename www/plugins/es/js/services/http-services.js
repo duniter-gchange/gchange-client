@@ -510,11 +510,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       options = options || {};
       var postRequest = that.post(path);
       return function(record, params) {
-        if (!csWallet.isLogin()) {
-          var deferred = $q.defer();
-          deferred.reject('Wallet must be login before sending record to ES node');
-          return deferred.promise;
-        }
+        if (!csWallet.isLogin()) return $q.reject('Wallet must be login before sending record to ES node');
         if (options.creationTime && !record.creationTime) {
           record.creationTime = moment().utc().unix();
         }
@@ -523,11 +519,11 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         var now = moment().utc().unix();
         record.time = (!record.time || record.time < now) ? now : (record.time+1);
 
-        var keypair = $rootScope.walletData.keypair;
+        var keypair = csWallet.data.keypair;
         var obj = angular.copy(record);
         delete obj.signature;
         delete obj.hash;
-        obj.issuer = $rootScope.walletData.pubkey;
+        obj.issuer = csWallet.data.pubkey;
         if (!obj.version) {
           obj.version = 2;
         }
@@ -566,30 +562,32 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       };
     }
 
-    function countRecord(index, type) {
-      return that.get("/{0}/{1}/_search?size=0".format(index, type))
-        .then(function(res) {
-          return res && res.hits && res.hits.total;
-        });
+    function countHits(index, type, cacheTime) {
+      var getRequest = that.get("/{0}/{1}/_search?size=0".format(index, type), cacheTime);
+      return function(params) {
+        return getRequest(params)
+            .then(function(res) {
+              return res && res.hits && res.hits.total;
+            });
+      };
     }
 
     function removeRecord(index, type) {
       return function(id) {
         if (!csWallet.isLogin()) return $q.reject('Wallet must be login before sending record to ES node');
 
-        var keypair = $rootScope.walletData.keypair;
         var obj = {
           version: 2,
           index: index,
           type: type,
           id: id,
-          issuer: $rootScope.walletData.pubkey,
+          issuer: csWallet.data.pubkey,
           time: moment().utc().unix()
         };
         var str = JSON.stringify(obj);
         return CryptoUtils.util.hash(str)
           .then(function(hash) {
-            return CryptoUtils.sign(hash, keypair)
+            return CryptoUtils.sign(hash, csWallet.data.keypair)
               .then(function(signature) {
                 // Prepend hash+signature
                 str = '{"hash":"{0}","signature":"{1}",'.format(hash, signature) + str.substring(1);
@@ -601,6 +599,129 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
               });
           });
       };
+    }
+
+    function addLike(index, type) {
+      var postRequest = postRecord('/{0}/{1}/:id/_like'.format(index, type));
+      return function(id, options) {
+        options = options || {};
+        options.kind = options.kind && options.kind.toUpperCase() || 'LIKE';
+        if (!csWallet.isLogin()) return $q.reject('Wallet must be login before sending record to ES node');
+        var obj = {
+          version: 2,
+          index: index,
+          type: type,
+          id: id,
+          kind: options.kind
+        };
+        if (options.comment) obj.comment = options.comment;
+        if (angular.isDefined(options.level)) obj.level = options.level;
+
+        return postRequest(obj);
+      };
+    }
+
+    function toggleLike(index, type) {
+      var getIdsRequest = getLikeIds(index, type);
+      var addRequest = addLike(index, type);
+      var removeRequest = removeRecord('like', 'record');
+      return function(id, options) {
+        options = options || {};
+        options.kind = options.kind || 'LIKE';
+        if (!csWallet.isLogin()) return $q.reject('Wallet must be login before sending record to ES node');
+        return getIdsRequest(id, {kind: options.kind, issuer: csWallet.data.pubkey})
+            .then(function(existingLikeIds) {
+              // User already like: so remove it
+              if (existingLikeIds && existingLikeIds.length) {
+                return $q.all(_.map(existingLikeIds, function(likeId) {
+                  return removeRequest(likeId)
+                }))
+                // Return the deletion, as a delta
+                .then(function() {
+                  return -1 * existingLikeIds.length;
+                });
+              }
+              // User not like, so add it
+              else {
+                return addRequest(id, options)
+                  // Return the insertion, as a delta
+                  .then(function() {
+                    return +1;
+                  });
+              }
+            });
+      }
+    }
+
+    function getLikeIds(index, type) {
+      var searchRequest = that.get('/like/record/_search?_source=false&q=:q');
+      var baseQueryString = 'index:{0} AND type:{1} AND id:'.format(index, type);
+      return function(id, options) {
+        options = options || {};
+        options.kind = options.kind || 'LIKE';
+        var queryString = baseQueryString + id;
+        if (options.kind) queryString += ' AND kind:' + options.kind.toUpperCase();
+        if (options.issuer) queryString += ' AND issuer:' + options.issuer;
+
+        return searchRequest({q: queryString})
+            .then(function(res) {
+              return (res && res.hits && res.hits.hits || []).map(function(hit) {
+                return hit._id;
+              });
+            });
+
+      }
+    }
+
+    function removeLike(index, type) {
+      var removeRequest = removeRecord('like', 'record');
+      return function(id) {
+        if (id) {
+          return removeRequest(id);
+        }
+        // Get the ID
+        else {
+
+        }
+      }
+    }
+
+    function countLike(index, type, cacheTime) {
+      var searchRequest = that.post("/like/record/_search");
+      return function(id, options) {
+        options = options || {};
+        options.kind = options.kind || 'LIKE';
+        var request = {
+          query: {
+            bool: {
+              filter: [
+                {term: {index: index}},
+                {term: {type: type}},
+                {term: {id: id}},
+                {term: {kind: options.kind.toUpperCase()}}
+              ]
+            }
+          },
+          size: 0
+        };
+
+        // To known if the user already like, add 'should' on issuer, and limit to 1
+        if (options.issuer) {
+          request.query.bool.should = {term: {issuer: options.issuer}};
+          request.size = 1;
+          request._source = ["issuer"];
+        }
+        return searchRequest(request)
+            .then(function(res) {
+              var hits = res && res.hits;
+              return {
+                total: hits && hits.total || 0,
+                wasHit: hits && options.issuer && _.findIndex(hits.hits, function(hit) {
+                  return hit._source.issuer === options.issuer;
+                }) !== -1 || false
+              };
+            })
+      }
     }
 
     that.image = {};
@@ -741,7 +862,13 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       record: {
         post: postRecord,
         remove: removeRecord,
-        count : countRecord
+        count : countHits
+      },
+      like: {
+        toggle: toggleLike,
+        add: addLike,
+        remove: removeLike,
+        count: countLike
       },
       image: {
         fromAttachment: imageFromAttachment,

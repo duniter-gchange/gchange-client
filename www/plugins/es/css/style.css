@@ -246,6 +246,18 @@
 }
 
 /**********
+   Common > report abuse
+**********/
+
+.popup-report-abuse .popup{
+  width: 350px !important;
+
+  .item-toggle .toggle {
+    right: 0 !important;
+  }
+}
+
+/**********
    Add specific Icons
 **********/
 

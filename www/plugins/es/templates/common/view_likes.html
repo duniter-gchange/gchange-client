@@ -1,0 +1,19 @@
+<div class=likes">
+
+          <span ng-if="views" title="{{'COMMON.VIEWS_TEXT'|translate: views }}">
+            {{views.total || 0}}
+            <i class="icon ion-eye"></i>
+          </span>
+    <ng-if ng-if="likes">&nbsp;|&nbsp;
+        <span title="{{'COMMON.LIKES_TEXT'|translate: likes }}">
+                          {{likes.total || 0}}
+                          <i class="icon ion-heart"></i>
+                        </span>
+    </ng-if>
+    <ng-if ng-if="abuses.total">&nbsp;|&nbsp;
+        <span title="{{'COMMON.ABUSES_TEXT'|translate: abuses }}">
+                          {{abuses.total || 0}}
+                          <i class="icon ion-android-warning"></i>
+                        </span>
+    </ng-if>
+</div>

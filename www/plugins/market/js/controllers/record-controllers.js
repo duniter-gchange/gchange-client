@@ -55,10 +55,13 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 ;
 
 
-function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q,
+function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q, $controller,
                                       $timeout, $filter, $translate, Modals, csConfig, esModals,
                                       csWallet, mkRecord, UIUtils, esHttp) {
   'ngInject';
+
+  // Initialize the super class and extend it.
+  //var likeScope = $scope.$new();
 
   $scope.formData = {};
   $scope.id = null;
@@ -70,6 +73,12 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   $scope.motion = UIUtils.motion.fadeSlideInRight;
   $scope.smallscreen = UIUtils.screen.isSmall();
   $scope.smallpictures = false;
+
+  // Like object
+  $scope.views = {};
+  $scope.likes = {};
+  $scope.abuses = {};
+  $scope.likeService = mkRecord.record.like;
 
   // Screen options
   $scope.options = $scope.options || angular.merge({
@@ -88,6 +97,9 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     }
   }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESLikesCtrl', {$scope: $scope}));
+
   $scope.enter = function (e, state) {
     if (state.stateParams && state.stateParams.id) { // Load by id
       if ($scope.loading || state.stateParams.refresh) {
@@ -96,6 +108,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       else {
         // prevent reload if same id (and if not forced)
         UIUtils.loading.hide();
+        $scope.updateButtons();
       }
 
       // Notify child controllers
@@ -113,6 +126,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 
   $scope.load = function (id) {
     $scope.loading = true;
+    $scope.formData = {};
     mkRecord.record.load(id, {
       fetchPictures: false,// lazy load for pictures
       convertPrice: true, // convert to user unit
@@ -122,13 +136,10 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         $scope.formData = data.record;
         $scope.id = data.id;
         $scope.issuer = data.issuer;
-        $scope.updateButtons();
+        $scope.updateView();
         UIUtils.loading.hide();
         $scope.loading = false;
-        // Set Motion (only direct children, to exclude .lazy-load children)
-        $scope.motion.show({
-          selector: '.list > .item'
-        });
+
       })
       .catch(function (err) {
         if (!$scope.secondTry) {
@@ -154,7 +165,20 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     $timeout(function () {
 
       // Load pictures
-      mkRecord.record.picture.all({id: id})
+      $scope.loadPictures(id);
+
+      // Load other data (e.g. comments - see child controller)
+      $scope.$broadcast('$recordView.load', id, mkRecord.record);
+
+
+    });
+
+  };
+
+
+  $scope.loadPictures = function(id) {
+    id = id || $scope.id;
+    return mkRecord.record.picture.all({id: id})
         .then(function (hit) {
           if (hit._source.pictures) {
             $scope.pictures = hit._source.pictures.reduce(function (res, pic) {
@@ -173,14 +197,20 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         .catch(function () {
           $scope.pictures = [];
         });
+  };
 
-      // Load other data (from child controller)
-      $scope.$broadcast('$recordView.load', id, mkRecord.record.comment);
+  $scope.updateView = function() {
+    $scope.updateButtons();
 
-      // scroll (for comment anchor)
-      //if (anchor) scrollToAnchorByName(anchor);
+    // Set Motion (only direct children, to exclude .lazy-load children)
+    $scope.motion.show({
+      selector: '.list > .item',
+      ink: false
     });
 
+    if (!$scope.canEdit) {
+      $scope.showFab('fab-like-market-record-' + $scope.id);
+    }
   };
 
   $scope.updateButtons = function() {
@@ -191,6 +221,26 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       $scope.canEdit = false;
     }
   };
+
+  $scope.markAsView = function() {
+    if (!$scope.formData || $scope.views.wasHit) return; // Already view
+    var canEdit = $scope.canEdit || csWallet.isUserPubkey($scope.formData.issuer);
+    if (canEdit) return; // User is the record's issuer: skip
+
+    var timer = $timeout(function() {
+      if (csWallet.isLogin()) {
+        mkRecord.record.like.add($scope.id, {kind: 'view'}).then(function() {
+          $scope.views.total = ($scope.views.total||0) + 1;
+        });
+      }
+      timer = null;
+    }, 3000);
+
+    $scope.$on("$destroy", function() {
+      if (timer) $timeout.cancel(timer);
+    });
+  };
+
 
   $scope.refreshConvertedPrice = function () {
     $scope.loading = true; // force reloading if settings changed (e.g. unit price)
@@ -299,6 +349,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     if ($scope.actionsPopover) {
       $scope.actionsPopover.hide();
     }
+    return true;
   };
 
   $scope.showSharePopover = function(event) {
@@ -325,6 +376,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       }
     });
   };
+
 
   $scope.showNewMessageModal = function() {
     return $q.all([
@@ -367,12 +419,18 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       });
   };
 
+  // $scope.toggleLike = function(event, options) {
+  //
+  //   return mkRecord.record.like.toggle(options);
+  // };
+
   /* -- context aware-- */
 
   // When wallet login/logout -> update buttons
   function onWalletChange(data, deferred) {
     deferred = deferred || $q.defer();
     $scope.updateButtons();
+    $scope.loadLikes();
     deferred.resolve();
     return deferred.promise;
   }

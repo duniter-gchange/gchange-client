@@ -453,7 +453,13 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     add: esHttp.record.post('/user/profile', {tagFields: ['title', 'description'], creationTime: true}),
     update: esHttp.record.post('/user/profile/:id/_update', {tagFields: ['title', 'description'], creationTime: true}),
     avatar: esHttp.get('/user/profile/:id?_source=avatar'),
-    fillAvatars: fillAvatars
+    fillAvatars: fillAvatars,
+    like: {
+      toggle: esHttp.like.toggle('user', 'profile'),
+      add: esHttp.like.add('user', 'profile'),
+      remove: esHttp.like.remove('user', 'profile'),
+      count: esHttp.like.count('user', 'profile')
+    }
   };
 })
 ;

@@ -42,7 +42,7 @@ const paths = {
     leafletSass: ['./scss/leaflet.app.scss'],
     converseSass: ['./scss/converse.app.scss'],
     css_plugin: ['./www/plugins/*/css/**/*.css'],
-    templatecache_plugin: ['./www/plugins/*/templates/**/*.html'],
+    templatecache_plugin: ['./www/plugins/**/*.html'],
     ng_translate_plugin: ['./www/plugins/*/i18n/locale-*.json'],
     ng_annotate_plugin: ['./www/plugins/*/**/*.js', '!./www/plugins/*/js/vendor/*.js']
 };

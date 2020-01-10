@@ -22,14 +22,16 @@ angular.module("cesium.config", [])
 		"enable": false
 	},
 	"node": {
-		"host": "data.gchange.fr",
-		"port": "443"
+		"host": "localhost",
+		"port": "9200",
+		"useSsl": false
 	},
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "data.gchange.fr",
-			"port": "443",
+			"host": "localhost",
+			"port": "9200",
+			"useSsl": false,
 			"maxUploadBodySize": 5242880,
 			"defaultCountry": "France"
 		},
@@ -42,7 +44,7 @@ angular.module("cesium.config", [])
 			}
 		},
 		"converse": {
-			"enable": true,
+			"enable": false,
 			"jid": "anonymous.duniter.org",
 			"bosh_service_url": "https://chat.duniter.org/http-bind/",
 			"auto_join_rooms": [

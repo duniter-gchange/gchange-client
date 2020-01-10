@@ -21,6 +21,8 @@ angular.module('cesium.es.common.controllers', ['ngResource', 'cesium.es.service
   .controller('ESSearchPositionItemCtrl', ESSearchPositionItemController)
 
   .controller('ESSearchPositionModalCtrl', ESSearchPositionModalController)
+
+  .controller('ESLikesCtrl', ESLikesController)
 ;
 
 
@@ -166,8 +168,8 @@ function ESCommentsController($scope, $filter, $state, $focus, $timeout, $anchor
 
     $scope.$on('$recordView.load', function(event, id, service) {
         $scope.id = id || $scope.id;
-        $scope.service = service || $scope.service;
-        console.debug("[ES] [comment] Will use {" + service.index + "} service");
+        $scope.service = service.comment || $scope.service;
+        console.debug("[ES] [comment] Will use {" + $scope.service.index + "} service");
         if ($scope.id) {
             $scope.load($scope.id)
               .then(function() {
@@ -978,5 +980,181 @@ function ESSearchPositionModalController($scope, $q, $translate, esGeo, paramete
             })
             ;
     };
+
+}
+
+
+function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtils, csWallet) {
+    'ngInject';
+
+    $scope.loading = true;
+    $scope.abuseData = {};
+    $scope.abuseLevels = [
+        {value: 1, label: 'LOW'},
+        {value: 2, label: 'LOW'}
+    ];
+
+    $scope.$on('$recordView.enter', function(e, state) {
+        // First enter
+        if ($scope.loading) {
+           // Nothing to do: main controller will trigger '$recordView.load' event
+        }
+        // second call (e.g. if cache)
+        else if ($scope.id) {
+            $scope.loadLikes($scope.id);
+        }
+    });
+
+    $scope.$on('$recordView.load', function(event, id) {
+        $scope.id = id || $scope.id;
+        if ($scope.id) {
+            $scope.loadLikes($scope.id);
+        }
+    });
+
+
+    $scope.loadLikes = function(id) {
+        id = id || $scope.id;
+        return $q.all(_.map(['like', 'view', 'abuse'], function(kind) {
+            return $scope.likeService.count(id, {issuer: csWallet.isLogin() ? csWallet.data.pubkey : undefined, kind: kind})
+                .then(function (res) {
+                    var key = kind.toLowerCase() + 's';
+                    $scope[key] = $scope[key] || {};
+                    $scope[key].total = res.total;
+                    $scope[key].wasHit = res.wasHit;
+                });
+        }))
+        .then(function () {
+            $scope.markAsView();
+            $scope.loading = false;
+        })
+        .catch(function (err) {
+            console.error(err && err.message || err);
+            $scope.loading = false;
+        });
+    };
+
+    $scope.markAsView = function() {
+        if (!$scope.formData || $scope.views.wasHit) return; // Already view
+        var canEdit = $scope.canEdit || csWallet.isUserPubkey($scope.formData.issuer);
+        if (canEdit) return; // User is the record's issuer: skip
+
+        var timer = $timeout(function() {
+            if (csWallet.isLogin()) {
+                $scope.likeService.add($scope.id, {kind: 'view'}).then(function() {
+                    $scope.views.total = ($scope.views.total||0) + 1;
+                });
+            }
+            timer = null;
+        }, 3000);
+
+        $scope.$on("$destroy", function() {
+            if (timer) $timeout.cancel(timer);
+        });
+    };
+
+
+    $scope.toggleLike = function(event, options) {
+        options = options || {};
+        options.kind = options.kind && options.kind.toUpperCase() || 'LIKE';
+        var key = options.kind.toLowerCase() + 's';
+        $scope[key] = $scope[key] || {};
+
+        // Make sure user is log in
+        return (csWallet.isLogin() ? $q.when() : $scope.loadWallet({minData: true}))
+            .then(function() {
+                // If report an abuse, open a modal
+                if (options.kind === 'ABUSE' && !$scope.abuses.wasHit) {
+
+                }
+
+                // Apply like
+                return $scope.likeService.toggle($scope.id, options);
+            })
+            .then(function(delta) {
+                if (delta) {
+                    $scope[key].total = ($scope[key].total || 0) + delta;
+                    $scope[key].wasHit = delta > 0;
+                }
+            });
+    };
+
+    $scope.setAbuseForm = function(form) {
+        $scope.abuseForm = form;
+    };
+
+    $scope.showAbuseCommentPopover = function(event) {
+        return $translate(['COMMON.REPORT_ABUSE.TITLE', 'COMMON.REPORT_ABUSE.SUB_TITLE','COMMON.BTN_SEND', 'COMMON.BTN_CANCEL'])
+            .then(function(translations) {
+
+                UIUtils.loading.hide();
+
+                return $ionicPopup.show({
+                    templateUrl: 'plugins/es/templates/common/popup_report_abuse.html',
+                    title: translations['COMMON.REPORT_ABUSE.TITLE'],
+                    subTitle: translations['COMMON.REPORT_ABUSE.SUB_TITLE'],
+                    cssClass: 'popup-report-abuse',
+                    scope: $scope,
+                    buttons: [
+                        { text: translations['COMMON.BTN_CANCEL'] },
+                        {
+                            text: translations['COMMON.BTN_SEND'],
+                            type: 'button-positive',
+                            onTap: function(e) {
+                                $scope.abuseForm.$submitted=true;
+                                if(!$scope.abuseForm.$valid || !$scope.abuseData.comment) {
+                                    //don't allow the user to close unless he enters a uid
+                                    e.preventDefault();
+                                } else {
+                                    return $scope.abuseData;
+                                }
+                            }
+                        }
+                    ]
+                });
+            })
+            .then(function(res) {
+                $scope.abuseData = {};
+                if (!res || !res.comment) { // user cancel
+                    UIUtils.loading.hide();
+                    return undefined;
+                }
+                return res;
+            });
+    };
+
+
+    $scope.reportAbuse = function(event, options) {
+        if ($scope.abuses && $scope.abuses.wasHit) return; // Abuse already reported
+
+        options = options || {};
+
+        if (!options.comment) {
+            return (csWallet.isLogin() ? $q.when() : $scope.loadData({minData: true}))
+                // Ask a comment
+                .then(function() {
+                    return $scope.showAbuseCommentPopover(event);
+                })
+                // Loop, with options.comment filled
+                .then(function(res) {
+                    if (!res || !res.comment) return; // Empty comment: skip
+                    options.comment = res.comment;
+                    options.level = res.level || (res.delete && 5) || undefined;
+                    return $scope.reportAbuse(event, options) // Loop
+                });
+        }
+
+        // Send abuse report
+        options.kind = 'ABUSE';
+        return $scope.toggleLike(event, options)
+            .then(function() {
+                UIUtils.toast.show('COMMON.REPORT_ABUSE.CONFIRM.SENT')
+            })
+    };
+
+    // Re-publish toggleLike() in the parent scope (to be able to use it in button)
+    $scope.$parent.toggleLike = $scope.toggleLike;
+    $scope.$parent.reportAbuse = $scope.reportAbuse;
+
 
 }

@@ -141,6 +141,9 @@ angular.module('cesium.graph.data.services', ['cesium.es.http.services'])
           // prepare next loop
           ranges = [];
           var indices = {};
+          var params = {
+            request_cache: angular.isDefined(options.cache) ? options.cache : true // enable by default
+          };
 
           if (jobs.length === 10) {
             console.error('Too many parallel jobs!');
@@ -148,7 +151,8 @@ angular.module('cesium.graph.data.services', ['cesium.es.http.services'])
           }
           else {
             jobs.push(
-              exports.raw.docstat.search(request).then(processSearchResult)
+              exports.raw.docstat.search(request, params)
+                  .then(processSearchResult)
             );
           }
         }

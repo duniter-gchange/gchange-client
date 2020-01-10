@@ -25,8 +25,8 @@
 
         <div class="list {{::motion.ionListClass}} item-text-wrap no-padding-xs">
 
-          <!-- descktop : title and location -->
-          <div class="item item-text-wrap hidden-xs">
+          <!-- desktop : title and location -->
+          <div class="item item-text-wrap hidden-xs hidden-sm" ng-if="!smallscreen">
 
             <!-- title -->
             <h1 ng-bind-html="formData.title"></h1>
@@ -68,6 +68,10 @@
               <span translate>MARKET.COMMON.LAST_UPDATE</span>
               <span>{{::formData.time | formatDate}}</span>
             </h4>
+            <!-- likes -->
+            <h4>
+              <ng-include src="'plugins/es/templates/common/view_likes.html'"></ng-include>
+            </h4>
             <div class="badge"
                  ng-if="options.type.show"
                  ng-class="{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}">
@@ -77,10 +81,11 @@
           </div>
 
           <!-- mobile: title and location -->
-          <div class="item visible-xs item-text-wrap">
+          <div class="item item-text-wrap" ng-if="smallscreen">
 
             <!-- title -->
             <h1 ng-bind-html="formData.title"></h1>
+
 
             <h2 class="gray">
               <a class="positive" ng-if="formData.city" ui-sref="app.market_lookup({location:formData.location})">
@@ -92,6 +97,7 @@
                 <i class="icon ion-flag"></i>
                 <span ng-bind-html="::formData.category.name"></span>
               </a>
+
             </h2>
             <h4>
               <i class="icon ion-clock"></i>
@@ -113,7 +119,24 @@
                 </span>
               </span>
             </h4>
+            <!-- likes -->
+            <h4>
+              <ng-include src="'plugins/es/templates/common/view_likes.html'"></ng-include>
+            </h4>
+
+            <!-- fab button-->
+            <div class="visible-xs visible-sm">
+
+              <!-- like -->
+              <button id="fab-like-market-record-{{id}}"
+                      class="button button-fab button-fab-top-right button-stable mini spin "
+                      ng-click="toggleLike(event)">
+                <i class="icon ion-heart"  ng-class="{'stable': !likes.wasHit, 'positive': likes.wasHit}"></i>
+              </button>
+
+            </div>
           </div>
+
 
           <!-- mobile: price -->
           <div class="item visible-xs no-padding-top no-padding-bottom">
@@ -145,13 +168,25 @@
           <!-- Buttons bar-->
           <a id="record-share-anchor-{{id}}"></a>
           <div class="item large-button-bar hidden-xs hidden-sm">
+
+            <!-- Share button -->
             <button class="button button-stable button-small-padding icon ion-android-share-alt"
                     ng-click="showSharePopover($event)">
             </button>
+
+            <!-- Message button -->
             <button class="button button-stable button-small-padding icon ion-compose"
                     ng-if="!canEdit"
                     ng-click="showNewMessageModal()"
                     title="{{'MARKET.VIEW.BTN_WRITE_'+formData.type |upper|translate}}">
+            </button>
+
+            <!-- Like button -->
+            <button class="button button-stable button-small-padding ink-dark"
+                    ng-if="!canEdit"
+                    title="{{'COMMON.BTN_LIKE_HELP' | translate }}"
+                    ng-click="toggleLike($event)">
+              <i class="icon ion-heart" ng-class="{'stable': !likes.wasHit, 'positive': likes.wasHit}"></i>
             </button>
 
             <!--<button class="button button-stable icon-left ink-dark"
@@ -177,6 +212,11 @@
                     ng-if="canEdit"
                     ng-click="edit()">
               {{'COMMON.BTN_EDIT' | translate}}
+            </button>
+
+            <button class="button button-stable button-small-padding icon ion-android-more-vertical"
+                    ng-if="!canEdit"
+                    ng-click="showActionsPopover($event)">
             </button>
 
           </div>

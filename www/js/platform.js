@@ -88,7 +88,7 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
 
 
   .factory('csPlatform', function (ionicReady, $rootScope, $q, $state, $translate, $timeout, UIUtils,
-                                   BMA, Device, csHttp, csConfig, csSettings, csCurrency, csWallet) {
+                                   BMA, Device, csHttp, csConfig, csCache, csSettings, csCurrency, csWallet) {
 
     'ngInject';
     var
@@ -182,7 +182,7 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
     function getLatestRelease() {
       var latestRelease = csSettings.data.latestReleaseUrl && csHttp.uri.parse(csSettings.data.latestReleaseUrl);
       if (latestRelease) {
-        return csHttp.get(latestRelease.host, latestRelease.protocol == 'https:' ? 443 : latestRelease.port, "/" + latestRelease.pathname)()
+        return csHttp.getWithCache(latestRelease.host, latestRelease.protocol == 'https:' ? 443 : latestRelease.port, "/" + latestRelease.pathname, undefined, csCache.constants.LONG)()
           .then(function (json) {
             if (json && json.name && json.tag_name && json.html_url) {
               return {

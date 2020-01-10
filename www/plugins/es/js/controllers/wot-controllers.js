@@ -45,13 +45,24 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
 
 ;
 
-function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils, esModals) {
+function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils, esModals, esProfile) {
   'ngInject';
 
   // Initialize the super class and extend it.
   angular.extend(this, $controller('ESExtensionCtrl', {$scope: $scope}));
 
+  $scope.stars = {};
+
+  $scope.addStar = function(event, level) {
+    return esProfile.like.add($scope.formData.pubkey, {kind: 'star', level: level || 1})
+        .then(function() {
+          $scope.stars.wasHit = true;
+          $scope.stars.level = level || 1;
+        });
+  };
+
   /* -- modals -- */
+
 
   $scope.showNewMessageModal = function(confirm) {
     return $scope.loadWallet({minData: true})

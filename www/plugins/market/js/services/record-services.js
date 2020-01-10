@@ -3,7 +3,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
 .factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, esGeo, csWot, csCurrency, mkSettings) {
   'ngInject';
 
-  function EsMarket() {
+  function MkRecord() {
 
     var
       fields = {
@@ -188,10 +188,13 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
                 request.query.bool.filter =  filters;
             }
         }
+        var params = {
+            request_cache: angular.isDefined(options.cache) ? options.cache : true // enable by default
+        };
 
       return $q.all([
           getFilteredCategories(options),
-          exports._internal.record.postSearch(request)
+          exports._internal.record.postSearch(request, params)
       ]).then(function(res) {
           var categories = res[0];
           res = res[1];
@@ -522,11 +525,17 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         picture: {
           all: esHttp.get('/market/record/:id?_source=pictures')
         },
-        comment: esComment.instance('market')
+        comment: esComment.instance('market'),
+        like: {
+            add: esHttp.like.add('market', 'record'),
+            remove: esHttp.like.remove('market', 'record'),
+            toggle: esHttp.like.toggle('market', 'record'),
+            count: esHttp.like.count('market', 'record')
+        },
       };
     return exports;
   }
 
-  return EsMarket();
+  return MkRecord();
 })
 ;

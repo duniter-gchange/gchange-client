@@ -5,7 +5,7 @@
   <ion-content scroll="false">
     <div class="list item-text-wrap">
 
-      <a class="item item-icon-left ink"
+      <a class="item item-icon-left ink visible-xs visible-sm"
          ng-click="showSharePopover($event)">
         <i class="icon ion-android-share-alt"></i>
         {{'COMMON.BTN_SHARE' | translate}}
@@ -18,18 +18,42 @@
         {{'COMMON.BTN_DELETE' | translate}}
       </a>-->
 
-      <a class="item item-icon-left ink "
+      <a class="item item-icon-left ink visible-xs visible-sm"
          ng-if="canSold"
          ng-click="sold()">
         <i class="icon ion-minus-circled"></i>
         {{'MARKET.VIEW.BTN_SOLD_AD' | translate}}
       </a>
 
-      <a class="item item-icon-left ink "
+      <a class="item item-icon-left ink visible-xs visible-sm"
          ng-if="canReopen"
          ng-click="reopen()">
         <i class="icon ion-unlocked"></i>
         {{'MARKET.VIEW.BTN_REOPEN' | translate}}
+      </a>
+
+      <!-- Write to vendor -->
+      <a class="item item-icon-left ink visible-xs visible-sm"
+              ng-if="!canEdit"
+              ng-click="showNewMessageModal()">
+        <i class="icon ion-compose"></i>
+        {{'MARKET.VIEW.BTN_WRITE_'+formData.type |upper|translate}}
+      </a>
+
+      <!-- report abuse -->
+      <a class="item item-icon-left ink"
+         ng-if="!canEdit && !abuses.wasHit"
+         ng-click="hideActionsPopover() && reportAbuse($event)">
+        <i class="icon ion-android-warning"></i>
+        <b class="ion-plus icon-secondary" style="font-size: 16px; left: 38px; top: -7px;"></b>
+        {{'COMMON.BTN_REPORT_ABUSE_DOTS' | translate}}
+      </a>
+      <a class="item item-icon-left ink"
+         ng-if="!canEdit && abuses.wasHit"
+         ng-click="hideActionsPopover() && toggleLike($event, {kind: 'abuse'})">
+        <i class="icon ion-android-warning"></i>
+        <b class="ion-close icon-secondary" style="font-size: 16px; left: 38px; top: -7px;"></b>
+        {{'COMMON.BTN_REMOVE_REPORTED_ABUSE' | translate}}
       </a>
     </div>
   </ion-content>
