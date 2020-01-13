@@ -50,7 +50,7 @@ function EsNotification(json, markAsReadCallback) {
   // TX
   else if (json.code.startsWith('TX_')) {
     that.avatarIcon = 'ion-card';
-    that.icon = (json.code == 'TX_SENT') ? 'ion-paper-airplane dark' : 'ion-archive balanced';
+    that.icon = (json.code === 'TX_SENT') ? 'ion-paper-airplane dark' : 'ion-archive balanced';
     pubkeys = json.params.length > 0 ? json.params[0] : null;
     if (pubkeys && pubkeys.indexOf(',') == -1) {
       that.pubkey = pubkeys;
@@ -61,10 +61,10 @@ function EsNotification(json, markAsReadCallback) {
 
   // Certifications
   else if (json.code.startsWith('CERT_')) {
-    that.avatarIcon = (json.code == 'CERT_RECEIVED') ? 'ion-ribbon-b' : 'ion-ribbon-a';
-    that.icon = (json.code == 'CERT_RECEIVED') ? 'ion-ribbon-b balanced' : 'ion-ribbon-a gray';
+    that.avatarIcon = (json.code === 'CERT_RECEIVED') ? 'ion-ribbon-b' : 'ion-ribbon-a';
+    that.icon = (json.code === 'CERT_RECEIVED') ? 'ion-ribbon-b balanced' : 'ion-ribbon-a gray';
     that.pubkey = json.params.length > 0 ? json.params[0] : null;
-    that.state = (json.code == 'CERT_RECEIVED') ? 'app.wallet_cert.tab_received' : 'app.wallet_cert.tab_given';
+    that.state = (json.code === 'CERT_RECEIVED') ? 'app.wallet_cert.tab_received' : 'app.wallet_cert.tab_given';
   }
 
   // Message
@@ -72,14 +72,14 @@ function EsNotification(json, markAsReadCallback) {
     that.avatarIcon = 'ion-email';
     that.icon = 'ion-email dark';
     pubkeys = json.params.length > 0 ? json.params[0] : null;
-    if (pubkeys && pubkeys.indexOf(',') == -1) {
+    if (pubkeys && pubkeys.indexOf(',') === -1) {
       that.pubkey = pubkeys;
     }
     that.id = json.reference.id; // Do not care about notification ID, because notification screen use message _id
   }
 
   // market record
-  else if (json.reference && json.reference.index == 'market') {
+  else if (json.reference && json.reference.index === 'market') {
     that.avatarIcon = 'ion-speakerphone';
     that.pubkey = json.params.length > 0 ? json.params[0] : null;
     if (json.reference.anchor) {
@@ -98,10 +98,21 @@ function EsNotification(json, markAsReadCallback) {
         id: json.reference.id,
         title: json.params[2]};
     }
+    if (json.code.startsWith('MODERATION_')) {
+      that.avatarIcon = 'ion-alert-circled';
+      that.icon = 'ion-alert-circled energized';
+    }
+    else if (json.code.startsWith('ABUSE_')) {
+      that.avatarIcon = 'ion-alert-circled';
+      that.icon = 'ion-alert-circled energized';
+    }
+    else if (json.code.startsWith('LIKE_')) {
+      that.icon = 'ion-heart gray';
+    }
   }
 
   // registry record
-  else if (json.reference && json.reference.index == 'registry') {
+  else if (json.reference && json.reference.index === 'registry' && json.reference.type === 'record') {
     that.avatarIcon = 'ion-ios-book';
     if (json.reference.anchor) {
       that.icon = 'ion-ios-chatbubble-outline dark';
@@ -122,17 +133,17 @@ function EsNotification(json, markAsReadCallback) {
   }
 
   // info message
-  else if (json.type == 'INFO') {
+  else if (json.type === 'INFO') {
     that.avatarIcon = 'ion-information';
     that.icon = 'ion-information-circled positive';
   }
   // warn message
-  else if (json.type == 'WARN') {
+  else if (json.type === 'WARN') {
     that.avatarIcon = 'ion-alert-circled';
     that.icon = 'ion-alert-circled energized';
   }
   // error message
-  else if (json.type == 'ERROR') {
+  else if (json.type === 'ERROR') {
     that.avatarIcon = 'ion-close';
     that.icon = 'ion-close-circled assertive';
   }

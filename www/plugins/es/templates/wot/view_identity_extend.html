@@ -16,23 +16,10 @@
           ng-click="showNewMessageModal()"
           title="{{'MESSAGE.BTN_WRITE' | translate}}">
   </button>
-
-  <!-- Like button -->
-  <button class="button button-stable button-small-padding ink"
-          title="{{'COMMON.LIKE_HELP'|translate: stars }}"
-          ng-click="addStar($event, {kind: 'star', level: 1})">
-    <i class="icon ion-android-star-outline" ng-class="{'ion-android-star': stars.wasHit}"></i>
-  </button>
 </ng-if>
 
 <!-- General section -->
 <ng-if ng-if="enable && extensionPoint === 'after-general'">
-
-  <div class="item item-icon-left item-text-wrap">
-    <i class="icon ion-android-star-outline"></i>
-    <span translate>PROFILE.STAR</span>
-    <div class="badge badge-assertive" ng-class="{'badge-balanced': stars.level > 3, 'badge-energized': stars.level > 2}">{{stars.level || 0}} / 5</div>
-  </div>
 
   <span class="item item-divider item-divider-top-border" translate>PROFILE.PROFILE_DIVIDER</span>
 

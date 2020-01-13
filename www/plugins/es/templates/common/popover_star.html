@@ -1,0 +1,12 @@
+<ion-popover-view class="popover-star" style="height: 50px">
+  <ion-content scroll="false" class="padding-left padding-right">
+    <h1>
+      <a ng-repeat="level in [1,2,3,4,5]"
+        ng-click="addStar(level)">
+        <b class="dark ion-android-star" ng-if="level <= formData.stars.level"></b>
+        <b class="dark ion-android-star-half" ng-if="level > formData.stars.level && level - 0.5 <= formData.stars.level"></b>
+        <b class="dark ion-android-star-outline" ng-if="level > formData.stars.level && level - 0.5 > formData.stars.level"></b>
+      </a>
+    </h1>
+  </ion-content>
+</ion-popover-view>

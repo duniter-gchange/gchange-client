@@ -686,11 +686,14 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
       }
     }
 
-    function countLike(index, type, cacheTime) {
+    function countLike(index, type) {
       var searchRequest = that.post("/like/record/_search");
       return function(id, options) {
         options = options || {};
         options.kind = options.kind || 'LIKE';
+        // Get level (default to true when kind=star, otherwise false)
+        options.level = angular.isDefined(options.level) ? options.level : (options.kind === 'star');
+
         var request = {
           query: {
             bool: {
@@ -711,15 +714,42 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
           request.size = 1;
           request._source = ["issuer"];
         }
+
+        // Computre level AVG and issuer level
+        if (options.level) {
+          request.aggs = {
+            level_sum: {
+              sum: {field: "level"}
+            }
+          };
+          request._source = request._source || [];
+          request._source.push("level");
+        }
         return searchRequest(request)
             .then(function(res) {
               var hits = res && res.hits;
-              return {
+
+              // Check is issuer is return (because of size=1 and should filter)
+              var issuerHitIndex = hits && options.issuer ? _.findIndex(hits.hits, function(hit) {
+                return hit._source.issuer === options.issuer;
+              }) : -1;
+
+              var result = {
                 total: hits && hits.total || 0,
-                wasHit: hits && options.issuer && _.findIndex(hits.hits, function(hit) {
-                  return hit._source.issuer === options.issuer;
-                }) !== -1 || false
+                wasHit: issuerHitIndex !== -1 || false,
+                wasHitId: issuerHitIndex !== -1 && hits.hits[issuerHitIndex]._id || false,
               };
+
+              // Set level values (e.g. is kind=star)
+              if (options.level) {
+                result.level= issuerHitIndex !== -1  ? hits.hits[issuerHitIndex]._source.level : undefined;
+                result.levelSum = res.aggregations && res.aggregations.level_sum.value || 0;
+
+                // Compute the AVG (rounded at a precision of 0.5)
+                result.levelAvg = result.total && (Math.floor((result.levelSum / result.total + 0.5) * 10) / 10 - 0.5) || 0;
+              }
+
+              return result;
             })
       }
     }

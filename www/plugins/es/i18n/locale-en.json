@@ -4,7 +4,14 @@
     "CATEGORY_SELECT_HELP": "Select",
     "CATEGORIES": "Categories",
     "CATEGORY_SEARCH_HELP": "Search",
+    "COMMENT_HELP": "Comments",
     "LAST_MODIFICATION_DATE": "Updated on ",
+    "BTN_LIKE_HELP": "I like",
+    "LIKES_TEXT": "{{total}} {{total > 1 ? 'people' : 'person'}} {{total > 1 ? 'ont' : 'a'}} liked this page",
+    "VIEWS_TEXT": "{{total}} {{total > 1 ? 'people' : 'person'}} {{total > 1 ? 'ont' : 'a'}} viewed this page",
+    "ABUSES_TEXT": "{{total}} {{total > 1 ? 'people' : 'person'}} reported a problem on this page",
+    "BTN_REPORT_ABUSE_DOTS": "Report a problem or an abuse...",
+    "BTN_REMOVE_REPORTED_ABUSE": "Cancel my problem report",
     "SUBMIT_BY": "Submitted by",
     "BTN_PUBLISH": "Publish",
     "BTN_PICTURE_DELETE": "Delete",
@@ -21,6 +28,15 @@
       "NO_RESULT": "No notification",
       "SHOW_ALL": "Show all",
       "LOAD_NOTIFICATIONS_FAILED": "Could not load notifications"
+    },
+    "REPORT_ABUSE": {
+      "TITLE": "Report a issue",
+      "SUB_TITLE": "Please explain briefly the problem:",
+      "REASON_HELP": "I explain the problem...",
+      "ASK_DELETE": "Request removal?",
+      "CONFIRM": {
+        "SENT": "Signalement envoyé. Merci !"
+      }
     }
   },
   "MENU": {
@@ -256,6 +272,7 @@
     "SOCIAL_HELP": "http://...",
     "GENERAL_DIVIDER": "General data",
     "SOCIAL_NETWORKS_DIVIDER": "Social networks and web site",
+    "STAR": "Trust level",
     "TECHNICAL_DIVIDER": "Technical data",
     "MODAL_AVATAR": {
       "TITLE": "Avatar",

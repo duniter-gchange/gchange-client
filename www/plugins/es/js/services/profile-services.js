@@ -22,7 +22,8 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     get: esHttp.get('/user/profile/:id?&_source_exclude=avatar._content'),
     getAll: esHttp.get('/user/profile/:id'),
     search: esHttp.post('/user/profile/_search'),
-    mixedSearch: esHttp.post('/user,page/profile,record/_search')
+    mixedSearch: esHttp.post('/user,page/profile,record/_search'),
+    getLikeCount: esHttp.like.count('user', 'profile')
   };
 
   function getAvatarAndName(pubkey) {
@@ -150,7 +151,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
 
       var avatarFieldName = 'avatar';
       // User profile
-      if (hit._index == "user") {
+      if (hit._index === "user") {
         values = dataByPubkey && dataByPubkey[hit._id];
         if (!values) {
           var value = {};
@@ -161,7 +162,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       }
 
       // Page or group
-      else if (hit._index != "user") {
+      else if (hit._index !== "user") {
         if (!indices[hit._index]) {
           indices[hit._index] = true;
           // add a separator
@@ -394,17 +395,29 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
             data.profile = profile.source;
             data.profile.description = profile.description;
           }
-          deferred.resolve(data);
         }),
 
       // Load avatar on certifications
-      fillAvatars(
-        (data.received_cert||[])
-        .concat(data.received_cert_pending||[])
-        .concat(data.given_cert||[])
-        .concat(data.given_cert_pending||[])
-      )
+      // fillAvatars(
+      //   (data.received_cert||[])
+      //   .concat(data.received_cert_pending||[])
+      //   .concat(data.given_cert||[])
+      //   .concat(data.given_cert_pending||[])
+      // )
+
+      // Load likes
+       that.raw.getLikeCount(data.pubkey, {
+             issuer: csWallet.isLogin() && csWallet.data.pubkey || undefined,
+             kind: 'star'
+           })
+           .then(function(res) {
+             res.levelAvg = res.levelAvg && (Math.floor((res.levelAvg + 0.5) * 10) /10 - 0.5) || 0;
+             data.stars = res;
+           })
     ])
+        .then(function() {
+          deferred.resolve(data);
+        })
     .catch(function(err){
       deferred.reject(err);
     });
@@ -458,7 +471,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       toggle: esHttp.like.toggle('user', 'profile'),
       add: esHttp.like.add('user', 'profile'),
       remove: esHttp.like.remove('user', 'profile'),
-      count: esHttp.like.count('user', 'profile')
+      count: that.raw.getLikeCount
     }
   };
 })

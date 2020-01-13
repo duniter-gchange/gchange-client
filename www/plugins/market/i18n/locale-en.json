@@ -19,6 +19,10 @@
         "DESCRIPTION": "Abut me",
         "DESCRIPTION_HELP": "Say something about you..."
       },
+      "SUBSCRIPTION": {
+        "EMAIL": "Email",
+        "EMAIL_HELP": "Email (optional)"
+      },
       "LAST_SLIDE_CONGRATULATION": "You have entered all necessary information: Congratulations!<br/>You can now <b>send the creation request </b>.<br/><br/>For information, the public key below will identify your future account:",
       "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Warning:</b> The identifier and the password can not be changed.<br/><br/>You should <b>always remember it!</b><br/><br/><b>Are you sure</b> you want to continue with these credentials?"
     },
@@ -140,11 +144,18 @@
     },
     "WOT": {
       "VIEW": {
+        "STARS": "Trust level",
+        "STAR_HIT_COUNT": "{{total}} rate{{total>1 ? 's' : ''}}",
         "BTN_RECORDS": "Ads",
+        "BTN_STAR_HELP": "Rate this profile",
+        "BTN_REDO_STAR_HELP": "Update your rate for this profile",
         "DUNITER_PUBKEY": "Public key to receive payments",
         "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
         "DUNITER_ACCOUNT_HELP": "The public key (above) is the account to be used to pay for this user.",
         "DUNITER_ACCOUNT_HELP_ASK_USER": "This user has not communicated their account public key. <a ng-click=\"showNewMessageModal()\">Contact him</a> to get it."
+      },
+      "ERROR": {
+        "FAILED_STAR_PROFILE": "Error sending your rate. Please try again later."
       }
     },
     "ERROR": {
@@ -174,7 +185,12 @@
       "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has commented on your ad: <b>{{params[2]}}</b>",
       "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his/her comment on your ad: <b>{{params[2]}}</b>",
       "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has replied to your comment on the ad: <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his/her answer to your comment on the ad: <b>{{params[2]}}</b>"
-    }
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his/her answer to your comment on the ad: <b>{{params[2]}}</b>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> asks for moderation on the ad: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> posted an ad to moderate: <b>{{params[2]}}</b>",
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span>reported abuse on your ad: <b>{{params[2]}}</b>",
+      "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> liked your ad: <b>{{params[2]}}</b>"
+    },
+    "STAR_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> rated your profile ({{params[3]}}/5)"
   }
 }

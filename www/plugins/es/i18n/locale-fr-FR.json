@@ -9,8 +9,8 @@
     "BTN_LIKE_HELP": "J'aime",
     "LIKES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} aimé cette page",
     "VIEWS_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} consulté cette page",
-    "ABUSES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} ont signalé cette page",
-    "BTN_REPORT_ABUSE_DOTS": "Signaler un problème, un abus, etc...",
+    "ABUSES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} ont signalé un problème cette page",
+    "BTN_REPORT_ABUSE_DOTS": "Signaler un problème ou un abus...",
     "BTN_REMOVE_REPORTED_ABUSE": "Annuler mon signalement",
     "SUBMIT_BY": "Soumis par",
     "BTN_PUBLISH": "Publier",
@@ -31,7 +31,7 @@
     },
     "REPORT_ABUSE": {
       "TITLE": "Signaler un problème",
-      "SUB_TITLE": "Merci de nous expliquez succintement le problème :",
+      "SUB_TITLE": "Merci d'expliquez succintement le problème :",
       "REASON_HELP": "J'explique le problème...",
       "ASK_DELETE": "Demander la suppression ?",
       "CONFIRM": {
