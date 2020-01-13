@@ -1,38 +1,4 @@
-/*
-To customize the look and feel of Ionic, you can override the variables
-in ionic's _variables.scss file.
-
-For example, you might change some of the default colors:
-
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
-$assertive:                       #ef473a !default;
-$royal:                           #886aea !default;
-$dark:                            #444 !default;
-*/
-
-//$royal:                           #030055 !default;
-//$assertive:                       #ff7a00 !default;
-//$balanced:                        #33cd5f !default;
-
-//$dark:                              #030055 !default; // bleu foncé uCoin App
-//$assertive:                       #94c11f !default;
-//$balanced:                        #94c11f !default;
-
-$light:                           #fff !default;
-$active:                          #b2e0ff !default;
-$stable-100-bg:                   #f2f2f2 !default;
-$stable-900-bg:                   #e0e0e0 !default;
-$positive-100-bg:                 #bfd6fc !default;
-$positive-900-bg:                 #1A237E !default;
-$dark-100-bg:                     #555 !default;
-
-// The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../lib/ionic/fonts" !default;
+@import "variables.app";
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
@@ -2437,6 +2403,10 @@ div[dropzone]:hover {
   top: 178px !important;
 }
 
+.button-fab-top-right {
+  top: 16px !important;
+  right: 16px !important;
+}
 
 .text-no-transform {
   text-transform: inherit;

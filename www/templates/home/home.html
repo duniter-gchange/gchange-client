@@ -5,7 +5,7 @@
 
   <ion-nav-buttons side="secondary" >
     <!-- locales  -->
-    <button class="button button-clear hidden-xs hidden-sm gray"
+    <button class="button button-clear hidden-xs hidden-sm gray " ng-if="!login"
             ng-click="showLocalesPopover($event)" style="align-content: center">
       <img ng-if=":locale:$root.settings.locale.country"
            ng-src="https://www.countryflags.io/{{:locale:$root.settings.locale.country}}/shiny/32.png">

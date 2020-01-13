@@ -56,8 +56,9 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
     cacheTimeMs: 60000, /*1 min*/
     latestReleaseUrl: "https://api.github.com/repos/duniter-gchange/gchange-client/releases/latest",
     newIssueUrl: "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug",
-    userForumUrl: "https://forum.gchange.fr",
-    minVersion: '1.2.0', // min duniter version
+    //userForumUrl: "https://forum.gchange.fr",
+    userForumUrl: "https://forum.monnaie-libre.fr",
+    minVersion: '1.7.0', // min duniter version
     httpsMode: false
   },
   defaultSettings = angular.extend(
