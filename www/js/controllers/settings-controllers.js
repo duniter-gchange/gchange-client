@@ -20,8 +20,8 @@ angular.module('cesium.settings.controllers', ['cesium.services'])
   .controller('SettingsCtrl', SettingsController)
 ;
 
-function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHttp,
-  UIUtils, BMA, csSettings, $ionicPopover, Modals) {
+function SettingsController($scope, $q, $window, $ionicHistory, $ionicPopup, $timeout, $translate,
+                            UIUtils, Modals, BMA, csHttp, csConfig, csSettings, csPlatform) {
   'ngInject';
 
   $scope.formData = angular.copy(csSettings.data);
@@ -52,13 +52,13 @@ function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHtt
     $scope.formData.locale = (csSettings.data.locale && csSettings.data.locale.id && _.findWhere($scope.locales, {id: csSettings.data.locale.id})) ||
       _.findWhere($scope.locales, {id: csSettings.defaultSettings.locale.id});
 
-    $scope.loading = false;
 
-    $timeout(function() {
+    return $timeout(function() {
+      $scope.loading = false;
       // Set Ink
       UIUtils.ink({selector: '.item'});
       $scope.showHelpTip();
-    }, 10);
+    }, 100);
   };
 
   $scope.reset = function() {
@@ -67,6 +67,7 @@ function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHtt
     }
     $scope.pendingSaving = true;
     csSettings.reset()
+      .then(csPlatform.restart)
       .then(function() {
         // reload
         $scope.load();
@@ -80,15 +81,24 @@ function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHtt
 
   // Change node
   $scope.changeNode= function(node) {
-    $scope.showNodePopup(node || $scope.formData.node)
+    var port = !!$scope.formData.node.port && $scope.formData.node.port != 80 && $scope.formData.node.port != 443 ? $scope.formData.node.port : undefined;
+    node = node || {
+        host: $scope.formData.node.host,
+        port: port,
+        useSsl: angular.isDefined($scope.formData.node.useSsl) ?
+          $scope.formData.node.useSsl :
+          ($scope.formData.node.port == 443)
+      };
+    $scope.showNodePopup(node)
     .then(function(newNode) {
       if (newNode.host === $scope.formData.node.host &&
-        newNode.port === $scope.formData.node.port) {
+        newNode.port === $scope.formData.node.port &&
+        newNode.useSsl === $scope.formData.node.useSsl && !$scope.formData.node.temporary) {
         return; // same node = nothing to do
       }
       UIUtils.loading.show();
 
-      var nodeBMA = BMA.instance(newNode.host, newNode.port, undefined/*auto detect*/, true /*cache*/);
+      var nodeBMA = BMA.instance(newNode.host, newNode.port, newNode.useSsl, true /*cache*/);
       nodeBMA.isAlive()
         .then(function(alive) {
           if (!alive) {
@@ -99,22 +109,39 @@ function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHtt
               });
           }
           UIUtils.loading.hide();
-          $scope.formData.node = newNode;
+          angular.merge($scope.formData.node, newNode);
+          delete $scope.formData.node.temporary;
           BMA.copy(nodeBMA);
+          $scope.bma = BMA;
+
+          // Restart platform (or start if not already started)
+          csPlatform.restart();
+
+          // Reset history cache
+          return $ionicHistory.clearCache();
         });
     });
   };
 
   $scope.showNodeList = function() {
+    // Check if need a filter on SSL node
+    var forceUseSsl = (csConfig.httpsMode === 'true' || csConfig.httpsMode === true || csConfig.httpsMode === 'force') ||
+    ($window.location && $window.location.protocol === 'https:') ? true : false;
+
     $ionicPopup._popupStack[0].responseDeferred.promise.close();
-    return Modals.showNetworkLookup({enableFilter: true, type: 'member'})
+    return Modals.showNetworkLookup({
+      enableFilter: true, // enable filter button
+      bma: true, // only BMA node
+      ssl: forceUseSsl ? true : undefined
+    })
       .then(function (peer) {
         if (peer) {
           var bma = peer.getBMA();
           return {
             host: (bma.dns ? bma.dns :
                    (peer.hasValid4(bma) ? bma.ipv4 : bma.ipv6)),
-            port: bma.port || 80
+            port: bma.port || 80,
+            useSsl: bma.useSsl || bma.port == 443
           };
         }
       })
@@ -127,6 +154,7 @@ function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHtt
   $scope.showNodePopup = function(node) {
     return $q(function(resolve, reject) {
       $scope.popupData.newNode = node.port ? [node.host, node.port].join(':') : node.host;
+      $scope.popupData.useSsl = node.useSsl;
       if (!!$scope.popupForm) {
         $scope.popupForm.$setPristine();
       }
@@ -148,22 +176,26 @@ function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHtt
                     //don't allow the user to close unless he enters a node
                     e.preventDefault();
                   } else {
-                    return $scope.popupData.newNode;
+                    return {
+                      server: $scope.popupData.newNode,
+                      useSsl: $scope.popupData.useSsl
+                    };
                   }
                 }
               }
             ]
           })
-          .then(function(node) {
-            if (!node) { // user cancel
+          .then(function(res) {
+            if (!res) { // user cancel
               UIUtils.loading.hide();
               return;
             }
-            var parts = node.split(':');
+            var parts = res.server.split(':');
             parts[1] = parts[1] ? parts[1] : 80;
             resolve({
               host: parts[0],
-              port: parts[1]
+              port: parts[1],
+              useSsl: res.useSsl
             });
           });
         });
@@ -183,13 +215,22 @@ function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHtt
     $scope.saving = true;
 
     // Async - to avoid UI lock
-    $timeout(function() {
+    return $timeout(function() {
       // Make sure to format helptip
       $scope.cleanupHelpTip();
-      angular.merge(csSettings.data, $scope.formData);
-      csSettings.store();
-      $scope.saving = false;
-    }, 100);
+
+      // Applying
+      csSettings.apply($scope.formData);
+
+      // Store
+      return csSettings.store();
+
+    }, 100)
+    .then(function() {
+      //return $timeout(function() {
+        $scope.saving = false;
+      //}, 100);
+    });
   };
 
   $scope.onDataChanged = function(oldValue, newValue, scope) {
@@ -203,9 +244,8 @@ function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHtt
       }, 500);
     }
 
-    var updated = !angular.equals(oldValue, newValue);
-    if (updated) {
-      //console.debug('Detected settings update: will save it');
+    // Changes from the current scope: save changes
+    if ((scope === $scope) && !angular.equals(oldValue, newValue)) {
       $scope.save();
     }
   };
@@ -231,26 +271,20 @@ function SettingsController($scope, $q, $ionicPopup, $timeout, $translate, csHtt
   /* -- modals & popover -- */
 
   $scope.showActionsPopover = function(event) {
-    if (!$scope.actionsPopover) {
-      $ionicPopover.fromTemplateUrl('templates/settings/popover_actions.html', {
-        scope: $scope
-      }).then(function(popover) {
+    UIUtils.popover.show(event, {
+      templateUrl: 'templates/settings/popover_actions.html',
+      scope: $scope,
+      autoremove: true,
+      afterShow: function(popover) {
         $scope.actionsPopover = popover;
-        //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function() {
-          $scope.actionsPopover.remove();
-        });
-        $scope.actionsPopover.show(event);
-      });
-    }
-    else {
-      $scope.actionsPopover.show(event);
-    }
+      }
+    });
   };
 
   $scope.hideActionsPopover = function() {
     if ($scope.actionsPopover) {
       $scope.actionsPopover.hide();
+      $scope.actionsPopover = null;
     }
   };
 

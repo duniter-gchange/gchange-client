@@ -1,7 +1,7 @@
 
-angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.config'])
+angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
 
-.factory('csSettings', function($rootScope, $q, Api, localStorage, $translate, csConfig) {
+.factory('csSettings', function($rootScope, $q, $window, Api, localStorage, $translate, csConfig) {
   'ngInject';
 
   // Define app locales
@@ -20,7 +20,7 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
     // exists in app locales: use it
     if (_.findWhere(locales, {id: locale})) return locale;
 
-    // not exists: reiterate with the root(e.g. 'fr-XX' -> 'fr')
+    // not exists: reiterate with the root (e.g. 'fr-XX' -> 'fr')
     var localeParts = locale.split('-');
     if (localeParts.length > 1) {
       return fixLocale(localeParts[0]);
@@ -38,7 +38,7 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
   // Convert browser locale to app locale (fix #140)
   function fixLocaleWithLog (locale) {
     var fixedLocale = fixLocale(locale);
-    if (locale != fixedLocale) {
+    if (locale !== fixedLocale) {
       console.debug('[settings] Fix locale [{0}] -> [{1}]'.format(locale, fixedLocale));
     }
     return fixedLocale;
@@ -46,28 +46,32 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
 
   var
   constants = {
-    STORAGE_KEY: 'GCHANGE_SETTINGS'
+    STORAGE_KEY: 'GCHANGE_SETTINGS',
+    KEEP_AUTH_IDLE_SESSION: 9999
   },
   // Settings that user cannot change himself (only config can override this values)
   fixedSettings = {
-    timeWarningExpireMembership: 2592000 * 2 /*=2 mois*/,
-    timeWarningExpire: 2592000 * 3 /*=3 mois*/,
     timeout : 4000,
     cacheTimeMs: 60000, /*1 min*/
-    latestReleaseUrl: "https://api.github.com/repos/duniter-gchange/gchange-client/releases/latest",
+    timeWarningExpireMembership: 2592000 * 2 /*=2 mois*/,
+    timeWarningExpire: 2592000 * 3 /*=3 mois*/,
+    minVersion: '1.7.0', // min duniter version
     newIssueUrl: "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug",
     //userForumUrl: "https://forum.gchange.fr",
     userForumUrl: "https://forum.monnaie-libre.fr",
-    minVersion: '1.7.0', // min duniter version
+    latestReleaseUrl: "https://api.github.com/repos/duniter-gchange/gchange-client/releases/latest",
     httpsMode: false
   },
-  defaultSettings = angular.extend(
-    {
+  defaultSettings = angular.merge({
     useRelative: false,
-    useLocalStorage: true, // override to false if no device
+    useLocalStorage: !!$window.localStorage, // override to false if no device
+    useLocalStorageEncryption: false,
     walletHistoryTimeSecond: 30 * 24 * 60 * 60 /*30 days*/,
     walletHistorySliceSecond: 5 * 24 * 60 * 60 /*download using 5 days slice*/,
-    rememberMe: true, // override to false if no device
+    walletHistoryAutoRefresh: true, // override to false if device
+    rememberMe: true,
+    keepAuthIdle: 10 * 60,
+    showUDHistory: true,
     showLoginSalt: false,
     expertMode: false,
     decimalCount: 2,
@@ -77,12 +81,18 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
       enable: false,
       installDocUrl: "https://github.com/duniter-gchange/gchange-client/blob/master/README.md",
       currency: 0,
+      network: 0,
+      wotLookup: 0,
       wot: 0,
       wotCerts: 0,
       wallet: 0,
       walletCerts: 0,
       header: 0,
       settings: 0
+    },
+    currency: {
+      allRules: false,
+      allWotRules: false
     },
     wallet: {
       showPubkey: true,
@@ -128,22 +138,34 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
   },
 
   emitChangedEvent = function() {
-    var hasChanged = previousData && !angular.equals(previousData, data);
-    previousData = angular.copy(data);
+    var hasChanged = angular.isUndefined(previousData) || !angular.equals(previousData, data);
     if (hasChanged) {
-      api.data.raise.changed(data);
+      previousData = angular.copy(data);
+      return api.data.raise.changed(data);
     }
   },
 
   store = function() {
     if (!started) {
       console.debug('[setting] Waiting start finished...');
-      return startPromise.then(store);
+      return (startPromise || start()).then(store);
     }
 
     var promise;
     if (data.useLocalStorage) {
-      promise = localStorage.setObject(constants.STORAGE_KEY, data);
+      // When node is temporary (fallback node): keep previous node address - issue #476
+      if (data.node.temporary === true) {
+        promise = localStorage.getObject(constants.STORAGE_KEY)
+          .then(function(previousSettings) {
+            var savedData = angular.copy(data);
+            savedData.node = previousSettings && previousSettings.node || {};
+            delete savedData.temporary; // never store temporary flag
+            return localStorage.setObject(constants.STORAGE_KEY, savedData);
+          });
+      }
+      else {
+        promise = localStorage.setObject(constants.STORAGE_KEY, data);
+      }
     }
     else {
       promise  = localStorage.setObject(constants.STORAGE_KEY, null);
@@ -152,7 +174,7 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
     return promise
       .then(function() {
         if (data.useLocalStorage) {
-          console.debug('[setting] Saved');
+          console.debug('[setting] Saved locally');
         }
 
         // Emit event on store
@@ -163,23 +185,33 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
       .then(emitChangedEvent);
   },
 
+  /**
+   * Apply new settings (can be partial)
+   * @param newData
+   */
   applyData = function(newData) {
+    if (!newData) return; // skip empty
+
     var localeChanged = false;
     if (newData.locale && newData.locale.id) {
       // Fix previously stored locale (could use bad format)
-      newData.locale.id = fixLocale(newData.locale.id);
+      var localeId = fixLocale(newData.locale.id);
+      newData.locale = _.findWhere(locales, {id: localeId});
       localeChanged = !data.locale || newData.locale.id !== data.locale.id || newData.locale.id !== $translate.use();
     }
 
-    // Apply stored settings
-    angular.merge(data, newData);
-
-    // Force some fixed settings
+    // Force some fixed settings, before merging
     _.keys(fixedSettings).forEach(function(key) {
-      data[key] = defaultSettings[key]; // This will apply fixed value (override by config.js file)
+      newData[key] = defaultSettings[key]; // This will apply fixed value (override by config.js file)
     });
 
-    // Replace OLD default duniter node, by gchange node
+    // Apply new settings
+    angular.merge(data, newData);
+
+    // Delete temporary properties, if false
+    if (newData && newData.node && !newData.node.temporary || !data.node.temporary) delete data.node.temporary;
+
+    // Gchange workaround: Replace OLD default duniter node, by gchange pod
     if ((data.plugins && data.plugins.es.host && data.plugins.es.port) &&
         (!data.node || (data.node.host !== data.plugins.es.host))) {
       var oldBmaNode = data.node.host;
@@ -193,14 +225,16 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
     }
 
     // Apply the new locale (only if need)
+    // will produce an event cached by onLocaleChange();
     if (localeChanged) {
-      $translate.use(fixLocale(data.locale.id)); // will produce an event cached by onLocaleChange();
+      $translate.use(data.locale.id);
     }
 
   },
 
   restore = function() {
-    var now = new Date().getTime();
+    var now = Date.now();
+
     return localStorage.getObject(constants.STORAGE_KEY)
         .then(function(storedData) {
           // No settings stored
@@ -214,32 +248,42 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
           // Apply stored data
           applyData(storedData);
 
-          console.debug('[settings] Loaded from local storage in '+(new Date().getTime()-now)+'ms');
+          console.debug('[settings] Loaded from local storage in '+(Date.now()-now)+'ms');
           emitChangedEvent();
         });
   },
 
-    // Detect locale sucessuf changes, then apply to vendor libs
+    // Detect locale successful changes, then apply to vendor libs
   onLocaleChange = function() {
     var locale = $translate.use();
     console.debug('[settings] Locale ['+locale+']');
 
     // config moment lib
     try {
-      moment.locale(locale.substr(0,2));
+      moment.locale(locale.toLowerCase());
     }
     catch(err) {
-      moment.locale('en');
-      console.warn('[settings] Unknown local for moment lib. Using default [en]');
+      try {
+        moment.locale(locale.substr(0,2));
+      }
+      catch(err) {
+        moment.locale('en-gb');
+        console.warn('[settings] Unknown local for moment lib. Using default [en]');
+      }
     }
 
     // config numeral lib
     try {
-      numeral.language(locale.substr(0,2));
+      numeral.language(locale.toLowerCase());
     }
     catch(err) {
-      numeral.language('en');
-      console.warn('[settings] Unknown local for numeral lib. Using default [en]');
+      try {
+        numeral.language(locale.substring(0, 2));
+      }
+      catch(err) {
+        numeral.language('en-gb');
+        console.warn('[settings] Unknown local for numeral lib. Using default [en]');
+      }
     }
 
     // Emit event
@@ -284,11 +328,13 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
   applyData(defaultSettings);
 
   // Default action
-  start();
+  //start();
 
   return {
     ready: ready,
+    start: start,
     data: data,
+    apply: applyData,
     getByPath: getByPath,
     reset: reset,
     store: store,
@@ -296,6 +342,7 @@ angular.module('cesium.settings.services', ['ngResource', 'ngApi', 'cesium.confi
     defaultSettings: defaultSettings,
     // api extension
     api: api,
-    locales: locales
+    locales: locales,
+    constants: constants
   };
 });

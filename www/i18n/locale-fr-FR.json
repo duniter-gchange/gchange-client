@@ -5,6 +5,7 @@
     "APP_BUILD": "date : {{build}}",
     "PUBKEY": "Clé publique",
     "MEMBER": "Membre",
+    "BLOCK" : "Bloc",
     "BTN_OK": "OK",
     "BTN_YES": "Oui",
     "BTN_NO": "Non",
@@ -15,10 +16,11 @@
     "BTN_YES_SAVE": "Oui, Enregistrer",
     "BTN_YES_CONTINUE": "Oui, Continuer",
     "BTN_SHOW": "Voir",
-    "BTN_SHOW_PUBKEY": "Voir la clé",
-    "BTN_RELATIVE_UNIT": "Afficher en unité relative ?",
+    "BTN_SHOW_PUBKEY": "Afficher la clé publique",
+    "BTN_RELATIVE_UNIT": "Afficher les montants en DU ?",
     "BTN_BACK": "Retour",
     "BTN_NEXT": "Suivant",
+    "BTN_IMPORT": "Importer",
     "BTN_CANCEL": "Annuler",
     "BTN_CLOSE": "Fermer",
     "BTN_LATER": "Plus tard",
@@ -47,6 +49,7 @@
     "NO_ACCOUNT_QUESTION": "Pas encore de compte ? Créez-en un gratuitement !",
     "SEARCH_NO_RESULT": "Aucun résultat trouvé",
     "LOADING": "Veuillez patienter...",
+    "LOADING_WAIT": "Veuillez patienter...<br/><small>(Attente de disponibilité du noeud)</small>",
     "SEARCHING": "Recherche en cours...",
     "FROM": "De",
     "TO": "À",
@@ -62,7 +65,7 @@
     "UID": "Pseudonyme",
     "ENABLE": "Activé",
     "DISABLE": "Désactivé",
-    "RESULTS_LIST": "Résultats :",
+    "RESULTS_LIST": "Résultats",
     "RESULTS_COUNT": "{{count}} résultats",
     "EXECUTION_TIME": "exécuté en {{duration|formatDurationMs}}",
     "SHOW_VALUES": "Afficher les valeurs en clair ?",
@@ -76,6 +79,12 @@
       "SHARE_ON_FACEBOOK": "Partager sur Facebook",
       "SHARE_ON_DIASPORA": "Partager sur Diaspora*",
       "SHARE_ON_GOOGLEPLUS": "Partager sur Google+"
+    },
+    "FILE": {
+      "DATE": "Date :",
+      "TYPE": "Type :",
+      "SIZE": "Taille :",
+      "VALIDATING": "Validation en cours..."
     }
   },
   "SYSTEM": {
@@ -87,8 +96,8 @@
     "HOME": "Accueil",
     "WOT": "Annuaire",
     "CURRENCY": "Monnaie",
-    "CURRENCIES": "Monnaies",
     "ACCOUNT": "Mon compte",
+    "WALLETS": "Mes portefeuilles",
     "TRANSFER": "Virement",
     "SCAN": "Scanner",
     "SETTINGS": "Paramètres",
@@ -97,10 +106,11 @@
   },
   "ABOUT": {
     "TITLE": "À propos",
-    "LICENSE": "Application <b>libre</b> (licence GNU GPLv3).",
+    "LICENSE": "Application <b>libre</b> (Licence GNU AGPLv3).",
     "LATEST_RELEASE": "Il existe une <b>version plus récente</b> de {{'COMMON.APP_NAME'|translate}} (<b>v{{version}}</b>)",
     "PLEASE_UPDATE": "Veuillez mettre à jour {{'COMMON.APP_NAME'|translate}} (dernière version : <b>v{{version}}</b>)",
     "CODE": "Code source :",
+    "OFFICIAL_WEB_SITE": "Site web officiel :",
     "DEVELOPERS": "Développé par :",
     "FORUM": "Forum :",
     "DEV_WARNING": "Avertissement",
@@ -122,14 +132,17 @@
   },
   "SETTINGS": {
     "TITLE": "Paramètres",
+    "DISPLAY_DIVIDER": "Affichage",
+    "STORAGE_DIVIDER": "Stockage",
     "NETWORK_SETTINGS": "Réseau",
     "PEER": "Adresse du nœud Duniter",
+    "PEER_SHORT": "Adresse du nœud",
     "PEER_CHANGED_TEMPORARY": "Adresse utilisée temporairement",
     "USE_LOCAL_STORAGE": "Activer le stockage local",
     "USE_LOCAL_STORAGE_HELP": "Permet de sauvegarder vos paramètres",
     "ENABLE_HELPTIP": "Activer les bulles d'aide contextuelles",
     "ENABLE_UI_EFFECTS": "Activer les effets visuels",
-    "HISTORY_SETTINGS": "Mon compte",
+    "HISTORY_SETTINGS": "Mes opérations",
     "DISPLAY_UD_HISTORY": "Afficher les dividendes produits ?",
     "AUTHENTICATION_SETTINGS": "Authentification",
     "AUTO_LOGOUT": "Déconnexion automatique",
@@ -146,14 +159,12 @@
     "EXPERT_MODE": "Activer le mode expert",
     "EXPERT_MODE_HELP": "Permet un affichage plus détaillé",
     "POPUP_PEER": {
-      "HELP" : "Adresse : serveur:port",
-      "BTN_SHOW_LIST_HELP": "",
-      "TITLE" : "Nœud Duniter",
-      "HOST" : "Adresse",
+      "TITLE": "Nœud Duniter",
+      "HOST": "Adresse",
       "HOST_HELP": "Adresse : serveur:port",
-      "USE_SSL" : "Sécurisé ?",
-      "USE_SSL_HELP" : "(Chiffrement SSL)",
-      "BTN_SHOW_LIST" : "Liste des noeuds"
+      "USE_SSL": "Sécurisé ?",
+      "USE_SSL_HELP": "(Chiffrement SSL)",
+      "BTN_SHOW_LIST": "Liste des noeuds"
     }
   },
   "BLOCKCHAIN": {
@@ -180,7 +191,7 @@
       "LEAVERS_COUNT_HELP": "Membres ne souhaitant plus de certification",
       "EXCLUDED_COUNT": "Membres exclus",
       "EXCLUDED_COUNT_HELP": "Anciens membres exclus par non renouvellement ou manque de certifications",
-      "REVOKED_COUNT": "Identités revoquées",
+      "REVOKED_COUNT": "Identités révoquées",
       "REVOKED_COUNT_HELP": "Ces comptes ne pourront plus être membres",
       "TX_COUNT": "Transactions",
       "CERT_COUNT": "Certifications",
@@ -234,7 +245,9 @@
       "SIG_STOCK": "Nombre maximal de certifications émises par membre",
       "SIG_PERIOD": "Délai minimal d'attente entre 2 certifications successives émises par une même personne",
       "SIG_WINDOW": "Délai limite de prise en compte d'une certification",
+      "SIG_VALIDITY": "Durée de vie d'une certification qui a été prise en compte",
       "MS_WINDOW": "Délai limite de prise en compte d'une demande d'adhésion comme membre",
+      "MS_VALIDITY": "Durée de vie d'une adhésion qui a été prise en compte",
       "STEP_MAX": "Distance maximale, par les certifications, entre un nouvel entrant et les membres référents",
       "WOT_RULES_DIVIDER": "Règles de la toile de confiance",
       "SENTRIES": "Nombre de certifications (émises <b>et</b> reçues) pour devenir membre référent",
@@ -257,10 +270,17 @@
     "VIEW": {
       "MEDIAN_TIME": "Heure de la blockchain",
       "LOADING_PEERS": "Chargement des noeuds...",
-      "NODE_ADDRESS": "Adresse du noeud",
+      "NODE_ADDRESS": "Adresse :",
+      "SOFTWARE": "Logiciel",
+      "WARN_PRE_RELEASE": "Pré-version (dernière version stable : <b>{{version}}</b>)",
+      "WARN_NEW_RELEASE": "Version <b>{{version}}</b> disponible",
+      "WS2PID": "Identifiant :",
+      "PRIVATE_ACCESS": "Accès privé",
+      "POW_PREFIX": "Préfixe de preuve de travail :",
       "ENDPOINTS": {
         "BMAS": "Interface sécurisée (SSL)",
         "BMATOR": "Interface réseau TOR",
+        "WS2P": "Interface WS2P",
         "ES_USER_API": "Noeud de données Cesium+"
       }
     },
@@ -290,7 +310,7 @@
       "OWNER": "Appartient à",
       "SHOW_RAW_PEERING": "Voir la fiche de pair",
       "SHOW_RAW_CURRENT_BLOCK": "Voir le dernier bloc (format brut)",
-      "LAST_BLOCKS": "Derniers blocs",
+      "LAST_BLOCKS": "Derniers blocs connus",
       "KNOWN_PEERS": "Nœuds connus :",
       "GENERAL_DIVIDER": "Informations générales",
       "ERROR": {
@@ -302,7 +322,7 @@
   "WOT": {
     "SEARCH_HELP": "Recherche (pseudo ou clé publique)",
     "SEARCH_INIT_PHASE_WARNING": "Durant la phase de pré-inscription, la recherche des inscriptions en attente <b>peut être longue</b>. Merci de patienter...",
-    "REGISTERED_SINCE": "Inscription",
+    "REGISTERED_SINCE": "Inscrit le",
     "REGISTERED_SINCE_BLOCK": "Inscrit au bloc #",
     "NO_CERTIFICATION": "Aucune certification validée",
     "NO_GIVEN_CERTIFICATION": "Aucune certification émise",
@@ -316,8 +336,8 @@
     "SIGNED_ON_BLOCK": "Emise au bloc #{{block}}",
     "WRITTEN_ON_BLOCK": "Ecrite au bloc #{{block}}",
     "GENERAL_DIVIDER": "Informations générales",
-    "NOT_MEMBER_ACCOUNT": "Compte non membre",
-    "NOT_MEMBER_ACCOUNT_HELP": "Il s'agit d'une simple portefeuille, sans demande d'adhésion en attente.",
+    "NOT_MEMBER_ACCOUNT": "Compte simple (non membre)",
+    "NOT_MEMBER_ACCOUNT_HELP": "Il s'agit d'un simple portefeuille, sans demande d'adhésion en attente.",
     "TECHNICAL_DIVIDER": "Informations techniques",
     "BTN_CERTIFY": "Certifier",
     "BTN_YES_CERTIFY": "Oui, certifier",
@@ -329,7 +349,9 @@
     "LOOKUP": {
       "TITLE": "Annuaire",
       "NEWCOMERS": "Nouveaux membres :",
+      "NEWCOMERS_COUNT": "{{count}} membres",
       "PENDING": "Inscriptions en attente :",
+      "PENDING_COUNT": "{{count}} inscriptions en attente",
       "REGISTERED": "Inscrit {{time | formatFromNow}}",
       "MEMBER_FROM": "Membre depuis {{time|formatFromNowShort}}",
       "BTN_NEWCOMERS": "Nouveaux membres",
@@ -338,6 +360,9 @@
       "SHOW_MORE_COUNT": "(limite actuelle à {{limit}})",
       "NO_PENDING": "Aucune inscription en attente.",
       "NO_NEWCOMERS": "Aucun membre."
+    },
+    "CONTACTS": {
+      "TITLE": "Contacts"
     },
     "MODAL": {
       "TITLE": "Recherche"
@@ -370,6 +395,7 @@
     "SCRYPT_FORM_HELP": "Veuillez saisir vos identifiants.<br>Pensez à vérifier que la clé publique est celle de votre compte.",
     "PUBKEY_FORM_HELP": "Veuillez saisir une clé publique de compte :",
     "FILE_FORM_HELP": "Choisissez le fichier de trousseau à utiliser :",
+    "SCAN_FORM_HELP": "Scanner le QR code d'un portefeuille.",
     "SALT": "Identifiant",
     "SALT_HELP": "Identifiant",
     "SHOW_SALT": "Afficher l'identifiant ?",
@@ -394,10 +420,11 @@
       "IDLE_WARNING": "Vous allez être déconnecté... {{countdown}}"
     },
     "METHOD": {
-      "SCRYPT_DEFAULT": "Salage standard (par défaut)",
+      "SCRYPT_DEFAULT": "Identifiant et mot de passe",
       "SCRYPT_ADVANCED": "Salage avancé",
       "FILE": "Fichier de trousseau",
-      "PUBKEY": "Clé publique seule"
+      "PUBKEY": "Clé publique ou pseudonyme",
+      "SCAN": "Scanner un QR code"
     },
     "SCRYPT": {
       "SIMPLE": "Salage léger",
@@ -411,11 +438,7 @@
       "p": "p (CPU):"
     },
     "FILE": {
-      "DATE": "Date :",
-      "TYPE": "Type :",
-      "SIZE": "Taille :",
-      "VALIDATING": "Validation...",
-      "HELP": "Format de fichier attendu : <b>.dunikey</b> (type PubSec). D'autres formats sont en cours de développement (EWIF, WIF)."
+      "HELP": "Format de fichier attendu : <b>.yml</b> ou <b>.dunikey</b> (type PubSec, WIF ou EWIF)."
     }
   },
   "AUTH": {
