@@ -247,6 +247,11 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           record.price = record.price * currentUD;
         }
       }
+      if (record.fees && options.convertPrice && currentUD && (!record.feesCurrency || record.feesCurrency === record.currency)) {
+        if (record.unit==='UD') {
+            record.fees = record.fees * currentUD;
+        }
+      }
       if (options.html && hit.highlight) {
         if (hit.highlight.title) {
           record.title = hit.highlight.title[0];

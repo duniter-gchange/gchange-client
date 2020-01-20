@@ -56,8 +56,8 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
 
 function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q, $controller,
-                                      $timeout, $filter, $translate, Modals, csConfig, esModals,
-                                      csWallet, mkRecord, UIUtils, esHttp) {
+                                $timeout, $filter, $translate, Modals, csConfig, csCurrency, esModals,
+                                csWallet, mkRecord, UIUtils, esHttp) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -134,12 +134,13 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     })
       .then(function (data) {
         $scope.formData = data.record;
+        $scope.formData.feesCurrency = data.record.feesCurrency || data.record.currency;
+        delete $scope.formData.useRelative;
         $scope.id = data.id;
         $scope.issuer = data.issuer;
         $scope.updateView();
         UIUtils.loading.hide();
         $scope.loading = false;
-
       })
       .catch(function (err) {
         if (!$scope.secondTry) {
@@ -439,7 +440,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 }
 
 function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $timeout, mkRecord, $ionicHistory, $focus, $controller,
-                                      UIUtils, ModalUtils, csConfig, esHttp, csSettings, mkSettings) {
+                                      UIUtils, ModalUtils, csConfig, esHttp, csSettings, csCurrency, mkSettings) {
   'ngInject';
 
   // Screen options
@@ -478,7 +479,8 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
   $scope.formData = {
     price: null,
     category: {},
-    geoPoint: null
+    geoPoint: null,
+    useRelative: csSettings.data.useRelative
   };
   $scope.id = null;
   $scope.pictures = [];
@@ -504,7 +506,6 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
     .then(function(res) {
       $scope.currencies = res[0];
 
-      $scope.useRelative = csSettings.data.useRelative;
       if (state.stateParams && state.stateParams.id) { // Load by id
         $scope.load(state.stateParams.id);
       }
@@ -527,24 +528,25 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
       }
     })
     .catch(function(err){
-      if (err == 'CANCELLED') {
+      if (err === 'CANCELLED') {
         $scope.motion.hide();
         $scope.showHome();
       }
     });
   });
 
-  $ionicPopover.fromTemplateUrl('plugins/es/templates/market/popover_unit.html', {
-    scope: $scope
-  }).then(function(popover) {
-    $scope.unitPopover = popover;
-  });
+  /* -- popover -- */
 
-  $scope.$on('$destroy', function() {
-    if (!!$scope.unitPopover) {
-      $scope.unitPopover.remove();
-    }
-  });
+  $scope.showUnitPopover = function($event) {
+    UIUtils.popover.show($event, {
+      templateUrl: 'templates/wallet/popover_unit.html',
+      scope: $scope,
+      autoremove: true
+    })
+    .then(function(useRelative) {
+      $scope.formData.useRelative = useRelative;
+    });
+  };
 
   $scope.cancel = function() {
     $scope.closeModal();
@@ -560,9 +562,11 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
       })
       .then(function(data) {
         angular.merge($scope.formData, data.record);
-        if (data.record.unit === 'unit') {
-          $scope.formData.price = $scope.formData.price ? $scope.formData.price / 100 : undefined; // add 2 decimals in quantitative mode
-          $scope.formData.fees = $scope.formData.fees ? $scope.formData.fees / 100 : undefined; // add 2 decimals in quantitative mode
+        $scope.formData.useRelative = (data.record.unit === 'UD');
+        if (!$scope.formData.useRelative) {
+          // add 2 decimals in quantitative mode
+          $scope.formData.price = $scope.formData.price ? $scope.formData.price / 100 : undefined;
+          $scope.formData.fees = $scope.formData.fees ? $scope.formData.fees / 100 : undefined;
         }
         // Set default currency (need by HELP texts)
         if (!$scope.formData.currency) {
@@ -580,9 +584,6 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
         $scope.id = data.id;
         $scope.pictures = data.record.pictures || [];
         delete $scope.formData.pictures; // duplicated with $scope.pictures
-        $scope.useRelative = $scope.formData.price ?
-          ($scope.formData.unit === 'UD') :
-          csSettings.data.useRelative;
         $scope.dirty = false;
 
         $scope.motion.show({
@@ -620,8 +621,9 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
       // Preparing json (pictures + resizing thumbnail)
       .then(function() {
         var json = angular.copy($scope.formData);
+        delete json.useRelative;
 
-        var unit = !$scope.useRelative ? 'unit' : 'UD';
+        var unit = $scope.formData.useRelative ? 'UD' : 'unit';
 
         // prepare price
         if (angular.isDefined(json.price) && json.price != null) { // warn: could be =0
@@ -629,7 +631,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
             json.price = parseFloat(json.price.replace(new RegExp('[.,]'), '.')); // fix #124
           }
           json.unit = unit;
-          if (!$scope.useRelative) {
+          if (unit === 'unit') {
             json.price = json.price * 100;
           }
           if (!json.currency) {
@@ -651,7 +653,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
           if (typeof json.fees == "string") {
             json.fees = parseFloat(json.fees.replace(new RegExp('[.,]'), '.')); // fix #124
           }
-          if (!$scope.useRelative) {
+          if (unit === 'unit') {
             json.fees = json.fees * 100;
           }
           if (!json.feesCurrency) {
@@ -764,12 +766,6 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
 
         UIUtils.onError('MARKET.ERROR.FAILED_SAVE_RECORD')(err);
       });
-  };
-
-  $scope.setUseRelative = function(useRelative) {
-    $scope.formData.unit = useRelative ? 'UD' : 'unit';
-    $scope.useRelative = useRelative;
-    $scope.unitPopover.hide();
   };
 
   $scope.openCurrencyLookup = function() {

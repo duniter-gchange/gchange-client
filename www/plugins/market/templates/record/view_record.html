@@ -145,13 +145,13 @@
                  ng-class="::{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}"
                  ng-if="formData.price">
               <i class="icon "
-                 ng-class="::{'cion-market-need': formData.type == 'need', 'ion-pricetag': formData.type == 'offer'}"></i>
-              <span ng-bind-html="::formData.price | formatAmount:{currency:formData.currency}"></span>
+                 ng-class="::{'cion-market-need': formData.type === 'need', 'ion-pricetag': formData.type === 'offer'}"></i>
+              <span ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative} "></span>
             </div>
             <div class="badge badge-secondary" ng-if="formData.fees">
               <span class="dark">
                 <i class="ion-plus" ng-if="::formData.price"></i>
-                <ng-bind-html ng-bind-html="::formData.fees | formatAmount:{currency: (formData.feesCurrency||formData.currency)}"></ng-bind-html>
+                <ng-bind-html ng-bind-html="::formData.fees | formatAmount: {currency: formData.feesCurrency, useRelative: $root.settings.useRelative}"></ng-bind-html>
               </span>
               <span class="gray">{{'MARKET.VIEW.RECORD_FEES_PARENTHESIS'|translate}} | </span>
               <span class="gray">
@@ -231,13 +231,14 @@
           <span class="item item-icon-left item-button-right hidden-xs" ng-if="formData.price||formData.fees">
             <ng-if ng-if="formData.price">
               <i class="calm icon ion-pricetag"></i>
-              <h1 class="calm" ng-bind-html="::formData.price | formatAmount:{currency:formData.currency}"></h1>
+              <h1 class="calm"
+                  ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative}"></h1>
             </ng-if>
             <h3>
               <ng-if ng-if="formData.fees">
                 <span class="dark">
                   <i class="ion-plus" ng-if="::formData.price"></i>
-                  <ng-bind-html ng-bind-html="::formData.fees | formatAmount:{currency: (formData.feesCurrency||formData.currency)}"></ng-bind-html>
+                  <ng-bind-html ng-bind-html="formData.fees | formatAmount: {currency: formData.feesCurrency, useRelative: $root.settings.useRelative}"></ng-bind-html>
                 </span>
                  <span class="gray">{{'MARKET.VIEW.RECORD_FEES_PARENTHESIS'|translate}} | </span>
               </ng-if>

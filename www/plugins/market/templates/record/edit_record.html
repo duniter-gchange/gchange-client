@@ -92,22 +92,29 @@
               </div>
 
               <!-- price -->
-              <div class="item item-input item-floating-label item-button-right"
-                   ng-class="{'item-input-error': form.$submitted && form.price.$invalid}"
-                   >
-                <div class="input-label">{{::'MARKET.EDIT.RECORD_PRICE' | translate}} (<span ng-bind-html="formData.currency| currencySymbol:useRelative"></span>)</div>
+              <ion-item class="item-input item-floating-label item-button-right"
+                   ng-class="{'item-input-error': form.$submitted && form.price.$invalid}">
 
-                <input type="number" name="price" placeholder="{{::'MARKET.EDIT.RECORD_PRICE_HELP' | translate}} ({{formData.currency | currencySymbolNoHtml:useRelative}})"
+                <div class="input-label">
+                  <span translate>MARKET.EDIT.RECORD_PRICE</span>
+                  (<span ng-bind-html="formData.currency| currencySymbol:formData.useRelative"></span>)
+                </div>
+
+                <input type="number"
+                       autocomplete="off"
+                       name="price"
+                       placeholder="{{::'MARKET.EDIT.RECORD_PRICE_HELP' | translate}}"
                        ng-model="formData.price"
                        number-float>
-                <ng-if ng-if="options.unit.canEdit">
-                  <span class="gray button button-block icon ion-arrow-swap hidden-xs hidden-sm" ng-click="unitPopover.show($event)">
+                <a class="button button-clear button-stable dark ink"
+                   tabindex="-1"  style="z-index:110; padding: 0 16px;"
+                   ng-if="options.unit.canEdit"
+                   ng-click="showUnitPopover($event)">
+                  <span ng-bind-html="$root.currency.name | currencySymbol:formData.useRelative">
                   </span>
-                  <span class="gray button button-block button-clear button-icon visible-xs visible-sm" ng-click="unitPopover.show($event)">
-                    <i class="icon ion-android-more-vertical"></i>
-                  </span>
-                </ng-if>
-              </div>
+                  &nbsp;<b class="ion-arrow-down-b" style="font-size: 12pt;"></b>
+                </a>
+              </ion-item>
               <div class="form-errors"
                    ng-show="form.$submitted && form.price.$invalid"
                    ng-messages="form.price.$error">
@@ -131,18 +138,23 @@
               <div class="item item-input item-floating-label item-button-right"
                    ng-if="formData.type=='offer'"
                    ng-class="{'item-input-error': form.$submitted && form.fees.$invalid}">
-                <div class="input-label">{{::'MARKET.EDIT.RECORD_FEES' | translate}} (<span ng-bind-html="formData.currency| currencySymbol:useRelative"></span>)</div>
+                <div class="input-label">
+                  <span translate>MARKET.EDIT.RECORD_FEES</span>
+                  (<span ng-bind-html="formData.currency| currencySymbol:formData.useRelative"></span>)
+                </div>
 
-                <input type="number" name="fees" placeholder="{{::'MARKET.EDIT.RECORD_FEES_HELP' | translate}} ({{formData.currency | currencySymbolNoHtml:useRelative}})"
+                <input type="number"
+                       autocomplete="off"
+                       name="fees"
+                       placeholder="{{::'MARKET.EDIT.RECORD_FEES_HELP' | translate}}"
                        ng-model="formData.fees"
                        number-float>
-                <ng-if ng-if="options.unit.canEdit">
-                  <span class="gray button button-block icon ion-arrow-swap hidden-xs hidden-sm" ng-click="unitPopover.show($event)">
+                <div class="button button-clear button-stable dark ink"
+                       tabindex="-1"  style="z-index:110; padding: 0 16px;"
+                       ng-if="options.unit.canEdit">
+                  <span ng-bind-html="$root.currency.name | currencySymbol:formData.useRelative">
                   </span>
-                  <span class="gray button button-block button-clear button-icon visible-xs visible-sm" ng-click="unitPopover.show($event)">
-                    <i class="icon ion-android-more-vertical"></i>
-                  </span>
-                </ng-if>
+                </div>
               </div>
               <div class="form-errors"
                    ng-show="form.$submitted && form.fees.$invalid"
