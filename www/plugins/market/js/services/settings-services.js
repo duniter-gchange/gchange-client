@@ -15,11 +15,20 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
   'ngInject';
 
   var
+    SETTINGS_SAVE_SPEC = {
+      includes: ['geoDistance'],
+      excludes: ['enable', 'homeMessage', 'defaultTags', 'defaultAdminPubkeys', 'record'],
+      cesiumApi: {}
+    },
     defaultSettings = angular.merge({
         plugins: {
           market: {
             enable: true,
-            geoDistance: "100km"
+            geoDistance: "100km",
+            cesiumApi: {
+              enable: true,
+              baseUrl: "https://g1.duniter.fr/api"
+            }
           },
           converse: {
             jid : "anonymous.duniter.org",
@@ -42,10 +51,7 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
   ;
 
   // Define settings to save remotely
-  esSettings.setPluginSaveSpecs('market', {
-    includes: [], // during active devlpment, ddo not store any market settings
-    excludes: ['enable', 'homeMessage', 'defaultTags', 'defaultAdminPubkeys', 'record']
-  });
+  esSettings.setPluginSaveSpecs('market', SETTINGS_SAVE_SPEC);
 
   that.raw = {
     currencies: undefined

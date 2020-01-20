@@ -100,13 +100,13 @@
                 <input type="number" name="price" placeholder="{{::'MARKET.EDIT.RECORD_PRICE_HELP' | translate}} ({{formData.currency | currencySymbolNoHtml:useRelative}})"
                        ng-model="formData.price"
                        number-float>
-                <!--<ng-if ng-if="options.unit.canEdit">
+                <ng-if ng-if="options.unit.canEdit">
                   <span class="gray button button-block icon ion-arrow-swap hidden-xs hidden-sm" ng-click="unitPopover.show($event)">
                   </span>
                   <span class="gray button button-block button-clear button-icon visible-xs visible-sm" ng-click="unitPopover.show($event)">
                     <i class="icon ion-android-more-vertical"></i>
                   </span>
-                </ng-if>-->
+                </ng-if>
               </div>
               <div class="form-errors"
                    ng-show="form.$submitted && form.price.$invalid"
@@ -136,13 +136,13 @@
                 <input type="number" name="fees" placeholder="{{::'MARKET.EDIT.RECORD_FEES_HELP' | translate}} ({{formData.currency | currencySymbolNoHtml:useRelative}})"
                        ng-model="formData.fees"
                        number-float>
-                <!--<ng-if ng-if="options.unit.canEdit">
+                <ng-if ng-if="options.unit.canEdit">
                   <span class="gray button button-block icon ion-arrow-swap hidden-xs hidden-sm" ng-click="unitPopover.show($event)">
                   </span>
                   <span class="gray button button-block button-clear button-icon visible-xs visible-sm" ng-click="unitPopover.show($event)">
                     <i class="icon ion-android-more-vertical"></i>
                   </span>
-                </ng-if>-->
+                </ng-if>
               </div>
               <div class="form-errors"
                    ng-show="form.$submitted && form.fees.$invalid"

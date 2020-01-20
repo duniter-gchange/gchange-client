@@ -63,7 +63,7 @@
              ng-if="::rec.price"
              ng-class="{'badge-calm': rec.type=='offer', 'badge-energized': rec.type=='need'}">
           <i class="cion-market-{{rec.type}}"></i>
-          <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: false}"></span>
+          <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: $root.settings.useRelative}"></span>
         </div>
         <div class="badge badge-price"
              ng-if="::!search.type && !rec.price"

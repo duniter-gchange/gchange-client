@@ -20,7 +20,9 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
       excludes: ['newIssueVersion', 'timeout', 'cacheTimeMs', 'time', 'login', 'build'],
       plugins: {
         es: {
-          excludes: ['enable', 'host', 'port', 'wsPort', 'fallbackNodes', 'minVersion', 'document']
+          excludes: ['enable', 'host', 'port', 'useSsl', 'fallbackNodes', 'minVersion', 'document', 'maxUploadBodySize', 'defaultCountry'],
+          notifications: {
+          }
         }
       },
       helptip: {
@@ -38,7 +40,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
         }
       }
     },
-    defaultSettings = angular.extend({
+    defaultSettings = angular.merge({
         plugins: {
           es: {
             askEnable: false,
@@ -96,7 +98,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
     // Add implicit includes
     if (copySpec.includes) {
       _.forEach(_.keys(copySpec), function(key) {
-        if (key != "includes" && key != "excludes") {
+        if (key !== "includes" && key !== "excludes") {
           copySpec.includes.push(key);
         }
       });
@@ -107,7 +109,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
         (!copySpec.excludes || !_.contains(copySpec.excludes, key))) {
         if (data[key] && (typeof data[key] == 'object') &&
           copySpec[key] && (typeof copySpec[key] == 'object')) {
-          result[key] = copyUsingSpec(data[key], copySpec[key]);
+          result[key] = copyUsingSpec(data[key], copySpec[key]); // Recursive call
         }
         else {
           result[key] = data[key];
