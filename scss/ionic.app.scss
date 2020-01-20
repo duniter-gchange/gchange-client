@@ -47,7 +47,14 @@
   }
 }
 
-/* -- Converse JS customization-- */
+.card.card-comment .card-footer {
+
+  button {
+    top: 0;
+  }
+}
+
+  /* -- Converse JS customization-- */
 
 #conversejs {
   height: 55vh;
