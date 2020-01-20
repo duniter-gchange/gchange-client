@@ -27,7 +27,7 @@ angular.module('cesium.graph.data.services', ['cesium.es.http.services'])
             event: esHttp.post('/user/event/_search?pretty')
           },
           docstat: {
-            search: esHttp.post('/docstat/record/_search')
+            search: esHttp.post('/document/stats/_search')
           },
           synchro: {
             search: esHttp.post('/:currency/synchro/_search')
@@ -119,7 +119,7 @@ angular.module('cesium.graph.data.services', ['cesium.es.http.services'])
                     aggs: {
                       type: {
                         terms: {
-                          field: "indexType",
+                          field: "type",
                           size: 0
                         },
                         aggs: {

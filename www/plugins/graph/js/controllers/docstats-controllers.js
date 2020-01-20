@@ -339,7 +339,7 @@ function GpDocStatsController($scope, $state, $controller, $q, $translate, gpCol
       if (!result || !result.times) return; // no data
       $scope.times = result.times;
 
-      console.debug(result);
+      //console.debug(result);
 
       // Labels
       var labelPattern = datePatterns[$scope.formData.rangeDuration];
