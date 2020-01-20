@@ -11,10 +11,12 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
   })
 
 .factory('mkWallet', function($rootScope, $q, $timeout, esHttp, $state, $sce, $sanitize, $translate,
-                            esSettings, SocialUtils, CryptoUtils, UIUtils, csWallet, esWallet, csWot, BMA, Device, esProfile) {
+                              UIUtils, csSettings, csWallet, csWot, BMA, Device,
+                              SocialUtils, CryptoUtils,  esWallet, esProfile, esSubscription) {
   'ngInject';
   var
     defaultProfile,
+    defaultSubscription,
     that = this,
     listeners;
 
@@ -22,6 +24,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
     data.profile = undefined;
     data.name = undefined;
     defaultProfile = undefined;
+    defaultSubscription = undefined;
   }
 
   function onWalletLoginCheck(data, deferred) {
@@ -37,7 +40,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
       return deferred.promise;
     }
 
-    var now = new Date().getTime();
+    var now = Date.now();
     console.debug("[market] [wallet] Checking user profile...");
 
     // Check if profile exists
@@ -49,7 +52,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
           data.avatar = profile.avatar;
           data.profile = profile.source;
           data.profile.description = profile.description;
-          return;
+          return; // Continue
         }
 
         // Invalid credentials (no user profile found)
@@ -59,45 +62,16 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
           deferred.reject('RETRY');
           return deferred.promise;
         }
-        // Fill default profile
-        data.profile = data.profile || {};
-        angular.merge(data.profile, defaultProfile);
 
-        return esWallet.box.getKeypair()
-          .then(function(keypair) {
-            return $q.all([
-              $translate('MARKET.PROFILE.DEFAULT_TITLE', {pubkey: data.pubkey}),
-              // Encrypt socials
-              SocialUtils.pack(angular.copy(data.profile.socials||[]), keypair)
-            ])
-          })
-          .then(function(res) {
-            var title = res[0];
-            var encryptedSocials = res[1];
+        // Save the new user profile
+        return registerNewProfile(data);
+      })
 
-            data.name = data.profile.title || title;
-            data.profile.title = data.name;
-            data.profile.issuer = data.pubkey;
-
-            // Add encrypted socials into a profile copy, then save it
-            var copiedProfile = angular.copy(data.profile);
-            copiedProfile.socials = encryptedSocials;
-            return esProfile.add(copiedProfile);
-          })
-          .then(function() {
-            // clean default profile
-            defaultProfile = undefined;
-          })
-          .catch(function(err) {
-            // clean default profile
-            defaultProfile = undefined;
-
-            console.error('[market] [user] Error while saving new profile', err);
-            deferred.reject(err);
-          });
+      .then(function() {
+        return registerNewSubscription(data);
       })
       .then(function() {
-        console.info('[market] [wallet] Checked user profile in {0}ms'.format(new Date().getTime() - now));
+        console.info('[market] [wallet] Checked user profile in {0}ms'.format(Date.now() - now));
         deferred.resolve(data);
       })
       .catch(function(err) {
@@ -105,6 +79,89 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
       });
 
     return deferred.promise;
+  }
+
+  function registerNewProfile(data) {
+    if (!defaultProfile) return;
+
+    var now = Date.now();
+    console.debug("[market] [wallet] Saving user profile...");
+
+    // Profile not exists, but it exists a default profile (from the join controller)
+    data.profile = data.profile || {};
+
+    angular.merge(data.profile, defaultProfile);
+
+    return esWallet.box.getKeypair()
+      .then(function(keypair) {
+        return $q.all([
+          $translate('MARKET.PROFILE.DEFAULT_TITLE', {pubkey: data.pubkey}),
+          // Encrypt socials
+          SocialUtils.pack(angular.copy(data.profile.socials||[]), keypair)
+        ])
+      })
+      .then(function(res) {
+        var title = res[0];
+        var encryptedSocials = res[1];
+
+        data.name = data.profile.title || title;
+        data.profile.title = data.name;
+        data.profile.issuer = data.pubkey;
+
+        // Add encrypted socials into a profile copy, then save it
+        var copiedProfile = angular.copy(data.profile);
+        copiedProfile.socials = encryptedSocials;
+
+        // Save the profile
+        return esProfile.add(copiedProfile)
+      })
+      .then(function() {
+        // clean default profile
+        defaultProfile = undefined;
+        console.info('[market] [wallet] Saving user profile in {0}ms'.format(Date.now() - now));
+      })
+      .catch(function(err) {
+        // clean default profile
+        defaultProfile = undefined;
+        console.error('[market] [wallet] Error while saving new profile', err);
+        throw err;
+      });
+  }
+
+  function registerNewSubscription(data) {
+    if (!defaultSubscription) return;
+
+    // Find the ES node pubkey (from its peer document)
+    return esHttp.network.peering.self()
+        .then(function(res) {
+          if (!res || !res.pubkey) return; // no pubkey: exit
+
+          var record = angular.merge({
+            type: 'email',
+            recipient: res.pubkey,
+            content: {
+              locale: csSettings.data.locale.id,
+              frequency: 'daily'
+            }
+          }, defaultSubscription);
+
+          if (record.type === 'email' && !record.content.email) {
+            console.warn("Missing email attribute (subscription content). Cannot subscribe!");
+            return;
+          }
+
+          return esSubscription.record.add(record, csWallet)
+        })
+        .then(function() {
+          data.subscriptions = data.subscriptions || {count: 0};
+          data.subscriptions.count++;
+          defaultSubscription = undefined;
+        })
+        .catch(function(err) {
+          defaultSubscription = undefined;
+          console.error('[market] [wallet] Error while saving new subscription', err);
+          throw err;
+        });
   }
 
   function onWalletFinishLoad(data, deferred) {
@@ -162,6 +219,10 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
 
   that.setDefaultProfile = function(profile) {
     defaultProfile = angular.copy(profile);
+  };
+
+  that.setDefaultSubscription = function(subscription) {
+    defaultSubscription = angular.copy(subscription);
   };
 
   return that;

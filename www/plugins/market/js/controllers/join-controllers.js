@@ -116,6 +116,17 @@ angular.module('cesium.market.join.controllers', ['cesium.services', 'cesium.mar
       description: $scope.formData.description
     });
 
+    // Fill the default subscription
+    if ($scope.formData.email) {
+      mkWallet.setDefaultSubscription({
+        type: 'email',
+        //recipient: '', TODO: allow to select a email provider
+        content: {
+          email: $scope.formData.email
+        }
+      });
+    }
+
     // do not alert use if wallet is empty
     csSettings.data.wallet = csSettings.data.wallet || {};
     csSettings.data.wallet.alertIfUnusedWallet = false;
