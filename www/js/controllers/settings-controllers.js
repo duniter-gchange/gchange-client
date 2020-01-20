@@ -191,7 +191,7 @@ function SettingsController($scope, $q, $window, $ionicHistory, $ionicPopup, $ti
               return;
             }
             var parts = res.server.split(':');
-            parts[1] = parts[1] ? parts[1] : 80;
+            parts[1] = parts[1] ? parts[1] : (res.useSsl ? 443 : 80);
             resolve({
               host: parts[0],
               port: parts[1],

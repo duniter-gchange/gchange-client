@@ -37,9 +37,9 @@ angular.module('cesium.es.network.controllers', ['cesium.es.services'])
 
     .controller('ESNetworkLookupCtrl', ESNetworkLookupController)
 
-    .controller('ESPeerViewCtrl', ESPeerViewController)
-
     .controller('ESNetworkLookupModalCtrl', ESNetworkLookupModalController)
+
+    .controller('ESPeerViewCtrl', ESPeerViewController)
 
     .controller('ESNetworkLookupPopoverCtrl', ESNetworkLookupPopoverController)
 
@@ -334,7 +334,7 @@ function ESNetworkLookupModalController($scope, $controller, parameters) {
   'ngInject';
 
   // Initialize the super class and extend it.
-  angular.extend(this, $controller('NetworkLookupCtrl', {$scope: $scope}));
+  angular.extend(this, $controller('ESNetworkLookupCtrl', {$scope: $scope}));
 
   // Read parameters
   parameters = parameters || {};
