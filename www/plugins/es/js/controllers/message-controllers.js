@@ -579,7 +579,7 @@ function ESMessageViewController($scope, $state, $timeout, $translate, $ionicHis
   };
 }
 
-function PopoverMessageController($scope, UIUtils, $state, csWallet, esHttp, esMessage, esModals) {
+function PopoverMessageController($scope, UIUtils, $state, $timeout, csWallet, esHttp, esMessage, esModals) {
   'ngInject';
 
   var defaultSearchLimit = 40;

@@ -7,7 +7,7 @@
          ng-class="{'item-input-error': form.$submitted && !formData.destPub}"
          ng-click="showWotLookupModal()">
           <span class="gray" translate>MESSAGE.COMPOSE.TO</span>
-          <span class="badge badge-royal"><i class="ion-person"></i>{{destUid}}</span>&nbsp;
+          <span class="badge badge-royal" ng-if="destUid"><i class="ion-person"></i>&nbsp;{{destUid}}</span>&nbsp;
           <i class="gray icon ion-ios-arrow-right"></i>
       </a>
       <div class="form-errors"

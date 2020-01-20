@@ -215,6 +215,7 @@ function ESPluginSettingsController ($scope, $window, $q,  $translate, $ionicPop
   $scope.onFormChanged = function() {
     if ($scope.loading) return;
 
+    $scope.formData.notifications = $scope.formData.notifications || {};
     if ($scope.hasWindowNotification &&
       $scope.formData.notifications.emitHtml5 !== (window.Notification.permission === "granted")){
       window.Notification.requestPermission(function (permission) {
