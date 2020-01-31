@@ -151,8 +151,8 @@ angular.module('cesium.market.join.controllers', ['cesium.services', 'cesium.mar
     return mkModals.showHelp({anchor: helpAnchor});
   };
 
-  // TODO: remove auto add account when done
-  $timeout(function() {
+  // DEV only: remove auto add account when done
+  /*$timeout(function() {
     $scope.formData.username="azertypoi";
     $scope.formData.confirmUsername=$scope.formData.username;
     $scope.formData.password="azertypoi";
@@ -162,4 +162,5 @@ angular.module('cesium.market.join.controllers', ['cesium.services', 'cesium.mar
     $scope.doNext();
     //$scope.form = {$valid:true};
   }, 1000);
+  */
 });
