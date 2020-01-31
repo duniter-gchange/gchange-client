@@ -1,6 +1,6 @@
 {
     "name": "gchange-client",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "Unhosted webapp client for Duniter network",
     "repository": {
         "type": "git",

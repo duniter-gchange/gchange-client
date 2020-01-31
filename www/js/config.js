@@ -22,29 +22,27 @@ angular.module("cesium.config", [])
 		"enable": false
 	},
 	"node": {
-		"host": "192.168.0.20",
-		"port": "10988",
-		"useSsl": false
+		"host": "data.gchange.fr",
+		"port": "443"
 	},
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "192.168.0.20",
-			"port": "10988",
-			"useSsl": false,
+			"host": "data.gchange.fr",
+			"port": "443",
 			"maxUploadBodySize": 5242880,
 			"defaultCountry": "France"
 		},
 		"market": {
 			"enable": true,
-			"searchDistance": "50km",
+			"geoDistance": "50km",
 			"cesiumApi": {
 				"enable": true,
 				"baseUrl": "https://g1.duniter.fr/api"
 			}
 		},
 		"converse": {
-			"enable": false,
+			"enable": true,
 			"jid": "anonymous.duniter.org",
 			"bosh_service_url": "https://chat.duniter.org/http-bind/",
 			"auto_join_rooms": [
@@ -52,8 +50,8 @@ angular.module("cesium.config", [])
 			]
 		}
 	},
-	"version": "1.0.1",
-	"build": "2020-01-03T23:44:43.846Z",
+	"version": "1.1.0",
+	"build": "2020-01-31T18:56:54.379Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
