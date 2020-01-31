@@ -511,7 +511,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
     function searchMoreLikeThis(id, options) {
       options = options || {};
 
-      var size = options.size||5;
+      var size = options.size||6;
       var request = {
         from: options.from||0,
         size: size * 2,
@@ -556,7 +556,9 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           };
         }
 
-        var hits = res.hits.hits.reduce(function(res, hit) {
+        var hits = res.hits.hits.reduce(function(res, hit, index) {
+          if (index >= size) return res; // Skip (already has enought ad)
+
           var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, html: true});
           record.id = hit._id;
 
