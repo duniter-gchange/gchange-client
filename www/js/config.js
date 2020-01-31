@@ -50,8 +50,8 @@ angular.module("cesium.config", [])
 			]
 		}
 	},
-	"version": "1.1.1",
-	"build": "2020-01-31T19:21:17.816Z",
+	"version": "1.1.2",
+	"build": "2020-01-31T19:39:49.657Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
