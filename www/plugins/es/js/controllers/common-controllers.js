@@ -1170,6 +1170,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
           return $scope.options.like.service.toggle($scope.likeData.id, options);
         })
         .then(function(delta) {
+          UIUtils.loading.hide();
           if (delta !== 0) {
             $scope.likeData[key].total = ($scope.likeData[key].total || 0) + delta;
             $scope.likeData[key].wasHit = delta > 0;
@@ -1181,6 +1182,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
         .catch(function(err) {
           console.error(err);
           $scope.likeData[key].loading = false;
+          UIUtils.loading.hide();
           event.preventDefault();
          });
     };
@@ -1296,12 +1298,13 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
         $scope.likeData.stars);
 
       var successFunction = function() {
-          stars.wasHit = true;
-          stars.level = level;
-          // Compute AVG (round to near 0.5)
-          stars.levelAvg = Math.floor((stars.levelSum / stars.total + 0.5) * 10) / 10 - 0.5;
-          // Update the star level
-          angular.merge($scope.likeData.stars, stars);
+        stars.wasHit = true;
+        stars.level = level;
+        // Compute AVG (round to near 0.5)
+        stars.levelAvg = Math.floor((stars.levelSum / stars.total + 0.5) * 10) / 10 - 0.5;
+        // Update the star level
+        angular.merge($scope.likeData.stars, stars);
+        UIUtils.loading.hide();
       };
 
       // Already hit: remove previous star, before inserted a new one
