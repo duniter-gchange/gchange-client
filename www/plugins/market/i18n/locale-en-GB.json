@@ -80,6 +80,7 @@
       "BTN_OFFERS": "Offers",
       "BTN_NEEDS": "Needs",
       "SHOW_CLOSED_RECORD": "Display closed ads?",
+      "SHOW_OLD_RECORD": "Display old ads?",
       "RECORD_STOCK": "Stock:"
     },
     "GALLERY": {

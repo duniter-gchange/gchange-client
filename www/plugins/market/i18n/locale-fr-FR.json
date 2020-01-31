@@ -80,6 +80,7 @@
       "BTN_OFFERS": "Offres",
       "BTN_NEEDS": "Demandes",
       "SHOW_CLOSED_RECORD": "Afficher les annonces closes ?",
+      "SHOW_OLD_RECORD": "Afficher les anciennes annonces ?",
       "RECORD_STOCK": "Stock :"
     },
     "GALLERY": {

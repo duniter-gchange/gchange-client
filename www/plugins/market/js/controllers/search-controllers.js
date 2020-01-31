@@ -6,7 +6,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     $stateProvider
 
     .state('app.market_lookup', {
-      url: "/market?q&category&location&reload&type&hash&lat&lon&last",
+      url: "/market?q&category&location&reload&type&hash&lat&lon&last&old",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup.html",
@@ -20,7 +20,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     })
 
     .state('app.market_lookup_lg', {
-      url: "/market/lg?q&category&location&reload&type&hash&closed&lat&lon&last",
+      url: "/market/lg?q&category&location&reload&type&hash&closed&lat&lon&last&old",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup_lg.html",
@@ -73,6 +73,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     options: null,
     loadingMore: false,
     showClosed: false,
+    showOld: false,
     geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 20,
     sortAttribute: null,
     sortDirection: 'desc'
@@ -100,6 +101,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
   $scope.$watch('search.showClosed', function() {
     $scope.options.showClosed = $scope.search.showClosed;
+  }, true);
+  $scope.$watch('search.showOld', function() {
+    $scope.options.showOld = $scope.search.showOld;
   }, true);
 
   $scope.init = function() {
@@ -273,6 +277,14 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       filters.push({range: {stock: {gt: 0}}});
     }
 
+    if ($scope.search.showOld) {
+      stateParams.old = true;
+    }
+    else {
+      var minTime = (Date.now() / 1000) - 60 * 60 * 24 * 365;
+      filters.push({range: {time: {gt: minTime}}});
+    }
+
     if ($scope.search.type) {
       filters.push({term: {type: $scope.search.type}});
       stateParams.type = $scope.search.type;
@@ -323,8 +335,16 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
     var filters = [];
     var matches = [];
+
+    // Filter on NOT closed
     if (!$scope.search.showClosed) {
       filters.push({range: {stock: {gt: 0}}});
+    }
+
+    // Filter on NOT too old
+    if (!$scope.search.showOld) {
+      var minTime = (Date.now() / 1000) - 60 * 60 * 24 * 365;
+      filters.push({range: {time: {gt: minTime}}});
     }
     // filter on type
     if ($scope.search.type) {
@@ -392,6 +412,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
             }});
       }
     }
+
+
     if (matches.length) {
       options.query = {bool: {}};
       options.query.bool.should =  matches;
@@ -611,9 +633,15 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
           }
         }
 
-        // Show closed ad
-        if (state.stateParams.closed == true) {
+        // Show closed ads
+        if (angular.isDefined(state.stateParams.closed)) {
           $scope.search.showClosed = true;
+          showAdvanced = true;
+        }
+
+        // Show old ads
+        if (angular.isDefined(state.stateParams.old)) {
+          $scope.search.showOld = true;
           showAdvanced = true;
         }
       }
