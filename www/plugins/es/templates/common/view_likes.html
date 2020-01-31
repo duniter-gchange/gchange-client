@@ -1,19 +1,56 @@
-<div class=likes">
 
-          <span ng-if="views" title="{{'COMMON.VIEWS_TEXT'|translate: views }}">
-            {{views.total || 0}}
-            <i class="icon ion-eye"></i>
-          </span>
-    <ng-if ng-if="likes">&nbsp;|&nbsp;
-        <span title="{{'COMMON.LIKES_TEXT'|translate: likes }}">
-                          {{likes.total || 0}}
-                          <i class="icon ion-heart"></i>
-                        </span>
+<div class="likes">
+    <!-- views -->
+    <span class="gray" ng-if="likeData.views" title="{{'COMMON.VIEWS_TEXT'|translate: likeData.views }}">
+        {{likeData.views.total || 0}}
+        <i class="icon ion-eye"></i>
+        <ng-if ng-if="likeData.likes||dislikes">&nbsp;|&nbsp;</ng-if>
+    </span>
+
+    <!-- likes / dislikes -->
+    <ng-if ng-if="likeData.likes||dislikes">
+        <span ng-class="{'gray': !likeData.likes.wasHit, 'positive': likeData.likes.wasHit}">
+        <a title="{{'COMMON.LIKES_TEXT'|translate: likeData.likes }}"
+           ng-click="!canEdit && toggleLike($event, {kind: 'like'})">
+            {{likeData.likes.total || 0}}
+            <i class="icon ion-heart"></i>
+        </a>
+        </span>
+        <span ng-if="likeData.dislikes" ng-class="{'gray': !likeData.dislikes.wasHit, 'positive': likeData.dislikes.wasHit}">
+            <a title="{{'COMMON.DISLIKES_TEXT'|translate: likeData.dislikes }}"
+               ng-click="!canEdit && toggleLike($event, {kind: 'dislike'})">
+                {{likeData.dislikes.total || 0}}
+                <i class="icon ion-heart-broken"></i>
+            </a>
+        </span>
     </ng-if>
-    <ng-if ng-if="abuses.total">&nbsp;|&nbsp;
-        <span title="{{'COMMON.ABUSES_TEXT'|translate: abuses }}">
-                          {{abuses.total || 0}}
-                          <i class="icon ion-android-warning"></i>
-                        </span>
-    </ng-if>
+
+    <!-- follow-->
+    <span class="gray" ng-if="likeData.follows">&nbsp;|&nbsp;</span>
+    <a ng-if="likeData.follows"
+       ng-click="!canEdit && toggleLike($event, {kind: 'follow'})">
+        <span ng-class="{'gray': !likeData.follows.wasHit, 'positive': likeData.follows.wasHit}"
+              title="{{'COMMON.FOLLOWS_TEXT'|translate: follows }}">
+            {{likeData.follows.total || 0}}
+            <i class="icon ion-android-people"></i>&nbsp;
+        </span>
+        <span ng-if="!canEdit"
+              class="hidden-xs"
+              ng-class="{'assertive': likeData.follows.wasHit, 'positive': !likeData.follows.wasHit}">
+         ({{likeData.follows.wasHit ? 'COMMON.BTN_STOP_FOLLOW': 'COMMON.BTN_FOLLOW' | translate }})
+        </span>
+    </a>
+    <span class="gray" ng-if="likeData.abuses.total">&nbsp;|&nbsp;</span>
+    <a ng-if="likeData.abuses.total && !likeData.abuses.wasHit"
+       ng-click="!canEdit && reportAbuse($event)"
+       title="{{'COMMON.ABUSES_TEXT'|translate: likeData.abuses }}">
+        {{likeData.abuses.total || 0}}
+        <i class="icon ion-android-warning"></i>
+    </a>
+    <span ng-if="likeData.abuses.total && likeData.abuses.wasHit"
+       class="assertive"
+       title="{{'COMMON.ABUSES_TEXT'|translate: likeData.abuses }}">
+        {{likeData.abuses.total || 0}}
+        <i class="icon ion-android-warning"></i>
+    </span>
 </div>

@@ -167,16 +167,6 @@ function GpDocStatsController($scope, $state, $controller, $q, $translate, gpCol
             name: 'app.document_search',
             params: {index:'message', type: 'outbox'}
           }
-        },
-        {
-          key: 'invitation_certification',
-          label: 'GRAPH.DOC_STATS.MESSAGE.INVITATION_CERTIFICATION',
-          color: gpColor.rgba.gray(0.5),
-          pointHoverBackgroundColor: gpColor.rgba.gray(),
-          clickState: {
-            name: 'app.document_search',
-            params: {index:'invitation', type: 'certification'}
-          }
         }
       ]
     },

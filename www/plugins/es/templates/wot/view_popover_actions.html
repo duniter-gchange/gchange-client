@@ -18,47 +18,24 @@
         {{'COMMON.BTN_DELETE' | translate}}
       </a>-->
 
-      <a class="item item-icon-left ink visible-xs visible-sm"
-         ng-if="canSold"
-         ng-click="sold()">
-        <i class="icon ion-minus-circled"></i>
-        {{'MARKET.VIEW.BTN_SOLD_AD' | translate}}
-      </a>
-
-      <a class="item item-icon-left ink visible-xs visible-sm"
-         ng-if="canReopen"
-         ng-click="reopen()">
-        <i class="icon ion-unlocked"></i>
-        {{'MARKET.VIEW.BTN_REOPEN' | translate}}
-      </a>
-
-      <!-- Write to vendor -->
-      <a class="item item-icon-left ink visible-xs visible-sm"
-              ng-if="!canEdit"
-              ng-click="showNewMessageModal()">
-        <i class="icon ion-compose"></i>
-        {{'MARKET.VIEW.BTN_WRITE_'+formData.type |upper|translate}}
-      </a>
-
       <!-- Follow -->
       <a class="item item-icon-left ink"
-         ng-if="!canEdit"
+         ng-if="!canEdit && likeData.follows"
          ng-click="hideActionsPopover() && toggleLike($event, {kind: 'follow'})">
         <i class="icon " ng-class="{'ion-android-notifications-off': likeData.follows.wasHit, 'ion-android-notifications': !likeData.follows.wasHit}"></i>
         <b class="ion-plus icon-secondary" ng-if="!likeData.follows.wasHit" style="font-size: 16px; left: 38px; top: -7px;"></b>
-        {{(!likeData.follows.wasHit ? 'MARKET.VIEW.BTN_FOLLOW' : 'MARKET.VIEW.BTN_STOP_FOLLOW' )| translate}}
+        {{(!likeData.follows.wasHit ? 'WOT.VIEW.BTN_FOLLOW' : 'WOT.VIEW.BTN_STOP_FOLLOW' )| translate}}
       </a>
 
       <!-- report abuse -->
       <a class="item item-icon-left ink"
-         ng-if="!canEdit && !likeData.abuses.wasHit"
+         ng-if="!canEdit && likeData.abuses && !likeData.abuses.wasHit"
          ng-click="hideActionsPopover() && reportAbuse($event)">
         <i class="icon ion-android-warning"></i>
-<!--        <b class="ion-plus icon-secondary" style="font-size: 16px; left: 38px; top: -7px;"></b>-->
         {{'COMMON.BTN_REPORT_ABUSE_DOTS' | translate}}
       </a>
       <a class="item item-icon-left ink"
-         ng-if="!canEdit && likeData.abuses.wasHit"
+         ng-if="!canEdit && likeData.abuses && likeData.abuses.wasHit"
          ng-click="hideActionsPopover() && toggleLike($event, {kind: 'abuse'})">
         <i class="icon ion-android-warning"></i>
         <b class="ion-close icon-secondary" style="font-size: 16px; left: 38px; top: -7px;"></b>

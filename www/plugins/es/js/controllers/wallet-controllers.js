@@ -7,9 +7,13 @@ angular.module('cesium.es.wallet.controllers', ['cesium.es.services'])
     if (enable) {
       PluginServiceProvider.extendState('app.view_wallet', {
           points: {
+            'hero': {
+              templateUrl: "plugins/es/templates/wallet/view_wallet_extend.html",
+              controller: 'ESWalletLikesCtrl'
+            },
             'after-general': {
               templateUrl: "plugins/es/templates/wallet/view_wallet_extend.html",
-              controller: 'ESWotIdentityViewCtrl'
+              controller: 'ESWalletViewCtrl'
             }
           }
         })
@@ -18,17 +22,53 @@ angular.module('cesium.es.wallet.controllers', ['cesium.es.services'])
 
   })
 
- .controller('ESWalletCtrl', ESWalletViewController)
+ .controller('ESWalletViewCtrl', ESWalletViewController)
+
+ .controller('ESWalletLikesCtrl', ESWalletLikesController)
 
 ;
 
-function ESWalletViewController($scope, esSettings) {
+function ESWalletViewController($scope, $controller, $state, csWallet, esModals) {
   'ngInject';
 
-  $scope.enable = esSettings.isEnable();
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESExtensionCtrl', {$scope: $scope}));
 
-  esSettings.api.state.on.changed($scope, function(enable) {
-    $scope.enable = enable;
+  /* -- modals -- */
+
+  $scope.showNewPageModal = function() {
+    return esModals.showNewPage();
+  };
+}
+
+
+function ESWalletLikesController($scope, $controller, esProfile) {
+    'ngInject';
+
+  $scope.options = $scope.options || {};
+  $scope.options.like = {
+    kinds: ['LIKE', 'STAR', 'FOLLOW', 'ABUSE'],
+    service: esProfile.like
+  };
+  $scope.likeData = {
+    likes: {},
+    stars: {},
+    follows: {},
+    abuses: {}
+  };
+
+  $scope.canEdit = true; // Avoid to change like counter itself
+
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESExtensionCtrl', {$scope: $scope}));
+
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESLikesCtrl', {$scope: $scope}));
+
+  // Load likes, when profile loaded
+  $scope.$watch('formData.pubkey', function(pubkey) {
+      if (pubkey) {
+          $scope.loadLikes(pubkey);
+      }
   });
-
 }

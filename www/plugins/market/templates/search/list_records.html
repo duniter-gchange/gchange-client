@@ -31,49 +31,9 @@
     <div class="list {{::motion.ionListClass}} no-padding"
          ng-if="!search.loading && search.results.length">
 
-      <div ng-repeat="rec in search.results"
-         class="item no-padding">
-
-        <a class="card card-record stable-bg  ink"
-             ng-click="showRecord($event, $index)">
-
-          <div class="card-item  item-text-wrap padding-right" ng-class="::{'item-thumbnail-left': rec.thumbnail, 'padding-left': !rec.thumbnail}">
-            <i class="item-image" ng-if="::rec.thumbnail" style="background-image: url('{{::rec.thumbnail.src}}')" ></i>
-            <h2 class="padding-top" ng-bind-html="::rec.title | truncText:100"></h2>
-            <h4 class="gray">
-              <span class="positive" ng-if="::rec.location">
-                <i class="icon ion-location"></i> {{::options.location.prefix|translate}}<span ng-bind-html="rec.location"></span>
-              </span>
-              <span ng-show="rec.time">
-                <br ng-show="rec.location"/>
-                <i class="icon ion-clock"></i> {{::rec.time | formatFromNow}}
-                {{::'MARKET.SEARCH.BY'|translate}}
-                <span class="dark">{{::rec.name || (rec.pubkey|formatPubkey)}}</span>
-              </span>
-              <span ng-if="rec.stock>1"><i class="icon ion-pie-graph"></i> {{::rec.stock}}</span>
-            </h4>
-            <div  ng-if="rec.picturesCount > 1"
-                   class="badge badge-balanced badge-picture-count">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i>
-            </div>
-            <div ng-if="rec.stock===0" class="badge badge-assertive" translate>MARKET.COMMON.SOLD</div>
-
-          </div>
-          <div class="card-footer" style="height: 45px">
-            <div class="badge badge-price badge-calm" ng-if="rec.type==='offer' && rec.price" >
-              <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: $root.settings.useRelative}"></span>
-            </div>
-            <div class="badge badge-calm" ng-if="rec.type=='offer' && !rec.price && options.type.show">
-              <i class="cion-market-offer"></i>
-              <span translate>MARKET.TYPE.OFFER_SHORT</span>
-            </div>
-            <div class="badge badge-energized" ng-if="rec.type=='need' && options.type.show">
-              <i class="cion-market-need"></i>
-                <span translate>MARKET.TYPE.NEED_SHORT</span>
-            </div>
-          </div>
-        </a>
-
-      </div>
+      <ng-include ng-repeat="rec in search.results"
+                  src="'plugins/market/templates/search/item_record.html'">
+      </ng-include>
     </div>
 
     <ion-infinite-scroll

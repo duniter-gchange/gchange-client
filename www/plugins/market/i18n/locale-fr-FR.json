@@ -98,6 +98,8 @@
       "BTN_REOPEN": "Réouvrir l'annonce",
       "BTN_WRITE_OFFER": "Ecrire au vendeur",
       "BTN_WRITE_NEED": "Ecrire au demandeur",
+      "BTN_FOLLOW": "Suivre cette annonce",
+      "BTN_STOP_FOLLOW": "Ne plus suivre cette annonce",
       "MENU_TITLE": "Options",
       "RECORD_FEES_PARENTHESIS": "(frais)",
       "RECORD_STOCK": "Stock disponible :",
@@ -105,13 +107,14 @@
       "REMOVE_CONFIRMATION" : "Êtes-vous sûr de vouloir supprimer cette annonce ?<br/><br/>Cette opération est irréversible.",
       "SOLD_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir clore cette annonce ?",
       "REOPEN_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir réouvrir cette annonce ?",
-      "NEW_MESSAGE_TITLE": "Au sujet de l'annonce \"{{title}}\"..."
+      "NEW_MESSAGE_TITLE": "Au sujet de l'annonce \"{{title}}\"...",
+      "MORE_LIKE_THIS": "Ceci pourrait vous intéresser :"
     },
     "WALLET": {
       "DUNITER_PUBKEY": "Clé publique de réception des paiements",
       "DUNITER_ACCOUNT": "Réception des paiements en {{currency|currencySymbol}}",
       "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) indique la destination des paiements que vous recevrez.",
-      "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Aucune clé publique de compte n'a été renseignée. Vous devrez la donner aux acheteurs éventuels.<br/>Vous pouvez la saisir à tout moment, <b>en éditant votre profile</b>."
+      "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Aucune clé publique de compte n'a été renseignée. Vous devrez la donner aux acheteurs éventuels.<br/>Vous pouvez la saisir à tout moment, <b>en éditant votre profil</b>."
     },
     "TYPE": {
       "TITLE": "Nouvelle annonce",
@@ -145,11 +148,7 @@
     },
     "WOT": {
       "VIEW": {
-        "STARS": "Niveau de confiance",
-        "STAR_HIT_COUNT": "{{total}} note{{total>1 ? 's' : ''}}",
         "BTN_RECORDS": "Annonces",
-        "BTN_STAR_HELP": "Noter ce profil",
-        "BTN_REDO_STAR_HELP": "Actualiser votre note",
         "DUNITER_PUBKEY": "Clé publique de réception des paiements",
         "DUNITER_ACCOUNT": "Réception des paiements en {{currency|currencySymbol}}",
         "DUNITER_ACCOUNT_HELP": "La clef publique (ci-dessus) correspond au compte à utiliser pour payer cet utilisateur.",
@@ -183,15 +182,20 @@
   },
   "EVENT": {
     "MARKET": {
-      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a commenté votre annonce : <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié son commentaire sur votre annonce : <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a répondu à votre commentaire sur l'annonce : <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié la réponse à votre commentaire sur l'annonce : <b>{{params[2]}}</b>",
-      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> vous demande une modération sur l'annonce: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
-      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a signalé une annonce à modérer: <b>{{params[2]}}</b>",
-      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a signalé votre annonce: <b>{{params[2]}}</b>",
-      "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a aimé votre annonce: <b>{{params[2]}}</b>"
-    },
-    "STAR_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a noté votre profil ({{params[3]}}/5)"
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a commenté votre annonce : <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié son commentaire sur votre annonce : <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a répondu à votre commentaire sur l'annonce : <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié la réponse à votre commentaire sur l'annonce : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a commenté l'annonce : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié son commentaire sur l'annonce : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a ajouté l'annonce : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié l'annonce : <b>{{params[2]}}</b>",
+      "FOLLOW_CLOSE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a clôturer l'annonce : <b>{{params[2]}}</b>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> vous demande une modération sur l'annonce : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé une annonce à modérer : <b>{{params[2]}}</b>",
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé votre annonce : <b>{{params[2]}}</b>",
+      "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a aimé votre annonce : <b>{{params[2]}}</b>",
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> suit votre annonce : <b>{{params[2]}}</b>"
+    }
   }
 }

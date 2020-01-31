@@ -1,12 +1,13 @@
-<ion-popover-view class="popover-star" style="height: 50px">
+<ion-popover-view class="popover-star" style="height: {{likeData.stars.wasHit ? 90 : 50}}px">
   <ion-content scroll="false" class="padding-left padding-right">
     <h1>
       <a ng-repeat="level in [1,2,3,4,5]"
         ng-click="addStar(level)">
-        <b class="dark ion-android-star" ng-if="level <= formData.stars.level"></b>
-        <b class="dark ion-android-star-half" ng-if="level > formData.stars.level && level - 0.5 <= formData.stars.level"></b>
-        <b class="dark ion-android-star-outline" ng-if="level > formData.stars.level && level - 0.5 > formData.stars.level"></b>
+        <b class="dark ion-android-star" ng-if="level <= likeData.stars.level"></b>
+        <b class="dark ion-android-star-half" ng-if="level > likeData.stars.level && level - 0.5 <= likeData.stars.level"></b>
+        <b class="dark ion-android-star-outline" ng-if="level > likeData.stars.level && level - 0.5 > likeData.stars.level"></b>
       </a>
     </h1>
+    <a ng-if="likeData.stars.wasHit" ng-click="removeStar(event)" translate>WOT.VIEW.BTN_STARS_REMOVE</a>
   </ion-content>
 </ion-popover-view>

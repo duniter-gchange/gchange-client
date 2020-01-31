@@ -508,6 +508,82 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             });
     }
 
+    function searchMoreLikeThis(id, options) {
+      options = options || {};
+
+      var request = {
+        from: options.from||0,
+        size: options.size||5,
+        _source: options._source || fields.commons,
+        query: {
+          more_like_this : {
+            fields : ["title", "category.name", "type", "city", "issuer"],
+            like : [
+              {
+                "_index" : "market",
+                "_type" : "record",
+                "_id" : id
+              }
+            ],
+            "min_term_freq" : 1,
+            "max_query_terms" : 12
+          }
+        }
+      };
+
+      if (options.type || options.category || options.city) {
+        var doc = {};
+        if (options.type) doc.type = options.type;
+        if (options.category) doc.category = {id: options.category};
+        if (options.city) doc.city = options.city;
+        request.query.more_like_this.like.push(
+        {
+          "_index" : "market",
+          "_type" : "record",
+          "doc" : doc
+        });
+      }
+
+      return $q.all([
+        // load categories
+        exports.category.all(),
+
+        // Get current UD
+        csCurrency.currentUD()
+          .catch(function(err) {
+            console.error('Could not get current UD', err);
+            return 1;
+          }),
+
+        // Search request
+        exports._internal.search(request)
+
+      ])
+        .then(function(res) {
+          var categories = res[0];
+          var currentUD = res[1];
+          res = res[2];
+
+          if (!res || !res.hits || !res.hits.total) {
+            return {
+              total: 0,
+              hits: []
+            };
+          }
+
+          var hits = _.map(res.hits.hits, function(hit) {
+            var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, html: true});
+            record.id = hit._id;
+            return record;
+          });
+
+          return {
+            total: res.hits.total,
+            hits: hits
+          };
+        })
+    }
+
     exports.category = {
       all: getCategories,
       filtered: getFilteredCategories,
@@ -524,6 +600,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         add: esHttp.record.post('/market/record'),
         update: esHttp.record.post('/market/record/:id/_update'),
         remove: esHttp.record.remove('market', 'record'),
+        moreLikeThis : searchMoreLikeThis,
         fields: {
           commons: fields.commons
         },
@@ -536,7 +613,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
             remove: esHttp.like.remove('market', 'record'),
             toggle: esHttp.like.toggle('market', 'record'),
             count: esHttp.like.count('market', 'record')
-        },
+        }
       };
     return exports;
   }

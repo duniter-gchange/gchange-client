@@ -7,12 +7,18 @@
     "COMMENT_HELP": "Commentaire",
     "LAST_MODIFICATION_DATE": "Mise à jour le",
     "BTN_LIKE_HELP": "J'aime",
+    "BTN_FOLLOW": "Suivre",
+    "BTN_STOP_FOLLOW": "Ne plus suivre",
     "LIKES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} aimé cette page",
+    "DISLIKES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'n\\'ont' : 'n\\'a'}} pas aimé cette page",
     "VIEWS_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} consulté cette page",
-    "ABUSES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} ont signalé un problème cette page",
+    "FOLLOWS_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'suivent' : 'suit'}} cette page",
+    "ABUSES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} signalé un problème",
     "BTN_REPORT_ABUSE_DOTS": "Signaler un problème ou un abus...",
     "BTN_REMOVE_REPORTED_ABUSE": "Annuler mon signalement",
     "SUBMIT_BY": "Soumis par",
+    "GEO_DISTANCE_SEARCH": "Distance de recherche",
+    "GEO_DISTANCE_OPTION": "{{value}} km",
     "BTN_PUBLISH": "Publier",
     "BTN_PICTURE_DELETE": "Supprimer",
     "BTN_PICTURE_FAVORISE": "Principale",
@@ -74,6 +80,15 @@
       "DIVIDER_PROFILE": "Comptes",
       "DIVIDER_PAGE": "Pages",
       "DIVIDER_GROUP": "Groupes"
+    },
+    "VIEW": {
+      "STARS": "Niveau de confiance",
+      "STAR_HIT_COUNT": "{{total}} note{{total>1 ? 's' : ''}}",
+      "BTN_STAR_HELP": "Noter ce profil",
+      "BTN_STARS_REMOVE": "Supprimer ma note",
+      "BTN_REDO_STAR_HELP": "Actualiser votre note",
+      "BTN_FOLLOW": "Suivre l'activité de ce profil",
+      "BTN_STOP_FOLLOW": "Ne plus suivre ce profil",
     },
     "CONFIRM": {
       "SUGGEST_CERTIFICATIONS": "Etes-vous sûr de vouloir <b>envoyer ces suggestions de certification</b> ?",
@@ -462,11 +477,26 @@
     "TX_RECEIVED_MULTI": "Vous avez <b>reçu un paiement</b> de <b>{{params[1]}}</b>.",
     "CERT_SENT": "Votre <b>certification</b> à <span class=\"positive\" ><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a été effectuée.",
     "CERT_RECEIVED": "Vous avez <b>reçu une certification</b> de <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
-    "REGISTRY": {
-      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a commenté votre référencement : <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié son commentaire sur votre référencement : <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a répondu à votre commentaire sur le référencement : <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> a modifié sa réponse à votre commentaire sur le référencement : <b>{{params[2]}}</b>"
+    "USER": {
+      "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> aime votre profil",
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> suit votre activité",
+      "STAR_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> vous a noté ({{params[3]}} <b class=\"ion-star\">)",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> vous demande une modération sur le profil : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé un profil à supprimer : <b>{{params[2]}}</b>",
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé votre profile"
+    },
+    "PAGE": {
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a commenté votre page : <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié son commentaire sur votre page : <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a répondu à votre commentaire sur la page : <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié sa réponse à votre commentaire sur la page : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a commenté la page : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié son commentaire sur la page : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a ajouté la page : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié la page : <b>{{params[2]}}</b>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> vous demande une modération sur la page : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé une page à supprimer : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé votre pager : <b>{{params[2]}}</b>"
     }
   },
   "CONFIRM": {

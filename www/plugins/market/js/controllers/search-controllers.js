@@ -724,17 +724,23 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   };
   $scope.$watch('search.location', $scope.onLocationChanged, true);
 
-  $scope.onToggleAdvanced = function() {
+  $scope.onToggleShowClosedAdChanged = function(value) {
     if ($scope.search.loading || !$scope.entered) return;
 
-    // Options will be hide: reset options value
-    if (!$scope.search.advanced) {
-      $scope.search.showClosed = false;
+    // Refresh results
+    $scope.doRefresh();
+  };
+  $scope.$watch('search.showClosed', $scope.onToggleShowClosedAdChanged, true);
+
+  $scope.onGeoDistanceChanged = function() {
+    if ($scope.search.loading || !$scope.entered) return;
+
+    if ($scope.search.location) {
       // Refresh results
       $scope.doRefresh();
     }
   };
-  $scope.$watch('search.advanced', $scope.onToggleAdvanced, true);
+  $scope.$watch('search.geoDistance', $scope.onGeoDistanceChanged, true);
 
   $scope.onCategoryClick = function(cat) {
     if (cat && cat.parent) {
@@ -758,12 +764,11 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
     $scope.doSearch();
   };
 
-
   /* -- modals & popover -- */
 
   $scope.showActionsPopover = function (event) {
     if (!$scope.actionsPopover) {
-      $ionicPopover.fromTemplateUrl('plugins/market/templates/search/lookup_popover_filters.html', {
+      $ionicPopover.fromTemplateUrl('plugins/market/templates/search/lookup_actions_popover.html', {
         scope: $scope
       }).then(function (popover) {
         $scope.actionsPopover = popover;
@@ -785,10 +790,10 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
     }
   };
 
-  $scope.toggleAdvanced = function() {
+  $scope.toggleShowClosed = function() {
     $scope.hideActionsPopover();
-    $scope.search.advanced = !$scope.search.advanced;
-  }
+    $scope.search.showClosed = !$scope.search.showClosed;
+  };
 }
 
 function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $ionicSlideBoxDelegate, $ionicModal, $interval, mkRecord) {

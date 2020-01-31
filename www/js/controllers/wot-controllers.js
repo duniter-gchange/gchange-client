@@ -548,12 +548,27 @@ function WotIdentityAbstractController($scope, $rootScope, $state, $translate, $
 /**
  * Identity view controller - should extend WotIdentityAbstractCtrl
  */
-function WotIdentityViewController($scope, $rootScope, $controller, $timeout, UIUtils, csWallet, csTx) {
+function WotIdentityViewController($scope, $rootScope, $controller, $timeout, UIUtils, csWallet) {
   'ngInject';
   // Initialize the super class and extend it.
   angular.extend(this, $controller('WotIdentityAbstractCtrl', {$scope: $scope}));
 
   $scope.motion = UIUtils.motion.fadeSlideInRight;
+
+  // Init likes here, to be able to use in extension
+  $scope.options = $scope.options || {};
+  $scope.options.like = {
+    kinds: ['VIEW', 'LIKE', 'ABUSE', 'FOLLOW', 'STAR'],
+    index: 'user',
+    type: 'profile'
+  };
+  $scope.likeData = {
+    views: {},
+    likes: {},
+    follows: {},
+    abuses: {},
+    stars: {}
+  };
 
   $scope.$on('$ionicView.enter', function(e, state) {
 
@@ -565,6 +580,8 @@ function WotIdentityViewController($scope, $rootScope, $controller, $timeout, UI
         }, 100);
 
         $scope.removeActionParamInLocationHref(state);
+
+        $scope.likeData.id = $scope.formData.pubkey;
       }
     };
 

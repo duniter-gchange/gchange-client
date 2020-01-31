@@ -1,6 +1,6 @@
   <!-- search text -->
-  <div class="item no-padding">
-    <div class="item-input light-bg">
+  <div class="item no-padding ">
+    <div class="item-input item-button-right light-bg">
       <i class="icon ion-location placeholder-icon"></i>
       <input type="text"
              autocomplete="postal-code"
@@ -10,8 +10,17 @@
              ng-keydown="onKeydown($event)"
              ng-change="onLocationChanged()"
              ng-blur="hideDropdown()">
+
+      <a class="button button-clear button-small button-stable gray ink no-padding"
+         tabindex="-1"
+          ng-click="showDistancePopover($event)">
+         <span>{{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }}</span>
+        &nbsp;<b class="ion-arrow-down-b" style="font-size: 12pt;"></b>
+      </a>
+
     </div>
   </div>
 
   <!-- dropdown -->
   <ng-include src="'plugins/es/templates/common/dropdown_locations.html'"></ng-include>
+

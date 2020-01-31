@@ -4,8 +4,7 @@
   </ion-nav-title>
 
   <ion-content class="lookupForm padding no-padding-xs stable-100-bg"
-               bind-notifier="{ rebind:$root.settings.useRelative }"
-               >
+               bind-notifier="{ rebind:$root.settings.useRelative }">
 
     <div class="padding-top hidden-xs hidden-sm" style="display: block; height: 60px;">
 
@@ -35,8 +34,7 @@
          ng-mouseleave="search.showCategories=false;"
          ng-show="search.showCategories" scroll="true"
          ng-controller="MkListCategoriesCtrl"
-         ng-init="load()"
-         >
+         ng-init="load()">
       <div class="text-center" ng-show="loading">
         <ion-spinner icon="android"></ion-spinner>
       </div>
@@ -54,11 +52,12 @@
           <div class="animate-show-hide ng-hide" ng-show="entered">
 
             <!-- selected location -->
-            <div ng-show="!search.loading && search.geoPoint"
+            <div ng-show="!search.loading && search.geoPoint && search.location"
                  class="button button-small button-text button-stable button-icon-event stable-900-bg"
                  style="margin-right: 10px;">
               &nbsp;<i class="icon ion-location"></i>
-              <span ng-bind-html="search.location"></span>
+              {{search.location.split(',')[0]}}
+              <span ng-if="search.geoDistance">({{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }})</span>
               <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
             </div>
 

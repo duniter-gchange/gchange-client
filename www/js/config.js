@@ -22,15 +22,15 @@ angular.module("cesium.config", [])
 		"enable": false
 	},
 	"node": {
-		"host": "localhost",
-		"port": "9200",
+		"host": "192.168.0.20",
+		"port": "10988",
 		"useSsl": false
 	},
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "localhost",
-			"port": "9200",
+			"host": "192.168.0.20",
+			"port": "10988",
 			"useSsl": false,
 			"maxUploadBodySize": 5242880,
 			"defaultCountry": "France"

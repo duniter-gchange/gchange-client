@@ -17,7 +17,7 @@
     <div class="row no-padding">
       <div class="col col-20 hidden-xs hidden-sm">&nbsp;</div>
 
-      <div class="col no-padding">
+      <div class="col col-main no-padding">
 
         <div class="center padding" ng-if="loading">
           <ion-spinner icon="android"></ion-spinner>
@@ -119,6 +119,7 @@
                 </span>
               </span>
             </h4>
+
             <!-- likes -->
             <h4>
               <ng-include src="'plugins/es/templates/common/view_likes.html'"></ng-include>
@@ -130,8 +131,8 @@
               <!-- like -->
               <button id="fab-like-market-record-{{id}}"
                       class="button button-fab button-fab-top-right button-stable mini spin "
-                      ng-click="toggleLike(event)">
-                <i class="icon ion-heart"  ng-class="{'stable': !likes.wasHit, 'positive': likes.wasHit}"></i>
+                      ng-click="toggleLike($event)">
+                <i class="icon ion-heart"  ng-class="{'gray': !likes.wasHit, 'calm': likes.wasHit}"></i>
               </button>
 
             </div>
@@ -157,9 +158,12 @@
               <span class="gray">
                 <i class="ion-pie-graph"></i>
                 {{'MARKET.VIEW.RECORD_STOCK'|translate}}
-                <ng-if ng-if="formData.stock"><span class="dark">{{::formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
-                <ng-if ng-if="!formData.stock"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
+                <ng-if ng-if="formData.stock > 0"><span class="dark">{{::formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
+                <ng-if ng-if="formData.stock === 0"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
               </span>
+            </div>
+            <div class="badge badge-secondary badge-assertive" ng-if="!formData.fees&&!formData.stock">
+              <i class="ion-close"></i> <span class="bold" translate>MARKET.COMMON.SOLD</span>
             </div>
           </div>
 
@@ -186,7 +190,7 @@
                     ng-if="!canEdit"
                     title="{{'COMMON.BTN_LIKE_HELP' | translate }}"
                     ng-click="toggleLike($event)">
-              <i class="icon ion-heart" ng-class="{'stable': !likes.wasHit, 'positive': likes.wasHit}"></i>
+              <i class="icon ion-heart" ng-class="{'gray': !likeData.likes.wasHit, 'calm': likeData.likes.wasHit}"></i>
             </button>
 
             <!--<button class="button button-stable icon-left ink-dark"
@@ -245,10 +249,13 @@
               <span class="gray">
                 <i class="ion-pie-graph"></i>
                 {{'MARKET.VIEW.RECORD_STOCK'|translate}}
-                <ng-if ng-if="formData.stock"><span class="dark">{{::formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
-                <ng-if ng-if="!formData.stock"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
+                <ng-if ng-if="formData.stock > 0"><span class="dark">{{::formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
+                <ng-if ng-if="formData.stock === 0"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
               </span>
             </h3>
+          </span>
+          <span class="item hidden-xs" ng-if="!formData.price && !formData.fees && formData.stock === 0">
+            <div class="badge badge-secondary badge-assertive"><i class="ion-close"></i> <span class="bold" translate>MARKET.COMMON.SOLD</span></div>
           </span>
 
           <div class="lazy-load">
@@ -261,7 +268,56 @@
         </div>
       </div>
 
-      <div class="col col-20 hidden-xs hidden-sm">&nbsp;</div>
+      <div class="col col-20 hidden-xs hidden-sm  padding padding-top list" style="display: inline-block;">
+
+        <!-- issuer card -->
+        <a class="item item-avatar card-meta item dark-100-bg dark ink animate-show-hide ng-hide ink item-border-large"
+                  ng-show="issuer.stars"
+                  ui-sref="app.wot_identity({pubkey: issuer.pubkey, uid: issuer.name})">
+          <div class="  item-text-wrap light">
+
+            <i ng-if="!issuer.avatar" class="item-image icon ion-person"></i>
+            <i ng-if="issuer.avatar" class="item-image avatar" style="background-image: url({{issuer.avatar.src}})"></i>
+
+            <h3>
+              <span ng-if="issuer.name||issuer.uid" class="positive">
+                {{::issuer.name||issuer.uid}}
+              </span>
+              <span ng-if="!issuer.name&&!issuer.uid" class="gray">
+                  <b class="ion-key"></b>
+                  {{::issuer.pubkey|formatPubkey}}
+              </span>
+            </h3>
+
+            <h3 class="align-right"
+              title="{{'WOT.VIEW.STARS' | translate }}">
+              <span ng-repeat="value in [1,2,3,4,5]"
+                    ng-class="{'energized': issuer.stars.levelAvg > 3, 'assertive': issuer.stars.levelAvg <= 2}">
+                <b class="ion-android-star" ng-if="value <= issuer.stars.levelAvg"></b>
+                <b class="ion-android-star-half" ng-if="value > issuer.stars.levelAvg && value - 0.5 <= issuer.stars.levelAvg"></b>
+                <b class="ion-android-star-outline" ng-if="value > issuer.stars.levelAvg && value - 0.5 > issuer.stars.levelAvg"></b>
+              </span><br/>
+            </h3>
+            <h4 class="gray">{{issuer.stars.levelAvg}}/5 ({{'WOT.VIEW.STAR_HIT_COUNT' | translate: issuer.stars }})</h4>
+          </div>
+        </a>
+
+
+
+        <!-- More similar ads  -->
+        <div class="list list-more-record {{::motion.ionListClass}} no-padding"
+             ng-if="!search.loading && search.results.length">
+
+          <div class="item item-divider " ng-if="!search.loading && search.results.length">
+            <span translate>MARKET.VIEW.MORE_LIKE_THIS</span>
+          </div>
+
+          <ng-include ng-repeat="rec in search.results"
+                      src="'plugins/market/templates/search/item_record.html'">
+          </ng-include>
+        </div>
+      </div>
+
     </div>
   </ion-content>
 </ion-view>

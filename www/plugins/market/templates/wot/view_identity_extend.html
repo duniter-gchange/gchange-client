@@ -1,28 +1,6 @@
 
-<!-- Buttons section -->
-<ng-if ng-if=":state:enable && extensionPoint === 'buttons'">
-
-  <!-- Star  button -->
-  <button class="button button-stable button-small-padding ink"
-          ng-if="!formData.stars.wasHit"
-          title="{{'MARKET.WOT.VIEW.BTN_STAR_HELP'|translate: formData.stars }}"
-          ng-click="showStarPopover($event)">
-    <i class="icon ion-android-star-outline"></i>
-  </button>
-
-  <button class="button button-stable button-small-padding ink"
-          ng-if="formData.stars.wasHit"
-          title="{{'MARKET.WOT.VIEW.BTN_REDO_STAR_HELP'|translate: formData.stars }}"
-          ng-click="showStarPopover($event)">
-    <i class="icon" ng-class="{'ion-android-star-half': formData.stars.level > 0 && formData.stars.level <=3, 'ion-android-star': formData.stars.level > 3}"></i>
-    <span ng-if="formData.stars.wasHit">{{formData.stars.level}}/5</span>
-  </button>
-
-</ng-if>
-
 <!-- General section -->
 <ng-if ng-if=":state:enable && extensionPoint === 'general'">
-
 
   <ion-item class="item-icon-left item-text-wrap ink"
             ng-if="formData.profile.pubkey"
@@ -41,25 +19,6 @@
     <h4
         ng-if="!formData.profile.pubkey"
         trust-as-html="'MARKET.WOT.VIEW.DUNITER_ACCOUNT_HELP_ASK_USER'|translate"></h4>
-  </div>
-
-  <!-- star level -->
-  <div class="item item-icon-left item-text-wrap">
-
-    <i class="icon"
-       ng-class="{'ion-android-star-outline assertive': formData.stars.levelAvg <= 2, 'ion-android-star-half': formData.stars.levelAvg > 2 && formData.stars.levelAvg <= 3, 'ion-android-star balanced': formData.stars.levelAvg > 3}"></i>
-    <span translate>MARKET.WOT.VIEW.STARS</span>
-    <h4 class="dark">{{'MARKET.WOT.VIEW.STAR_HIT_COUNT' | translate: formData.stars }}</h4>
-
-    <div class="badge">
-      <span ng-repeat="value in [1,2,3,4,5]"
-            class="" ng-class="{'balanced': formData.stars.levelAvg > 3, 'assertive': formData.stars.levelAvg <= 2}">
-        <b class="ion-android-star" ng-if="value <= formData.stars.levelAvg"></b>
-        <b class="ion-android-star-half" ng-if="value > formData.stars.levelAvg && value - 0.5 <= formData.stars.levelAvg"></b>
-        <b class="ion-android-star-outline" ng-if="value > formData.stars.levelAvg && value - 0.5 > formData.stars.levelAvg"></b>
-      </span>
-      <small class="dark">({{formData.stars.levelAvg}}/5)</small>
-    </div>
   </div>
 </ng-if>
 

@@ -1,4 +1,6 @@
-<ng-if ng-if="enable">
+
+
+<ng-if ng-if=":state:enable && extensionPoint === 'general'">
 
 
   <ion-item class="item-icon-left item-text-wrap ink"
@@ -23,7 +25,6 @@
     <div class="item item-divider item-divider-top-border">
       {{'MENU.MARKET' | translate}}
     </div>
-
 
     <!-- market records -->
     <a class="item item-icon-left item-icon-right"

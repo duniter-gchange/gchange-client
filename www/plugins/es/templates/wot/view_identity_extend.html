@@ -1,7 +1,14 @@
 
+<!-- Hero -->
+<ng-if ng-if=":state:enable && extensionPoint === 'hero'">
+  <!-- likes -->
+  <h4 class="light">
+    <small ng-include="'plugins/es/templates/common/view_likes.html'"></small>
+  </h4>
+</ng-if>
 
 <!-- Top fab buttons -->
-<ng-if ng-if="enable && extensionPoint === 'buttons-top-fab'">
+<ng-if ng-if=":state:enable && extensionPoint === 'buttons-top-fab'">
   <button id="fab-compose-{{:rebind:formData.pubkey}}"
           class="button button-fab button-fab-top-right button-fab-hero mini button-stable spin"
           ng-click="showNewMessageModal()">
@@ -10,16 +17,61 @@
 </ng-if>
 
 <!-- Buttons section -->
-<ng-if ng-if="enable && extensionPoint === 'buttons'">
+<ng-if ng-if=":state:enable && extensionPoint === 'buttons'">
 
-  <button class="button button-stable button-small-padding icon ion-compose ink"
+  <!-- message -->
+  <button class="button button-calm button-raised icon icon-left icon ion-compose ink"
           ng-click="showNewMessageModal()"
-          title="{{'MESSAGE.BTN_WRITE' | translate}}">
+          title="{{'MESSAGE.BTN_WRITE' | translate}}" translate>
+    MESSAGE.BTN_WRITE
+  </button>
+
+  <!-- Star -->
+  <button class="button button-stable button-small-padding ink"
+          ng-if="likeData.stars && !likeData.stars.wasHit"
+          title="{{'WOT.VIEW.BTN_STAR_HELP'|translate: likeData.stars }}"
+          ng-click="showStarPopover($event)">
+    <i class="icon ion-android-star-outline"></i>
+  </button>
+  <button class="button button-stable button-small-padding ink "
+          ng-if="likeData.stars.wasHit"
+          title="{{'WOT.VIEW.BTN_REDO_STAR_HELP'|translate: likeData.stars }}"
+          ng-click="showStarPopover($event)">
+    <i class="icon" ng-class="{'ion-android-star-half': likeData.stars.level > 0 && likeData.stars.level <=3, 'ion-android-star': likeData.stars.level > 3}"></i>
+    <span>{{likeData.stars.level}}/5</span>
+  </button>
+
+  <!-- options -->
+  <button class="button button-stable button-small-padding icon ion-android-more-vertical"
+          ng-click="showActionsPopover($event)">
   </button>
 </ng-if>
 
 <!-- General section -->
-<ng-if ng-if="enable && extensionPoint === 'after-general'">
+<ng-if ng-if=":state:enable && extensionPoint === 'general'">
+
+  <!-- star level -->
+  <div class="item item-icon-left item-text-wrap" ng-if="likeData.stars">
+
+    <i class="icon"
+       ng-class="{'ion-android-star-outline': likeData.stars.levelAvg <= 2, 'ion-android-star-half': likeData.stars.levelAvg > 2 && likeData.stars.levelAvg <= 3, 'ion-android-star energized': likeData.stars.levelAvg > 3}"></i>
+    <span translate>WOT.VIEW.STARS</span>
+    <h4 class="dark">{{'WOT.VIEW.STAR_HIT_COUNT' | translate: likeData.stars }}</h4>
+
+    <div class="badge">
+        <span ng-repeat="value in [1,2,3,4,5]"
+              ng-class="{'energized': likeData.stars.levelAvg > 3, 'assertive': likeData.stars.levelAvg <= 2}">
+          <b class="ion-android-star" ng-if="value <= likeData.stars.levelAvg"></b>
+          <b class="ion-android-star-half" ng-if="value > likeData.stars.levelAvg && value - 0.5 <= likeData.stars.levelAvg"></b>
+          <b class="ion-android-star-outline" ng-if="value > likeData.stars.levelAvg && value - 0.5 > likeData.stars.levelAvg"></b>
+        </span>
+      <small class="dark">({{likeData.stars.levelAvg}}/5)</small>
+    </div>
+  </div>
+</ng-if>
+
+<!-- After general section -->
+<ng-if ng-if=":state:enable && extensionPoint === 'after-general'">
 
   <span class="item item-divider item-divider-top-border" translate>PROFILE.PROFILE_DIVIDER</span>
 

@@ -23,7 +23,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     getAll: esHttp.get('/user/profile/:id'),
     search: esHttp.post('/user/profile/_search'),
     mixedSearch: esHttp.post('/user,page/profile,record/_search'),
-    getLikeCount: esHttp.like.count('user', 'profile')
+    countLikes: esHttp.like.count('user', 'profile')
   };
 
   function getAvatarAndName(pubkey) {
@@ -406,18 +406,18 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       // )
 
       // Load likes
-       that.raw.getLikeCount(data.pubkey, {
-             issuer: csWallet.isLogin() && csWallet.data.pubkey || undefined,
-             kind: 'star'
-           })
-           .then(function(res) {
-             res.levelAvg = res.levelAvg && (Math.floor((res.levelAvg + 0.5) * 10) /10 - 0.5) || 0;
-             data.stars = res;
-           })
-    ])
-        .then(function() {
-          deferred.resolve(data);
-        })
+      that.raw.countLikes(data.pubkey, {
+           issuer: csWallet.isLogin() && csWallet.data.pubkey || undefined,
+           kind: 'star'
+         })
+         .then(function(res) {
+           data.stars = res;
+         })
+      ])
+
+      .then(function() {
+        deferred.resolve(data);
+      })
     .catch(function(err){
       deferred.reject(err);
     });
@@ -465,13 +465,14 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     get: getProfile,
     add: esHttp.record.post('/user/profile', {tagFields: ['title', 'description'], creationTime: true}),
     update: esHttp.record.post('/user/profile/:id/_update', {tagFields: ['title', 'description'], creationTime: true}),
+    remove: esHttp.record.remove("user","profile"),
     avatar: esHttp.get('/user/profile/:id?_source=avatar'),
     fillAvatars: fillAvatars,
     like: {
       toggle: esHttp.like.toggle('user', 'profile'),
       add: esHttp.like.add('user', 'profile'),
       remove: esHttp.like.remove('user', 'profile'),
-      count: that.raw.getLikeCount
+      count: that.raw.countLikes
     }
   };
 })

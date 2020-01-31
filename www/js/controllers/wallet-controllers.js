@@ -30,19 +30,20 @@ function WalletController($scope, $q, $ionicPopup, $timeout, $state,
   $scope.loading = true;
   $scope.settings = csSettings.data;
 
-  $scope.$on('$ionicView.enter', function() {
+  $scope.$on('$ionicView.enter', function(e, state) {
     if ($scope.loading) { // load once
       $scope.loadWallet()
         .then(function(walletData) {
           $scope.formData = walletData;
           $scope.loading=false; // very important, to avoid TX to be display before wallet.currentUd is loaded
           $scope.updateView();
+
           //$scope.showQRCode('qrcode', $scope.formData.pubkey, 1100);
           //$scope.showHelpTip();
           UIUtils.loading.hide(); // loading could have be open (e.g. new account)
         })
         .catch(function(err){
-          if (err == 'CANCELLED') {
+          if (err === 'CANCELLED') {
             $scope.showHome();
           }
         });
@@ -51,12 +52,14 @@ function WalletController($scope, $q, $ionicPopup, $timeout, $state,
       // update view (to refresh profile and subscriptions)
       $scope.updateView();
     }
+    $scope.$broadcast('$recordView.enter', state);
   });
 
   $scope.updateView = function() {
     $scope.motion.show({selector: '#wallet .item'});
     $scope.$broadcast('$$rebind::' + 'rebind'); // force rebind
   };
+
   // Listen new events (can appears from security wizard also)
   $scope.$watchCollection('formData.events', function(newEvents, oldEvents) {
     if (!oldEvents || $scope.loading || angular.equals(newEvents, oldEvents)) return;

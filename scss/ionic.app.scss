@@ -112,3 +112,16 @@
   }
 }
 
+/* -- likes -- */
+
+.hero .likes {
+  .gray {
+    color: white !important;
+  }
+  a.positive,
+  .positive a,
+  .positive i,
+  .positive {
+    color: $calm !important;
+  }
+}

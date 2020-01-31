@@ -1,0 +1,13 @@
+<ion-popover-view class="popover-light popover-distance" style="height: {{33 + 4 * 53}}px">
+  <ion-header-bar class="bar bar-header stable-bg">
+    <div class="title" translate>COMMON.GEO_DISTANCE_SEARCH</div>
+  </ion-header-bar>
+  <ion-content scroll="true">
+    <a class="item ink" ng-repeat="value in geoDistances"
+       ng-click="selectDistance(value)">
+      <b class="ion-checkmark" ng-if="search.geoDistance==value"></b>
+      <b ng-if="search.geoDistance==value">{{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: value} }}</b>
+      <span ng-if="search.geoDistance!=value">{{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: value} }}</span>
+    </a>
+  </ion-content>
+</ion-popover-view>

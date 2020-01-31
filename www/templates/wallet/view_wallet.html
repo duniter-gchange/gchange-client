@@ -29,11 +29,11 @@
         <ng-if ng-if=":rebind:formData.name">
           <h3 class="light">{{:rebind:formData.name}}</h3>
         </ng-if>
-        <ng-if ng-if=":rebind:!formData.name">
+        <!--ng-if ng-if=":rebind:!formData.name">
           <h3 class="light" ng-if=":rebind:formData.uid">{{:rebind:formData.uid}}</h3>
           <h3 class="light" ng-if=":rebind:!formData.uid"><i class="ion-key"></i> {{:rebind:formData.pubkey | formatPubkey}}</h3>
-        </ng-if>
-        <h4>&nbsp;</h4>
+        </ng-if-->
+        <cs-extension-point name="hero"></cs-extension-point>
       </div>
       <h4 class="content light" ng-if="loading">
         <ion-spinner icon="android"></ion-spinner>

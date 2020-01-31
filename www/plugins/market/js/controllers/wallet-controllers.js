@@ -9,7 +9,7 @@ angular.module('cesium.market.wallet.controllers', ['cesium.es.services'])
           points: {
             'general': {
               templateUrl: "plugins/market/templates/wallet/view_wallet_extend.html",
-              controller: 'MarketWalletViewCtrl'
+              controller: 'ESExtensionCtrl'
             }
           }
         })
@@ -29,22 +29,11 @@ angular.module('cesium.market.wallet.controllers', ['cesium.es.services'])
           })
   })
 
- .controller('MarketWalletViewCtrl', MarketWalletViewController)
 
   .controller('MkWalletRecordsCtrl', MarketWalletRecordsController)
 
 ;
 
-function MarketWalletViewController($scope, esSettings) {
-  'ngInject';
-
-  $scope.enable = esSettings.isEnable();
-
-  esSettings.api.state.on.changed($scope, function(enable) {
-    $scope.enable = enable;
-  });
-
-}
 
 function MarketWalletRecordsController($scope, $controller, UIUtils) {
 

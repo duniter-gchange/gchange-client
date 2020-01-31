@@ -9,6 +9,14 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
 
         .extendStates(['app.wot_identity', 'app.wot_identity_uid'], {
           points: {
+            'hero': {
+              templateUrl: "plugins/es/templates/wot/view_identity_extend.html",
+              controller: 'ESWotIdentityViewCtrl'
+            },
+            'general': {
+              templateUrl: "plugins/es/templates/wot/view_identity_extend.html",
+              controller: 'ESWotIdentityViewCtrl'
+            },
             'after-general': {
               templateUrl: "plugins/es/templates/wot/view_identity_extend.html",
               controller: 'ESWotIdentityViewCtrl'
@@ -23,19 +31,6 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
             },
           }
         })
-
-        .extendStates(['app.wot_cert', 'app.wot_cert_lg', 'app.wallet_cert', 'app.wallet_cert_lg'], {
-          points: {
-            'nav-buttons': {
-              templateUrl: "plugins/es/templates/wot/view_certifications_extend.html",
-              controller: 'ESWotIdentityViewCtrl'
-            },
-            'buttons': {
-              templateUrl: "plugins/es/templates/wot/view_certifications_extend.html",
-              controller: 'ESWotIdentityViewCtrl'
-            }
-          }
-        })
       ;
     }
 
@@ -43,18 +38,28 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
 
  .controller('ESWotIdentityViewCtrl', ESWotIdentityViewController)
 
+
 ;
 
-function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils, esModals) {
+function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils, csWallet, esProfile, esModals) {
   'ngInject';
+
+  $scope.options = $scope.options || {};
+  $scope.options.like = $scope.options.like || {
+    kinds: esHttp.constants.like.KINDS,
+    index: 'user',
+    type: 'profile',
+    service: esProfile.like
+  };
+
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('ESLikesCtrl', {$scope: $scope}));
 
   // Initialize the super class and extend it.
   angular.extend(this, $controller('ESExtensionCtrl', {$scope: $scope}));
 
 
-
   /* -- modals -- */
-
 
   $scope.showNewMessageModal = function(confirm) {
     return $scope.loadWallet({minData: true})
@@ -87,30 +92,34 @@ function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils
 
   };
 
+  /* -- likes -- */
+
+  // Load likes, when profile loaded
+  $scope.$watch('formData.pubkey', function(pubkey) {
+    if (pubkey) {
+      $scope.loadLikes(pubkey);
+    }
+  });
+
   /* -- Popover -- */
 
-  $scope.showCertificationActionsPopover = function(event) {
-    if (!$scope.certificationActionsPopover) {
-      $ionicPopover.fromTemplateUrl('plugins/es/templates/wot/popover_certification_actions.html', {
-        scope: $scope
-      }).then(function(popover) {
-        $scope.certificationActionsPopover = popover;
-        //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function() {
-          $scope.certificationActionsPopover.remove();
-        });
-        $scope.certificationActionsPopover.show(event);
-      });
-    }
-    else {
-      $scope.certificationActionsPopover.show(event);
-    }
+  $scope.showActionsPopover = function (event) {
+    UIUtils.popover.show(event, {
+      templateUrl: 'plugins/es/templates/wot/view_popover_actions.html',
+      scope: $scope,
+      autoremove: true,
+      afterShow: function(popover) {
+        $scope.actionsPopover = popover;
+      }
+    });
   };
 
-  $scope.hideCertificationActionsPopover = function() {
-    if ($scope.certificationActionsPopover) {
-      $scope.certificationActionsPopover.hide();
+  $scope.hideActionsPopover = function () {
+    if ($scope.actionsPopover) {
+      $scope.actionsPopover.hide();
+      $scope.actionsPopover = null;
     }
+    return true;
   };
 
   if ($scope.extensionPoint === 'buttons-top-fab') {
@@ -129,4 +138,3 @@ function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils
     $scope.showSuggestCertificationModal();
   }, 1000);*/
 }
-

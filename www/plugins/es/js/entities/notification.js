@@ -4,8 +4,10 @@
 function EsNotification(json, markAsReadCallback) {
 
   var messagePrefixes = {
-    'market': 'EVENT.MARKET.',
-    'registry': 'EVENT.REGISTRY.'
+    'user': 'EVENT.USER.',
+    'page': 'EVENT.PAGE.',
+    // gchange market record
+    'market': 'EVENT.MARKET.'
   };
 
   var that = this;
@@ -78,6 +80,61 @@ function EsNotification(json, markAsReadCallback) {
     that.id = json.reference.id; // Do not care about notification ID, because notification screen use message _id
   }
 
+  // user profile record
+  else if (json.reference && json.reference.index === 'user' && json.reference.type === 'profile') {
+    if (json.code.startsWith('STAR_')) {
+      that.avatarIcon = 'ion-person';
+      that.icon = 'ion-star gray';
+    }
+    else if (json.code.startsWith('FOLLOW_')) {
+      that.avatarIcon = 'ion-person';
+      that.icon = 'ion-ios-people gray';
+    }
+    else if (json.code.startsWith('LIKE_')) {
+      that.avatarIcon = 'ion-person';
+      that.icon = 'ion-ios-heart positive';
+    }
+    else {
+      that.icon = 'ion-person dark';
+    }
+    that.state = 'app.view_wallet';
+  }
+
+  // page record
+  else if (json.reference && json.reference.index === 'page') {
+    that.avatarIcon = 'ion-social-buffer';
+    if (json.reference.anchor) {
+      that.icon = 'ion-ios-chatbubble-outline dark';
+      that.state = 'app.view_page_anchor';
+      that.stateParams = {
+        id: json.reference.id,
+        title: json.params[1],
+        anchor: _formatHash(json.reference.anchor)
+      };
+    }
+    else {
+      that.icon = 'ion-social-buffer dark';
+      that.state = 'app.view_page';
+      that.stateParams = {
+        id: json.reference.id,
+        title: json.params[1]};
+    }
+    if (json.code.startsWith('MODERATION_')) {
+      that.avatarIcon = 'ion-alert-circled';
+      that.icon = 'ion-alert-circled energized';
+    }
+    else if (json.code.startsWith('ABUSE_')) {
+      that.icon = 'ion-alert-circled energized';
+    }
+    else if (json.code.startsWith('LIKE_')) {
+      that.icon = 'ion-ios-heart positive';
+    }
+    else if (json.code.startsWith('FOLLOW_')) {
+      that.avatarIcon = 'ion-person';
+    }
+  }
+
+
   // market record
   else if (json.reference && json.reference.index === 'market') {
     that.avatarIcon = 'ion-speakerphone';
@@ -103,32 +160,13 @@ function EsNotification(json, markAsReadCallback) {
       that.icon = 'ion-alert-circled energized';
     }
     else if (json.code.startsWith('ABUSE_')) {
-      that.avatarIcon = 'ion-alert-circled';
       that.icon = 'ion-alert-circled energized';
     }
     else if (json.code.startsWith('LIKE_')) {
-      that.icon = 'ion-heart gray';
+      that.icon = 'ion-ios-heart positive';
     }
-  }
-
-  // registry record
-  else if (json.reference && json.reference.index === 'registry' && json.reference.type === 'record') {
-    that.avatarIcon = 'ion-ios-book';
-    if (json.reference.anchor) {
-      that.icon = 'ion-ios-chatbubble-outline dark';
-      that.state = 'app.registry_view_record_anchor';
-      that.stateParams = {
-        id: json.reference.id,
-        title: json.params[1],
-        anchor: _formatHash(json.reference.anchor)
-      };
-    }
-    else {
-      that.icon = 'ion-ios-book dark';
-      that.state = 'app.registry_view_record';
-      that.stateParams = {
-        id: json.reference.id,
-        title: json.params[1]};
+    else if (json.code.startsWith('FOLLOW_')) {
+      that.avatarIcon = 'ion-person';
     }
   }
 

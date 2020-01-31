@@ -42,10 +42,10 @@
 .card-record .badge-picture-count,
 .row-record .badge-picture-count {
   position: absolute !important;
-  left: 67px !important;
-  bottom: 15px !important;
+  left: 95px !important;
+  bottom: inherit !important;
   right: inherit !important;
-  top: inherit !important;
+  top: 109px !important;
 }
 
 
@@ -253,12 +253,16 @@
    Common > report abuse
 **********/
 
-.popup-report-abuse .popup{
-  width: 350px !important;
-
-  .item-toggle .toggle {
-    right: 0 !important;
-  }
+.popup-report-abuse .popup {
+  width: 370px !important;
+}
+.popup-report-abuse .popup .item-toggle .toggle {
+  right: 0 !important;
+}
+.popup-report-abuse .popup .item-toggle .input-label {
+  width: 280px;
+  max-width: 100%;
+  white-space: normal;
 }
 
 /**********
@@ -312,5 +316,15 @@
 }
 
 .popover-star {
-  width: 216px !important;
+  width: 220px !important;
 }
+.popover-star .popup-container {
+  padding: 0;
+}
+
+.popover-distance {
+  width: 170px !important;
+}
+
+
+
