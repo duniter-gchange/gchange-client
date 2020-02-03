@@ -385,42 +385,20 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       return deferred.promise;
     }
 
-    $q.all([
-      // Load full profile
-      getProfile(data.pubkey)
-        .then(function(profile) {
-          if (profile) {
-            data.name = profile.name;
-            data.avatar = profile.avatar;
-            data.profile = profile.source;
-            data.profile.description = profile.description;
-          }
-        }),
-
-      // Load avatar on certifications
-      // fillAvatars(
-      //   (data.received_cert||[])
-      //   .concat(data.received_cert_pending||[])
-      //   .concat(data.given_cert||[])
-      //   .concat(data.given_cert_pending||[])
-      // )
-
-      // Load likes
-      that.raw.countLikes(data.pubkey, {
-           issuer: csWallet.isLogin() && csWallet.data.pubkey || undefined,
-           kind: 'star'
-         })
-         .then(function(res) {
-           data.stars = res;
-         })
-      ])
-
-      .then(function() {
+    // Load full profile
+    getProfile(data.pubkey)
+      .then(function(profile) {
+        if (profile) {
+          data.name = profile.name;
+          data.avatar = profile.avatar;
+          data.profile = profile.source;
+          data.profile.description = profile.description;
+        }
         deferred.resolve(data);
       })
-    .catch(function(err){
-      deferred.reject(err);
-    });
+      .catch(function(err) {
+        deferred.reject(data);
+      });
     return deferred.promise;
   }
 

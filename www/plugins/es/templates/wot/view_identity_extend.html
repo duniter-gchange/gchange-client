@@ -51,14 +51,20 @@
 <ng-if ng-if=":state:enable && extensionPoint === 'general'">
 
   <!-- star level -->
-  <div class="item item-icon-left item-text-wrap" ng-if="likeData.stars">
+  <div class="item item-icon-left item-text-wrap" ng-if="likeData.stars"
+    ng-click="smallscreen && showStarPopover($event)">
 
     <i class="icon"
+
        ng-class="{'ion-android-star-outline': likeData.stars.levelAvg <= 2, 'ion-android-star-half': likeData.stars.levelAvg > 2 && likeData.stars.levelAvg <= 3, 'ion-android-star energized': likeData.stars.levelAvg > 3}"></i>
+
     <span translate>WOT.VIEW.STARS</span>
     <h4 class="dark">{{'WOT.VIEW.STAR_HIT_COUNT' | translate: likeData.stars }}</h4>
 
-    <div class="badge">
+    <div class="badge" ng-if="likeData.stars.loading">
+      <ion-spinner icon="android"></ion-spinner>
+    </div>
+    <div class="badge" ng-if="!likeData.stars.loading">
         <span ng-repeat="value in [1,2,3,4,5]"
               ng-class="{'energized': likeData.stars.levelAvg > 3, 'assertive': likeData.stars.levelAvg <= 2}">
           <b class="ion-android-star" ng-if="value <= likeData.stars.levelAvg"></b>

@@ -21,6 +21,25 @@
         class="gray" translate>MARKET.WALLET.DUNITER_ACCOUNT_NO_PUBKEY_HELP</h4>
   </div>
 
+  <!-- star level -->
+  <div class="item item-icon-left item-text-wrap" ng-if="likeData.stars">
+
+    <i class="icon"
+       ng-class="{'ion-android-star-outline': likeData.stars.levelAvg <= 2, 'ion-android-star-half': likeData.stars.levelAvg > 2 && likeData.stars.levelAvg <= 3, 'ion-android-star energized': likeData.stars.levelAvg > 3}"></i>
+    <span translate>WOT.VIEW.STARS</span>
+    <h4 class="dark">{{'WOT.VIEW.STAR_HIT_COUNT' | translate: likeData.stars }}</h4>
+
+    <div class="badge">
+          <span ng-repeat="value in [1,2,3,4,5]"
+                ng-class="{'energized': likeData.stars.levelAvg > 3, 'assertive': likeData.stars.levelAvg <= 2}">
+            <b class="ion-android-star" ng-if="value <= likeData.stars.levelAvg"></b>
+            <b class="ion-android-star-half" ng-if="value > likeData.stars.levelAvg && value - 0.5 <= likeData.stars.levelAvg"></b>
+            <b class="ion-android-star-outline" ng-if="value > likeData.stars.levelAvg && value - 0.5 > likeData.stars.levelAvg"></b>
+          </span>
+      <small class="dark">({{likeData.stars.levelAvg}}/5)</small>
+    </div>
+  </div>
+
   <div class="visible-xs visible-sm">
     <div class="item item-divider item-divider-top-border">
       {{'MENU.MARKET' | translate}}

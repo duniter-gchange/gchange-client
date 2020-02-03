@@ -741,7 +741,6 @@ function ESSearchPositionItemController($scope, $timeout, UIUtils, ModalUtils, c
 
   // The default country used for address localisation
   var defaultCountry = csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.defaultCountry;
-  //$scope.smallscreen = angular.isDefined($scope.smallscreen) ? $scope.smallscreen : UIUtils.screen.isSmall();
 
   var loadingPosition = false;
   var minLength = 3;
@@ -1084,9 +1083,9 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
           return $scope.options.like.service.count(id, {issuer: csWallet.isLogin() ? csWallet.data.pubkey : undefined, kind: kind})
             .then(function (res) {
               // Store result to scope
-              //$scope.likeData = $scope.likeData || {};
-              //$scope.likeData[key] = $scope.likeData[key] || {};
-              angular.merge($scope.likeData[key], res);
+                if ($scope.likeData[key]) {
+                    angular.merge($scope.likeData[key], res);
+                }
             });
         }))
         .then(function () {
@@ -1142,7 +1141,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
       $scope.likeData[key] = $scope.likeData[key] || {};
 
       // Avoid too many call
-      if ($scope.likeData[key].loading === true) {
+      if ($scope.likeData[key].loading === true || $scope.likeData.loading) {
         event.preventDefault();
         return $q.reject();
       }
@@ -1272,7 +1271,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
             $scope.addStar(level); // Loop
           })
       }
-      if ($scope.likeData.stars.loading) return; // Avoid multiple call
+      if ($scope.likeData.loading || !$scope.likeData.stars || $scope.likeData.stars.loading) return; // Avoid multiple call
 
       if (!csWallet.isLogin()) {
         return $scope.loadWallet({minData: true})
@@ -1311,6 +1310,11 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
       if (stars.wasHitId) {
           console.debug("[ES] Deleting previous star level... " + stars.wasHitId);
           return $scope.options.like.service.remove(stars.wasHitId)
+            .catch(function(err) {
+                // Not found, so continue
+                if (err && err.ucode === 404) return;
+                else throw err;
+            })
             .then(function() {
                 console.debug("[ES] Deleting previous star level [OK]");
                 stars.levelSum = stars.levelSum - stars.level + level;
@@ -1319,18 +1323,22 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
                 return $timeout(function() {
                     console.debug("[ES] Sending new star level...");
                     return $scope.options.like.service.add($scope.likeData.id, {kind: 'star', level: level || 1});
-                }, 1000);
+                }, 2000);
             })
             .then(function(newHitId) {
                 stars.wasHitId = newHitId;
                 console.debug("[ES] Star level successfully sent... " + newHitId);
-                $scope.likeData.stars.loading = false;
                 UIUtils.loading.hide();
+                return $timeout(function() {
+                    $scope.likeData.stars.loading = false;
+                }, 1000);
             })
             .catch(function(err) {
                 console.error(err && err.message || err);
                 $scope.likeData.stars.loading = false;
                 UIUtils.onError('MARKET.WOT.ERROR.FAILED_STAR_PROFILE')(err);
+                // Reload, to force refresh state
+                $scope.loadLikes();
             });
       }
 
@@ -1353,8 +1361,15 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
 
   $scope.removeStar = function(event) {
     if ($scope.starsPopover) $scope.starsPopover.hide();
-    $scope.toggleLike(event, {kind: 'star'});
+    if ($scope.likeData.loading) return; // Skip
     $scope.likeData.stars.level = undefined;
+    $scope.toggleLike(event, {kind: 'star'})
+      .then(function() {
+          return $timeout(function() {
+              $scope.loadLikes(); // refresh
+          }, 1000);
+      });
+
   };
 
   $scope.showStarPopover = function(event) {

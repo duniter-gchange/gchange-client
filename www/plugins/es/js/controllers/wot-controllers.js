@@ -51,6 +51,7 @@ function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils
     type: 'profile',
     service: esProfile.like
   };
+  $scope.smallscreen = angular.isDefined($scope.smallscreen) ? $scope.smallscreen : UIUtils.screen.isSmall();
 
   // Initialize the super class and extend it.
   angular.extend(this, $controller('ESLikesCtrl', {$scope: $scope}));

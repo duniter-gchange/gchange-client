@@ -29,6 +29,13 @@ function WalletController($scope, $q, $ionicPopup, $timeout, $state,
 
   $scope.loading = true;
   $scope.settings = csSettings.data;
+  $scope.likeData = {
+    views: {},
+    likes: {},
+    follows: {},
+    abuses: {},
+    stars: {}
+  };
 
   $scope.$on('$ionicView.enter', function(e, state) {
     if ($scope.loading) { // load once
