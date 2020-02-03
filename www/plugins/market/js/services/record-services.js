@@ -545,7 +545,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         });
       }
 
-      var minTime = (Date.now() / 1000) - 60 * 60 * 24 * 365;
+      var minTime = (Date.now() / 1000) - 60 * 60 * 24 * 365; // last year
       var oldHits = [];
 
       var processHits = function(categories, currentUD, size, res) {

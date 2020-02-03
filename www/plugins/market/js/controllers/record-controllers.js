@@ -153,8 +153,10 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         // Load issuer stars
         $scope.loadIssuerStars($scope.issuer.pubkey);
 
-        // Load more ads
-        $scope.loadMoreLikeThis(data);
+        // Load more ads (if not mobile)
+        if (!UIUtils.screen.isSmall()) {
+          $scope.loadMoreLikeThis(data);
+        }
 
         $scope.updateView();
         UIUtils.loading.hide();
