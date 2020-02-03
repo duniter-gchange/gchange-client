@@ -122,11 +122,11 @@
 @media screen and (max-width: 991px) {
 
     .gallery .card-gallery {
-        margin: 0;
+        margin: 0 !important;
     }
 
     .gallery .card-gallery img,
-    .gallery .card.card-gallery img{
+    .gallery .card.card-gallery img {
         min-width: 100%;
         max-height: inherit;
     }

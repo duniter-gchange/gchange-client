@@ -12,10 +12,10 @@
     </button>
   </ion-nav-buttons>
 
-  <ion-content>
+  <ion-content class="grid ">
 
     <div class="row no-padding">
-      <div class="col col-20 hidden-xs hidden-sm">&nbsp;</div>
+      <div class="col col-15 hidden-xs hidden-sm hidden-md ">&nbsp;</div>
 
       <div class="col col-main no-padding">
 
@@ -268,11 +268,12 @@
         </div>
       </div>
 
-      <div class="col col-20 hidden-xs hidden-sm  padding padding-top list" style="display: inline-block;">
+      <div class="col col-33 hidden-xs hidden-sm hidden-md padding padding-top list"
+           style="display: inline-block; max-width: 350px;">
 
         <!-- issuer card -->
-        <a class="item item-avatar card-meta item dark-100-bg dark ink animate-show-hide ng-hide ink item-border-large"
-                  ng-show="issuer.stars"
+        <a class="item item-avatar card-meta item item-border-large dark-100-bg dark animate-ripple animate-show-hide ng-hide"
+                  ng-show="issuer.stars && !loading"
                   ui-sref="app.wot_identity({pubkey: issuer.pubkey, uid: issuer.name})">
           <div class="  item-text-wrap light">
 
@@ -305,7 +306,7 @@
 
 
         <!-- More similar ads  -->
-        <div class="list list-more-record {{::motion.ionListClass}} no-padding"
+        <div class="list list-more-record animate-ripple no-padding"
              ng-if="!search.loading && search.results.length">
 
           <div class="item item-divider " ng-if="!search.loading && search.results.length">

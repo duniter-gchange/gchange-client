@@ -885,6 +885,7 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
     options = options || {};
     options.filter = options.filter || ($scope.options && $scope.options.category && $scope.options.category.filter);
     options.withStock = (!$scope.options || !$scope.options.showClosed);
+    options.withOld = $scope.options && $scope.options.showOld;
 
     $scope.stop();
 
@@ -1006,7 +1007,7 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
     $scope.activeCategoryIndex = $scope.loading ? 0 : $scope.activeCategoryIndex+1;
 
     // End of slideshow: restart (reload all)
-    if ($scope.activeCategoryIndex == $scope.categories.length) {
+    if ($scope.activeCategoryIndex === $scope.categories.length) {
 
       $scope.resetSlideShow();
 

@@ -70,6 +70,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   $scope.loading = true;
   $scope.motion = UIUtils.motion.fadeSlideInRight;
   $scope.smallscreen = UIUtils.screen.isSmall();
+  $scope.moreAdMotion = UIUtils.motion.default;
   $scope.smallpictures = false;
 
   // Screen options
@@ -154,7 +155,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         $scope.loadIssuerStars($scope.issuer.pubkey);
 
         // Load more ads (if not mobile)
-        if (!UIUtils.screen.isSmall()) {
+        if (!$scope.smallscreen) {
           $scope.loadMoreLikeThis(data);
         }
 

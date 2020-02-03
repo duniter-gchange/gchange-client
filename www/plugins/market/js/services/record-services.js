@@ -175,6 +175,12 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         if (options.withStock) {
             filters.push({range: {stock: {gt: 0}}});
         }
+        if (!options.withOld) {
+          var minTime = options.minTime ? options.minTime : Date.now() / 1000  - 24 * 365 * 60 * 60; // last year
+          // Round to hour, to be able to use cache
+          minTime = Math.floor(minTime / 60 / 60 ) * 60 * 60;
+          filters.push({range: {time: {gte: minTime}}});
+        }
         if (options.currencies && options.currencies.length) {
             filters.push({terms: {currency: options.currencies}});
         }
@@ -479,6 +485,15 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         }
         if (options.withStock) {
             filters.push({range: {stock: {gt: 0}}});
+        }
+        if (!options.withOld) {
+          var minTime = options.minTime ? options.minTime : Date.now() / 1000  - 24 * 365 * 60 * 60; // last year
+          // Round to hour, to be able to use cache
+          minTime = Math.floor(minTime / 60 / 60 ) * 60 * 60;
+          filters.push({range: {time: {gte: minTime}}});
+        }
+        if (options.currencies && options.currencies.length) {
+          filters.push({terms: {currency: options.currencies}});
         }
 
         // Add query to request
