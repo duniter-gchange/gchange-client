@@ -277,7 +277,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   };
 
   $scope.markAsView = function() {
-    if (!$scope.likeData || !$scope.likeData.views || !$scope.likeData.views.wasHit) return; // Already view
+    if (!$scope.likeData || !$scope.likeData.views || $scope.likeData.views.wasHit) return; // Already view
     var canEdit = $scope.canEdit || csWallet.isUserPubkey($scope.formData.issuer);
     if (canEdit) return; // User is the record's issuer: skip
 
