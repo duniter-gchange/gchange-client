@@ -87,28 +87,26 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   ////////////////////////////////////////
 
   $scope.scanQrCodeAndGo = function() {
-    if (!Device.barcode.enable) {
-      return;
-    }
-    Device.barcode.scan()
-    .then(function(uri) {
-      if (!uri) {
-        return;
-      }
-      BMA.uri.parse(uri)
-      .then(function(result){
-        // If pubkey
-        if (result && result.pubkey) {
-          $state.go('app.wot_identity', {
-            pubkey: result.pubkey,
-            node: result.host ? result.host: null}
-          );
-        }
-        else {
-          UIUtils.alert.error(result, 'ERROR.SCAN_UNKNOWN_FORMAT');
-        }
-      })
-      .catch(UIUtils.onError('ERROR.SCAN_UNKNOWN_FORMAT'));
+
+    if (!Device.barcode.enable)  return;
+
+    // Run scan cordova plugin, on device
+    return Device.barcode.scan()
+    .then(function(data) {
+      if (!data) return;
+
+      // Try to parse as an URI
+      return BMA.uri.parse(data)
+        .then(function(res){
+          if (!res || !res.pubkey) throw {message: 'ERROR.SCAN_UNKNOWN_FORMAT'};
+          // If pubkey: open the identity
+          return $state.go('app.wot_identity', {
+              pubkey: result.pubkey,
+              node: result.host ? result.host: null}
+            );
+        })
+        // Unknown format (not URI)
+        .catch(UIUtils.onError('ERROR.SCAN_UNKNOWN_FORMAT'));
     })
     .catch(UIUtils.onError('ERROR.SCAN_FAILED'));
   };
@@ -161,26 +159,6 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
 
   $scope.isLogin = function() {
     return $scope.login;
-  };
-
-  $scope.showProfilePopover = function(event) {
-    return UIUtils.popover.show(event, {
-      templateUrl :'templates/common/popover_profile.html',
-      scope: $scope,
-      autoremove: true,
-      afterShow: function(popover) {
-        $scope.profilePopover = popover;
-        $timeout(function() {
-          UIUtils.ink({selector: '#profile-popover .ink, #profile-popover .ink-dark'});
-        }, 100);
-      }
-    });
-  };
-
-  $scope.closeProfilePopover = function() {
-    if ($scope.profilePopover && $scope.profilePopover.isShown()) {
-      $timeout(function(){$scope.profilePopover.hide();});
-    }
   };
 
   // Load wallet data (after login)
@@ -389,6 +367,39 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
 
   $scope.showHelpModal = function(parameters) {
     return Modals.showHelp(parameters);
+  };
+
+  ////////////////////////////////////////
+  // Useful popovers
+  ////////////////////////////////////////
+
+  $scope.showProfilePopover = function(event) {
+    return UIUtils.popover.show(event, {
+      templateUrl :'templates/common/popover_profile.html',
+      scope: $scope,
+      autoremove: true,
+      afterShow: function(popover) {
+        $scope.profilePopover = popover;
+        $timeout(function() {
+          UIUtils.ink({selector: '#profile-popover .ink, #profile-popover .ink-dark'});
+        }, 100);
+      }
+    });
+  };
+
+  $scope.closeProfilePopover = function() {
+    if ($scope.profilePopover && $scope.profilePopover.isShown()) {
+      $timeout(function(){$scope.profilePopover.hide();});
+    }
+  };
+
+  // Change peer info
+  $scope.showPeerInfoPopover = function(event) {
+    return UIUtils.popover.show(event, {
+      templateUrl: 'templates/network/popover_peer_info.html',
+      autoremove: true,
+      scope: $scope.$new(true)
+    });
   };
 
   ////////////////////////////////////////
