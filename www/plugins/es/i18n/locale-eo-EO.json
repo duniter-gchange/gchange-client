@@ -4,8 +4,21 @@
     "CATEGORY_SELECT_HELP": "Elekti",
     "CATEGORIES": "Kategorioj",
     "CATEGORY_SEARCH_HELP": "Serĉado",
+    "COMMENT_HELP": "Komento",
     "LAST_MODIFICATION_DATE": "Ĝisdatigita la",
+    "BTN_LIKE_HELP": "Mi ŝatas",
+    "BTN_FOLLOW": "Sekvi",
+    "BTN_STOP_FOLLOW": "Ne plu sekvi",
+    "LIKES_TEXT": "{{total}} persono{{total > 1 ? 'j' : ''}} ŝatis tiun ĉi paĝon",
+    "DISLIKES_TEXT": "{{total}} persono{{total > 1 ? 'j' : ''}} ne ŝatis tiun ĉi paĝon",
+    "VIEWS_TEXT": "{{total}} persono{{total > 1 ? 'j' : ''}} konsultis tiun ĉi paĝon",
+    "FOLLOWS_TEXT": "{{total}} persono{{total > 1 ? 'j' : ''}} sekvas tiun ĉi paĝon",
+    "ABUSES_TEXT": "{{total}} persono{{total > 1 ? 'j' : ''}} atentigis pri problemo",
+    "BTN_REPORT_ABUSE_DOTS": "Atentigi pri problemo aŭ misuzo...",
+    "BTN_REMOVE_REPORTED_ABUSE": "Nuligi mian atentigon",
     "SUBMIT_BY": "Submetita de",
+    "GEO_DISTANCE_SEARCH": "Distanco por serĉado",
+    "GEO_DISTANCE_OPTION": "{{value}} km",
     "BTN_PUBLISH": "Publikigi",
     "BTN_PICTURE_DELETE": "Forigi",
     "BTN_PICTURE_FAVORISE": "Precipa",
@@ -21,6 +34,15 @@
       "NO_RESULT": "Neniu avizo",
       "SHOW_ALL": "Vidi ĉion",
       "LOAD_NOTIFICATIONS_FAILED": "Malsukceso por ŝarĝi la avizojn"
+    },
+    "REPORT_ABUSE": {
+      "TITLE": "Atentigi pri problemo",
+      "SUB_TITLE": "Bonvolu klarigi rapide la problemon:",
+      "REASON_HELP": "Mi klarigas la problemon...",
+      "ASK_DELETE": "Peti la forigon?",
+      "CONFIRM": {
+        "SENT": "Atentigo sendita. Dankon!"
+      }
     }
   },
   "MENU": {
@@ -58,6 +80,15 @@
       "DIVIDER_PROFILE": "Kontoj",
       "DIVIDER_PAGE": "Paĝoj",
       "DIVIDER_GROUP": "Grupoj"
+    },
+    "VIEW": {
+      "STARS": "Fido-nivelo",
+      "STAR_HIT_COUNT": "{{total}} noto{{total>1 ? 'j' : ''}}",
+      "BTN_STAR_HELP": "Noti tiun ĉi profilon",
+      "BTN_STARS_REMOVE": "Forigi mian noton",
+      "BTN_REDO_STAR_HELP": "Aktualigi vian noton",
+      "BTN_FOLLOW": "Sekvi la agojn de tiu ĉi profilo",
+      "BTN_STOP_FOLLOW": "Ne plu sekvi tiun ĉi profilon"
     },
     "CONFIRM": {
       "SUGGEST_CERTIFICATIONS": "Ĉu vi certas, ke vi volas <b>sendi tiujn sugestojn por atestado</b>?",
@@ -223,21 +254,21 @@
       "RECORD_PUBKEY_HELP": "Publika ŝlosilo por ricevi la pagojn"
     },
     "WALLET": {
-      "REGISTRY_DIVIDER": "Pages",
-      "REGISTRY_HELP": "Les pages référencent des activités acceptant la monnaie ou la favorisant : commerces, entreprises, associations, institutions."
+      "REGISTRY_DIVIDER": "Paĝoj",
+      "REGISTRY_HELP": "La paĝoj referencigas agadojn akceptantajn la monon aŭ favorigantajn ĝin: komercoj, entreprenoj, asocioj, institucioj."
     },
     "ERROR": {
-      "LOAD_CATEGORY_FAILED": "Erreur de chargement de la liste des activités",
-      "LOAD_RECORD_FAILED": "Erreur lors du chargement de la page",
-      "LOOKUP_RECORDS_FAILED": "Erreur lors de l'execution de la recherche.",
-      "REMOVE_RECORD_FAILED": "Erreur de la suppression de la page",
-      "SAVE_RECORD_FAILED": "Erreur lors de la sauvegarde",
-      "RECORD_NOT_EXISTS": "Page inexistante",
-      "GEO_LOCATION_NOT_FOUND": "Ville ou code postal non trouvé"
+      "LOAD_CATEGORY_FAILED": "Eraro dum la ŝarĝo de la listo de la agadoj",
+      "LOAD_RECORD_FAILED": "Eraro dum la ŝarĝo de la paĝo",
+      "LOOKUP_RECORDS_FAILED": "Eraro dum la serĉado",
+      "REMOVE_RECORD_FAILED": "Eraro dum la forigo de la paĝo",
+      "SAVE_RECORD_FAILED": "Eraro dum la konservado",
+      "RECORD_NOT_EXISTS": "Paĝo neekzistanta",
+      "GEO_LOCATION_NOT_FOUND": "Urbo aŭ poŝto-kodo ne trovita"
     },
     "INFO": {
-      "RECORD_REMOVED" : "Page supprimée",
-      "RECORD_SAVED": "Page sauvegardée"
+      "RECORD_REMOVED" : "Paĝo forigita",
+      "RECORD_SAVED": "Paĝo konservita"
     }
   },
   "PROFILE": {
@@ -256,6 +287,7 @@
     "SOCIAL_HELP": "http://...",
     "GENERAL_DIVIDER": "Ĝeneralaj informoj",
     "SOCIAL_NETWORKS_DIVIDER": "Sociaj retoj, retejoj",
+    "STAR": "Fido-nivelo",
     "TECHNICAL_DIVIDER": "Teknikaj informoj",
     "MODAL_AVATAR": {
       "TITLE": "Profil-foto",
@@ -381,16 +413,16 @@
       }
     },
     "INFO": {
-      "REMOVED": "Document supprimé"
+      "REMOVED": "Dokumento forigita"
     },
     "CONFIRM": {
-      "REMOVE": "Êtes-vous sûr de vouloir <b>supprimer ce document</b> ?",
-      "REMOVE_ALL": "Êtes-vous sûr de vouloir <b>supprimer ces documents</b> ?"
+      "REMOVE": "Ĉu vi certas, ke vi volas <b>forigi tiun ĉi dokumenton</b>?",
+      "REMOVE_ALL": "Ĉu vi certas, ke vi volas <b>forigi tiujn ĉi dokumentojn</b>?"
     },
     "ERROR": {
-      "LOAD_DOCUMENTS_FAILED": "Erreur lors de la recherche de documents",
-      "REMOVE_FAILED": "Erreur lors de la suppression du document",
-      "REMOVE_ALL_FAILED": "Erreur lors de la suppression des documents"
+      "LOAD_DOCUMENTS_FAILED": "Eraro dum la serĉado de dokumentoj",
+      "REMOVE_FAILED": "Eraro dum la forigo de la dokumento",
+      "REMOVE_ALL_FAILED": "Eraro dum la forigo de la dokumentoj"
     }
   },
   "ES_SETTINGS": {
@@ -411,7 +443,7 @@
       "ENABLE_TX_SENT": "Avizi pri la <b>senditaj pagoj</b>?",
       "ENABLE_TX_RECEIVED": "Avizi pri la <b>ricevitaj pagoj</b>?",
       "ENABLE_CERT_SENT": "Avizi pri la <b>senditaj atestaĵoj</b>?",
-      "ENABLE_CERT_RECEIVED": "Avizi pri <b>la ricevitaj atestaĵoj</b>?"
+      "ENABLE_CERT_RECEIVED": "Avizi pri <b>la ricevitaj atestaĵoj</b>?",
     },
     "CONFIRM": {
       "ASK_ENABLE_TITLE": "Kromaj funkcioj",
@@ -445,11 +477,26 @@
     "TX_RECEIVED_MULTI": "Vi <b>ricevis pagon</b> de <b>{{params[1]}}</b>.",
     "CERT_SENT": "Via <b>atestado</b> al <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> efektiviĝis.",
     "CERT_RECEIVED": "Vi <b>ricevis atestaĵon</b> de <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
-    "REGISTRY": {
-      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> komentis vian referenciĝon: <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> modifis sian komenton ĉe via referenciĝo: <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> respondis al via komento ĉe la referenciĝo: <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> modifis sian respondon al via komento ĉe la referenciĝo: <b>{{params[2]}}</b>"
+    "USER": {
+      "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ŝatas vian profilon",
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> sekvas viajn agojn",
+      "STAR_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> notis vin ({{params[3]}} <b class=\"ion-star\">)",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> petas de vi moderigon pri la profilo: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri profilo foriginda: <b>{{params[2]}}</b>",
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri via profilo"
+    },
+    "PAGE": {
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> komentis vian paĝon: <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis sian komenton ĉe via paĝo: <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> respondis al via komento ĉe la paĝo: <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis sian respondon al via komento ĉe la paĝo: <b>{{params[2]}}</b>",
+      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> komentis la paĝon: <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis sian komenton ĉe la paĝo: <b>{{params[2]}}</b>",
+      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> aldonis la paĝon: <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis la paĝon: <b>{{params[2]}}</b>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> petas de vis moderigon pri la paĝo: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri paĝo foriginda: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri via paĝo: <b>{{params[2]}}</b>"
     }
   },
   "CONFIRM": {
@@ -457,7 +504,7 @@
   },
   "ERROR": {
     "ES_CONNECTION_ERROR": "Daten-nodo <b>{{server}}</b> neatingebla aŭ adreso nevalida.<br/><br/>Kontrolu vian retkonekton, aŭ ŝanĝu la daten-nodon en la <a class=\"positive\" ng-click=\"doQuickFix('settings')\">spertaj parametroj</a>.",
-    "ES_MAX_UPLOAD_BODY_SIZE": "La kvanto de datenoj sendotaj superas la limon fiksitan de la servilo.<br/>Bonvolu reprovi post, ekzemple, forigo de fotoj.",
+    "ES_MAX_UPLOAD_BODY_SIZE": "La kvanto de datenoj sendotaj superas la limon fiksitan de la servilo.<br/>Bonvolu reprovi post, ekzemple, forigo de fotoj."
     "INVALID_PUBKEY": "Publika ŝlosilo nevalida"
   }
 }
