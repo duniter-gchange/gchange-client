@@ -5,6 +5,7 @@
     "APP_BUILD": "dato: {{build}}",
     "PUBKEY": "Publika ŝlosilo",
     "MEMBER": "Membro",
+    "BLOCK" : "Bloko",
     "BTN_OK": "OK",
     "BTN_YES": "Jes",
     "BTN_NO": "Ne",
@@ -15,10 +16,11 @@
     "BTN_YES_SAVE": "Jes, Konservi",
     "BTN_YES_CONTINUE": "Jes, Daŭrigi",
     "BTN_SHOW": "Vidi",
-    "BTN_SHOW_PUBKEY": "Vidi la publikan ŝlosilon",
-    "BTN_RELATIVE_UNIT": "Afiŝi en relativa unuo?",
+    "BTN_SHOW_PUBKEY": "Afiŝi la publikan ŝlosilon",
+    "BTN_RELATIVE_UNIT": "Afiŝi la sumojn en UD?",
     "BTN_BACK": "Reiro",
     "BTN_NEXT": "Sekva",
+    "BTN_IMPORT": "Enporti",
     "BTN_CANCEL": "Nuligi",
     "BTN_CLOSE": "Fermi",
     "BTN_LATER": "Poste",
@@ -47,6 +49,7 @@
     "NO_ACCOUNT_QUESTION": "Ankoraŭ sen konto? Kreu ĝin senpage!",
     "SEARCH_NO_RESULT": "Neniu rezulto trovita",
     "LOADING": "Bonvolu pacienci...",
+    "LOADING_WAIT": "Bonvolu pacienci...<br/><small>(Atendo pri disponebleco de la nodo)</small>",
     "SEARCHING": "Serĉanta...",
     "FROM": "De",
     "TO": "Al",
@@ -62,7 +65,7 @@
     "UID": "Pseŭdonimo",
     "ENABLE": "Aktiva",
     "DISABLE": "Malaktiva",
-    "RESULTS_LIST": "Rezultoj:",
+    "RESULTS_LIST": "Rezultoj",
     "RESULTS_COUNT": "{{count}} rezultoj",
     "EXECUTION_TIME": "plenumita en {{duration|formatDurationMs}}",
     "SHOW_VALUES": "Afiŝi la signojn klare?",
@@ -76,6 +79,12 @@
       "SHARE_ON_FACEBOOK": "Diskonigi ĉe Facebook",
       "SHARE_ON_DIASPORA": "Diskonigi ĉe Diaspora*",
       "SHARE_ON_GOOGLEPLUS": "Diskonigi ĉe Google+"
+    },
+    "FILE": {
+      "DATE": "Dato:",
+      "TYPE": "Tipo:",
+      "SIZE": "Amplekso:",
+      "VALIDATING": "Validiĝanta..."
     }
   },
   "SYSTEM": {
@@ -87,8 +96,8 @@
     "HOME": "Hejmpaĝo",
     "WOT": "Kontaro",
     "CURRENCY": "Mono",
-    "CURRENCIES": "Monoj",
     "ACCOUNT": "Mia konto",
+    "WALLETS": "Miaj monujoj",
     "TRANSFER": "Elspezo",
     "SCAN": "Skani",
     "SETTINGS": "Parametroj",
@@ -97,10 +106,11 @@
   },
   "ABOUT": {
     "TITLE": "Prie",
-    "LICENSE": "Programo <b>libera</b> (licenco GNU GPLv3).",
+    "LICENSE": "Programo <b>libera</b> (licenco GNU AGPLv3).",
     "LATEST_RELEASE": "Ekzistas <b>pli freŝdata versio</b> de {{'COMMON.APP_NAME'|translate}} (<b>v{{version}}</b>)",
     "PLEASE_UPDATE": "Bonvolu ĝisdatigi {{'COMMON.APP_NAME'|translate}} (lasta versio: <b>v{{version}}</b>)",
     "CODE": "Fonto-kodo:",
+    "OFFICIAL_WEB_SITE": "Oficiala retejo:",
     "DEVELOPERS": "Programita de:",
     "FORUM": "Forumo:",
     "DEV_WARNING": "Averto",
@@ -122,14 +132,17 @@
   },
   "SETTINGS": {
     "TITLE": "Parametroj",
+    "DISPLAY_DIVIDER": "Afiŝado",
+    "STORAGE_DIVIDER": "Stokado",
     "NETWORK_SETTINGS": "Reto",
     "PEER": "Adreso de la nodo Duniter",
+    "PEER_SHORT": "Adreso de la nodo",
     "PEER_CHANGED_TEMPORARY": "Adreso provizore uzata",
     "USE_LOCAL_STORAGE": "Aktivigi lokan stokadon",
     "USE_LOCAL_STORAGE_HELP": "Ebligas konservi viajn parametrojn",
     "ENABLE_HELPTIP": "Aktivigi la rilatigajn help-vezikojn",
     "ENABLE_UI_EFFECTS": "Aktivigi la vid-efikojn",
-    "HISTORY_SETTINGS": "Mia konto",
+    "HISTORY_SETTINGS": "Miaj spezoj",
     "DISPLAY_UD_HISTORY": "Afiŝi la produktitajn dividendojn?",
     "AUTHENTICATION_SETTINGS": "Aŭtentigado",
     "AUTO_LOGOUT": "Aŭtomata malaŭtentigado",
@@ -146,14 +159,12 @@
     "EXPERT_MODE": "Aktivigi la spertan moduson",
     "EXPERT_MODE_HELP": "Ebligas pli detalan afiŝadon",
     "POPUP_PEER": {
-      "HELP" : "Adreso : servilo:konektujo",
-      "BTN_SHOW_LIST_HELP": "",
-      "TITLE" : "Nodo Duniter",
-      "HOST" : "Adreso",
+      "TITLE": "Nodo Duniter",
+      "HOST": "Adreso",
       "HOST_HELP": "Adreso : servilo:konektujo",
-      "USE_SSL" : "Sekurigita?",
-      "USE_SSL_HELP" : "(SSL-ĉifrado)",
-      "BTN_SHOW_LIST" : "Listo de la nodoj"
+      "USE_SSL": "Sekurigita?",
+      "USE_SSL_HELP": "(SSL-ĉifrado)",
+      "BTN_SHOW_LIST": "Listo de la nodoj"
     }
   },
   "BLOCKCHAIN": {
@@ -234,7 +245,9 @@
       "SIG_STOCK": "Maksimuma nombro da senditaj atestaĵoj por membro",
       "SIG_PERIOD": "Minimuma daŭro de atendado inter 2 sinsekvaj atestaĵoj senditaj de sama persono",
       "SIG_WINDOW": "Limdaŭro por akcepti atestaĵon",
+      "SIG_VALIDITY": "Vivdaŭro de atestaĵo, kiu estis akceptita",
       "MS_WINDOW": "Limdaŭro por akcepti aliĝ-peton kiel membron",
+      "MS_VALIDITY": "Vivdaŭro de aliĝo, kiu estis akceptita",
       "STEP_MAX": "Maksimuma distanco, per la atestaĵoj, inter nova eniranto kaj la referencaj membroj",
       "WOT_RULES_DIVIDER": "Reguloj de la reto de fido",
       "SENTRIES": "Nombro de atestaĵoj (senditaj <b>kaj</b> ricevitaj) por fariĝi referenca membro",
@@ -257,10 +270,17 @@
     "VIEW": {
       "MEDIAN_TIME": "Horo de la blokĉeno",
       "LOADING_PEERS": "Nodoj ŝarĝiĝantaj...",
-      "NODE_ADDRESS": "Adreso de la nodo",
+      "NODE_ADDRESS": "Adreso:",
+      "SOFTWARE": "Programo",
+      "WARN_PRE_RELEASE": "Antaŭ-versio (lasta stabila versio: <b>{{version}}</b>)",
+      "WARN_NEW_RELEASE": "Versio <b>{{version}}</b> disponebla",
+      "WS2PID": "Identigilo:",
+      "PRIVATE_ACCESS": "Privata aliro",
+      "POW_PREFIX": "Prefikso pri labor-pruvo:",
       "ENDPOINTS": {
         "BMAS": "Sekurigita interfaco (SSL)",
         "BMATOR": "Reta interfaco TOR",
+        "WS2P": "Interfaco WS2P",
         "ES_USER_API": "Nodo de datenoj Cesium+"
       }
     },
@@ -272,22 +292,25 @@
     "PEERS": "Nodoj",
     "SIGNED_ON_BLOCK": "Skribita en la bloko",
     "MIRROR": "spegulo",
-    "MIRRORS": "Spegul-nodoj",
+    "MIRRORS": "Speguloj",
+    "MIRROR_PEERS": "Spegul-nodoj",
     "PEER_LIST" : "Listo de la nodoj",
-    "MEMBERS" : "Membro-nodoj",
+    "MEMBERS" : "Membroj",
+    "MEMBER_PEERS" : "Membro-nodoj",
     "ALL_PEERS" : "Ĉiuj nodoj",
     "DIFFICULTY" : "Malfacileco",
     "API" : "API",
     "CURRENT_BLOCK" : "Bloko #",
     "POPOVER_FILTER_TITLE": "Filtrilo",
-    "OFFLINE": "Nekonektitaj nodoj",
+    "OFFLINE": "Nekonektita",
+    "OFFLINE_PEERS": "Nekonektitaj nodoj",
     "BTN_SHOW_PEER": "Vidi la nodon",
     "VIEW": {
       "TITLE": "Nodo",
       "OWNER": "Apartenas al",
       "SHOW_RAW_PEERING": "Vidi la samrangan dokumenton",
       "SHOW_RAW_CURRENT_BLOCK": "Vidi la lastan blokon (kompleta strukturo)",
-      "LAST_BLOCKS": "Lastaj blokoj",
+      "LAST_BLOCKS": "Lastaj blokoj konataj",
       "KNOWN_PEERS": "Konataj nodoj:",
       "GENERAL_DIVIDER": "Ĝeneralaj informoj",
       "ERROR": {
@@ -299,7 +322,7 @@
   "WOT": {
     "SEARCH_HELP": "Traserĉado (pseŭdo aŭ publika ŝlosilo)",
     "SEARCH_INIT_PHASE_WARNING": "Dum la periodo de antaŭ-aliĝo, la traserĉado de la atendantaj aliĝoj <b>povas esti longa</b>. Bonvolu pacienci...",
-    "REGISTERED_SINCE": "Enskribiĝo",
+    "REGISTERED_SINCE": "Enskribita la",
     "REGISTERED_SINCE_BLOCK": "Enskribita en la bloko #",
     "NO_CERTIFICATION": "Neniu atestaĵo validigita",
     "NO_GIVEN_CERTIFICATION": "Neniu atestaĵo sendita",
@@ -313,7 +336,7 @@
     "SIGNED_ON_BLOCK": "Sendita en la bloko #{{block}}",
     "WRITTEN_ON_BLOCK": "Enskribita en la bloko #{{block}}",
     "GENERAL_DIVIDER": "Ĝeneralaj informoj",
-    "NOT_MEMBER_ACCOUNT": "Ne membro-konto",
+    "NOT_MEMBER_ACCOUNT": "Simpla konto (ne membro)",
     "NOT_MEMBER_ACCOUNT_HELP": "Temas pri simpla monujo, sen aliĝ-peto atendanta.",
     "TECHNICAL_DIVIDER": "Teknikaj informoj",
     "BTN_CERTIFY": "Atesti",
@@ -326,7 +349,9 @@
     "LOOKUP": {
       "TITLE": "Kontaro",
       "NEWCOMERS": "Novaj membroj:",
-      "PENDING": "Atendantaj enskribiĝoj:",
+      "NEWCOMERS_COUNT": "{{count}} membroj",
+      "PENDING": "Atendantaj enskribiĝoj",
+      "PENDING_COUNT": "{{count}} atendantaj enskribiĝoj",
       "REGISTERED": "Enskribita {{time | formatFromNow}}",
       "MEMBER_FROM": "Membro depost {{time|formatFromNowShort}}",
       "BTN_NEWCOMERS": "Novaj membroj",
@@ -335,6 +360,9 @@
       "SHOW_MORE_COUNT": "(nuna limo je {{limit}})",
       "NO_PENDING": "Neniu enskribiĝo atendanta.",
       "NO_NEWCOMERS": "Neniu membro."
+    },
+    "CONTACTS": {
+      "TITLE": "Kontaktoj"
     },
     "MODAL": {
       "TITLE": "Traserĉado"
@@ -367,6 +395,7 @@
     "SCRYPT_FORM_HELP": "Bonvolu tajpi viajn identigilojn.<br>Pensu kontroli, ke la publika ŝlosilo estas tiu de via konto.",
     "PUBKEY_FORM_HELP": "Bonvolu tajpi publikan ŝlosilon de konto:",
     "FILE_FORM_HELP": "Elektu la ŝlosilaro-dosieron uzotan:",
+    "SCAN_FORM_HELP": "Skani la QR-kodon de monujo.",
     "SALT": "Identigilo",
     "SALT_HELP": "Identigilo",
     "SHOW_SALT": "Afiŝi la identigilon?",
@@ -391,10 +420,11 @@
       "IDLE_WARNING": "Vi estos malkonektita... {{countdown}}"
     },
     "METHOD": {
-      "SCRYPT_DEFAULT": "Kutima salumado (implicite)",
+      "SCRYPT_DEFAULT": "Identigilo kaj pasvorto",
       "SCRYPT_ADVANCED": "Sperta salumado",
       "FILE": "Dosiero pri ŝlosilaro",
-      "PUBKEY": "Publika ŝlosilo sola"
+      "PUBKEY": "Publika ŝlosilo aŭ pseŭdonimo",
+      "SCAN": "Skani QR-kodon"
     },
     "SCRYPT": {
       "SIMPLE": "Malpeza salumado",
@@ -408,11 +438,7 @@
       "p": "p (CPU):"
     },
     "FILE": {
-      "DATE": "Dato:",
-      "TYPE": "Tipo:",
-      "SIZE": "Pezo:",
-      "VALIDATING": "Validigo...",
-      "HELP": "Atendita strukturo de dosiero: <b>.dunikey</b> (tipo PubSec). Aliaj strukturoj estas programiĝantaj (EWIF, WIF)."
+      "HELP": "Atendita strukturo de dosiero: <b>.yml</b> aŭ <b>.dunikey</b> (tipo PubSec, WIF aŭ EWIF)."
     }
   },
   "AUTH": {
