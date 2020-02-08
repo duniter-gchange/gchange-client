@@ -19,8 +19,12 @@
         "DESCRIPTION": "Pri mi",
         "DESCRIPTION_HELP": "Diru ion pri vi..."
       },
+      "SUBSCRIPTION": {
+        "EMAIL": "Retadreso",
+        "EMAIL_HELP": "Retadreso (nedeviga)"
+      },
       "LAST_SLIDE_CONGRATULATION": "Vi tajpis ĉiujn necesajn informojn: Gratulon!<br/>Vi nun povas <b>sendi la peton pri kreado</b> de konto.<br/><br/>Ne forgesu viajn identigilojn, vi ne povos ŝanĝi ilin!",
-      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Averto:</b> la identigilo kaj la pasvorto ne plu povos esti modifitaj.<br/><br/><b>Certiĝu, ke vi ĉiam rememoros ilin!</b><br/><br/><b>Ĉu vi certas</b>, ke vi volas daŭrigi per tiuj identigiloj?",
+      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Averto:</b> la identigilo kaj la pasvorto ne plu povos esti modifitaj.<br/><br/><b>Certiĝu, ke vi ĉiam rememoros ilin!</b><br/><br/><b>Ĉu vi certas</b>, ke vi volas daŭrigi per tiuj identigiloj?"
     },
     "PROFILE": {
       "DEFAULT_TITLE": "Uzanto {{pubkey|formatPubkey}}"
@@ -76,6 +80,7 @@
       "BTN_OFFERS": "Proponoj",
       "BTN_NEEDS": "Petoj",
       "SHOW_CLOSED_RECORD": "Afiŝi la fermitajn anoncojn?",
+      "SHOW_OLD_RECORD": "Afiŝi la malnovajn anoncojn?",
       "RECORD_STOCK": "Stoko:"
     },
     "GALLERY": {
@@ -94,6 +99,8 @@
       "BTN_REOPEN": "Reaperigi la anoncon",
       "BTN_WRITE_OFFER": "Skribi al la vendanto",
       "BTN_WRITE_NEED": "Skribi al la petanto",
+      "BTN_FOLLOW": "Sekvi tiun ĉi anoncon",
+      "BTN_STOP_FOLLOW": "Ne plu sekvi tiun ĉi anoncon",
       "MENU_TITLE": "Kromeblecoj",
       "RECORD_FEES_PARENTHESIS": "(kostoj)",
       "RECORD_STOCK": "Stoko disponebla:",
@@ -101,7 +108,8 @@
       "REMOVE_CONFIRMATION" : "Ĉu vi certas, ke vi volas forigi tiun ĉi anoncon?<br/><br/>Tiu ago estas neinversigebla.",
       "SOLD_CONFIRMATION" : "<b>Ĉu vi certas</b>, ke vi volas fermi tiun ĉi anoncon?",
       "REOPEN_CONFIRMATION" : "<b>Ĉu vi certas</b>, ke vi volas reaperigi tiun ĉi anoncon?",
-      "NEW_MESSAGE_TITLE": "Pri la anonco \"{{title}}\"..."
+      "NEW_MESSAGE_TITLE": "Pri la anonco \"{{title}}\"...",
+      "MORE_LIKE_THIS": "Tio ĉi povus interesi vin:"
     },
     "WALLET": {
       "DUNITER_PUBKEY": "Publika ŝlosilo por ricevi la pagojn",
@@ -146,6 +154,9 @@
         "DUNITER_ACCOUNT": "Ricevo de la pagoj en {{currency|currencySymbol}}",
         "DUNITER_ACCOUNT_HELP": "La publika ŝlosilo (ĉi-supre) rilatas al la konto uzota por pagi tiun ĉi anoncanton.",
         "DUNITER_ACCOUNT_HELP_ASK_USER": "Tiu ĉi anoncanto ne sciigis la publikan ŝlosilon de sia konto. <a ng-click=\"showNewMessageModal()\">Kontaktu lin/ŝin</a> por ekhavi ĝin."
+      },
+      "ERROR": {
+        "FAILED_STAR_PROFILE": "Eraro dum la sendo de via noto. Bonvolu reprovi pli poste."
       }
     },
     "ERROR": {
@@ -172,10 +183,20 @@
   },
   "EVENT": {
     "MARKET": {
-      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> kometis vian anoncon: <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> modifis sian komenton ĉe via anonco: <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> respondis al via komento ĉe la anonco: <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> modifis la respondon al via komento ĉe la anonco: <b>{{params[2]}}</b>"
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> komentis vian anoncon: <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis sian komenton ĉe via anonco: <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> respondis al via komento ĉe la anonco: <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis la respondon al via komento ĉe la anonco: <b>{{params[2]}}</b>"
+      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> komentis la anoncon: <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis sian komenton ĉe la anonco: <b>{{params[2]}}</b>",
+      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> aldonis la anoncon: <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis la anoncon: <b>{{params[2]}}</b>",
+      "FOLLOW_CLOSE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> fermis la anoncon: <b>{{params[2]}}</b>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> petas de vi moderigon ĉe la anonco: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri anonco moderiginda: <b>{{params[2]}}</b>",
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri via anonco: <b>{{params[2]}}</b>",
+      "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ŝatis vian anoncon: <b>{{params[2]}}</b>",
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> sekvas vian anoncon: <b>{{params[2]}}</b>"
     }
   }
 }
