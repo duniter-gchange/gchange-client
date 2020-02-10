@@ -37,7 +37,7 @@
     },
     "REPORT_ABUSE": {
       "TITLE": "Signaler un problème",
-      "SUB_TITLE": "Merci d'expliquez succintement le problème :",
+      "SUB_TITLE": "Merci d'expliquer succintement le problème :",
       "REASON_HELP": "J'explique le problème...",
       "ASK_DELETE": "Demander la suppression ?",
       "CONFIRM": {
@@ -88,7 +88,7 @@
       "BTN_STARS_REMOVE": "Supprimer ma note",
       "BTN_REDO_STAR_HELP": "Actualiser votre note",
       "BTN_FOLLOW": "Suivre l'activité de ce profil",
-      "BTN_STOP_FOLLOW": "Ne plus suivre ce profil",
+      "BTN_STOP_FOLLOW": "Ne plus suivre ce profil"
     },
     "CONFIRM": {
       "SUGGEST_CERTIFICATIONS": "Etes-vous sûr de vouloir <b>envoyer ces suggestions de certification</b> ?",
@@ -261,7 +261,7 @@
       "LOAD_CATEGORY_FAILED": "Erreur de chargement de la liste des activités",
       "LOAD_RECORD_FAILED": "Erreur lors du chargement de la page",
       "LOOKUP_RECORDS_FAILED": "Erreur lors de l'exécution de la recherche.",
-      "REMOVE_RECORD_FAILED": "Erreur de la suppression de la page",
+      "REMOVE_RECORD_FAILED": "Erreur lors de la suppression de la page",
       "SAVE_RECORD_FAILED": "Erreur lors de la sauvegarde",
       "RECORD_NOT_EXISTS": "Page inexistante",
       "GEO_LOCATION_NOT_FOUND": "Ville ou code postal non trouvé"
@@ -297,7 +297,7 @@
       "RESULT_HELP": "<b>Voici le résultat</b> tel que visible sur votre profil :"
     },
     "CONFIRM": {
-      "DELETE": "Êtes-vous sur de vouloir <b>supprimer votre profil ğchange ?</b><br/><br/>Cette opération est irréversible."
+      "DELETE": "Êtes-vous sûr de vouloir <b>supprimer votre profil ğchange ?</b><br/><br/>Cette opération est irréversible."
     },
     "ERROR": {
       "REMOVE_PROFILE_FAILED": "Erreur de suppression du profil",
@@ -447,7 +447,7 @@
     },
     "CONFIRM": {
       "ASK_ENABLE_TITLE": "Fonctionnalités optionnelles",
-      "ASK_ENABLE": "L'extension Cesium+ est <b>désactivée</b> dans vos paramètres, rendant inactives les fonctionnalités : <ul><li>&nbsp;&nbsp;<b><i class=\"icon ion-person\"></i> Profils Cesium+</b>;<li>&nbsp;&nbsp;<b><i class=\"icon ion-android-notifications\"></i> Notifications</b>;<li>&nbsp;&nbsp;<b><i class=\"icon ion-email\"></i> Messages privés</b>.<li>&nbsp;&nbsp;<b><i class=\"icon ion-location\"></i> Cartes, etc.</b>.</ul><br/><b>Souhaitez-vous la ré-activer</b> l'extension ?"
+      "ASK_ENABLE": "L'extension Cesium+ est <b>désactivée</b> dans vos paramètres, rendant inactives les fonctionnalités : <ul><li>&nbsp;&nbsp;<b><i class=\"icon ion-person\"></i> Profils Cesium+</b>;<li>&nbsp;&nbsp;<b><i class=\"icon ion-android-notifications\"></i> Notifications</b>;<li>&nbsp;&nbsp;<b><i class=\"icon ion-email\"></i> Messages privés</b>.<li>&nbsp;&nbsp;<b><i class=\"icon ion-location\"></i> Cartes, etc.</b>.</ul><br/><b>Souhaitez-vous ré-activer</b> l'extension ?"
     }
   },
   "ES_WALLET": {
@@ -483,7 +483,7 @@
       "STAR_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> vous a noté ({{params[3]}} <b class=\"ion-star\">)",
       "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> vous demande une modération sur le profil : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
       "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé un profil à supprimer : <b>{{params[2]}}</b>",
-      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé votre profile"
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé votre profil"
     },
     "PAGE": {
       "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a commenté votre page : <b>{{params[2]}}</b>",
@@ -496,7 +496,7 @@
       "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié la page : <b>{{params[2]}}</b>",
       "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> vous demande une modération sur la page : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
       "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé une page à supprimer : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
-      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé votre pager : <b>{{params[2]}}</b>"
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé votre page : <b>{{params[2]}}</b>"
     }
   },
   "CONFIRM": {
