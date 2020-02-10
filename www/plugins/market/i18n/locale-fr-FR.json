@@ -156,7 +156,7 @@
         "DUNITER_ACCOUNT_HELP_ASK_USER": "Cet utilisateur n'a pas communiqué sa clef publique de compte. <a ng-click=\"showNewMessageModal()\">Contactez-le</a> pour l'obtenir."
       },
       "ERROR": {
-        "FAILED_STAR_PROFILE": "Erreur lors de l'envoi de votre note. Veuillez ressayer ultérieurement."
+        "FAILED_STAR_PROFILE": "Erreur lors de l'envoi de votre note. Veuillez réessayer ultérieurement."
       }
     },
     "ERROR": {
@@ -191,7 +191,7 @@
       "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié son commentaire sur l'annonce : <b>{{params[2]}}</b>",
       "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a ajouté l'annonce : <b>{{params[2]}}</b>",
       "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a modifié l'annonce : <b>{{params[2]}}</b>",
-      "FOLLOW_CLOSE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a clôturer l'annonce : <b>{{params[2]}}</b>",
+      "FOLLOW_CLOSE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a clôturé l'annonce : <b>{{params[2]}}</b>",
       "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> vous demande une modération sur l'annonce : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
       "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé une annonce à modérer : <b>{{params[2]}}</b>",
       "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé votre annonce : <b>{{params[2]}}</b>",
