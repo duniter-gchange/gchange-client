@@ -15,7 +15,7 @@ if [ "_$GCHANGE_DIR" = "_" ]; then
 fi
 
 latest_version() {
-  echo "v1.1.5" #lastest
+  echo "v1.1.6" #lastest
 }
 
 api_release_url() {
