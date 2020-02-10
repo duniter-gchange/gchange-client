@@ -186,7 +186,7 @@
       "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> komentis vian anoncon: <b>{{params[2]}}</b>",
       "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis sian komenton ĉe via anonco: <b>{{params[2]}}</b>",
       "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> respondis al via komento ĉe la anonco: <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis la respondon al via komento ĉe la anonco: <b>{{params[2]}}</b>"
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis la respondon al via komento ĉe la anonco: <b>{{params[2]}}</b>",
       "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> komentis la anoncon: <b>{{params[2]}}</b>",
       "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis sian komenton ĉe la anonco: <b>{{params[2]}}</b>",
       "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> aldonis la anoncon: <b>{{params[2]}}</b>",
