@@ -31,8 +31,18 @@
         "AD": "Anoncoj",
         "COMMENT": "Komentoj"
       },
+      "MARKET_DELTA": {
+        "TITLE": "Variado de la nombro de anoncoj",
+        "AD": "Anoncoj",
+        "COMMENT": "Komentoj"
+      },
       "USER": {
         "TITLE": "Nombro de dokumentoj ligitaj al konto",
+        "USER_PROFILE": "Uzanto-profiloj",
+        "USER_SETTINGS": "Parametroj konservitaj"
+      },
+      "USER_DELTA": {
+        "TITLE": "Variado de la nombro de dokumentoj ligitaj al konto",
         "USER_PROFILE": "Uzanto-profiloj",
         "USER_SETTINGS": "Parametroj konservitaj"
       },
