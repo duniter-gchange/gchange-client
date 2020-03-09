@@ -1,4 +1,3 @@
-
 <!-- Hero -->
 <ng-if ng-if=":state:enable && extensionPoint === 'hero'">
   <!-- likes -->
@@ -10,7 +9,8 @@
 <!-- Top fab buttons -->
 <ng-if ng-if=":state:enable && extensionPoint === 'buttons-top-fab'">
   <button id="fab-compose-{{:rebind:formData.pubkey}}"
-          class="button button-fab button-fab-top-right button-fab-hero mini button-stable spin"
+          class="button button-fab button-fab-top-left button-fab-hero mini button-stable spin"
+          style="left: 88px;"
           ng-click="showNewMessageModal()">
     <i class="icon ion-compose"></i>
   </button>
@@ -25,7 +25,6 @@
           title="{{'MESSAGE.BTN_WRITE' | translate}}" translate>
     MESSAGE.BTN_WRITE
   </button>
-
   <!-- Star -->
   <button class="button button-stable button-small-padding ink"
           ng-if="likeData.stars && !likeData.stars.wasHit"

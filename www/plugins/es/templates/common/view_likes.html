@@ -4,11 +4,11 @@
     <span class="gray" ng-if="likeData.views" title="{{'COMMON.VIEWS_TEXT'|translate: likeData.views }}">
         {{likeData.views.total || 0}}
         <i class="icon ion-eye"></i>
-        <ng-if ng-if="likeData.likes||dislikes">&nbsp;|&nbsp;</ng-if>
+        <ng-if ng-if="likeData.likes||likeData.dislikes">&nbsp;|&nbsp;</ng-if>
     </span>
 
     <!-- likes / dislikes -->
-    <ng-if ng-if="likeData.likes||dislikes">
+    <ng-if ng-if="likeData.likes||likeData.dislikes">
         <span ng-class="{'gray': !likeData.likes.wasHit, 'positive': likeData.likes.wasHit}">
         <a title="{{'COMMON.LIKES_TEXT'|translate: likeData.likes }}"
            ng-click="!canEdit && toggleLike($event, {kind: 'like'})">

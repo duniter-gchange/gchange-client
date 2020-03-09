@@ -6,7 +6,7 @@
     "CATEGORY_SEARCH_HELP": "Recherche",
     "COMMENT_HELP": "Commentaire",
     "LAST_MODIFICATION_DATE": "Mise à jour le",
-    "BTN_LIKE_HELP": "J'aime",
+    "BTN_LIKE": "J'aime",
     "BTN_FOLLOW": "Suivre",
     "BTN_STOP_FOLLOW": "Ne plus suivre",
     "LIKES_TEXT": "{{total}} personne{{total > 1 ? 's' : ''}} {{total > 1 ? 'ont' : 'a'}} aimé cette page",
@@ -58,7 +58,7 @@
       "ORGANIZATION_ACCOUNT_HELP": "Si vous représentez une entreprise, une association, etc.<br/>Aucun dividende universel ne sera créé par ce compte."
     },
     "EVENT": {
-      "MEMBER_WITHOUT_PROFILE": "Pour obtenir vos certifications plus rapidement, complétez <a ui-sref=\"app.user_edit_profile\">votre profil utilisateur</a>. Les membres accorderont plus facilement leur confiance à une identité vérifiable."
+      "MEMBER_WITHOUT_PROFILE": "Vous pouvez <a ui-sref=\"app.edit_profile\">saisir votre profil Cesium+</a> (optionnel) pour offrir une meilleure visibilité de votre compte. Ce profil sera stocké dans <b>un annuaire indépendant</b> de la monnaie, mais décentralisé."
     },
     "ERROR": {
       "WS_CONNECTION_FAILED": "ğchange ne peut pas recevoir les notifications à cause d'une erreur technique (connexion au noeud de données ğchange).<br/><br/>Si le problème persiste, veuillez <b>choisir un autre noeud de données</b> dans les paramètres."
@@ -89,11 +89,6 @@
       "BTN_REDO_STAR_HELP": "Actualiser votre note",
       "BTN_FOLLOW": "Suivre l'activité de ce profil",
       "BTN_STOP_FOLLOW": "Ne plus suivre ce profil"
-    },
-    "CONFIRM": {
-      "SUGGEST_CERTIFICATIONS": "Etes-vous sûr de vouloir <b>envoyer ces suggestions de certification</b> ?",
-      "ASK_CERTIFICATION": "Etes-vous sûr de vouloir <b>envoyer une demande de certification</b> ?",
-      "ASK_CERTIFICATIONS": "Etes-vous sûr de vouloir <b>envoyer une demande de certification</b> à ces personnes ?"
     }
   },
   "COMMENTS": {
@@ -246,7 +241,7 @@
       "RECORD_DESCRIPTION": "Description",
       "RECORD_DESCRIPTION_HELP": "Description de l'activité",
       "RECORD_ADDRESS": "Rue",
-      "RECORD_ADDRESS_HELP": "Rue, batiment...",
+      "RECORD_ADDRESS_HELP": "Rue, bâtiment...",
       "RECORD_CITY": "Ville",
       "RECORD_CITY_HELP": "Ville",
       "RECORD_SOCIAL_NETWORKS": "Réseaux sociaux et site web",
@@ -260,7 +255,7 @@
     "ERROR": {
       "LOAD_CATEGORY_FAILED": "Erreur de chargement de la liste des activités",
       "LOAD_RECORD_FAILED": "Erreur lors du chargement de la page",
-      "LOOKUP_RECORDS_FAILED": "Erreur lors de l'exécution de la recherche.",
+      "LOOKUP_RECORDS_FAILED": "Erreur lors de l'exécution de la recherche",
       "REMOVE_RECORD_FAILED": "Erreur lors de la suppression de la page",
       "SAVE_RECORD_FAILED": "Erreur lors de la sauvegarde",
       "RECORD_NOT_EXISTS": "Page inexistante",
@@ -301,7 +296,7 @@
     },
     "ERROR": {
       "REMOVE_PROFILE_FAILED": "Erreur de suppression du profil",
-      "LOAD_PROFILE_FAILED": "Erreur de chargement du profil utilisateur.",
+      "LOAD_PROFILE_FAILED": "Erreur de chargement du profil utilisateur",
       "SAVE_PROFILE_FAILED": "Erreur lors de la sauvegarde",
       "INVALID_SOCIAL_NETWORK_FORMAT": "Format non pris en compte : veuillez indiquer une adresse valide.<br/><br/>Exemples :<ul><li>- Une page Facebook (https://www.facebook.com/user)</li><li>- Une page web (http://www.monsite.fr)</li><li>- Une adresse email (joe@dalton.com)</li></ul>",
       "IMAGE_RESIZE_FAILED": "Erreur lors du redimensionnement de l'image"
@@ -351,7 +346,7 @@
     "SUBSCRIPTION_COUNT": "Services / Abonnements",
     "EDIT": {
       "TITLE": "Services en ligne",
-      "HELP_TEXT": "Gérer ici vos abonnements et autres services en ligne",
+      "HELP_TEXT": "Gérez ici vos abonnements et autres services en ligne",
       "PROVIDER": "Prestataire :"
     },
     "TYPE": {
@@ -380,13 +375,13 @@
     }
   },
   "DOCUMENT": {
-    "HASH": "Hash: ",
+    "HASH": "Hash : ",
     "LOOKUP": {
       "TITLE": "Recherche de documents",
       "BTN_ACTIONS": "Actions",
       "SEARCH_HELP": "issuer:AAA*, time:1508406169",
-      "LAST_DOCUMENTS": "Derniers documents",
       "LAST_DOCUMENTS_DOTS": "Derniers documents :",
+      "LAST_DOCUMENTS": "Derniers documents",
       "SHOW_QUERY": "Voir la requête",
       "HIDE_QUERY": "Masquer la requête",
       "HEADER_TIME": "Date/Heure",
@@ -467,7 +462,7 @@
     "NODE_BMA_DOWN": "Le noeud <b>{{params[0]}}:{{params[1]}}</b> (utilisé par votre noeud ES API) est <b>injoignable</b>.",
     "NODE_BMA_UP": "Le noeud <b>{{params[0]}}:{{params[1]}}</b> est à nouveau accessible.",
     "MEMBER_JOIN": "Vous êtes maintenant <b>membre</b> de la monnaie <b>{{params[0]}}</b> !",
-    "MEMBER_LEAVE": "Vous n'êtes <b>plus membre</b> de la monnaie <b>{{params[0]}}</b>!",
+    "MEMBER_LEAVE": "Vous n'êtes <b>plus membre</b> de la monnaie <b>{{params[0]}}</b> !",
     "MEMBER_EXCLUDE": "Vous n'êtes <b>plus membre</b> de la monnaie <b>{{params[0]}}</b>, faute de non renouvellement ou par manque de certifications.",
     "MEMBER_REVOKE": "La révocation de votre compte a été effectuée. Il ne pourra plus être un compte membre de la monnaie <b>{{params[0]}}</b>.",
     "MEMBER_ACTIVE": "Votre renouvellement d'adhésion à la monnaie <b>{{params[0]}}</b> a été <b>pris en compte</b>.",
@@ -504,7 +499,6 @@
   },
   "ERROR": {
     "ES_CONNECTION_ERROR": "Nœud de données <b>{{server}}</b> injoignable ou adresse invalide.<br/><br/>Vérifiez votre connexion Internet, ou changer de nœud de données dans les <a class=\"positive\" ng-click=\"doQuickFix('settings')\">paramètres avancés</a>.",
-    "ES_MAX_UPLOAD_BODY_SIZE": "Le volume des données à envoyer dépasse la limite fixée par le serveur.<br/>Veuillez ré-essayer après avoir, par exemple, supprimer des photos.",
-    "INVALID_PUBKEY": "Clé publique invalide"
+    "ES_MAX_UPLOAD_BODY_SIZE": "Le volume des données à envoyer dépasse la limite fixée par le serveur.<br/>Veuillez ré-essayer après avoir, par exemple, supprimer des photos."
   }
 }

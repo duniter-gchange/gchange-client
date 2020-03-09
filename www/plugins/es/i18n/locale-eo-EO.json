@@ -6,7 +6,7 @@
     "CATEGORY_SEARCH_HELP": "Serĉado",
     "COMMENT_HELP": "Komento",
     "LAST_MODIFICATION_DATE": "Ĝisdatigita la",
-    "BTN_LIKE_HELP": "Mi ŝatas",
+    "BTN_LIKE": "Mi ŝatas",
     "BTN_FOLLOW": "Sekvi",
     "BTN_STOP_FOLLOW": "Ne plu sekvi",
     "LIKES_TEXT": "{{total}} persono{{total > 1 ? 'j' : ''}} ŝatis tiun ĉi paĝon",
@@ -89,11 +89,6 @@
       "BTN_REDO_STAR_HELP": "Aktualigi vian noton",
       "BTN_FOLLOW": "Sekvi la agojn de tiu ĉi profilo",
       "BTN_STOP_FOLLOW": "Ne plu sekvi tiun ĉi profilon"
-    },
-    "CONFIRM": {
-      "SUGGEST_CERTIFICATIONS": "Ĉu vi certas, ke vi volas <b>sendi tiujn sugestojn por atestado</b>?",
-      "ASK_CERTIFICATION": "Ĉu vi certas, ke vi volas <b>sendi atesto-peton</b>?",
-      "ASK_CERTIFICATIONS": "Ĉu vi certas, ke vi volas <b>sendi atesto-peton</b> al tiuj personoj?"
     }
   },
   "COMMENTS": {
@@ -504,7 +499,6 @@
   },
   "ERROR": {
     "ES_CONNECTION_ERROR": "Daten-nodo <b>{{server}}</b> neatingebla aŭ adreso nevalida.<br/><br/>Kontrolu vian retkonekton, aŭ ŝanĝu la daten-nodon en la <a class=\"positive\" ng-click=\"doQuickFix('settings')\">spertaj parametroj</a>.",
-    "ES_MAX_UPLOAD_BODY_SIZE": "La kvanto de datenoj sendotaj superas la limon fiksitan de la servilo.<br/>Bonvolu reprovi post, ekzemple, forigo de fotoj.",
-    "INVALID_PUBKEY": "Publika ŝlosilo nevalida"
+    "ES_MAX_UPLOAD_BODY_SIZE": "La kvanto de datenoj sendotaj superas la limon fiksitan de la servilo.<br/>Bonvolu reprovi post, ekzemple, forigo de fotoj."
   }
 }

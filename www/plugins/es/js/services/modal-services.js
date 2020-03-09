@@ -42,7 +42,7 @@ angular.module('cesium.es.modal.services', ['cesium.modal.services', 'cesium.es.
       parameters);
   }
 
-  function showNewPage() {
+  function showNewPage(parameters) {
     // Fix #50 - avoid to login and fake account, when creating a new page
     //return csWallet.login({minData: true})
       return ModalUtils.show('plugins/es/templates/registry/modal_record_type.html', undefined, {

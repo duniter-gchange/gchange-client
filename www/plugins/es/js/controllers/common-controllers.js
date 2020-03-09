@@ -1235,7 +1235,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
 
 
     $scope.reportAbuse = function(event, options) {
-        if ($scope.abuses && $scope.abuses.wasHit) return; // Abuse already reported
+        if ($scope.likeData && $scope.likeData.abuses && $scope.likeData.abuses.wasHit) return; // Abuse already reported
 
         options = options || {};
 
@@ -1391,8 +1391,8 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
   };
 
   csWallet.api.data.on.reset($scope, function() {
-    _.forEach($scope.options.like.kinds, function(kind) {
-      var key = $scope.toLowerCase() + 's';
+    _.forEach($scope.options.like.kinds||[], function(kind) {
+      var key = kind.toLowerCase() + 's';
       if ($scope.likeData[key]) {
         $scope.likeData[key].wasHit = false;
         $scope.likeData[key].wasHitId = undefined;

@@ -32,9 +32,7 @@ angular.module('cesium.wot.controllers', ['cesium.services'])
             controller: 'WotIdentityViewCtrl'
           }
         }
-      })
-
-      ;
+      });
   })
 
   .controller('WotLookupCtrl', WotLookupController)
@@ -69,7 +67,7 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
   $scope.showResultLabel = true;
   $scope.parameters = {}; // override in the modal controller
 
-  $scope.$on('$ionicView.enter', function(e, state) {
+  $scope.enter = function(e, state) {
     if (!$scope.entered) {
       if (state.stateParams && state.stateParams.q) { // Query parameter
         $scope.search.text = state.stateParams.q;
@@ -86,7 +84,7 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
       else {
         $timeout(function() {
           // get new comers
-          if (state.stateParams.type == 'newcomers' || (!csConfig.initPhase && !state.stateParams.type)) {
+          if (state.stateParams.type === 'newcomers' || (!csConfig.initPhase && !state.stateParams.type)) {
             $scope.doGetNewcomers(0, undefined, true/*skipLocationUpdate*/);
           }
 
@@ -103,7 +101,8 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
 
       $scope.showHelpTip();
     }
-  });
+  };
+  $scope.$on('$ionicView.enter', $scope.enter);
 
   $scope.resetWotSearch = function() {
     $scope.search = {
@@ -114,17 +113,17 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
     };
   };
 
-  $scope.doRefreshLocationHref = function() {
-
+  $scope.updateLocationHref = function() {
+    // removeIf(device)
     var stateParams = {
       q: undefined,
       hash: undefined,
       type: undefined
     };
 
-    if ($scope.search.type == 'text') {
+    if ($scope.search.type === 'text') {
       var text = $scope.search.text.trim();
-      if (text.match(/^#\w+$/)) {
+      if (text.match(/^#[\wḡĞǦğàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+$/)) {
         stateParams.hash = text.substr(1);
       }
       else {
@@ -147,42 +146,46 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
         inherit: true,
         notify: false
       });
+    // endRemoveIf(device)
   };
 
   $scope.doSearchText = function() {
 
     $scope.doSearch();
-    $scope.doRefreshLocationHref();
+    $scope.updateLocationHref();
+
+    // removeIf(no-device)
+    Device.keyboard.close();
+    // endRemoveIf(no-device)
   };
 
-  $scope.doSearch = function(offset, size, skipLocationUpdate) {
+  $scope.doSearch = function(offset, size) {
     var text = $scope.search.text.trim();
     if ((UIUtils.screen.isSmall() && text.length < 3) || !text.length) {
       $scope.search.results = [];
       $scope.search.type = 'none';
+      return $q.when();
     }
-    else {
-      $scope.search.loading = true;
-      var options = {
-        from: offset || 0,
-        size: size || defaultSearchLimit,
-        _source: $scope._source
-      };
-      $scope.search.type = 'text';
-      return esProfile.searchText(text, options)
-        .then(function(idties){
-          if ($scope.search.type != 'text') return; // could have change
-          if ($scope.search.text.trim() !== text) return; // search text has changed before received response
+    $scope.search.loading = true;
+    var options = {
+      from: offset || 0,
+      size: size || defaultSearchLimit,
+      _source: $scope._source
+    };
+    $scope.search.type = 'text';
+    return esProfile.searchText(text, options)
+      .then(function(idties){
+        if ($scope.search.type !== 'text') return; // could have change
+        if ($scope.search.text.trim() !== text) return; // search text has changed before received response
 
-          if ((!idties || !idties.length) && BMA.regexp.PUBKEY.test(text)) {
-            $scope.doDisplayResult([{pubkey: text}]);
-          }
-          else {
-            $scope.doDisplayResult(idties, offset, size);
-          }
-        })
-        .catch(UIUtils.onError('ERROR.WOT_LOOKUP_FAILED'));
-    }
+        if ((!idties || !idties.length) && BMA.regexp.PUBKEY.test(text)) {
+          $scope.doDisplayResult([{pubkey: text}]);
+        }
+        else {
+          $scope.doDisplayResult(idties, offset, size);
+        }
+      })
+      .catch(UIUtils.onError('ERROR.WOT_LOOKUP_FAILED'));
   };
 
   $scope.doGetNewcomers = function(offset, size, skipLocationUpdate) {
@@ -196,7 +199,7 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
 
     // Update location href
     if (!offset && !skipLocationUpdate) {
-      $scope.doRefreshLocationHref();
+      $scope.updateLocationHref();
     }
 
     var options = {
@@ -209,7 +212,7 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
 
     return esProfile.search(options)
       .then(function(idties){
-        if ($scope.search.type != 'newcomers') return false; // could have change
+        if ($scope.search.type !== 'newcomers') return false; // could have change
         $scope.doDisplayResult(idties, offset, size);
         return true;
       })
@@ -225,7 +228,7 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
     var offset = $scope.search.results ? $scope.search.results.length : 0;
 
     $scope.search.loadingMore = true;
-    var searchFunction = ($scope.search.type == 'newcomers') ?
+    var searchFunction = ($scope.search.type === 'newcomers') ?
       $scope.doGetNewcomers :
       $scope.doGetPending;
 
@@ -310,25 +313,25 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
       return;
     }
     Device.barcode.scan()
-    .then(function(result) {
-      if (!result) {
-        return;
-      }
-      BMA.uri.parse(result)
-      .then(function(obj){
-        if (obj.pubkey) {
-          $scope.search.text = obj.pubkey;
+      .then(function(result) {
+        if (!result) {
+          return;
         }
-        else if (result.uid) {
-          $scope.search.text = obj.uid;
-        }
-        else {
-          $scope.search.text = result;
-        }
-        $scope.doSearch();
-      });
-    })
-    .catch(UIUtils.onError('ERROR.SCAN_FAILED'));
+        BMA.uri.parse(result)
+          .then(function(obj){
+            if (obj.pubkey) {
+              $scope.search.text = obj.pubkey;
+            }
+            else if (result.uid) {
+              $scope.search.text = obj.uid;
+            }
+            else {
+              $scope.search.text = result;
+            }
+            $scope.doSearch();
+          });
+      })
+      .catch(UIUtils.onError('ERROR.SCAN_FAILED'));
   };
 
   // Show help tip (show only not already shown)
@@ -367,7 +370,7 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
       $scope.search.results = res || [];
     }
     else {
-        $scope.search.results = $scope.search.results.concat(res);
+      $scope.search.results = $scope.search.results.concat(res);
     }
     $scope.search.loading = false;
     $scope.search.hasMore = res.length && $scope.search.results.length >= (offset + size);
@@ -445,7 +448,7 @@ function WotLookupModalController($scope, $controller, $focus, parameters){
     $scope.closeModal($scope.selection);
   };
 
-  $scope.doRefreshLocationHref = function() {
+  $scope.updateLocationHref = function() {
     // Do NOT change location href
   };
 
@@ -491,7 +494,7 @@ function WotIdentityAbstractController($scope, $rootScope, $state, $translate, $
         $scope.canSelectAndCertify = identity.hasSelf && csWallet.isUserPubkey(pubkey);
         $scope.alreadyCertified = !$scope.canCertify || !csWallet.isLogin() ? false :
           (!!_.findWhere(identity.received_cert, { pubkey: csWallet.data.pubkey, valid: true }) ||
-          !!_.findWhere(identity.received_cert_pending, { pubkey: csWallet.data.pubkey, valid: true }));
+            !!_.findWhere(identity.received_cert_pending, { pubkey: csWallet.data.pubkey, valid: true }));
         $scope.disableCertifyButton = $scope.alreadyCertified || $scope.revoked;
         $scope.loading = false;
       })

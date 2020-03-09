@@ -6,7 +6,7 @@
     "CATEGORY_SEARCH_HELP": "Search",
     "COMMENT_HELP": "Comments",
     "LAST_MODIFICATION_DATE": "Updated on ",
-    "BTN_LIKE_HELP": "I like",
+    "BTN_LIKE": "I like",
     "BTN_FOLLOW": "Follow",
     "BTN_STOP_FOLLOW": "Stop following",
     "LIKES_TEXT": "{{total}} {{total > 1 ? 'people' : 'person'}} liked this page",
@@ -36,12 +36,12 @@
       "LOAD_NOTIFICATIONS_FAILED": "Could not load notifications"
     },
     "REPORT_ABUSE": {
-      "TITLE": "Report a issue",
+      "TITLE": "Report a problem",
       "SUB_TITLE": "Please explain briefly the problem:",
       "REASON_HELP": "I explain the problem...",
       "ASK_DELETE": "Request removal?",
       "CONFIRM": {
-        "SENT": "Signalement envoyé. Merci !"
+        "SENT": "Request sent. Thnak you!"
       }
     }
   },
@@ -89,11 +89,6 @@
       "BTN_REDO_STAR_HELP": "Update your rate for this profile",
       "BTN_FOLLOW": "Follow the activity of this profile",
       "BTN_STOP_FOLLOW": "Stop following this profil"
-    },
-    "CONFIRM": {
-      "SUGGEST_CERTIFICATIONS": "Etes-vous sûr de vouloir <b>envoyer ces suggestions de certification</b> ?",
-      "ASK_CERTIFICATION": "Etes-vous sûr de vouloir <b>envoyer une demande de certification</b> ?",
-      "ASK_CERTIFICATIONS": "Etes-vous sûr de vouloir <b>envoyer une demande de certification</b> à ces personnes ?"
     }
   },
   "COMMENTS": {
@@ -385,8 +380,8 @@
       "TITLE": "Document search",
       "BTN_ACTIONS": "Actions",
       "SEARCH_HELP": "issuer:AAA*, time:1508406169",
-      "LAST_DOCUMENTS": "Last documents",
       "LAST_DOCUMENTS_DOTS": "Last documents :",
+      "LAST_DOCUMENTS": "Last documents",
       "SHOW_QUERY": "Show query",
       "HIDE_QUERY": "Hide query",
       "HEADER_TIME": "Time/Hour",
@@ -486,14 +481,14 @@
       "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has requested moderation on your profile"
     },
     "PAGE": {
-      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has commented on your referencing: <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his comment on your referencing: <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has replied to your comment on the referencing: <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his answer to your comment, on the referencing: <b>{{params[2]}}</b>",
-      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has commented on the page: <b>{{params[2]}}</b>",
-      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> has modified his comment on the page: <b>{{params[2]}}</b>",
-      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> added a page: <b>{{params[2]}}</b>",
-      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> updated the page: <b>{{params[2]}}</b>",
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has commented on your referencing: <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has modified his comment on your referencing: <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has replied to your comment on the referencing: <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has modified his answer to your comment, on the referencing: <b>{{params[2]}}</b>",
+      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has commented on the page: <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has modified his comment on the page: <b>{{params[2]}}</b>",
+      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> added a page: <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> updated the page: <b>{{params[2]}}</b>",
       "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> asks you for a moderation on the page: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
       "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> reported a page to be deleted: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
       "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has requested moderation on your page: <b>{{params[2]}}</b>"
@@ -504,7 +499,6 @@
   },
   "ERROR": {
     "ES_CONNECTION_ERROR": "Data node <b>{{server}}</b> unreachable or invalid address.<br/><br/>Check your Internet connection, or change data node in <a class=\"positive\" ng-click=\"doQuickFix('settings')\">advanced settings</a>.",
-    "ES_MAX_UPLOAD_BODY_SIZE": "The volume of data to be sent exceeds the limit set by the server.<br/><br/>Please try again after, for example, deleting photos.",
-    "INVALID_PUBKEY": "Invalid public key"
+    "ES_MAX_UPLOAD_BODY_SIZE": "The volume of data to be sent exceeds the limit set by the server.<br/><br/>Please try again after, for example, deleting photos."
   }
 }

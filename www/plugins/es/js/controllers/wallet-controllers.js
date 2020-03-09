@@ -11,10 +11,6 @@ angular.module('cesium.es.wallet.controllers', ['cesium.es.services'])
             templateUrl: "plugins/es/templates/wallet/view_wallet_extend.html",
             controller: 'ESWalletLikesCtrl'
           },
-          'general': {
-            templateUrl: "plugins/es/templates/wallet/view_wallet_extend.html",
-            controller: 'ESWalletLikesCtrl'
-          },
           'after-general': {
             templateUrl: "plugins/es/templates/wallet/view_wallet_extend.html",
             controller: 'ESWalletViewCtrl'
@@ -39,8 +35,8 @@ function ESWalletViewController($scope, $controller, $state, csWallet, esModals)
 
   /* -- modals -- */
 
-  $scope.showNewPageModal = function() {
-    return esModals.showNewPage();
+  $scope.showNewPageModal = function(event) {
+    return esModals.showNewPage(event);
   };
 }
 

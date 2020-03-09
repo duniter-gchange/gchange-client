@@ -349,7 +349,6 @@
   },
   "ERROR": {
     "ES_CONNECTION_ERROR": "Nodo de datos <b>{{server}}</b> dirección no válida o no válida.<br/><br/>Verifique su conexión a Internet o cambie el nodo de datos en <a class=\"positive\" ng-click=\"doQuickFix('settings')\">configuración avanzada</a>.",
-    "ES_MAX_UPLOAD_BODY_SIZE": "El volumen de datos a enviar excede el límite establecido por el servidor.<br/><br/>Por favor, inténtelo de nuevo después, por ejemplo, borrando fotos.",
-    "INVALID_PUBKEY": "Llave pública inválida"
+    "ES_MAX_UPLOAD_BODY_SIZE": "El volumen de datos a enviar excede el límite establecido por el servidor.<br/><br/>Por favor, inténtelo de nuevo después, por ejemplo, borrando fotos."
   }
 }

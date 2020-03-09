@@ -41,7 +41,8 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
 
 ;
 
-function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils, csWallet, esProfile, esModals) {
+function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils, csWallet,
+                                     esHttp, esProfile, esModals) {
   'ngInject';
 
   $scope.options = $scope.options || {};
@@ -58,7 +59,6 @@ function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils
 
   // Initialize the super class and extend it.
   angular.extend(this, $controller('ESExtensionCtrl', {$scope: $scope}));
-
 
   /* -- modals -- */
 
