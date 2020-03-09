@@ -147,6 +147,7 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
     }
 
     var notification = new EsNotification(event, markNotificationAsRead);
+    notification.id = event.id || notification.id;
 
     // Extend the notification entity
     return csWot.extendAll([notification])
