@@ -1332,8 +1332,6 @@ function ESRegistryRecordEditController($scope, $timeout,  $state, $q, $ionicHis
           if (!$scope.avatar) {
             $scope.avatarClass['cion-page-' + type] = true;
           }
-          $scope.doSearch();
-          $scope.updateLocationHref();
         }
       });
   };
@@ -1349,8 +1347,6 @@ function ESRegistryRecordEditController($scope, $timeout,  $state, $q, $ionicHis
       .then(function(cat){
         if (cat && cat.parent) {
           $scope.formData.category = cat;
-          $scope.doSearch();
-          $scope.updateLocationHref();
         }
       });
   };
