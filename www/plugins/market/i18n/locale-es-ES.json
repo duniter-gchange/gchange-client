@@ -1,8 +1,7 @@
 {
   "MENU": {
     "MARKET": "Anuncios",
-    "MY_RECORDS": "Mis anuncios",
-    "PAGES": "Páginas pro"
+    "MY_RECORDS": "Mis anuncios"
   },
   "MARKET": {
     "COMMON": {
@@ -18,6 +17,10 @@
         "TITLE_HELP": "Nombre, Apellidos",
         "DESCRIPTION": "Sobre mí",
         "DESCRIPTION_HELP": "Escriba algo sobre usted…"
+      },
+      "SUBSCRIPTION": {
+        "EMAIL": "Correo electrónico",
+        "EMAIL_HELP": "Correo electrónico (opcional)"
       },
       "LAST_SLIDE_CONGRATULATION": "<b>¡Bien!</b> Ha introducido todas los datos necesarios.<br/><b>Puede solicitar</b> la creación de su cuenta.</b><br/><br/>Para su información, la llave pública que se muestra más abajo identificará su futura cuenta.<br/>Esta podrá ser comunicada a terceros para recibir pagos.",
       "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Advertencia:</b> el identificador secreto y la contraseña no podrán ser modificados.<br/><b>¡Asegúrese de recordarlos siempre!</b><br/><br/><b>¿Desea</b> continuar?"
@@ -53,6 +56,7 @@
       "LOCATION": "localidad",
       "LOCATION_HELP": "Ciudad",
       "LAST_RECORDS": "Anuncios recientes:",
+      "SHOW_OLD_RECORD": "Mostrar anuncios viejos",
       "RESULTS": "Resultados :",
       "BTN_LAST_RECORDS": "Anuncios recientes",
       "BTN_SHOW_CATEGORIES": "Mostrar categorías",
@@ -71,6 +75,10 @@
       "SLIDE_DURATION_OPTION": "{{value}} segundos"
     },
     "VIEW": {
+      "BTN_FOLLOW": "Seguir este anuncio",
+      "BTN_STOP_FOLLOW": "Dejar de seguir este anuncio",
+      "MORE_LIKE_THIS": "Esto le podría interesar :",
+
       "NEW_MESSAGE_TITLE": "Sobre el anuncio \"{{title}}\"...",
       "REOPEN_CONFIRMATION": "¿<b>Desea</b> reabrir este anuncio ?",
       "SOLD_CONFIRMATION": "¿<b>Desea</b> cerrar este anuncio ?",
@@ -118,9 +126,15 @@
     },
     "WALLET": {
       "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|currencySymbol}}",
-      "DUNITER_ACCOUNT_HELP": "La llave pública (de arriba) indica el destino de los pagos que recibirá."
+      "DUNITER_ACCOUNT_HELP": "La llave pública (de arriba) indica el destino de los pagos que recibirá.",
+      "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Ninguna llave pública ha sido introducida. Deberá enviársela a los eventuales compradores.<br/>La puede obtener en cualquier momento <b>editando su perfil</b>.",
+      "DUNITER_PUBKEY": "Llave pública de recepción de pagos"
+
     },
     "WOT": {
+      "ERROR": {
+        "FAILED_STAR_PROFILE": "Error durante el envío de su nota. Inténtelo más tarde."
+      },
       "VIEW": {
         "BTN_RECORDS": "Anuncios",
         "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|currencySymbol}}",
@@ -168,6 +182,16 @@
   },
   "EVENT": {
     "MARKET": {
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha reportardo su anuncio : <b>{{params[2]}}</b>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha reportado un anuncio para moderar : <b>{{params[2]}}</b>",
+      "FOLLOW_CLOSE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha cerrado el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha añadido el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha comentado el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> sigue su anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado su comentario en el anuncio : <b>{{params[2]}}</b>",
+      "LIKE_RECEIVED": "A <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> le ha gustado su anuncio : <b>{{params[2]}}</b>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> os pide moderación sobre el anuncio : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
       "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha comentado su anuncio : <b>{{params[2]}}</b>",
       "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado su comentario sobre su anuncio : <b>{{params[2]}}</b>",
       "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha contestado a su comentario sobre el anuncio : <b>{{params[2]}}</b>",
