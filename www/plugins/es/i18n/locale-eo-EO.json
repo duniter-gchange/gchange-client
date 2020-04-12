@@ -489,7 +489,7 @@
       "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis sian komenton ĉe la paĝo: <b>{{params[2]}}</b>",
       "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> aldonis la paĝon: <b>{{params[2]}}</b>",
       "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> modifis la paĝon: <b>{{params[2]}}</b>",
-      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> petas de vis moderigon pri la paĝo: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> petas de vi moderigon pri la paĝo: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
       "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri paĝo foriginda: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
       "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri via paĝo: <b>{{params[2]}}</b>"
     }
