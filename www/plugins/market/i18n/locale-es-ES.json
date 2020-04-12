@@ -6,71 +6,105 @@
   "MARKET": {
     "COMMON": {
       "PRICE": "Precio",
-      "BTN_NEW_AD": "Presento un anuncio",
-      "SOLD": "El anuncio cerrada",
-      "AROUND_ME": "Alrededor de yo"
+      "BTN_NEW_AD": "Poner un anuncio",
+      "SOLD": "Cerrar anuncio",
+      "LAST_UPDATE": "Última actualización"
+    },
+    "JOIN": {
+      "PROFILE": {
+        "WARNING": "Complete su perfil con <b>información pública</b>, accesible por todo el mundo.",
+        "TITLE": "Nombre, Apellidos",
+        "TITLE_HELP": "Nombre, Apellidos",
+        "DESCRIPTION": "Sobre mí",
+        "DESCRIPTION_HELP": "Escriba algo sobre usted…"
+      },
+      "SUBSCRIPTION": {
+        "EMAIL": "Correo electrónico",
+        "EMAIL_HELP": "Correo electrónico (opcional)"
+      },
+      "LAST_SLIDE_CONGRATULATION": "<b>¡Bien!</b> Ha introducido todas los datos necesarios.<br/><b>Puede solicitar</b> la creación de su cuenta.</b><br/><br/>Para su información, la llave pública que se muestra más abajo identificará su futura cuenta.<br/>Esta podrá ser comunicada a terceros para recibir pagos.",
+      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Advertencia:</b> el identificador secreto y la contraseña no podrán ser modificados.<br/><b>¡Asegúrese de recordarlos siempre!</b><br/><br/><b>¿Desea</b> continuar?"
     },
     "HOME": {
       "BTN_NEW_AD": "Poner un anuncio",
-      "BTN_SHOW_MARKET_OFFER": "Consultar los anuncios"
+      "BTN_SHOW_MARKET_OFFER": "Consultar los anuncios",
+      "LOCATION_LABEL": "Buscar anuncios por localidad :",
+      "LOCATION_HELP": "Código postal, Localidad",
+      "ERROR": {
+        "GEO_LOCATION_NOT_FOUND": "Localidad o código postal no encontrados"
+      }
     },
     "CATEGORY": {
       "ALL": "Todas las categorías"
     },
     "SEARCH": {
+      "GEO_DISTANCE": "Distancia máxima desde la localidad :",
+      "GEO_DISTANCE_OPTION": "{{value}} km",
+      "LAST_RECORD_COUNT": "{{count}} anuncio{{count>0?'s':''}} reciente{{count>0?'s':''}}",
+      "LAST_RECORD_COUNT_LOCATION": "{{count}} anuncio{{count>0?'s':''}} recente{{count>0?'s':''}}, cerca de {{location}}",
+      "RESULT_COUNT": "{{count}} resultado{{count>0?'s':''}}",
+      "RESULT_COUNT_LOCATION": "{{count}} resultado{{count>0?'s':''}}, cerca de {{location}}",
       "TITLE": "Anuncios",
-      "CATEGORY": "Categorías: ",
+      "CATEGORY": "Categoría: ",
       "SEARCH_HELP": "Búsqueda (coche, libro...)",
       "BY": "por",
       "BTN_ADD": "Nuevo",
       "BTN_OPTIONS": "Búsqueda avanzada",
-      "BTN_AROUND_ME": "Alrededor de yo",
-      "SHOW_MORE": "Visualizar más",
-      "SHOW_MORE_COUNT": "(límite actual a {{limit}})",
-      "LOCATION": "localización",
+      "BTN_AROUND_ME": "Alrededor mío",
+      "SHOW_MORE": "Mostrar más",
+      "SHOW_MORE_COUNT": "(mostrar sólo {{limit}})",
+      "LOCATION": "localidad",
       "LOCATION_HELP": "Ciudad",
-      "LAST_RECORDS": "últimos anuncios :",
+      "LAST_RECORDS": "Anuncios recientes:",
+      "SHOW_OLD_RECORD": "Mostrar anuncios viejos",
       "RESULTS": "Resultados :",
-      "BTN_LAST_RECORDS": "últimos anuncios",
-      "BTN_SHOW_CATEGORIES": "Recorrer las categorías",
-      "BTN_OFFERS": "Ofrecimientos",
+      "BTN_LAST_RECORDS": "Anuncios recientes",
+      "BTN_SHOW_CATEGORIES": "Mostrar categorías",
+      "BTN_OFFERS": "Ofertas",
       "BTN_NEEDS": "Demandas",
-      "SHOW_CLOSED_RECORD": "Mostrar anuncios cerrados?",
+      "SHOW_CLOSED_RECORD": "Mostrar anuncios cerrados",
       "RECORD_STOCK": "Stock :"
     },
     "GALLERY": {
-      "TITLE": "Diapositivas",
-      "BTN_START": "Comienzo",
-      "BTN_CONTINUE": "Retomar",
-      "BTN_PAUSE": "Pausa",
+      "TITLE": "Galería",
+      "BTN_START": "Comenzar",
+      "BTN_CONTINUE": "Continuar",
+      "BTN_PAUSE": "Pausar",
       "BTN_STOP": "Detener",
-      "SLIDE_DURATION": "Visualización de la hora :",
-      "SLIDE_DURATION_OPTION": "{{value}} segundo"
+      "SLIDE_DURATION": "Duración de visionado :",
+      "SLIDE_DURATION_OPTION": "{{value}} segundos"
     },
     "VIEW": {
+      "BTN_FOLLOW": "Seguir este anuncio",
+      "BTN_STOP_FOLLOW": "Dejar de seguir este anuncio",
+      "MORE_LIKE_THIS": "Esto le podría interesar :",
+
+      "NEW_MESSAGE_TITLE": "Sobre el anuncio \"{{title}}\"...",
+      "REOPEN_CONFIRMATION": "¿<b>Desea</b> reabrir este anuncio ?",
+      "SOLD_CONFIRMATION": "¿<b>Desea</b> cerrar este anuncio ?",
       "TITLE": "Anuncio",
-      "BTN_SOLD_AD": "Vendido",
-      "BTN_SOLD": "Vendido",
-      "BTN_REOPEN": "Reabierto el anuncio",
+      "BTN_SOLD_AD": "Cerrar anuncio",
+      "BTN_SOLD": "Cerrado",
+      "BTN_REOPEN": "Reabrir anuncio",
       "BTN_WRITE_OFFER": "Escribir al vendedor",
       "BTN_WRITE_NEED": "Escribir al solicitante",
-      "MENU_TITLE": "Opciónes",
-      "RECORD_FEES_PARENTHESIS": "(gastos)",
+      "MENU_TITLE": "Opciones",
+      "RECORD_FEES_PARENTHESIS": "(costes)",
       "RECORD_STOCK": "Stock disponible :",
       "POPOVER_SHARE_TITLE": "Anuncio {{title}}",
-      "REMOVE_CONFIRMATION" : "Está usted segura/o querer suprimir este anuncio ?<br/><br/>Esta operación es ireversible."
+      "REMOVE_CONFIRMATION" : "¿ Desea suprimir este anuncio ?<br/><br/>Esta operación es irreversible."
     },
     "TYPE": {
       "TITLE": "Nuevo anuncio",
       "SELECT_TYPE": "Tipo de anuncio :",
-      "OFFER": "Ofrecimiento, Venta",
-      "OFFER_SHORT": "Ofrecimiento",
-      "NEED": "Demanda, Búsqueda",
+      "OFFER": "Oferta",
+      "OFFER_SHORT": "Oferta",
+      "NEED": "Demanda",
       "NEED_SHORT": "Demanda"
     },
     "LOCAL_SALE": {
       "LOCATION": "Número de stand",
-      "LOCATION_HELP": "Número de stand : 1, 2, ...",
+      "LOCATION_HELP": "Número de stand : 1, 2, …",
       "LOCATION_PREFIX": "Stand n°"
     },
     "EDIT": {
@@ -80,8 +114,8 @@
       "RECORD_TITLE_HELP": "Título",
       "RECORD_DESCRIPTION": "Descripción",
       "RECORD_DESCRIPTION_HELP": "Descripción",
-      "RECORD_LOCATION": "Ciudad",
-      "RECORD_LOCATION_HELP": "Dirección, Ciudad",
+      "RECORD_LOCATION": "Dirección",
+      "RECORD_LOCATION_HELP": "Ciudad, País",
       "RECORD_PRICE": "Precio",
       "RECORD_PRICE_HELP": "Precio (opcional)",
       "RECORD_CURRENCY": "Moneda",
@@ -90,37 +124,78 @@
       "RECORD_STOCK": "Stock disponible",
       "RECORD_STOCK_HELP": "Stock disponible"
     },
+    "WALLET": {
+      "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|currencySymbol}}",
+      "DUNITER_ACCOUNT_HELP": "La llave pública (de arriba) indica el destino de los pagos que recibirá.",
+      "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Ninguna llave pública ha sido introducida. Deberá enviársela a los eventuales compradores.<br/>La puede obtener en cualquier momento <b>editando su perfil</b>.",
+      "DUNITER_PUBKEY": "Llave pública de recepción de pagos"
+
+    },
     "WOT": {
+      "ERROR": {
+        "FAILED_STAR_PROFILE": "Error durante el envío de su nota. Inténtelo más tarde."
+      },
       "VIEW": {
-        "BTN_RECORDS": "Anuncios"
+        "BTN_RECORDS": "Anuncios",
+        "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|currencySymbol}}",
+        "DUNITER_ACCOUNT_HELP": "La llave pública (de arriba) indica el destino de los pagos que recibirá."
       }
     },
     "ERROR": {
-      "INVALID_LOGIN_CREDENTIALS": "De usuario o contraseña no válidos.<br/>Por favor, inténtelo de nuevo.",
-      "FAILED_SAVE_RECORD": "Fracaso durante el registro de el anuncio",
-      "FAILED_UPDATE_RECORD": "Fracaso durante la actualización de el anuncio",
-      "LOAD_CATEGORY_FAILED": "Erreur de actualización de las categorías",
-      "LOOKUP_RECORDS_FAILED": "Fracaso durante la ejecución de la búsqueda.",
-      "LOAD_RECORD_FAILED": "Fracaso durante la carga de el anuncio.",
-      "REMOVE_RECORD_FAILED": "Erreur de la supresión de el anuncio",
-      "SOLD_RECORD_FAILED": "Erreur de la cierre de el anuncio",
-      "REOPEN_RECORD_FAILED": "Erreur de la reapertura de el anuncio",
-      "FAILED_SAVE_COMMENT": "Fracaso durante el respaldo del comentario",
-      "FAILED_REMOVE_COMMENT": "Fracaso durante la supresión del comentario",
+      "GEO_LOCATION_NOT_FOUND": "Localidad o código postal no encontrados",
+      "RECORD_EXCEED_UPLOAD_SIZE": "Parece que su anuncio <b>ha excedido el tamaño máximo</b>.<br/><br/>Puede por ejemplo <b>suprimir fotos</b>, y reintentarlo.",
+      "INVALID_LOGIN_CREDENTIALS": "Identificador o contraseña no válidos.<br/>Por favor, inténtelo de nuevo.",
+      "FAILED_SAVE_RECORD": "Hubo un fallo guardando el anuncio",
+      "FAILED_UPDATE_RECORD": "Fallo durante la actualización del anuncio",
+      "LOAD_CATEGORY_FAILED": "Error cargando las categorías",
+      "LOOKUP_RECORDS_FAILED": "Fallo durante la ejecución de la búsqueda.",
+      "LOAD_RECORD_FAILED": "Fallo durante la carga del anuncio.",
+      "REMOVE_RECORD_FAILED": "Error de la supresión del anuncio",
+      "SOLD_RECORD_FAILED": "Error del cierre del anuncio",
+      "REOPEN_RECORD_FAILED": "Error de la reapertura del anuncio",
+      "FAILED_SAVE_COMMENT": "Fallo mientras se guardaba el comentario",
+      "FAILED_REMOVE_COMMENT": "Fallo durante la supresión del comentario",
       "RECORD_NOT_EXISTS": "Anuncio inexistente"
+    },
+    "PROFILE": {
+      "DEFAULT_TITLE": "Usuario/a {{pubkey|formatPubkey}}"
+    },
+    "LOGIN": {
+      "HELP": "Introduzca sus credenciales de conexión :",
+      "REMEMBER_ME": "Recordar mi sesión"
+    },
+    "EVENT_LOGIN": {
+      "EMAIL_OR_PHONE": "Correo electrónico o teléfono",
+      "EMAIL_OR_PHONE_HELP": "Correo electrónico o teléfono",
+      "ERROR": {
+          "INVALID_USERNAME": "Correo electrónico o teléfono no válidos"
+      },
+      "HELP": "Introduce un <b>correo electrónico o teléfono</b>, para poder contactarle durante el evento:",
+      "REMEMBER_ME": "Recordarme",
+      "TITLE": "Coordenadas"
     },
     "INFO": {
       "RECORD_REMOVED" : "Anuncio suprimido",
-      "RECORD_SOLD" : "Anuncio cerrada",
-      "RECORD_REOPEN" : "Anuncio reabrió"
+      "RECORD_SOLD" : "Anuncio cerrado",
+      "RECORD_REOPEN" : "Anuncio reabierto"
     }
   },
   "EVENT": {
     "MARKET": {
-      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> ha comentado su anuncio : <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado su comentario sobre su anuncio : <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> ha contestado a su comentario sobre el anuncio : <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado la repuesta a su comentario sobre el anuncio : <b>{{params[2]}}</b>"
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha reportardo su anuncio : <b>{{params[2]}}</b>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha reportado un anuncio para moderar : <b>{{params[2]}}</b>",
+      "FOLLOW_CLOSE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha cerrado el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha añadido el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha comentado el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> sigue su anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado su comentario en el anuncio : <b>{{params[2]}}</b>",
+      "LIKE_RECEIVED": "A <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> le ha gustado su anuncio : <b>{{params[2]}}</b>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> os pide moderación sobre el anuncio : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha comentado su anuncio : <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado su comentario sobre su anuncio : <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha contestado a su comentario sobre el anuncio : <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado la repuesta a su comentario sobre el anuncio : <b>{{params[2]}}</b>"
     }
   }
 }
