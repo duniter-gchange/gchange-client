@@ -63,7 +63,7 @@ function appAndPluginWatch(done) {
   gulp.watch(paths.templatecache_plugin, () => pluginNgTemplate());
   gulp.watch(paths.ng_annotate_plugin, (event) => pluginNgAnnotate(event));
   gulp.watch(paths.ng_translate_plugin, () => pluginNgTranslate());
-  gulp.watch(paths.css_plugin.concat([paths.leafletSass, paths.converseSass]), () => pluginSass());
+  gulp.watch(paths.css_plugin.concat(paths.leafletSass, paths.converseSass), () => pluginSass());
 
   if (done) done();
 }
