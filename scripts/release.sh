@@ -34,7 +34,7 @@ fi
 echo "Current Android version: $currentAndroid"
 
 # Check version format
-if [[ ! $2 =~ ^[0-9]+.[0-9]+.[0-9]+((a|b)[0-9]+)?$ || ! $3 =~ ^[0-9]+$ ]]; then
+if [[ ! $2 =~ ^[0-9]+.[0-9]+.[0-9]+(-(alpha|beta|rc)[-0-9]*)?$ || ! $3 =~ ^[0-9]+$ ]]; then
   echo "Wrong version format"
   echo "Usage:"
   echo " > ./release.sh [pre|rel] <version>  <android-version> <release_description>"
@@ -61,6 +61,10 @@ case "$1" in
     currentManifestJsonVersion=$(grep -oP "version\": \"\d+.\d+.\d+((a|b)[0-9]+)?\"" www/manifest.json | grep -oP "\d+.\d+.\d+((a|b)[0-9]+)?")
     sed -i "s/version\": \"$currentManifestJsonVersion\"/version\": \"$2\"/g" www/manifest.json
 
+    # Change version in file: 'resources/web-ext/manifest.json'
+    currentExtManifestJsonVersion=$(grep -oP "version\": \"\d+.\d+.\d+((a|b)[0-9]+)?\"" resources/web-ext/manifest.json | grep -oP "\d+.\d+.\d+((a|b)[0-9]+)?")
+    sed -i "s/version\": \"$currentExtManifestJsonVersion\"/version\": \"$2\"/g" resources/web-ext/manifest.json
+
     # Bump the install.sh
     sed -i "s/echo \"v.*\" #lastest/echo \"v$2\" #lastest/g" install.sh
     ;;
@@ -71,17 +75,20 @@ case "$1" in
 esac
 
 
-# Preparing Android environment
+# Preparing the environment
 . ${PROJECT_DIR}/scripts/env-global.sh
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+[[ $? -ne 0 ]] && exit 1
+
 
 echo "----------------------------------"
 echo "- Compiling sources..."
 echo "----------------------------------"
 cd ${PROJECT_DIR} || exit 1
 gulp config build --env default || exit 1
+
+
+echo "Clean previous sha256 files..."
+rm -rf ${PROJECT_DIR}/dist/*.sha256
 
 echo "----------------------------------"
 echo "- Building Android artifact..."
@@ -90,9 +97,8 @@ mkdir -p ${DIST_ANDROID} || exit 1
 rm -rf ${DIST_ANDROID}/*.apk || exit 1
 rm -rf ${ANDROID_OUTPUT_APK_RELEASE}/*.apk || exit 1
 . scripts/build-android.sh --release
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+[[ $? -ne 0 ]] && exit 1
+
 APK_RELEASE_FILE="${ANDROID_OUTPUT_APK_RELEASE}/android-release.apk"
 if [[ ! -f "${APK_RELEASE_FILE}" ]]; then
   echo "ERROR: Missing android artifact at ${APK_RELEASE_FILE}"
@@ -101,18 +107,31 @@ fi
 mkdir -p ${DIST_ANDROID} || exit 1
 cp ${APK_RELEASE_FILE} "${DIST_ANDROID}/${PROJECT_NAME}-v$2-android.apk" || exit 1
 
+
 echo "----------------------------------"
-echo "- Building web artifact..."
+echo "- Building web and extension artifacts..."
 echo "----------------------------------"
 cd ${PROJECT_DIR} || exit 1
+
+# Gnerate config (only once, to keep same config if web and web-extension artifacts)
 gulp config --env default
+
+# Run web build
 gulp webBuild --release
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+[[ $? -ne 0 ]] && exit 1
+
+gulp webExtBuild --release
+[[ $? -ne 0 ]] && exit 1
+
+# check files exists
 DIST_WEB_FILE="${DIST_WEB}/${PROJECT_NAME}-v$2-web.zip"
 if [[ ! -f "${DIST_WEB_FILE}" ]]; then
   echo "ERROR: Missing web artifact at ${DIST_WEB_FILE}"
+  exit 1
+fi;
+DIST_WEB_EXT_FILE="${DIST_WEB}/${PROJECT_NAME}-v$2-extension.zip"
+if [[ ! -f "${DIST_WEB_EXT_FILE}" ]]; then
+  echo "ERROR: Missing web-ext artifact at ${DIST_WEB_EXT_FILE}"
   exit 1
 fi;
 
@@ -127,55 +146,49 @@ fi
 # Commit
 cd ${PROJECT_DIR} || exit 1
 git reset HEAD
-git add package.json config.xml install.sh www/js/config.js www/manifest.json
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+git add package.json config.xml install.sh www/js/config.js www/manifest.json resources/web-ext/manifest.json
+[[ $? -ne 0 ]] && exit 1
 git commit -m "v$2"
 git tag -f -a "v$2" -m "${description}"
-git push origin "v$2"
-git push
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+# Push the tag
+git push -f origin "v$2"
+# Push the master branch
+git push -f origin
+[[ $? -ne 0 ]] && exit 1
 
-# Commit android project
-cd ${PROJECT_DIR}/platforms/android
-#git reset HEAD
-#git add -A
-#git commit -m "v$2"
-#git tag -f -a "v$2" -m "${description}"
-#git push origin "v$2"
-#git push
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+echo "----------------------------------"
+echo "- Uploading web extension to Mozilla ..."
+echo "----------------------------------"
+. ${PROJECT_DIR}/scripts/release-sign-extension.sh $1
+# FIXME: always failed: but continue
+#[[ $? -ne 0 ]] && exit 1
 
-echo "**********************************"
-echo "* Uploading artifacts to Github..."
-echo "**********************************"
+echo "----------------------------------"
+echo "- Uploading artifacts to Github ..."
+echo "----------------------------------"
 # Pause (wait propagation to from git.duniter.org to github)
-echo " Waiting 40s, for propagation to github..."
-sleep 40s
+echo " Waiting 40s, for propagation to github..." && sleep 40s
+. ${PROJECT_DIR}/scripts/release-to-github.sh $1 ''"$description"''
+[[ $? -ne 0 ]] && exit 1
 
-. ${PROJECT_DIR}/scripts/github.sh $1 ''"$description"''
-if [[ $? -ne 0 ]]; then
-    exit 1
-fi
 
 echo "----------------------------------"
 echo "- Building desktop artifacts..."
 echo "----------------------------------"
-. ${PROJECT_DIR}/scripts/build-desktop.sh
-if [[ $? -ne 0 ]]; then
-    exit 1
-fi
+. ${PROJECT_DIR}/scripts/release-desktop.sh $1
+[[ $? -ne 0 ]] && exit 1
 
-# Back to nodejs
-cd ${PROJECT_DIR}
-nvm use ${NODEJS_VERSION}
+#echo "----------------------------------"
+#echo "- Push git android project..."
+#echo "----------------------------------"
+#. ${PROJECT_DIR}/scripts/release-android-sources.sh $2
 
 echo "**********************************"
 echo "* Build release succeed !"
 echo "**********************************"
+
+cd ${PROJECT_DIR}
+
+# Back to nodejs project version
+nvm use ${NODEJS_VERSION}
 
