@@ -1,0 +1,24 @@
+{
+  "name": "gchange-client",
+  "short_name": "gchange",
+  "version": "1.1.7",
+  "description": "Make exchanges in the libre currency Ğ1!",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": ["storage"],
+  "browser_action" : {
+    "default_title": "ğchange",
+    "default_icon": {
+      "32": "img/logo_32px.png",
+      "64": "img/logo_64px.png",
+      "128": "img/logo_128px.png"
+    }
+  },
+  "icons": {
+    "32": "img/logo_32px.png",
+    "64": "img/logo_64px.png",
+    "128": "img/logo_128px.png"
+  },
+  "manifest_version": 2
+}

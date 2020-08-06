@@ -5,8 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('gchange', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht.translate',
-  'ngApi', 'angular-cache', 'angular.screenmatch', 'angular.bind.notifier', 'ImageCropper', 'ngFileSaver', 'ngIdle',
-  'FBAngular', // = angular-fullscreen
+  'ngApi', 'angular-cache', 'angular.screenmatch', 'angular.bind.notifier', 'angular-fullscreen-toggle',
+  'ImageCropper', 'ngFileSaver', 'ngIdle',
   // removeIf(no-device)
   'ngCordova',
   // endRemoveIf(no-device)

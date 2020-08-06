@@ -22,11 +22,9 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
 
     resetData = function(init) {
       data.loaded = false;
-      data.pubkey= null;
-      data.keypair = {
-          signSk: null,
-          signPk: null
-        };
+      data.pubkey = null;
+      data.qrcode = null;
+
       data.uid = null;
       data.isNew = null;
       data.events = [];
@@ -195,6 +193,15 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
 
     getData = function() {
       return data;
+    },
+
+    loadQrCode = function(){
+      if (!data.pubkey || data.qrcode) return $q.when(data.qrcode);
+      console.debug("[wallet] Creating SVG QRCode...");
+      return $timeout(function() {
+        data.qrcode = UIUtils.qrcode.svg(data.pubkey);
+        return data.qrcode;
+      });
     },
 
     loadData = function(options) {
@@ -535,6 +542,7 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
       isNew: function() {return !!data.isNew;},
       isUserPubkey: isUserPubkey,
       getData: getData,
+      loadQrCode: loadQrCode,
       loadData: loadData,
       refreshData: refreshData,
       downloadSaveId: downloadSaveId,

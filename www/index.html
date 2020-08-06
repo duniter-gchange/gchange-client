@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="css/ionic.app.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="lib/angular-image-crop/image-crop-styles.css">
+    <link rel="stylesheet" type="text/css" href="lib/angular-image-crop/dist/angular-image-crop.min.css">
 
     <!-- endbuild -->
 
@@ -42,7 +42,6 @@
     <meta property="og:title" content="ğchange" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Make exchanges in the libre currency Ğ1!" />
-    <meta property="og:type" content="website" />
     <meta property="og:image" content="./img/logo_256px.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:height" content="256" />
@@ -50,7 +49,9 @@
     <meta property="og:site_name" content="ğchange" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="en_GB" />
+    <meta property="og:locale:alternate" content="es_ES" />
     <meta property="og:locale:alternate" content="fr_FR" />
+    <meta property="og:locale:alternate" content="eo_EO" />
 
     <!--endRemoveIf(device)-->
 
@@ -61,7 +62,7 @@
     <ion-nav-view>
       <div class="loader">
         <h3 style="text-align: center; padding-top: 25px; white-space: nowrap;"><b>ğchange</b></h3>
-        <h4 style="text-align: center;"><i class="icon ion-load-c"></i></h4>
+        <h4 style="text-align: center;"><i class="icon ion-load-b"></i></h4>
       </div>
     </ion-nav-view>
 
@@ -76,36 +77,38 @@
     <script src="lib/numeral/languages/es.js"></script>
     <script src="lib/numeral/languages/it.js"></script>
     <script src="js/vendor/numeral.eo.js"></script>
+    <script src="lib/qrcode-generator/js/qrcode.js"></script>
+    <script src="lib/aes-js/index.js"></script>
+    <script src="lib/moment/min/moment-with-locales.min.js"></script>
+
     <script src="lib/socket.io-client/dist/socket.io.min.js"></script>
     <script src="lib/underscore/underscore-min.js"></script>
-    <script src="lib/qrcode.js/qrcode.js"></script>
-    <script src="lib/aes-js/index.js"></script>
     <script src="lib/chart.js/dist/Chart.min.js"></script>
     <script src="lib/converse/dist/converse.js"></script>
 
     <!-- ionic/angular js -->
-    <script src="lib/ionic/js/ionic.js"></script>
-    <script src="lib/angular/angular.js"></script>
-    <script src="lib/angular-animate/angular-animate.js"></script>
-    <script src="lib/angular-sanitize/angular-sanitize.js"></script>
-    <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="lib/ionic/js/ionic-angular.js"></script>
-    <script src="lib/ionic-material/dist/ionic.material.js"></script>
-    <script src="lib/angular-resource/angular-resource.js"></script>
-    <script src="lib/angular-translate/angular-translate.js"></script>
-    <script src="lib/angular-messages/angular-messages.js"></script>
-    <script src="lib/angular-api/angular-api.js"></script>
-    <script src="lib/angular-cache/dist/angular-cache.js"></script>
+    <script src="lib/ionic/js/ionic.min.js"></script>
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular-animate/angular-animate.min.js"></script>
+    <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="lib/ionic/js/ionic-angular.min.js"></script>
+    <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
+    <script src="lib/angular-resource/angular-resource.min.js"></script>
+    <script src="lib/angular-translate/angular-translate.min.js"></script>
+    <script src="lib/angular-messages/angular-messages.min.js"></script>
+    <script src="lib/angular-expose-api/dist/angular-expose-api.min.js"></script>
+    <script src="lib/angular-cache/dist/angular-cache.min.js"></script>
     <script src="lib/angular-screenmatch/dist/angular-screenmatch.min.js"></script>
     <script src="lib/angular-bind-notifier/dist/angular-bind-notifier.min.js"></script>
-    <script src="lib/angular-image-crop/image-crop.js"></script>
-    <script src="lib/angular-file-saver/dist/angular-file-saver.bundle.js"></script>
-    <script src="lib/ng-idle/angular-idle.js"></script>
-    <script src="lib/angular-simple-logger/dist/angular-simple-logger.light.js"></script>
-    <script src="lib/ui-leaflet/dist/ui-leaflet.js"></script>
+    <script src="lib/angular-image-crop/dist/angular-image-crop.js"></script>
+    <script src="lib/angular-file-saver/dist/angular-file-saver.bundle.min.js"></script>
+    <script src="lib/ng-idle/angular-idle.min.js"></script>
+    <script src="lib/angular-simple-logger/dist/angular-simple-logger.light.min.js"></script>
+    <script src="lib/ui-leaflet/dist/ui-leaflet.min.no-header.js"></script>
     <script src="lib/ion-digit-keyboard/dist/ion-digit-keyboard.min.js"></script>
     <script src="lib/angular-chart.js/dist/angular-chart.min.js"></script>
-    <script src="lib/angular-fullscreen/src/angular-fullscreen.js"></script>
+    <script src="lib/angular-fullscreen-toggle/dist/angular-fullscreen-toggle.min.js"></script>
 
     <script src="js/vendor/base58.js" async></script>
     <!--removeIf(android)-->
@@ -122,7 +125,7 @@
 
     <script src="lib/leaflet/dist/leaflet.js"></script>
     <script src="lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js"></script>
-    <script src="lib/leaflet-search/dist/leaflet-search.src.js"></script>
+    <script src="lib/leaflet-search/dist/leaflet-search.min.js"></script>
     <script src="lib/Leaflet.EasyButton/src/easy-button.js"></script>
     <script src="lib/leaflet.loading/src/Control.Loading.js"></script>
     <script src="lib/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
@@ -254,6 +257,5 @@
     <!-- config  -->
     <script src="dist/dist_js/app/config.js"></script>
     <!-- endbuild -->
-
   </body>
 </html>
