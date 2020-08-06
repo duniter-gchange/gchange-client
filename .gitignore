@@ -16,6 +16,7 @@
 /npm-debug.log
 /package-lock.json
 /yarn-error.log
+/yarn.lock
 
 /dist/web
 /dist/android
