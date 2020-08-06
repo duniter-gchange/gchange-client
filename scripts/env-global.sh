@@ -126,9 +126,9 @@ CORDOVA_RES_PATH=`which cordova-res`
 NATIVE_RUN_PATH=`which native-run`
 WEB_EXT_PATH=`which web-ext`
 if [[ "_" == "_${YARN_PATH}" || "_" == "_${IONIC_PATH}" || "_" == "_${CORDOVA_PATH}" || "_" == "_${CORDOVA_RES_PATH}" || "_" == "_${NATIVE_RUN_PATH}" || "_" == "_${WEB_EXT_PATH}" ]]; then
-  echo "Installing global dependencies..."
+  echo "Installing global dependencies (some are missing)..."
   npm install -g yarn cordova cordova-res @ionic/cli web-ext native-run
-   [[ $? -ne 0 ]] && exit 1
+  [[ $? -ne 0 ]] && exit 1
 
   # Make sure Ionic use yarn
   ionic config set -g yarn true
