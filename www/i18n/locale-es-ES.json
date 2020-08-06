@@ -140,7 +140,7 @@
     "REMEMBER_ME": "Recordarme",
     "REMEMBER_ME_HELP": "Permite mantenerse siempre conectado (no recomendado), conservando localmente la llave pública.",
     "PLUGINS_SETTINGS": "Extensiones",
-    "BTN_RESET": "Restaurar los valores por defecto" ,
+    "BTN_RESET": "Restaurar los valores por defecto",
     "EXPERT_MODE": "Modo experto",
     "EXPERT_MODE_HELP": "Permite una visualización más detallada",
     "POPUP_PEER": {

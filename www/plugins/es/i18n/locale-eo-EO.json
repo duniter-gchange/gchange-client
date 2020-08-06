@@ -438,7 +438,7 @@
       "ENABLE_TX_SENT": "Avizi pri la <b>senditaj pagoj</b>?",
       "ENABLE_TX_RECEIVED": "Avizi pri la <b>ricevitaj pagoj</b>?",
       "ENABLE_CERT_SENT": "Avizi pri la <b>senditaj atestaĵoj</b>?",
-      "ENABLE_CERT_RECEIVED": "Avizi pri <b>la ricevitaj atestaĵoj</b>?",
+      "ENABLE_CERT_RECEIVED": "Avizi pri <b>la ricevitaj atestaĵoj</b>?"
     },
     "CONFIRM": {
       "ASK_ENABLE_TITLE": "Kromaj funkcioj",

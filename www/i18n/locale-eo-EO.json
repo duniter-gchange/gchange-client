@@ -678,7 +678,7 @@
     "EXISTING_ACCOUNT": "Viaj identigiloj rilatas al jam ekzistanta konto, kies <a ng-click=\"showHelpModal('pubkey')\">publika ŝlosilo</a> estas:",
     "EXISTING_ACCOUNT_REQUEST": "Bonvolu modifi viajn identigilojn, por ke ili rilatu al ne uzata konto.",
     "GET_LICENSE_FILE_FAILED": "La ricevo de la dosiero pri licenco ne eblis.",
-    "CHECK_NETWORK_CONNECTION": "Neniu nodo ŝajnas atingebla.<br/><br/>Bonvolu <b>kontroli vian retkonekton</b>.",
+    "CHECK_NETWORK_CONNECTION": "Neniu nodo ŝajnas atingebla.<br/><br/>Bonvolu <b>kontroli vian retkonekton</b>."
   },
   "INFO": {
     "POPUP_TITLE": "Informo",
@@ -716,7 +716,7 @@
     "SAVE_BEFORE_LEAVE": "Ĉu vi volas <b>konservi viajn modifojn</b> antaŭ ol eliri el la paĝo?",
     "SAVE_BEFORE_LEAVE_TITLE": "Modifoj ne registritaj",
     "LOGOUT": "Ĉu vi certas, ke vi volas malkonektiĝi?",
-    "USE_FALLBACK_NODE": "Nodo <b>{{old}}</b> neatingebla aŭ adreso nevalida.<br/><br/>Ĉu vi volas provizore uzi la nodon <b>{{new}}</b> ?",
+    "USE_FALLBACK_NODE": "Nodo <b>{{old}}</b> neatingebla aŭ adreso nevalida.<br/><br/>Ĉu vi volas provizore uzi la nodon <b>{{new}}</b> ?"
   },
   "DOWNLOAD": {
     "POPUP_TITLE": "<b>Dosiero pri nuligo</b>",
@@ -746,7 +746,7 @@
       "CURRENCY_RULES_DEF": "La reguloj de la mono estas difinitaj definitive. Ili fiksas la funkciadon de la mono: la kalkulon de la universala dividendo, la nombron de necesaj atestaĵoj por esti membro, la maksimuman nombron da atestaĵoj, kiujn povas doni unu membro, ktp. <a href=\"#/app/currency\">Vidi la nuntempajn regulojn</a>.<br/>La nemodifo de la reguloj tra la tempo eblas per uzado de <span class=\"text-italic\">Blokĉeno</span>, kiu entenas kaj plenumas tiujn regulojn, kaj konstante kontrolas ties ĝustan aplikadon.",
       "BLOCKCHAIN": "Ĉeno de blokoj (<span class=\"text-italic\">Blokchain/Blokĉeno</span>)",
       "BLOCKCHAIN_DEF": "La Blokĉeno estas malcentrigita sistemo, kiu, kaze de Duniter, servas por enteni kaj plenumi la <span class=\"text-italic\">regulojn de la mono</span>.<br/><a href=\"https://duniter.org/fr/comprendre/\" target=\"_system\">Scii pli pri Duniter</a> kaj la funkciado de ties blokĉeno.",
-      "UNIVERSAL_DIVIDEND_DEF": "La Universala Dividendo (UD) estas la kvanto de mono kunkreita de ĉiu membro, laŭ la periodo kaj kalkulo difinitaj en la <span class=\"text-italic\">reguloj de la mono</span>.<br/>Por ĉiu perioda dato, la membroj ricevas en sian konton la saman kvanton da nova mono.<br/><br/>La UD spertas regulan kreskon, por resti justa inter la membroj (nunaj kaj venontaj), kalkulitan depende de la meza vivespero, kiel estas demonstrite en la Teorio Relativa pri la Mono (TRM).<br/><a href=\"http://trm.creationmonetaire.info\" target=\"_system\">Scii pli pri la TRM</a> kaj la liberaj monoj.",
+      "UNIVERSAL_DIVIDEND_DEF": "La Universala Dividendo (UD) estas la kvanto de mono kunkreita de ĉiu membro, laŭ la periodo kaj kalkulo difinitaj en la <span class=\"text-italic\">reguloj de la mono</span>.<br/>Por ĉiu perioda dato, la membroj ricevas en sian konton la saman kvanton da nova mono.<br/><br/>La UD spertas regulan kreskon, por resti justa inter la membroj (nunaj kaj venontaj), kalkulitan depende de la meza vivespero, kiel estas demonstrite en la Teorio Relativa pri la Mono (TRM).<br/><a href=\"http://trm.creationmonetaire.info\" target=\"_system\">Scii pli pri la TRM</a> kaj la liberaj monoj."
     },
     "TIP": {
       "MENU_BTN_CURRENCY": "La menuo <b>{{'MENU.CURRENCY'|translate}}</b> ebligas konsulti la <b>regulojn de la mono</b> kaj ties staton.",
