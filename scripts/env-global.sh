@@ -114,7 +114,7 @@ if [[ -d "${NVM_DIR}" ]]; then
         [[ $? -ne 0 ]] && exit 1
     fi
 else
-    echo "nvm (Node version manager) not found (directory ${NVM_DIR} not found). Please install, and retry"
+    echo "ERROR: nvm (Node version manager) not found (directory ${NVM_DIR} not found). Please install, and retry"
     exit -1
 fi
 
@@ -147,7 +147,7 @@ if [[ ! -d "${PROJECT_DIR}/platforms/android" || ! -d "${PROJECT_DIR}/dist/deskt
   cd ${PROJECT_DIR}
   git submodule init && git submodule sync && git submodule update --remote --merge
   if [[ $? -ne 0 ]]; then
-    echo "Unable to sync git submodule. Will not be able to build android and desktop artifacts!"
+    echo "ERROR: Unable to sync git submodule. Will not be able to build android and desktop artifacts!"
     exit 1
   fi
 fi

@@ -309,11 +309,14 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
   // See doc : https://gist.github.com/jlong/2428561
   function parseUri(uri) {
     var protocol;
-    if (uri.startsWith('duniter://')) {
-      protocol = 'duniter';
-      uri = uri.replace('duniter://', 'http://');
+
+    // G1 URI (see G1lien)
+    if (uri.startsWith('web+june://') || uri.startsWith('g1://')) {
+      protocol = 'g1:';
+      uri = uri.replace(/^(g1|web+june):\/\//, 'http:');
     }
 
+    // Use a <a> element to parse
     var parser = document.createElement('a');
     parser.href = uri;
 
@@ -350,13 +353,13 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
       var parts = parseUri(uri);
 
       if (!parts.protocol && options.type) {
-        parts.protocol = (options.type == 'email')  ? 'mailto:' :
-          ((options.type == 'phone') ? 'tel:' : '');
+        parts.protocol = (options.type === 'email')  ? 'mailto:' :
+          ((options.type === 'phone') ? 'tel:' : '');
         uri = parts.protocol + uri;
       }
 
       // On desktop, open into external tool
-      if (parts.protocol == 'mailto:'  && Device.isDesktop()) {
+      if (parts.protocol === 'mailto:'  && Device.isDesktop()) {
         try {
           nw.Shell.openExternal(uri);
           return;
@@ -366,10 +369,12 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
         }
       }
 
-      // Check if device is enable, on special tel: or mailto: protocole
-      var validProtocol = (parts.protocol == 'mailto:' || parts.protocol == 'tel:') && Device.enable;
+
+      var validProtocol = parts.protocol === 'g1:'
+        // Check if device is enable, on special tel: or mailto: protocol
+        || (Device.enable && (parts.protocol === 'mailto:' || parts.protocol === 'tel:'));
       if (!validProtocol) {
-        if (options.onError && typeof options.onError == 'function') {
+        if (options.onError && typeof options.onError === 'function') {
           options.onError(uri);
         }
         return;

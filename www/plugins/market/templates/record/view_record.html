@@ -232,7 +232,7 @@
             </p>
           </ion-item>
 
-          <span class="item item-icon-left item-button-right hidden-xs" ng-if="formData.price||formData.fees">
+          <ion-item class="item-icon-left item-button-right hidden-xs" ng-if="formData.price||formData.fees">
             <ng-if ng-if="formData.price">
               <i class="calm icon ion-pricetag"></i>
               <h1 class="calm"
@@ -253,7 +253,16 @@
                 <ng-if ng-if="formData.stock === 0"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
               </span>
             </h3>
-          </span>
+
+            <!-- TODO G1lien
+            <a class="button button-right ink"
+                ng-if="showPayButton"
+               title="Payer"
+               href="web+june://{{formData.issuer}}?amount={{formData.price}}&comment=REF"
+               target="_blank"
+               translate>MARKET.COMMON.BTN_PAY</a> -->
+
+          </ion-item>
           <span class="item hidden-xs" ng-if="!formData.price && !formData.fees && formData.stock === 0">
             <div class="badge badge-secondary badge-assertive"><i class="ion-close"></i> <span class="bold" translate>MARKET.COMMON.SOLD</span></div>
           </span>

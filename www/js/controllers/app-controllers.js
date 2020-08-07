@@ -469,7 +469,9 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
 }
 
 
-function HomeController($scope, $state, $timeout, $ionicHistory, $translate, UIUtils,  csPlatform, csCurrency, csSettings) {
+function HomeController($scope, $state, $timeout, $ionicHistory, $translate, UIUtils,  csPlatform, csCurrency, csSettings,
+                        // TODO: remove
+                        $http, csHttp) {
   'ngInject';
 
   $scope.loading = true;
@@ -601,4 +603,18 @@ function HomeController($scope, $state, $timeout, $ionicHistory, $translate, UIU
   /*$timeout(function() {
    $scope.loginAndGo();
    }, 500);*/
+  
+  $scope.openUri = function(uri, options) {
+    options = options || {};
+
+    csHttp.uri.open(uri);
+
+    $http.get(uri, {})
+      .success(function(data, status, headers, config) {
+        console.info("OK !")
+      })
+      .error(function(data, status, headers, config) {
+        console.error("KO !", status)
+      });
+  };
 }
