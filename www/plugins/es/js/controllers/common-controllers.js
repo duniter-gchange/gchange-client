@@ -1082,7 +1082,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
           var key = kind.toLowerCase() + 's';
           return $scope.options.like.service.count(id, {issuer: csWallet.isLogin() ? csWallet.data.pubkey : undefined, kind: kind})
             .then(function (res) {
-              // Store result to scope
+                // Store result to scope
                 if ($scope.likeData[key]) {
                     angular.merge($scope.likeData[key], res);
                 }
@@ -1151,13 +1151,13 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
         return $scope.toggleLike(event, {kind: 'dislike'})
           .then(function() {
             $scope.toggleLike(event, options);
-          })
+          });
       }
       else if (options.kind === 'DISLIKE' && $scope.likes && $scope.likes.wasHit) {
         return $scope.toggleLike(event, {kind: 'LIKE'})
           .then(function() {
             $scope.toggleLike(event, options);
-          })
+          });
       }
 
       $scope.likeData[key].loading = true;
@@ -1250,7 +1250,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
                     if (!res || !res.comment) return; // Empty comment: skip
                     options.comment = res.comment;
                     options.level = res.level || (res.delete && 5) || undefined;
-                    return $scope.reportAbuse(event, options) // Loop, with the comment
+                    return $scope.reportAbuse(event, options); // Loop, with the comment
                 });
         }
 
@@ -1258,8 +1258,8 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
         options.kind = 'ABUSE';
         return $scope.toggleLike(event, options)
             .then(function() {
-                UIUtils.toast.show('COMMON.REPORT_ABUSE.CONFIRM.SENT')
-            })
+                UIUtils.toast.show('COMMON.REPORT_ABUSE.CONFIRM.SENT');
+            });
     };
 
 
@@ -1269,7 +1269,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
           .then(function() {
             $scope.starsPopover = null;
             $scope.addStar(level); // Loop
-          })
+          });
       }
       if ($scope.likeData.loading || !$scope.likeData.stars || $scope.likeData.stars.loading) return; // Avoid multiple call
 
@@ -1283,7 +1283,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
               .then(function(stars) {
                   angular.merge($scope.stars, stars);
                   $scope.addStar(level); // Loop
-              })
+              });
           })
           .catch(function(err) {
             if (err === 'CANCELLED') return; // User cancelled
@@ -1387,7 +1387,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
       afterShow: function(popover) {
         $scope.starsPopover = popover;
       }
-    })
+    });
   };
 
   csWallet.api.data.on.reset($scope, function() {
@@ -1398,7 +1398,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
         $scope.likeData[key].wasHitId = undefined;
         $scope.likeData[key].level = undefined;
       }
-    })
+    });
   }, this);
 
 }

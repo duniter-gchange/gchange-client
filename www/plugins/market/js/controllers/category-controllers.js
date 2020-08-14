@@ -65,7 +65,7 @@ function MkListCategoriesController($scope, UIUtils, csConfig, mkRecord) {
          return res + cat.count;
         }, 0);
         $scope.loading = false;
-        $scope.motion.show && $scope.motion.show();
+        if ($scope.motion.show) $scope.motion.show();
       });
   };
 
@@ -102,5 +102,5 @@ function MkViewCategoriesController($scope, $controller, $state) {
 
     $scope.onCategoryClick = function(cat) {
         return $state.go('app.market_lookup', {category: cat && cat.id});
-    }
+    };
 }

@@ -26,7 +26,7 @@ angular.module('cesium.market.wallet.controllers', ['cesium.es.services'])
                       controller: 'MkWalletRecordsCtrl'
                   }
               }
-          })
+          });
   })
 
 

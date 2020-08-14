@@ -98,7 +98,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
           $translate('MARKET.PROFILE.DEFAULT_TITLE', {pubkey: data.pubkey}),
           // Encrypt socials
           SocialUtils.pack(angular.copy(data.profile.socials||[]), keypair)
-        ])
+        ]);
       })
       .then(function(res) {
         var title = res[0];
@@ -113,7 +113,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
         copiedProfile.socials = encryptedSocials;
 
         // Save the profile
-        return esProfile.add(copiedProfile)
+        return esProfile.add(copiedProfile);
       })
       .then(function() {
         // clean default profile
@@ -150,7 +150,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
             return;
           }
 
-          return esSubscription.record.add(record, csWallet)
+          return esSubscription.record.add(record, csWallet);
         })
         .then(function() {
           data.subscriptions = data.subscriptions || {count: 0};

@@ -125,7 +125,7 @@ function MarketHomeExtendController($scope, $rootScope, $state, $controller, $fo
                           return $translate("MARKET.COMMON.AROUND_ME")
                             .then(function(locationName) {
                               return $scope.doSearch(locationName); // Loop
-                            })
+                            });
                         }
                         return $scope.doSearch(); // Loop
                     }

@@ -409,7 +409,7 @@ function GpDocStatsController($scope, $state, $controller, $q, $translate, gpCol
       return $state.go(serie.clickState.name, stateParams);
     }
     else {
-      console.debug('Click on item index={0} on range [{1},{2}]'.format(item._index, from, to));
+      console.debug('Click on item index={0}'.format(item._index));
     }
   };
 

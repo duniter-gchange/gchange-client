@@ -48,7 +48,7 @@ function MarketEventLoginModalController($scope, $controller, $q, csConfig, csWa
             var socials = [angular.merge({recipient: data.pubkey}, social)];
 
             // Add social for admins
-            var socials = (adminPubkeys||[]).reduce(function(res, pubkey) {
+            socials = (adminPubkeys||[]).reduce(function(res, pubkey) {
                 return res.concat(angular.merge({recipient: pubkey}, social)) ;
             }, socials);
 

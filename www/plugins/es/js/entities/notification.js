@@ -40,7 +40,7 @@ function EsNotification(json, markAsReadCallback) {
     }
   };
 
-  var pubkeys;
+  var pubkeys, level;
 
   json.code = json.code || '';
 
@@ -121,7 +121,7 @@ function EsNotification(json, markAsReadCallback) {
       that.avatarIcon = 'ion-alert-circled';
       that.icon = 'ion-alert-circled energized';
       // If deletion has been asked, change the message
-      var level = json.params && json.params[4] || 0;
+      level = json.params && json.params[4] || 0;
       if (json.code === 'MODERATION_RECEIVED' && level == 5) {
         that.message = 'EVENT.USER.DELETION_RECEIVED';
         that.icon = 'ion-trash-a assertive';
@@ -184,7 +184,7 @@ function EsNotification(json, markAsReadCallback) {
       that.icon = 'ion-alert-circled energized';
 
       // If deletion has been asked, change the message
-      var level = json.params && json.params[4] || 0;
+      level = json.params && json.params[4] || 0;
       if (json.code === 'MODERATION_RECEIVED' && level == 5) {
         that.message = 'EVENT.PAGE.DELETION_RECEIVED';
         that.icon = 'ion-trash-a assertive';

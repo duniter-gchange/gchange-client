@@ -8,7 +8,7 @@ if [[ "_" == "_${PROJECT_DIR}" ]]; then
 fi;
 
 # Preparing Android environment
-. ${PROJECT_DIR}/scripts/env-android.sh
+. ${PROJECT_DIR}/scripts/env-global.sh
 [[ $? -ne 0 ]] && exit 1
 
 cd ${PROJECT_DIR}
@@ -63,8 +63,7 @@ echo "Checking diff between templates files... [OK]"
 # ----------------------------------
 
 # Clean generated files (1/2)
-rm www/css/*.app*.css
-rm -rf www/dist
+gulp clean webClean webExtClean > /dev/null
 rm -rf dist/web
 
 # Compile (1/2)
@@ -84,8 +83,7 @@ rm -rf "${WEB_EXT_COPY_DIR}"
 mv "${WEB_EXT_DIR}" "${WEB_EXT_COPY_DIR}"
 
 # Clean generated files (2/2)
-rm www/css/*.app*.css
-rm -rf www/dist
+gulp clean webClean webExtClean > /dev/null
 rm -rf dist/web
 
 # Compile web extension (2/2)

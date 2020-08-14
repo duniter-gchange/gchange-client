@@ -106,15 +106,15 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
     return deferred.promise;
   }
 
-  function _compareVersion(version1, version2) {
+  function _compareVersion(v1, v2) {
 
-    var parts = version1 && version1.split('.');
-    var version1 = parts && parts.length == 3 ? {
+    var parts = v1 && v1.split('.');
+    var version1 = parts && parts.length === 3 ? {
       major: parseInt(parts[0]),
       minor: parseInt(parts[1]),
       build: parseInt(parts[2])
     }: {};
-    parts = version2 && version2.split('.');
+    parts = v2 && v2.split('.');
     var version2 = parts && parts.length == 3 ? {
       major: parseInt(parts[0]),
       minor: parseInt(parts[1]),

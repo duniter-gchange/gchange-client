@@ -50,7 +50,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
       if (Array.isArray(obj)) {
         return obj.reduce(function(res, item) {
           return res ? res : _findAttributeInObjectTree(item, attrName);
-        }, false)
+        }, false);
       }
 
       if (typeof obj == "object") {
@@ -205,7 +205,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           var categories = res[0];
           res = res[1];
 
-          var buckets = (res.aggregations.category && res.aggregations.category.by_id && res.aggregations.category.by_id.buckets || [])
+          var buckets = (res.aggregations.category && res.aggregations.category.by_id && res.aggregations.category.by_id.buckets || []);
           var countById = {};
           buckets.forEach(function(bucket){
             var cat = categories[bucket.key];
@@ -220,7 +220,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           return categories.reduce(function(res, cat) {
             return res.concat(angular.merge({
               count: countById[cat.id] || 0
-            }, cat))
+            }, cat));
           }, []);
         })
           .then(function(res) {
@@ -268,7 +268,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         else {
             record.description = esHttp.util.parseAsHtml(record.description, {
                 tagState: 'app.market_lookup'
-            })
+            });
         }
         if (hit.highlight.location) {
           record.location = hit.highlight.location[0];

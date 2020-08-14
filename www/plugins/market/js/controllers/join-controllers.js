@@ -28,7 +28,7 @@ angular.module('cesium.market.join.controllers', ['cesium.services', 'cesium.mar
   $scope.enter = function() {
     csCurrency.get().then(function(currency) {
       $scope.currency = currency;
-    })
+    });
   };
   $scope.$on('modal.shown', $scope.enter);
 

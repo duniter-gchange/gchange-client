@@ -106,7 +106,7 @@ angular.module('cesium.market.converse.services', ['cesium.es.services'])
               return {
                 jid: room,
                 nick: nickname
-              }
+              };
             }
             room.nick = nickname;
             // Minimized by default

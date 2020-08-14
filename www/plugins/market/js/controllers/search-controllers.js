@@ -994,7 +994,7 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
   $scope.nextCategory = function(started) {
     if (!$scope.categories || !$scope.categories.length) return $q.when();
 
-    var started = started || !!$scope.interval;
+    started = started || !!$scope.interval;
 
     // Make sure sure to stop slideshow
     if (started && $scope.modal.isShown()) {
@@ -1014,7 +1014,7 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
       if (started) {
         return $scope.startSlideShow();
       }
-      return $q.when()
+      return $q.when();
     }
 
     var category = $scope.categories[$scope.activeCategoryIndex];
@@ -1059,5 +1059,5 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $io
 
   $scope.slideChanged = function(index) {
     $scope.activeSlide = index;
-  }
+  };
 }

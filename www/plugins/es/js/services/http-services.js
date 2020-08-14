@@ -639,7 +639,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
                   // User already like: so remove it
                   if (existingLikeIds && existingLikeIds.length) {
                     return $q.all(_.map(existingLikeIds, function(likeId) {
-                      return removeRequest(likeId)
+                      return removeRequest(likeId);
                     }))
                     // Return the deletion, as a delta
                     .then(function() {
@@ -655,7 +655,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
                         });
                   }
                 });
-          }
+          };
         }
 
         function getLikeIds(index, type) {
@@ -675,7 +675,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
                   });
                 });
 
-          }
+          };
         }
 
         function removeLike(index, type) {
@@ -688,7 +688,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
             else {
 
             }
-          }
+          };
         }
 
         function countLikes(index, type) {
@@ -755,8 +755,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
                   }
 
                   return result;
-                })
-          }
+                });
+          };
         }
 
         that.image = {};

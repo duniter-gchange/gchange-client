@@ -15,9 +15,12 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <allow-intent href="gchange:*" />
     <allow-navigation href="http://*/*" />
     <allow-navigation href="https://*/*" />
     <allow-navigation href="data:*" />
+    <allow-navigation href="gchange:*" />
+    <allow-navigation href="web+gchange:*" />
     <icon src="www/img/logo_128px.png" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
@@ -33,7 +36,10 @@
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarBackgroundColor" value="#000" />
     <preference name="StatusBarStyle" value="lightcontent" />
-    <allow-navigation href="*" />
+    <preference name="loadUrlTimeoutValue" value="700000" />
+    <hook src="scripts/hooks/before_prepare.js" type="before_prepare" />
+    <hook src="scripts/hooks/after_prepare.js" type="after_prepare" />
+    <hook src="scripts/hooks/before_compile.js" type="before_compile" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
@@ -43,7 +49,14 @@
     <feature name="MiniSodium">
         <param name="android-package" onload="true" value="me.lockate.plugins.MiniSodium" />
     </feature>
+    <feature name="Custom URL scheme">
+        <param name="id" value="cordova-plugin-customurlscheme" />
+        <param name="url" value="https://github.com/EddyVerbruggen/Custom-URL-scheme.git" />
+        <variable name="URL_SCHEME" value="june" />
+    </feature>
     <platform name="android">
+        <preference name="AndroidXEnabled" value="true" />
+        <preference name="AndroidLaunchMode" value="singleTask" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
         <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
@@ -109,6 +122,9 @@
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
             <string>To choose a profile picture</string>
         </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="CFBundleURLSchemes">
+            <string>gchange</string>
+        </edit-config>
         <config-file mode="add" parent="ITSAppUsesNonExemptEncryption" target="*-Info.plist">
             <false />
         </config-file>
@@ -125,26 +141,28 @@
     <plugin name="cordova-plugin-camera" spec="^4.1.0">
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="28.+" />
     </plugin>
-    <plugin name="cordova-plugin-ionic-webview" spec="^4.1.3">
+    <plugin name="cordova-plugin-ionic-webview" spec="^4.2.1">
         <variable name="ANDROID_SUPPORT_ANNOTATIONS_VERSION" value="28.+" />
     </plugin>
     <plugin name="cordova-plugin-device" spec="^2.0.3" />
     <plugin name="cordova-plugin-dialogs" spec="^2.0.2" />
     <plugin name="cordova-clipboard" spec="^1.3.0" />
-    <plugin name="cordova-plugin-secure-storage-android10" spec="git+https://github.com/duniter-cesium/cordova-plugin-secure-storage-android10#6.0.4" />
-    <plugin name="cordova-plugin-splashscreen" spec="^5.0.3" />
+    <plugin name="cordova-plugin-splashscreen" spec="^5.0.4" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.3" />
     <plugin name="cordova-plugin-vibration" spec="^3.1.1" />
     <plugin name="cordova-plugin-websocket" spec="^0.12.2" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.4" />
     <plugin name="cordova-plugin-x-toast" spec="^2.7.2" />
-    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.2.1" />
-    <plugin name="cordova-plugin-minisodium" spec="git+https://github.com/duniter-cesium/cordova-plugin-minisodium.git#v1.0.1" />
+    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.2.0" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^8.1.0">
         <variable name="CAMERA_USAGE_DESCRIPTION" value="To scan QRCode" />
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="28.+" />
     </plugin>
-    <engine name="ios" spec="git+https://github.com/duniter-cesium/cordova-ios.git#5.1.0" />
-    <engine name="osx" spec="^5.0.0" />
-    <engine name="android" spec="^8.1.0" />
+    <plugin name="cordova-plugin-customurlscheme" spec="^5.0.2">
+        <variable name="URL_SCHEME" value="gchange" />
+    </plugin>
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <plugin name="cordova-plugin-androidx" spec="^1.0.2" />
+    <engine name="ios" spec="^6.1.0" />
+    <engine name="osx" spec="^6.0.0" />
 </widget>

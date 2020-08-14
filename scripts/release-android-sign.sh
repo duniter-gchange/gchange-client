@@ -11,16 +11,14 @@ fi;
 KEYSTORE_FILE=${PROJECT_DIR}/.local/android/Cesium.keystore
 KEY_ALIAS=Cesium
 KEYSTORE_PWD=
-APK_RELEASE_DIR=${PROJECT_DIR}/platforms/android/build/outputs/apk/release
-APK_UNSIGNED_FILE=${APK_RELEASE_DIR}/android-release-unsigned.apk
-APK_SIGNED_FILE=${APK_RELEASE_DIR}/android-release-signed.apk
+APK_RELEASE_DIR=${PROJECT_DIR}/platforms/android/app/build/outputs/apk/release
+APK_UNSIGNED_FILE=${APK_RELEASE_DIR}/app-release-unsigned.apk
+APK_SIGNED_FILE=${APK_RELEASE_DIR}/app-release.apk
 
 
 # Preparing Android environment
 . ${PROJECT_DIR}/scripts/env-android.sh
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+[[ $? -ne 0 ]] && exit 1
 
 cd ${PROJECT_DIR}
 
@@ -43,9 +41,7 @@ fi
 
 echo "Executing jarsigner..."
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${KEYSTORE_FILE} ${APK_UNSIGNED_FILE} Cesium
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+[[ $? -ne 0 ]] && exit 1
 echo "Executing jarsigner [OK]"
 
 BUILD_TOOLS_DIR="${ANDROID_SDK_ROOT}/build-tools/28.*/"
@@ -53,16 +49,12 @@ cd ${BUILD_TOOLS_DIR}
 
 echo "Executing zipalign..."
 ./zipalign -v 4 ${APK_UNSIGNED_FILE} ${APK_SIGNED_FILE}
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+[[ $? -ne 0 ]] && exit 1
 echo "Executing zipalign [OK]"
 
 echo "Verify APK signature..."
 ./apksigner verify ${APK_SIGNED_FILE}
-if [[ $? -ne 0 ]]; then
-  exit 1
-fi
+[[ $? -ne 0 ]] && exit 1
 echo "Verify APK signature [OK]"
 
 echo "Successfully generated signed APK at: ${APK_SIGNED_FILE}"

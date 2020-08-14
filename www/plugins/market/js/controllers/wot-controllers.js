@@ -30,7 +30,7 @@ angular.module('cesium.market.wot.controllers', ['cesium.es.services'])
                 controller: 'MkIdentityRecordsCtrl'
               }
           }
-       })
+       });
   })
 
   .controller('MkIdentityRecordsCtrl', MkIdentityRecordsController)
