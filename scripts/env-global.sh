@@ -20,7 +20,7 @@ REPO="duniter-gchange/gchange-client"
 REPO_API_URL="https://api.github.com/repos/${REPO}"
 REPO_PUBLIC_URL="https://github.com/${REPO}"
 
-NODEJS_VERSION=10
+NODEJS_VERSION=12
 
 ANDROID_NDK_VERSION=r19c
 ANDROID_SDK_VERSION=r29.0.2

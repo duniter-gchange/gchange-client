@@ -27,6 +27,11 @@ if (rootdir) {
         // Add 'tools' namespace to root tag
         .pipe(replace(/(xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android")\s*>/g, '$1 xmlns:tools="http://schemas.android.com/tools">'))
 
+        // Add <application> (replace 'targetSdkversion' and add tools:overrideLibrary)
+        .pipe(replace(/\s+tools:replace="android:appComponentFactory"/, ''))
+        .pipe(replace(/\s+android:appComponentFactory="[^"]+"/, ''))
+        .pipe(replace(/(\s*<application)\s*/, '$1 tools:replace="android:appComponentFactory" android:appComponentFactory="androidx.core.app.CoreComponentFactory" '))
+
         // remove all <uses-sdk>
         .pipe(replace(/<uses-sdk [^>]+\/>/g, ''))
 

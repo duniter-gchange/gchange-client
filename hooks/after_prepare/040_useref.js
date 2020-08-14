@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 "use strict";
-const gulp = require('gulp');
-const path = require("path");
-const es = require('event-stream');
-const useref = require('gulp-useref');
-const filter = require('gulp-filter');
-const uglify = require('gulp-uglify-es').default;
-const csso = require('gulp-csso');
-const rev = require('gulp-rev');
-const revReplace = require('gulp-rev-replace');
+const gulp = require('gulp'),
+  path = require("path"),
+  es = require('event-stream'),
+  useref = require('gulp-useref'),
+  filter = require('gulp-filter'),
+  uglify = require('gulp-uglify-es').default,
+  csso = require('gulp-csso'),
+  log = require('fancy-log'),
+  colors = require('ansi-colors');
+
 
 const cmd = process.env.CORDOVA_CMDLINE;
 const rootdir = process.argv[2];
@@ -16,6 +17,9 @@ const rootdir = process.argv[2];
 let skip = true;
 if (cmd.indexOf("--release") > -1 || cmd.indexOf("--useref") > -1) {
     skip = false;
+}
+else {
+  log(colors.grey('Skipping useref'));
 }
 
 if (rootdir && !skip) {
@@ -29,18 +33,22 @@ if (rootdir && !skip) {
 
     let wwwPath;
     if(platform === 'android') {
-      wwwPath = path.join(rootdir, 'platforms', platform, 'assets', 'www');
+      wwwPath = path.join(rootdir, 'platforms', platform, 'app', 'src', 'main', 'assets', 'www');
     } else {
       wwwPath = path.join(rootdir, 'platforms', platform, 'www');
     }
 
     let indexPath = path.join(wwwPath, 'index.html');
 
-    const jsFilter = filter(["**/*.js", "!**/vendor/*", '!**/config.js'], { restore: true });
-    const cssFilter = filter("**/*.css", { restore: true });
-    const revFilesFilter = filter(['**/*', '!**/index.html', '!**/config.js'], { restore: true });
+    const jsFilter = filter(['*/lib/**/*.js', '*/js/vendor/**/*.js'], { restore: true });
+    const cssFilter = filter('**/*.css', { restore: true });
     const uglifyOptions = {
       toplevel: true,
+      warnings: true,
+      ecma: '5',
+      mangle: {
+        reserved: ['qrcode', 'Base58']
+      },
       compress: {
         global_defs: {
           "@console.log": "alert"
@@ -58,16 +66,15 @@ if (rootdir && !skip) {
     es.concat(
       gulp.src(indexPath)
         .pipe(useref())      // Concatenate with gulp-useref
+
         .pipe(jsFilter)
         .pipe(uglify(uglifyOptions)) // Minify any javascript sources
         .pipe(jsFilter.restore)
+
         .pipe(cssFilter)
         .pipe(csso())               // Minify any CSS sources
         .pipe(cssFilter.restore)
-        .pipe(revFilesFilter)
-        .pipe(rev())                // Rename the concatenated files (but not index.html)
-        .pipe(revFilesFilter.restore)
-        .pipe(revReplace())         // Substitute in new filenames
+
         .pipe(gulp.dest(wwwPath))
      );
   }
