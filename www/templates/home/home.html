@@ -1,7 +1,6 @@
 <ion-view id="home">
-  <ion-nav-title>
-
-  </ion-nav-title>
+  <!-- no title -->
+  <ion-nav-title></ion-nav-title>
 
   <ion-nav-buttons side="secondary" >
     <!-- locales  -->
@@ -15,96 +14,159 @@
   </ion-nav-buttons>
 
   <ion-content class="has-header text-center padding-xs bg-image-cover"
-               style="background-image: url({{bgImage}})"
-               scroll="false">
+               style="background-image: url({{bgImage}})">
 
-    <div class="logo"></div>
-    <p class="hidden-xs">&nbsp;</p>
+    <div class="row padding-horizontal no-padding-xxs responsive-lg">
+      <div class="col col-30 no-padding hidden-xs hidden-sm">&nbsp;</div>
+      <div class="col text-center no-padding-xs main-container">
 
-    <div class="center padding light-bg" style="max-width: 382px;">
+      <div class="logo"></div>
+      <p class="hidden-xs">&nbsp;</p>
 
-      <h4>
-        <span class="hidden-xs" translate>HOME.MESSAGE</span>
+      <div class="center padding light-bg" style="max-width: 382px;">
 
-        <span ng-show="!loading" ng-bind-html="'HOME.MESSAGE_CURRENCY'|translate:{currency: $root.currency.name}"></span>
-      </h4>
+        <h4>
+          <span class="hidden-xs" translate>HOME.MESSAGE</span>
 
-      <br class="hidden-xs"/>
+          <span ng-show="!loading" ng-bind-html="'HOME.MESSAGE_CURRENCY'|translate:{currency: $root.currency.name}"></span>
+        </h4>
 
-      <ion-spinner icon="android" ng-if="loading"></ion-spinner>
+        <br class="hidden-xs"/>
 
-      <div class="animate-fade-in animate-show-hide ng-hide" ng-show="!loading && error">
-        <div class="card card-item padding">
-          <p class="item-content item-text-wrap">
-              <span class="dark" trust-as-html="'HOME.CONNECTION_ERROR'|translate:node"></span>
-          </p>
+        <div class="center padding" ng-if="loading">
+          <ion-spinner icon="android" ></ion-spinner>
+        </div>
 
-          <!-- Retry-->
+        <div class="animate-fade-in animate-show-hide ng-hide" ng-show="!loading && error">
+          <div class="card card-item padding">
+            <p class="item-content item-text-wrap">
+                <span class="dark" trust-as-html="'HOME.CONNECTION_ERROR'|translate:node"></span>
+            </p>
+
+            <!-- Retry -->
+            <button type="button"
+                    class="button button-positive icon icon-left ion-refresh ink"
+                    ng-click="reload()">{{:locale:'COMMON.BTN_REFRESH'|translate}}</button>
+          </div>
+        </div>
+
+        <div class="center animate-fade-in animate-show-hide ng-hide" ng-show="!loading && !error">
+
+
+          <!-- Help tour (NOT ready yet for small device)
           <button type="button"
-                  class="button button-positive icon icon-left ion-refresh ink"
-                  ng-click="reload()">{{'COMMON.BTN_REFRESH'|translate}}</button>
-        </div>
-      </div>
+                  ng-show="login"
+                  class="button button-block button-stable button-raised icon-left icon ion-easel ink-dark hidden-xs"
+                  ng-click="startHelpTour()" >
+            {{'COMMON.BTN_HELP_TOUR'|translate}}
+          </button>-->
 
-      <div class="center animate-fade-in animate-show-hide ng-hide" ng-show="!loading && !error">
+          <cs-extension-point name="buttons"></cs-extension-point>
 
+          <button type="button"
+                  class="button button-block button-positive button-raised icon ink-dark"
+                  ng-click="showJoinModal()" ng-if="!login" translate>LOGIN.CREATE_FREE_ACCOUNT</button>
 
-        <!-- Help tour (NOT ready yet for small device)
-        <button type="button"
-                ng-show="login"
-                class="button button-block button-stable button-raised icon-left icon ion-easel ink-dark hidden-xs"
-                ng-click="startHelpTour()" >
-          {{'COMMON.BTN_HELP_TOUR'|translate}}
-        </button>-->
+          <button type="button"
+                  class="button button-block button-positive button-raised icon icon-left ion-person ink-dark"
+                  ui-sref="app.view_wallet" ng-show="login" translate>MENU.ACCOUNT</button>
 
-        <cs-extension-point name="buttons"></cs-extension-point>
-
-        <button type="button"
-                class="button button-block button-positive button-raised icon ink-dark"
-                ng-click="showJoinModal()" ng-if="!login" translate>LOGIN.CREATE_FREE_ACCOUNT</button>
-
-        <button type="button"
-                class="button button-block button-positive button-raised icon icon-left ion-person ink-dark"
-                ui-sref="app.view_wallet" ng-show="login" translate>MENU.ACCOUNT</button>
-
-        <br class="visible-xs visible-sm"/>
-        <!-- login link -->
-        <div class="text-center no-padding" ng-show="!login">
           <br class="visible-xs visible-sm"/>
-          {{'LOGIN.HAVE_ACCOUNT_QUESTION'|translate}}
-          <b>
-            <a class="positive hidden-xs hidden-sm" ng-click="loginAndGo('app.view_wallet')" translate>
-              COMMON.BTN_LOGIN
+          <!-- login link -->
+          <div class="text-center no-padding" ng-show="!login">
+            <br class="visible-xs visible-sm"/>
+            {{'LOGIN.HAVE_ACCOUNT_QUESTION'|translate}}
+            <b>
+              <a class="positive hidden-xs hidden-sm" ng-click="loginAndGo('app.view_wallet')" translate>
+                COMMON.BTN_LOGIN
+              </a>
+            </b>
+          </div>
+
+          <!-- disconnect link -->
+          <div class="text-center no-padding hidden-xs hidden-sm " ng-show="login">
+            <span class="dark" ng-bind-html="'HOME.NOT_YOUR_ACCOUNT_QUESTION'|translate:$root.walletData"></span>
+            <a class="bold positive" ng-click="logout()" translate>
+              HOME.BTN_CHANGE_ACCOUNT
             </a>
-          </b>
+          </div>
+
+          <button type="button"
+                  class="button button-block button-stable button-raised ink visible-xs visible-sm"
+                  ui-sref="app.view_wallet" ng-if="!login" translate>COMMON.BTN_LOGIN</button>
+          <button type="button"
+                  class="button button-block button-assertive button-raised icon icon-left ion-log-out ink-dark visible-xs visible-sm"
+                  ng-click="logout()" ng-if="login" translate>COMMON.BTN_LOGOUT</button>
+
         </div>
 
-        <!-- disconnect link -->
-        <div class="text-center no-padding hidden-xs hidden-sm " ng-show="login">
-          <span class="dark" ng-bind-html="'HOME.NOT_YOUR_ACCOUNT_QUESTION'|translate:$root.walletData"></span>
-          <a class="bold positive" ng-click="logout()" translate>
-            HOME.BTN_CHANGE_ACCOUNT
-          </a>
-        </div>
-
-        <button type="button"
-                class="button button-block button-stable button-raised ink visible-xs visible-sm"
-                ui-sref="app.view_wallet" ng-if="!login" translate>COMMON.BTN_LOGIN</button>
-        <button type="button"
-                class="button button-block button-assertive button-raised icon icon-left ion-log-out ink-dark visible-xs visible-sm"
-                ng-click="logout()" ng-if="login" translate>COMMON.BTN_LOGOUT</button>
-
-      </div>
-
-      <br/>
-
-      <div class="text-center no-padding visible-xs stable">
         <br/>
-        <!-- version -->
-        <span translate="COMMON.APP_VERSION" translate-values="{version: config.version}"></span>
-        |
-        <!-- about -->
-        <a href="#" ng-click="showAboutModal()" translate>HOME.BTN_ABOUT</a>
+
+        <div class="text-center no-padding visible-xs stable">
+          <br/>
+          <!-- version -->
+          {{:locale:'COMMON.APP_VERSION'|translate:{version: config.version} }}
+          |
+          <!-- about -->
+          <a href="#" ng-click="showAboutModal()" translate>HOME.BTN_ABOUT</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col no-padding" ng-class="{'col-30': !feed, 'col-10': feed}">&nbsp;
+    </div>
+      <div class="col col-30 no-padding" ng-if="feed">
+
+        <!-- feed -->
+        <div class="feed padding-horizontal no-padding-xs padding-top">
+          <h3 class="padding-left">
+            <i class="icon ion-speakerphone"></i>
+            {{feed.title}}
+            <small><a ng-click="openLink($event, feed.home_page_url)" class="gray">
+              <span translate>HOME.SHOW_ALL_FEED</span>
+              <i class="icon ion-chevron-right"></i>
+            </a></small>
+          </h3>
+
+          <!-- feed items -->
+          <div class="animate-show-hide ng-hide" ng-show="feed">
+            <div ng-repeat="item in feed.items"
+                 class="card padding no-margin-xs">
+
+              <div class="header ">
+                <!-- author -->
+                <i ng-if="item.author.avatar" class="avatar" style="background-image: url({{item.author.avatar}});"></i>
+                <a ng-class="{'avatar-left-padding': item.author.avatar}" class="author"
+                   ng-click="item.author.url && openLink($event, item.author.url)">
+                  {{item.author.name}}
+                </a>
+
+                <!-- time -->
+                <a ng-if="item.time"
+                   title="{{item.time|formatDate}}"
+                   ng-click="openLink($event, item.url)"
+                   class="item-note ">
+                  <small><i class="icon ion-clock"></i>&nbsp;{{item.time|formatFromNow}}</small>
+                </a>
+              </div>
+              <!-- title -->
+              <h2 class="title feed-title">
+                <a ng-click="openLink($event, item.url)">{{item.title}}</a></h2>
+              <div ng-if="item.content"
+                   class="content feed-content"
+                   trust-as-html="item.content"></div>
+
+              <!-- footer -->
+              <h4 class="card-footer feed-footer text-right positive-100">
+                <a ng-click="openLink($event, item.url)">
+                  <span ng-if="item.truncated" translate>HOME.READ_MORE</span>
+                  <span ng-if="!item.truncated" translate>COMMON.BTN_SHOW</span>
+                  <i class="icon ion-chevron-right"></i>
+                </a>
+              </h4>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -112,3 +174,4 @@
   </ion-content>
 
 </ion-view>
+

@@ -12,6 +12,13 @@
     "helptip": {
       "enable": false
     },
+    "feed": {
+      "jsonFeed": {
+        "fr-FR": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-fr.json",
+        "en": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-en.json"
+      },
+      "maxContentLength": 1300
+    },
     "node": {
       "host": "data.gchange.fr",
       "port": "443"
@@ -52,6 +59,13 @@
     "helptip": {
       "enable": false
     },
+    "feed": {
+      "jsonFeed": {
+        "fr-FR": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-fr.json",
+        "en": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-en.json"
+      },
+      "maxContentLength": 1300
+    },
     "node": {
       "host": "data.gchange.fr",
       "port": "443"
@@ -86,6 +100,13 @@
     "rememberMe": true,
     "helptip": {
       "enable": false
+    },
+    "feed": {
+      "jsonFeed": {
+        "fr-FR": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-fr.json",
+        "en": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-en.json"
+      },
+      "maxContentLength": 1300
     },
     "node": {
       "host": "g1.duniter.fr",

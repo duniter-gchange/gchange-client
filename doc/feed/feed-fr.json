@@ -1,0 +1,27 @@
+{
+  "version": "https://jsonfeed.org/version/1",
+  "user_comment": "Feed that use the jsonFeed format (see jsonFeed.org for details).",
+  "title": "Actualités",
+  "description": "Actualités de ğ<b>change</b>",
+  "home_page_url": "https://forum.monnaie-libre.fr/tag/gchange",
+  "feed_url": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-fr.json",
+  "author": {
+    "name": "Benoit Lavenier",
+    "url": "@BenoitLavenier",
+    "avatar": "https://data.gchange.fr/user/profile/8PTThXiUSwwuPoqQWw3tuAn4MpvzQzpKhs6LMuiozS7Z/_image/avatar.png"
+  },
+  "items": [
+    {
+      "title": "Cesium évolue ! Aïe, ça va piquer mais…",
+      "author": {
+        "name": "Benoit Lavenier",
+        "url": "@8PTThXiUSwwuPoqQWw3tuAn4MpvzQzpKhs6LMuiozS7Z",
+        "avatar": "https://forum.monnaie-libre.fr/user_avatar/forum.monnaie-libre.fr/elois/45/185_2.png"
+      },
+      "date_published": "2020-03-07T19:42:00+01:00",
+      "id": "https://forum.monnaie-libre.fr/t/cesium-evolue-aie-ca-va-piquer-mais/10015",
+      "url": "https://forum.monnaie-libre.fr/t/cesium-evolue-aie-ca-va-piquer-mais/10015",
+      "content_html": "<p>Nouveauté dans gchange !</p>\n"
+    }
+  ]
+}

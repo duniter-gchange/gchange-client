@@ -128,7 +128,10 @@
     "REPORT_ISSUE": "Report an issue",
     "NOT_YOUR_ACCOUNT_QUESTION" : "You do not own the account <b><i class=\"ion-key\"></i> {{pubkey|formatPubkey}}</b>?",
     "BTN_CHANGE_ACCOUNT": "Disconnect this account",
-    "CONNECTION_ERROR": "Peer <b>{{server}}</b> unreachable or invalid address.<br/><br/>Check your Internet connection, or change node <a class=\"positive\" ng-click=\"doQuickFix('settings')\">in the settings</a>."
+    "CONNECTION_ERROR": "Peer <b>{{server}}</b> unreachable or invalid address.<br/><br/>Check your Internet connection, or change node <a class=\"positive\" ng-click=\"doQuickFix('settings')\">in the settings</a>.",
+    "SHOW_ALL_FEED": "Show all",
+    "READ_MORE": "Read more",
+    "FEED_SOURCE": "Source"
   },
   "SETTINGS": {
     "TITLE": "Settings",
@@ -138,6 +141,8 @@
     "PEER": "Duniter peer address",
     "PEER_SHORT": "Peer address",
     "PEER_CHANGED_TEMPORARY": "Address used temporarily",
+    "PERSIST_CACHE": "Keep navigation data (experimental)",
+    "PERSIST_CACHE_HELP": "Allows faster navigation, locally retaining the data received, for use from one session to another.",
     "USE_LOCAL_STORAGE": "Enable local storage",
     "USE_LOCAL_STORAGE_HELP": "Allows you to save your settings",
     "WALLETS_SETTINGS": "My wallets",
@@ -627,6 +632,8 @@
     }
   },
   "ERROR": {
+    "UNKNOWN_URI_FORMAT": "Unknown URI format",
+    "PUBKEY_INVALID_CHECKSUM": "Invalid public key (bad checksum).",
     "POPUP_TITLE": "Error",
     "UNKNOWN_ERROR": "Unknown error",
     "CRYPTO_UNKNOWN_ERROR": "Your browser is not compatible with cryptographic features.",
@@ -677,12 +684,14 @@
     "INVALID_USER_ID": "Field 'pseudonym' must not contains spaces or special characters.",
     "INVALID_COMMENT": "Field 'reference' has a bad format.",
     "INVALID_PUBKEY": "Public key has a bad format.",
+    "INVALID_PUBKEY_CHECKSUM": "Invalid checksum.",
     "IDENTITY_REVOKED": "This identity <b>has been revoked {{revocationTime|formatFromNow}}</b> ({{revocationTime|formatDate}}). It can no longer become a member.",
     "IDENTITY_PENDING_REVOCATION": "The <b>revocation of this identity</b> has been requested and is awaiting processing. Certification is therefore disabled.",
     "IDENTITY_INVALID_BLOCK_HASH": "This membership application is no longer valid (because it references a block that network peers are cancelled): the person must renew its application for membership <b>before</b> being certified.",
     "IDENTITY_EXPIRED": "This identity has expired: this person must re-apply <b>before</b> being certified.",
     "IDENTITY_SANDBOX_FULL": "Could not register, because peer's sandbox is full.<br/><br/>Please retry later or choose another Duniter peer (in <b>Settings</b>).",
     "IDENTITY_NOT_FOUND": "Identity not found",
+    "IDENTITY_TX_FAILED": "Error while getting identity's transactions",
     "WOT_PENDING_INVALID_BLOCK_HASH": "Membership not valid.",
     "WALLET_INVALID_BLOCK_HASH": "Your membership application is no longer valid (because it references a block that network peers are cancelled).<br/>You must <a ng-click=\"doQuickFix('renew')\">renew your application for membership</a> to fix this issue.",
     "WALLET_IDENTITY_EXPIRED": "The publication of your identity <b>has expired</b>.<br/>You must <a ng-click=\"doQuickFix('fixIdentity')\">re-issue your identity</a> to resolve this issue.",

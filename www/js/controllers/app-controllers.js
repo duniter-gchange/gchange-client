@@ -58,57 +58,24 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
       .then(UIUtils.loading.hide);
   };
 
-  // removeIf(no-device)
-  ////////////////////////////////////////
-  // Device only methods
-  // (code removed when NO device)
-  ////////////////////////////////////////
-
-  $scope.scanQrCodeAndGo = function() {
-
-    if (!Device.barcode.enable)  return;
-
-    // Run scan cordova plugin, on device
-    return Device.barcode.scan()
-    .then(function(data) {
-      if (!data) return;
-
-      // Try to parse as an URI
-      return BMA.uri.parse(data)
-        .then(function(res){
-          if (!res || !res.pubkey) throw {message: 'ERROR.SCAN_UNKNOWN_FORMAT'};
-          // If pubkey: open the identity
-          return $state.go('app.wot_identity', {
-              pubkey: result.pubkey,
-              node: result.host ? result.host: null}
-            );
-        })
-        // Unknown format (not URI)
-        .catch(UIUtils.onError('ERROR.SCAN_UNKNOWN_FORMAT'));
-    })
-    .catch(UIUtils.onError('ERROR.SCAN_FAILED'));
-  };
-
-  ////////////////////////////////////////
-  // End of device only methods
-  ////////////////////////////////////////
-  // endRemoveIf(no-device)
-
   ////////////////////////////////////////
   // Show Help tour
   ////////////////////////////////////////
 
-  $scope.createHelptipScope = function(isTour) {
+  $scope.createHelptipScope = function(isTour, ctrlName) {
     if (!isTour && ($rootScope.tour || !$rootScope.settings.helptip.enable || UIUtils.screen.isSmall())) {
       return; // avoid other helptip to be launched (e.g. csWallet)
     }
+    ctrlName = ctrlName || 'HelpTipCtrl';
     // Create a new scope for the tour controller
     var helptipScope = $scope.$new();
-    $controller('HelpTipCtrl', { '$scope': helptipScope});
+    $controller(ctrlName, { '$scope': helptipScope});
     return helptipScope;
   };
 
-  $scope.startHelpTour = function(skipClearCache) {
+  $scope.startHelpTour = function(event, skipClearCache) {
+    if (event && event.defaultPrevented) return false; // Event stopped;
+
     $rootScope.tour = true; // to avoid other helptip to be launched (e.g. csWallet)
 
     // Clear cache history
@@ -116,19 +83,32 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
       $ionicHistory.clearHistory();
       return $ionicHistory.clearCache()
         .then(function() {
-          $scope.startHelpTour(true/*continue*/);
+          $scope.startHelpTour(null, true/*continue*/);
         });
     }
 
-    var helptipScope = $scope.createHelptipScope(true);
+    var helptipScope = $scope.createHelptipScope(true/*is tour*/);
     return helptipScope.startHelpTour()
-    .then(function() {
-      helptipScope.$destroy();
-      delete $rootScope.tour;
-    })
-    .catch(function(err){
-      delete $rootScope.tour;
-    });
+      .then(function() {
+        helptipScope.$destroy();
+        delete $rootScope.tour;
+      })
+      .catch(function(err){
+        delete $rootScope.tour;
+      });
+  };
+
+  $scope.disableHelpTour = function(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    if (csSettings.data.helptip && csSettings.data.helptip.enable) {
+      $rootScope.settings.helptip.enable = false;
+      csSettings.store();
+    }
+
   };
 
   ////////////////////////////////////////
@@ -388,6 +368,15 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
     $event.stopPropagation();
     $event.preventDefault();
 
+    // Read URL like '@UID' (Used by home page, in feed's author url)
+    if (uri && uri.startsWith('@')) {
+      var uid = uri.substr(1);
+      if (BMA.regexp.USER_ID.test(uid)) {
+        $state.go('app.wot_identity_uid', {uid: uid});
+        return false;
+      }
+    }
+
     options = options || {};
 
     // If unable to open, just copy value
@@ -398,6 +387,88 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
     csHttp.uri.open(uri, options);
 
     return false;
+  };
+
+  /**
+   * Parse an external URI (see g1lien), and open the expected state
+   * @param uri
+   * @param reject optional function, to avoid error to be displayed
+   * @returns {*}
+   */
+  $scope.handleUri = function(uri, reject) {
+    if (!uri) return $q.when(); // Skip
+
+    console.info('[app] Trying to parse as uri: ', uri);
+    var fromHomeState = $state.current && $state.current.name === 'app.home';
+
+    // Parse the URI
+    return BMA.uri.parse(uri)
+      .then(function(res) {
+        if (!res) throw {message: 'ERROR.UNKNOWN_URI_FORMAT'}; // Continue
+
+        if (res.pubkey) {
+          $state.go('app.wot_identity',
+            angular.merge({
+              pubkey: res.pubkey,
+              action: res.params && res.params.amount ? 'transfer' : undefined
+            }, res.params),
+            {reload: true});
+        }
+        else if (res.uid) {
+          return $state.go('app.wot_identity_uid',
+            angular.merge({
+              uid: res.uid,
+              action: res.params && res.params.amount ? 'transfer' : undefined
+            }, res.params),
+            {reload: true});
+        }
+        else if (angular.isDefined(res.block)) {
+          return $state.go('app.view_block',
+            angular.merge(res.block, res.params),
+            {reload: true});
+        }
+        // Default: wot lookup
+        else {
+          console.warn('[app] TODO implement state redirection from URI result: ', res, uri);
+          return $state.go('app.wot_lookup.tab_search',
+            {q: uri},
+            {reload: true});
+        }
+      })
+
+      // After state change
+      .then(function() {
+        if (fromHomeState) {
+          // Wait 500ms, then remove /app/home?uri from the history
+          // to make sure the back button will work fine
+          return $timeout(function () {
+            if ($ionicHistory.backView()) $ionicHistory.removeBackView();
+          }, 500);
+        }
+      })
+
+      .catch(function(err) {
+        if (reject) {
+          reject(err);
+          return;
+        }
+        console.error("[home] Error while handle uri {" + uri + "': ", err);
+        return UIUtils.onError(uri)(err);
+      });
+  };
+
+  $scope.registerProtocolHandlers = function() {
+    var protocols = ['web+gchange'];
+
+    _.each(protocols, function(protocol) {
+      console.debug("[app] Registering protocol '{0}'...".format(protocol));
+      try {
+        navigator.registerProtocolHandler(protocol, "#/app/home?uri=%s", "Cesium");
+      }
+      catch(err) {
+        console.error("[app] Error while registering protocol '{0}'".format(protocol), err);
+      }
+    });
   };
 
   ////////////////////////////////////////
@@ -425,12 +496,12 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
     var skip = $scope.fullscreen || !UIUtils.screen.isSmall() || !Device.isWeb();
     if (skip) return;
 
-    return UIUtils.alert.confirm('CONFIRM.FULLSCREEN', null, {
+    return UIUtils.alert.confirm('CONFIRM.FULLSCREEN', undefined, {
       cancelText: 'COMMON.BTN_NO',
       okText: 'COMMON.BTN_YES'
     })
       .then(function(confirm) {
-         if (!confirm) return;
+        if (!confirm) return;
         $scope.toggleFullscreen();
       });
   };
@@ -440,10 +511,70 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
     UIUtils.screen.fullscreen.toggleAll();
   };
 
+  // removeIf(no-device)
+  ////////////////////////////////////////
+  // Device only methods
+  // (code removed when NO device)
+  ////////////////////////////////////////
+
+  $scope.scanQrCodeAndGo = function() {
+
+    if (!Device.barcode.enable) return;
+
+    // Run scan cordova plugin, on device
+    return Device.barcode.scan()
+      .then(function(data) {
+        if (!data) return;
+
+        var throwIfError = function (err) {
+          if (err) throw err;
+        };
+
+        // Try to parse as an URI
+        return $scope.handleUri(data, throwIfError)
+          .catch(UIUtils.onError('ERROR.SCAN_UNKNOWN_FORMAT'));
+      })
+      .catch(UIUtils.onError('ERROR.SCAN_FAILED'));
+  };
+
+  /**
+   * Process launch intent, as it could have been triggered BEFORE addListeners()
+   * @returns {*}
+   */
+  $scope.processLaunchUri = function() {
+    return Device.intent.last()
+      .then(function(intent) {
+        if (intent) {
+          Device.intent.clear();
+          return $scope.handleUri(intent);
+        }
+      });
+  };
+
+  // Listen for new intent
+  Device.api.intent.on.new($scope, $scope.handleUri);
+  $scope.processLaunchUri();
+
+  ////////////////////////////////////////
+  // End of device only methods
+  ////////////////////////////////////////
+  // endRemoveIf(no-device)
+
+
   // removeIf(device)
+  ////////////////////////////////////////
+  // NOT-Device only methods (web or desktop)
+  // (code removed when build for device - eg. Android, iOS)
+  ////////////////////////////////////////
+
   // Ask switching fullscreen
   $scope.askFullscreen();
+
+  // Register protocol handlers
+  $scope.registerProtocolHandlers();
+
+  ////////////////////////////////////////
+  // End of NOT-device only methods
+  ////////////////////////////////////////
   // endRemoveIf(device)
 }
-
-

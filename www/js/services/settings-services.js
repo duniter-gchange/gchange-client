@@ -9,7 +9,8 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     {id:'en',    label:'English', country: 'us'},
     {id:'en-GB', label:'English (UK)', country: 'gb'},
     {id:'eo-EO', label:'Esperanto'},
-    {id:'fr-FR', label:'Français', country: 'fr'}
+    {id:'fr-FR', label:'Français', country: 'fr'},
+    {id:'es-ES', label:'Spanish', country: 'es'}
   ];
   var fallbackLocale = csConfig.fallbackLanguage ? fixLocale(csConfig.fallbackLanguage) : 'en';
 
@@ -66,6 +67,7 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     useRelative: false,
     useLocalStorage: !!$window.localStorage, // override to false if no device
     useLocalStorageEncryption: false,
+    persistCache: false, // disable by default (waiting resolution of issue #885)
     walletHistoryTimeSecond: 30 * 24 * 60 * 60 /*30 days*/,
     walletHistorySliceSecond: 5 * 24 * 60 * 60 /*download using 5 days slice*/,
     walletHistoryAutoRefresh: true, // override to false if device
@@ -87,6 +89,7 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
       wotCerts: 0,
       wallet: 0,
       walletCerts: 0,
+      wallets: 0,
       header: 0,
       settings: 0
     },
@@ -253,7 +256,13 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
         });
   },
 
-    // Detect locale successful changes, then apply to vendor libs
+  getFeedUrl = function() {
+    var locale = data.locale && data.locale.id || csConfig.defaultLanguage || 'en';
+    return (csConfig.feed && csConfig.feed.jsonFeed) ?
+      (csConfig.feed.jsonFeed[locale] ? csConfig.feed.jsonFeed[locale] : defaultSettings.feed.jsonFeed[csConfig.defaultLanguage || 'en'] || csConfig.feed) : undefined;
+  },
+
+  // Detect locale successful changes, then apply to vendor libs
   onLocaleChange = function() {
     var locale = $translate.use();
     console.debug('[settings] Locale ['+locale+']');
@@ -290,6 +299,9 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     api.locale.raise.changed(locale);
   },
 
+  isStarted = function() {
+    return started;
+  },
 
   ready = function() {
     if (started) return $q.when();
@@ -331,6 +343,7 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
   //start();
 
   return {
+    isStarted: isStarted,
     ready: ready,
     start: start,
     data: data,
@@ -339,6 +352,7 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     reset: reset,
     store: store,
     restore: restore,
+    getFeedUrl: getFeedUrl,
     defaultSettings: defaultSettings,
     // api extension
     api: api,

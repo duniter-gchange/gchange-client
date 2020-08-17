@@ -9,17 +9,20 @@
 angular.module("cesium.config", [])
 
 .constant("csConfig", {
-	"fallbackLanguage": "fr-FR",
 	"defaultLanguage": "fr-FR",
 	"timeout": 300000,
 	"cacheTimeMs": 300000,
 	"useLocalStorage": true,
 	"rememberMe": true,
-	"useRelative": false,
-	"decimalCount": 2,
-	"shareBaseUrl": "https://gchange.fr",
 	"helptip": {
 		"enable": false
+	},
+	"feed": {
+		"jsonFeed": {
+			"fr-FR": "file:///home/blavenie/git/gchange/gchange-client/doc/feed/feed-fr.json",
+			"en": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-en.json"
+		},
+		"maxContentLength": 1300
 	},
 	"node": {
 		"host": "data.gchange.fr",
@@ -35,23 +38,18 @@ angular.module("cesium.config", [])
 		},
 		"market": {
 			"enable": true,
-			"geoDistance": "50km",
+			"geoDistance": "100km",
 			"cesiumApi": {
 				"enable": true,
 				"baseUrl": "https://g1.duniter.fr/api"
 			}
 		},
 		"converse": {
-			"enable": true,
-			"jid": "anonymous.duniter.org",
-			"bosh_service_url": "https://chat.duniter.org/http-bind/",
-			"auto_join_rooms": [
-				"gchange@muc.duniter.org"
-			]
+			"enable": false
 		}
 	},
 	"version": "1.1.7",
-	"build": "2020-08-06T14:22:14.467Z",
+	"build": "2020-08-17T10:51:12.778Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

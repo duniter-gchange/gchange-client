@@ -76,25 +76,25 @@ function HomeController($scope, $state, $timeout, $ionicHistory, $translate, $ht
       }
     }
 
-    if (state && state.stateParams && state.stateParams.error) { // Error query parameter
+    if (state && state.stateParams && state.stateParams.uri) {
+
+      return $scope.handleUri(state.stateParams.uri)
+        .then(function() {
+          $scope.loading = false;
+        });
+    }
+    else if (state && state.stateParams && state.stateParams.error) { // Error query parameter
       $scope.error = state.stateParams.error;
       $scope.node = csCurrency.data.node;
       $scope.loading = false;
-      $ionicHistory.nextViewOptions({
-        disableAnimate: true,
-        disableBack: true,
-        historyRoot: true
-      });
-      $state.go('app.home', {error: undefined}, {
-        reload: false,
-        inherit: true,
-        notify: false});
+      $scope.cleanLocationHref(state);
     }
     else {
-      // Start platform
+      // Wait platform to be ready
       csPlatform.ready()
         .then(function() {
           $scope.loading = false;
+          $scope.loadFeeds();
         })
         .catch(function(err) {
           $scope.node =  csCurrency.data.node;
@@ -187,7 +187,7 @@ function HomeController($scope, $state, $timeout, $ionicHistory, $translate, $ht
 
   $scope.showLocalesPopover = function(event) {
     UIUtils.popover.show(event, {
-      templateUrl: 'templates/api/locales_popover.html',
+      templateUrl: 'templates/common/popover_locales.html',
       scope: $scope,
       autoremove: true,
       afterShow: function(popover) {
