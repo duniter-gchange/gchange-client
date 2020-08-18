@@ -143,6 +143,22 @@
            ng-click="toggleAdType('need')">
           {{'MARKET.SEARCH.BTN_NEEDS' | translate}}
         </a>
+
+        <a class="button button-text button-small ink icon ion-speakerphone"
+           ng-if="options.type.show"
+           ng-class="{'button-text-positive': search.type=='crowdfunding'}"
+           ng-click="toggleAdType('crowdfunding')">
+          {{'MARKET.SEARCH.BTN_CROWDFUNDING' | translate}}
+        </a>
+
+        <a class="button button-text button-small ink icon ion-arrow-graph-up-right"
+           ng-if="options.type.show"
+           ng-class="{'button-text-positive': search.type=='auction'}"
+           ng-click="toggleAdType('auction')">
+          {{'MARKET.SEARCH.BTN_AUCTION' | translate}}
+        </a>
+
+
         &nbsp;
         <button class="button button-small button-stable ink"
                 ng-click="doSearch()">

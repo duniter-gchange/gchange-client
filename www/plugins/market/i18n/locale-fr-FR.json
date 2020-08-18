@@ -79,6 +79,8 @@
       "BTN_LAST_RECORDS": "Dernières annonces",
       "BTN_SHOW_CATEGORIES": "Parcourir les catégories",
       "BTN_OFFERS": "Offres",
+      "BTN_CROWDFUNDING": "Financements",
+      "BTN_AUCTION": "Enchères",
       "BTN_NEEDS": "Demandes",
       "SHOW_CLOSED_RECORD": "Afficher les annonces closes ?",
       "SHOW_OLD_RECORD": "Afficher les anciennes annonces ?",
@@ -123,8 +125,12 @@
       "SELECT_TYPE": "Type d'annonce :",
       "OFFER": "Offre, Vente",
       "OFFER_SHORT": "Offre",
+      "CROWDFUNDING": "Financement participatif",
+      "CROWDFUNDINGR_SHORT": "Financement",
       "NEED": "Demande, Recherche",
-      "NEED_SHORT": "Demande"
+      "NEED_SHORT": "Demande",
+      "AUCTION": "Vente aux enchères",
+      "AUCTION_SHORT": "Enchère"
     },
     "LOCAL_SALE": {
       "LOCATION": "Numéro du stand",
@@ -133,7 +139,6 @@
     },
     "EDIT": {
       "TITLE": "Edition",
-      "TITLE_NEW": "Nouvelle annonce",
       "RECORD_TITLE": "Titre",
       "RECORD_TITLE_HELP": "Titre : vélo, livre...",
       "RECORD_DESCRIPTION": "Description",
@@ -146,7 +151,23 @@
       "RECORD_FEES": "Frais d'envoi",
       "RECORD_FEES_HELP": "Frais (optionnel)",
       "RECORD_STOCK": "Stock disponible",
-      "RECORD_STOCK_HELP": "Stock disponible"
+      "RECORD_STOCK_HELP": "Stock disponible",
+      "AUCTION": {
+        "TITLE_NEW": "Nouvelle enchère",
+        "START_PRICE_HELP": "Prix de départ (optionnel)"
+      },
+      "OFFER": {
+        "TITLE_NEW": "Nouvelle annonce"
+      },
+      "NEED": {
+        "TITLE_NEW": "Nouvelle demande",
+        "MAX_PRICE_HELP": "Prix maximum (optionnel)"
+      },
+      "CROWDFUNDING": {
+        "TITLE_NEW": "Nouvelle campagne de financement",
+        "TITLE_HELP": "Titre de la campagne",
+        "DESCRIPTION_HELP": "Description : Decrivez votre projet ici"
+      }
     },
     "WOT": {
       "VIEW": {

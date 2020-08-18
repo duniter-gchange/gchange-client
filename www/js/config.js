@@ -19,37 +19,32 @@ angular.module("cesium.config", [])
 	},
 	"feed": {
 		"jsonFeed": {
-			"fr-FR": "file:///home/blavenie/git/gchange/gchange-client/doc/feed/feed-fr.json",
+			"fr-FR": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-fr.json",
 			"en": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-en.json"
 		},
 		"maxContentLength": 1300
 	},
 	"node": {
-		"host": "data.gchange.fr",
-		"port": "443"
+		"host": "localhost",
+		"port": "9200"
 	},
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "data.gchange.fr",
-			"port": "443",
-			"maxUploadBodySize": 5242880,
+			"host": "localhost",
+			"port": "9200",
+			"wsPort": "9400",
 			"defaultCountry": "France"
 		},
 		"market": {
-			"enable": true,
-			"geoDistance": "100km",
-			"cesiumApi": {
-				"enable": true,
-				"baseUrl": "https://g1.duniter.fr/api"
-			}
+			"enable": true
 		},
 		"converse": {
 			"enable": false
 		}
 	},
 	"version": "1.1.7",
-	"build": "2020-08-17T10:51:12.778Z",
+	"build": "2020-08-18T16:14:27.902Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

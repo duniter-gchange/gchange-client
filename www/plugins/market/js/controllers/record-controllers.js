@@ -531,6 +531,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
   angular.extend(this, $controller('ESPositionEditCtrl', {$scope: $scope}));
 
   $scope.formData = {
+    type: null,
     price: null,
     category: {},
     geoPoint: null,
@@ -832,7 +833,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
   };
 
   $scope.$on('$stateChangeStart', function (event, next, nextParams, fromState) {
-    if (!$scope.dirty || $scope.saving) return;
+    if (!$scope.dirty || $scope.saving || event.defaultPrevented) return;
 
     // stop the change state action
     event.preventDefault();

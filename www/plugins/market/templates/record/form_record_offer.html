@@ -1,0 +1,136 @@
+
+<!-- category -->
+<a class="item item-icon-right ink item-border"
+   ng-if="options.category.show"
+   ng-class="{'item-input-error': form.$submitted && !formData.category.id}"
+   ng-click="showCategoryModal()">
+  <span class="item-label" translate>COMMON.CATEGORY</span>
+  <span ng-if="!formData.category.id"
+        class="item-note">{{::'COMMON.CATEGORY_SELECT_HELP'|translate}}</span>
+  <span class="badge badge-royal" ng-bind-html="formData.category.name"></span>&nbsp;
+  <i class="gray icon ion-ios-arrow-right"></i>
+</a>
+<div class="form-errors"
+     ng-show="form.$submitted && !formData.category.id">
+  <div class="form-error">
+    <span translate="ERROR.FIELD_REQUIRED"></span>
+  </div>
+</div>
+
+<!-- title -->
+<div class="item item-input item-floating-label"
+     ng-class="{'item-input-error': form.$submitted && form.title.$invalid}">
+  <span class="input-label" translate>MARKET.EDIT.RECORD_TITLE</span>
+  <input type="text" placeholder="{{'MARKET.EDIT.RECORD_TITLE_HELP'|translate}}"
+         name="title"
+         id="market-record-title"
+         ng-model="formData.title"
+         ng-minlength="3"
+         required>
+</div>
+<div class="form-errors"
+     ng-show="form.$submitted && form.title.$invalid"
+     ng-messages="form.title.$error">
+  <div class="form-error" ng-message="required">
+    <span translate="ERROR.FIELD_REQUIRED"></span>
+  </div>
+  <div class="form-error" ng-message="minlength">
+    <span translate="ERROR.FIELD_TOO_SHORT"></span>
+  </div>
+</div>
+
+<div class="item item-input item-floating-label"
+     ng-if="options.description.show">
+  <span class="input-label" translate>MARKET.EDIT.RECORD_DESCRIPTION</span>
+  <textarea placeholder="{{'MARKET.EDIT.RECORD_DESCRIPTION_HELP'|translate}}"
+            ng-model="formData.description"
+            rows="8" cols="10"></textarea>
+</div>
+
+<!-- price -->
+<ion-item class="item-input item-floating-label item-button-right"
+          ng-class="{'item-input-error': form.$submitted && form.price.$invalid}">
+
+  <div class="input-label">
+    <span translate>MARKET.EDIT.RECORD_PRICE</span>
+    (<span ng-bind-html="formData.currency| currencySymbol:formData.useRelative"></span>)
+  </div>
+
+  <input type="number"
+         autocomplete="off"
+         name="price"
+         placeholder="{{::'MARKET.EDIT.RECORD_PRICE_HELP' | translate}}"
+         ng-model="formData.price"
+         number-float>
+  <a class="button button-clear button-stable dark ink"
+     tabindex="-1"  style="z-index:110; padding: 0 16px;"
+     ng-if="options.unit.canEdit"
+     ng-click="showUnitPopover($event)">
+      <span ng-bind-html="$root.currency.name | currencySymbol:formData.useRelative">
+      </span>
+    &nbsp;<b class="ion-arrow-down-b" style="font-size: 12pt;"></b>
+  </a>
+</ion-item>
+<div class="form-errors"
+     ng-show="form.$submitted && form.price.$invalid"
+     ng-messages="form.price.$error">
+  <div class="form-error" ng-message="numberFloat">
+    <span translate="ERROR.FIELD_NOT_NUMBER"></span>
+  </div>
+  <div class="form-error" ng-message="numberInt">
+    <span translate="ERROR.FIELD_NOT_INT"></span>
+  </div>
+</div>
+
+
+<!-- fees -->
+<div class="item item-input item-floating-label item-button-right"
+     ng-class="{'item-input-error': form.$submitted && form.fees.$invalid}">
+  <div class="input-label">
+    <span translate>MARKET.EDIT.RECORD_FEES</span>
+    (<span ng-bind-html="formData.currency| currencySymbol:formData.useRelative"></span>)
+  </div>
+
+  <input type="number"
+         autocomplete="off"
+         name="fees"
+         placeholder="{{::'MARKET.EDIT.RECORD_FEES_HELP' | translate}}"
+         ng-model="formData.fees"
+         number-float>
+  <div class="button button-clear button-stable dark ink"
+       tabindex="-1"  style="z-index:110; padding: 0 16px;"
+       ng-if="options.unit.canEdit">
+      <span ng-bind-html="$root.currency.name | currencySymbol:formData.useRelative">
+      </span>
+  </div>
+</div>
+<div class="form-errors"
+     ng-show="form.$submitted && form.fees.$invalid"
+     ng-messages="form.fees.$error">
+  <div class="form-error" ng-message="numberFloat">
+    <span translate="ERROR.FIELD_NOT_NUMBER"></span>
+  </div>
+  <div class="form-error" ng-message="numberInt">
+    <span translate="ERROR.FIELD_NOT_INT"></span>
+  </div>
+</div>
+
+<!-- stock -->
+<div class="item item-input item-floating-label item-button-right"
+     ng-class="{'item-input-error': form.$submitted && form.stock.$invalid}">
+  <div class="input-label">{{::'MARKET.EDIT.RECORD_STOCK' | translate}}</div>
+
+  <input type="number" name="stock" placeholder="{{::'MARKET.EDIT.RECORD_STOCK_HELP' | translate}}"
+         ng-model="formData.stock"
+         number-int>
+</div>
+<div class="form-errors"
+     ng-show="form.$submitted && form.stock.$invalid"
+     ng-messages="form.stock.$error">
+  <div class="form-error" ng-message="numberInt">
+    <span translate="ERROR.FIELD_NOT_INT"></span>
+  </div>
+</div>
+
+<!-- position -->
+<ng-include src="'plugins/es/templates/common/edit_position.html'" ng-controller="ESPositionEditCtrl"></ng-include>

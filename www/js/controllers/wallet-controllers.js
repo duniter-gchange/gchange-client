@@ -100,7 +100,7 @@ function WalletController($scope, $q, $ionicPopup, $timeout, $state,
   $scope.addListeners = function() {
     $scope.listeners = [
       // Reset the view on logout
-      wallet.api.data.on.logout($scope, $scope.onWalletLogout),
+      csWallet.api.data.on.logout($scope, $scope.onWalletLogout),
 
       // Listen new events (can appears from security wizard also)
       $scope.$watchCollection('formData.events', function(newEvents, oldEvents) {

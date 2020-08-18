@@ -109,8 +109,8 @@
       "maxContentLength": 1300
     },
     "node": {
-      "host": "g1.duniter.fr",
-      "port": "443"
+      "host": "localhost",
+      "port": "9200"
     },
     "plugins":{
       "es": {

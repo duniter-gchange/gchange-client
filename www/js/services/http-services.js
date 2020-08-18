@@ -7,11 +7,23 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
 
   var
     sockets = [],
-    cachePrefix = 'csHttp-'
+    cachePrefix = 'csHttp-',
+    regexp = {
+      POSITIVE_INTEGER: /^\d+$/,
+      VERSION_PART_REGEXP: /^[0-9]+|alpha[0-9]+|beta[0-9]+|rc[0-9]+|[0-9]+-SNAPSHOT$/
+    }
   ;
 
   if (!timeout) {
     timeout=4000; // default
+  }
+
+  function exact(regexpContent) {
+    return new RegExp("^" + regexpContent + "$");
+  }
+
+  function test(regexpContent) {
+    return new RegExp(regexpContent);
   }
 
   function getServer(host, port) {
@@ -458,7 +470,9 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
     // First, validate both numbers are true version numbers
     function validateParts(parts) {
       for (var i = 0; i < parts.length; ++i) {
-        if (!isPositiveInteger(parts[i])) {
+        if ((i === 0 && !regexp.POSITIVE_INTEGER.test(parts[i])) ||
+          // Other value can have alpha, beta, rc, etc
+          !regexp.VERSION_PART_REGEXP.test(parts[i])) {
           return false;
         }
       }
