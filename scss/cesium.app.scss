@@ -371,7 +371,7 @@ $screen-menu:                     $screen-sm;
     visibility: hidden !important;
   }
   .visible-nomenu {
-    display: inherit !important;
+    display: unset;
     visibility: visible !important;
   }
 }
