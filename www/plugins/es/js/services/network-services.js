@@ -466,8 +466,8 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
             sortScore += (data.sort.type == 'name' ? computeScoreAlphaValue(peer.name, 10, data.sort.asc) : 0);
             sortScore += (data.sort.type == 'software' ? computeScoreAlphaValue(peer.software, 10, data.sort.asc) : 0);
             sortScore += (data.sort.type == 'api') &&
-              ((peer.hasEndpoint('ES_SUBSCRIPTION_API') && (data.sort.asc ? 1 : -1) || 0) +
-              (peer.hasEndpoint('ES_USER_API') && (data.sort.asc ? 0.01 : -0.01) || 0) +
+              ((peer.hasEndpoint('GCHANGE_SUBSCRIPTION_API') && (data.sort.asc ? 1 : -1) || 0) +
+              (peer.hasEndpoint('GCHANGE_API') && (data.sort.asc ? 0.01 : -0.01) || 0) +
               (peer.isSsl() && (data.sort.asc ? 0.75 : -0.75) || 0)) || 0;
             sortScore += (data.sort.type == 'doc_count' ? (peer.docCount ? (data.sort.asc ? (1000000000 - peer.docCount) : peer.docCount) : 0) : 0);
             score += (10000000000 * sortScore);

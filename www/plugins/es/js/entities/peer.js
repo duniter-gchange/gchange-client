@@ -91,7 +91,7 @@ EsPeer.prototype.hasEsEndpoint = function() {
 };
 
 EsPeer.prototype.getEsEndpoints = function() {
-  return this.getEndpoints(/^(ES_CORE_API|ES_USER_API|ES_SUBSCRIPTION_API|GCHANGE_API)/);
+  return this.getEndpoints(/^(GCHANGE_API|GCHANGE_SUBSCRIPTION_API)/);
 };
 
 EsPeer.prototype.getDns = function() {
