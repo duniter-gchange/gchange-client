@@ -166,7 +166,8 @@
       "CROWDFUNDING": {
         "TITLE_NEW": "Nouvelle campagne de financement",
         "TITLE_HELP": "Titre de la campagne",
-        "DESCRIPTION_HELP": "Description : Decrivez votre projet ici"
+        "DESCRIPTION_HELP": "Description : Decrivez votre projet ici",
+        "PRICE_HELP": "Montant recherché"
       }
     },
     "WOT": {

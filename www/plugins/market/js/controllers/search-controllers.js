@@ -286,7 +286,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
 
     if ($scope.search.type) {
-      filters.push({term: {type: $scope.search.type}});
+      var types = $scope.search.type === 'offer' ? ['offer', 'auction'] : ['need', 'crowdfunding'];
+      filters.push({terms: {type: types}});
       stateParams.type = $scope.search.type;
     }
 

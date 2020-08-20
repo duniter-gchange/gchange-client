@@ -1,0 +1,50 @@
+<a
+   class="item item-record item-border-large ink padding-xs"
+   ui-sref="app.market_view_record({id: rec.id, title: rec.urlTitle})">
+
+  <div class="row row-record">
+    <div class="col item-text-wrap item-thumbnail-left">
+      <i ng-if="::rec.thumbnail" class="item-image" style="background-image: url({{::rec.thumbnail.src}})"></i>
+      <i class="item-image ion-speakerphone" ng-if="::!rec.thumbnail"></i>
+      <h2 ng-bind-html="rec.title" ></h2>
+      <h4 class="positive" ng-if="rec.city">
+        <i class="icon ion-location"></i>
+        {{::options.location.prefix|translate}}<span ng-bind-html="::rec.city"></span>
+        <span class="gray" ng-if="::rec.distance">
+          ({{::rec.distance|formatDecimal}} {{::geoUnit}})
+        </span>
+      </h4>
+      <h4 class="gray" ng-if="rec.creationTime">
+        <i class="icon ion-clock" ></i>
+        {{::rec.creationTime | formatFromNow}}
+        {{::'MARKET.SEARCH.BY'|translate}}
+        <span class="dark">{{::rec.name || (rec.pubkey|formatPubkey)}}</span>
+      </h4>
+      <span  ng-if="::rec.picturesCount > 1"
+             class="badge badge-balanced badge-picture-count">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i></span>
+    </div>
+    <div class="col col-20" style="max-width: 180px;">
+      <h3 class="gray" ng-if="::rec.category" ng-bind-html="::rec.category.name"></h3>
+      <h5 ng-if="::rec.stock>1" class="gray hidden-xs hidden-sm"><i class="icon ion-pie-graph"></i> <span class="">{{::rec.stock}} <i class="ion-checkmark balanced"></i></span></h5>
+      <div class="badge badge-price"
+           ng-if="::rec.price"
+           ng-class="{'badge-calm': rec.type=='offer', 'badge-energized': rec.type=='need'}">
+        <i class="cion-market-{{rec.type}}"></i>
+        <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: $root.settings.useRelative}"></span>
+      </div>
+      <div class="badge badge-price"
+           ng-if="::!search.type && !rec.price"
+           ng-class="::{'badge-calm': rec.type=='offer', 'badge-energized': rec.type=='need'}">
+        <i class="cion-market-{{::rec.type}}"></i>
+        {{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
+      </div>
+    </div>
+    <div class="col hidden-sm hidden-xs">
+        <h4 class="gray text-wrap text-italic" ng-if="::!!rec.description">
+          <i class="icon ion-quote" ></i>
+          <span ng-bind-html="::rec.description | truncText:500"></span>
+        </h4>
+        <div ng-if="::!rec.stock" class="badge badge-assertive"  translate>MARKET.COMMON.SOLD</div>
+    </div>
+  </div>
+</a>
