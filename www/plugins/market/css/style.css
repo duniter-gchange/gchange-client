@@ -173,6 +173,17 @@
     content: "\f27c";
 }
 
+/* crowdfunding */
+.cion-market-crowdfunding:before {
+    font-family: "Ionicons";
+    content: "";
+}
+
+/* auction */
+.cion-market-auction:before {
+    font-family: "Ionicons";
+    content: "";
+}
 /* -- Gallery -- */
 
 .image-list-thumb {
