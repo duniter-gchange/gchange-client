@@ -122,7 +122,7 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   // Load wallet data (after login)
   $scope.loadWalletData = function(options) {
 
-    console.warn("[app-controller] DEPRECATED  - Please use csWallet.load() instead of $scope.loadWalletData()", new Error());
+    //console.warn("[app-controller] DEPRECATED  - Please use csWallet.load() instead of $scope.loadWalletData()", new Error());
 
     options = options || {};
 
@@ -138,7 +138,6 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   // Login and load wallet
   $scope.loadWallet = function(options) {
 
-    console.warn("[app-controller] DEPRECATED  - Please use csWallet.loadData() instead of $scope.loadWallet()", new Error());
 
     // Make sure the platform is ready
     if (!csPlatform.isStarted()) {

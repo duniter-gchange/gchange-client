@@ -1240,7 +1240,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
         options = options || {};
 
         if (!options.comment) {
-            return (csWallet.isLogin() ? $q.when() : $scope.loadData({minData: true}))
+            return (csWallet.isLogin() ? $q.when() : $scope.loadWallet({minData: true}))
                 // Ask a comment
                 .then(function() {
                     return $scope.showAbuseCommentPopover(event);

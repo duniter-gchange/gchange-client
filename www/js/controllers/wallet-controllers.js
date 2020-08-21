@@ -59,7 +59,7 @@ function WalletController($scope, $q, $ionicPopup, $timeout, $state,
   $scope.$on('$ionicView.enter', $scope.enter);
 
   $scope.load = function() {
-    return csWallet.login()
+    return $scope.loadWallet()
       .then(function(walletData) {
         $scope.formData = walletData;
         $scope.loading=false; // very important, to avoid TX to be display before wallet.currentUd is loaded

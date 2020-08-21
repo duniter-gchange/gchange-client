@@ -53,6 +53,7 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
     },
 
     login = function(salt, password) {
+      if (!salt || !password) throw Error('Missing required arguments');
       return CryptoUtils.scryptKeypair(salt, password)
         .then(function(keypair) {
           // Copy result to properties
