@@ -24,10 +24,11 @@
              class="badge badge-balanced badge-picture-count">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i></span>
     </div>
     <div class="col col-20" style="max-width: 180px;">
+      <!-- category -->
       <h3 class="gray" ng-if="::rec.category" ng-bind-html="::rec.category.name"></h3>
       <h5 ng-if="::rec.stock>1" class="gray hidden-xs hidden-sm"><i class="icon ion-pie-graph"></i> <span class="">{{::rec.stock}} <i class="ion-checkmark balanced"></i></span></h5>
 
-
+      <!-- price -->
       <div class="badge badge-price badge-shadow"
            ng-class="{'badge-calm': rec.type==='offer'||rec.type==='auction', 'badge-energized': rec.type==='need'||rec.type==='crowdfunding'}">
         <i class="cion-market-{{rec.type}}"></i>
@@ -44,10 +45,10 @@
         <div ng-if="::!rec.stock" class="badge badge-assertive"  translate>MARKET.COMMON.SOLD</div>
         <ion-range></ion-range>
 
-        <!-- Progress (e.g. crowdfunding) -->
-        <div class="badge "
+        <!-- progress -->
+        <div class="badge"
              ng-if="::rec.price && rec.tx"
-             ng-class="{'bagde-secondary badge-shadow': !rec.stock, 'badge-balanced badge-shadow': rec.tx.pct>=100, 'badge-calm': rec.tx.pct < 100 && rec.tx.pct > 0, 'badge-stable': rec.tx.pct === 0}">
+             ng-class="{'badge-secondary': !rec.stock, 'badge-balanced badge-shadow': rec.tx.pct>=100, 'badge-calm badge-shadow': rec.tx.pct < 100 && rec.tx.pct > 0, 'badge-stable': rec.tx.pct === 0}">
           <i class="ion-android-checkmark-circle" ng-if="::rec.tx.pct>=100"></i>
           <span>Financé à {{::rec.tx.pct|formatInteger}} %</span>
         </div>

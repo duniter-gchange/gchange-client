@@ -53,7 +53,9 @@
     padding: 0 20px;
     font-weight: normal !important;
 }
-
+.row-record .badge-secondary {
+    top: 40px !important;
+}
 
 /**
 * Market lookup screen

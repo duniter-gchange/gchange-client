@@ -14,7 +14,10 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       postSearch: esHttp.post('/market/record/_search'),
       searchText: esHttp.get('/market/record/_search?q=:search'),
       get: esHttp.get('/market/record/:id'),
-      getCommons: esHttp.get('/market/record/:id?_source=' + fields.commons.join(','))
+      getCommons: esHttp.get('/market/record/:id?_source=' + fields.commons.join(',')),
+      add: esHttp.record.post('/market/record'),
+      update: esHttp.record.post('/market/record/:id/_update'),
+      remove: esHttp.record.remove('market', 'record')
     },
     api = new Api(this, "mkRecord"),
     filters = {
@@ -252,7 +255,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
             var record = res._source;
             record.stock = stock||0;
             record.id = id;
-            return exports.record.update(record, {id: id});
+            return raw.update(record, {id: id});
         });
   }
 
@@ -471,9 +474,9 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       load: loadData,
       setStock: setStockToRecord,
       pictures: searchPictures,
-      add: esHttp.record.post('/market/record'),
-      update: esHttp.record.post('/market/record/:id/_update'),
-      remove: esHttp.record.remove('market', 'record'),
+      add: raw.add,
+      update: raw.update,
+      remove: raw.remove,
       moreLikeThis: searchMoreLikeThis,
       fields: {
         commons: fields.commons
