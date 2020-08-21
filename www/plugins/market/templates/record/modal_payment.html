@@ -1,0 +1,37 @@
+<ion-modal-view id="transfer" class="modal-transfer">
+  <ion-header-bar class="bar-positive">
+    <button class="button button-clear visible-xs" ng-click="closeModal()" translate>COMMON.BTN_CANCEL</button>
+    <h1 class="title" translate>MARKET.PAYMENT.MODAL.TITLE</h1>
+
+  </ion-header-bar>
+
+  <ion-content class="padding">
+
+    <p ng-if="formData.comment" trust-as-html="'MARKET.VIEW.PAYMENT_WITH_COMMENT'|translate: formData"></p>
+    <p ng-if="!formData.comment" trust-as-html="'MARKET.VIEW.PAYMENT'|translate: formData"></p>
+
+    <br/>
+
+    <p trust-as-html="'MARKET.PAYMENT.MODAL.SOFTWARE_HELP'|translate: formData"></p>
+
+    <br/>
+
+    <p trust-as-html="'MARKET.PAYMENT.MODAL.PAYMENT_LINK_HELP'|translate"></p>
+
+    <div class="list">
+      <div class="item item-text-wrap ink item-button-right"
+           ng-repeat="uri in formData.uris">
+        <a ng-click="openLink($event, uri)" class="positive">{{uri}}</a>
+        <a class="button  button-clear button-positive ink"
+           title="{{'COMMON.BTN_COPY'}}"
+           copy-on-click="{{::uri}}">
+          <i class="icon ion-ios-copy-outline"></i>
+        </a>
+      </div>
+    </div>
+
+    <ng-include src="::'templates/common/qrcode.html'"></ng-include>
+  </ion-content>
+
+
+</ion-modal-view>

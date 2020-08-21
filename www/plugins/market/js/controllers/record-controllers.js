@@ -52,12 +52,14 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
  .controller('MkRecordEditCtrl', MkRecordEditController)
 
+ .controller('MkRecordPaymentModalCtrl', MkRecordPaymentModalController)
+
 ;
 
 
 function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q, $controller,
-                                $timeout, $filter, $translate, UIUtils, Modals, csConfig, csCurrency, csWallet,
-                                esModals, esProfile, esHttp, mkRecord) {
+                                $timeout, $filter, $translate, UIUtils, csCrypto, ModalUtils, csConfig, csCurrency, csWallet,
+                                esModals, esProfile, esHttp, mkRecord, mkTx) {
   'ngInject';
 
 
@@ -121,6 +123,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         // prevent reload if same id (and if not forced)
         UIUtils.loading.hide();
         $scope.updateButtons();
+        $scope.updatePaymentData();
       }
 
       // Notify child controllers
@@ -255,6 +258,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 
   $scope.updateView = function() {
     $scope.updateButtons();
+    $scope.updatePaymentData();
 
     // Set Motion (only direct children, to exclude .lazy-load children)
     $scope.motion.show({
@@ -274,6 +278,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     if ($scope.canReopen) {
       $scope.canEdit = false;
     }
+
   };
 
   $scope.markAsView = function() {
@@ -426,7 +431,6 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     });
   };
 
-
   $scope.showNewMessageModal = function() {
     return $q.all([
         $translate('MARKET.VIEW.NEW_MESSAGE_TITLE', $scope.formData),
@@ -446,28 +450,6 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       });
   };
 
-  $scope.buy = function () {
-    $scope.hideActionsPopover();
-
-    return $scope.loadWallet()
-      .then(function (walletData) {
-        UIUtils.loading.hide();
-        if (walletData) {
-          return Modals.showTransfer({
-              pubkey: $scope.issuer.pubkey,
-              uid: $scope.issuer.name || $scope.issuer.uid,
-              amount: $scope.formData.price
-            }
-          )
-            .then(function (result) {
-              if (result) {
-                return UIUtils.toast.show('INFO.TRANSFER_SENT');
-              }
-            });
-        }
-      });
-  };
-
   $scope.showRecord = function(event, index) {
     if (event.defaultPrevented) return;
     var item = $scope.search.results[index];
@@ -477,6 +459,63 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         title: item.title
       });
     }
+  };
+
+
+  $scope.updatePaymentData = function() {
+    var record = $scope.formData;
+    var canPay = !$scope.canEdit && record && record.stock > 0;
+    if (!canPay) {
+      $scope.canPay = false;
+      return;
+    }
+
+    // Compute TX amount
+    var amount = record.price;
+    var comment;
+
+    // crowdfunding
+    if (record.type === 'crowdfunding') {
+      amount = undefined;
+      comment = mkTx.record.computePrefix(record);
+    }
+
+    // Auction
+    else if (record.type === 'auction') {
+      //amount = $scope.formData.tx.max
+      comment = mkTx.record.computePrefix(record);
+    }
+
+    var pubkey = $scope.issuer.pubkey;
+    if (!pubkey) {
+      console.error('TODO: use the profile.pubkey !!');
+      $scope.canPay = false;
+      $scope.paymentData = null;
+      return;
+    }
+    var pkChecksum = csCrypto.util.pkChecksum(pubkey);
+
+    $scope.paymentData = {
+        pubkey: pubkey,
+        pubkeyWithChecksum: pubkey + ':' + pkChecksum,
+        amount: amount,
+        comment: comment,
+        currency: record.currency,
+      };
+
+    // Compute URI
+    mkTx.uri.compute($scope.paymentData)
+      .then(function(uris) {
+        $scope.paymentData.uris = uris;
+      });
+
+    $scope.canPay = true;
+  }
+
+  $scope.showPaymentModal = function() {
+    if (!$scope.canPay) return;
+    return ModalUtils.show('plugins/market/templates/record/modal_payment.html', 'MkRecordPaymentModalCtrl',
+      $scope.paymentData);
   };
 
   /* -- context aware-- */
@@ -867,6 +906,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
   $scope.$watch('formData', $scope.onFormDataChanged, true);
 
   /* -- modals -- */
+
   $scope.showRecordTypeModal = function() {
     ModalUtils.show('plugins/market/templates/record/modal_record_type.html')
     .then(function(type){
@@ -899,4 +939,34 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
         }
       });
   };
+}
+
+function MkRecordPaymentModalController($scope, parameters, csSettings, mkTx) {
+
+  $scope.loading = true;
+  $scope.formData = {
+    helpSiteUrl: csSettings.data.userForumUrl
+  }
+
+  $scope.openHelpSite = function(event) {
+    return $scope.openLink(event, csSettings.data.userForumUrl || 'https://forum.monnaie-libre.fr');
+  };
+
+  $scope.load = function() {
+
+    console.debug("[market] Display payment info", parameters);
+
+    angular.merge($scope.formData, parameters);
+
+    return mkTx.uri.compute(parameters)
+      .then(function(links) {
+        $scope.links = links;
+
+        $scope.loading = false;
+    })
+
+
+  };
+
+  $scope.load();
 }

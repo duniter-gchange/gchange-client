@@ -12,14 +12,13 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
 
   })
 
-.factory('mkTx', function($rootScope, $q, csSettings, csPlatform, BMA, csConfig, esHttp, mkRecord) {
+.factory('mkTx', function($rootScope, $q, csSettings, csPlatform, CryptoUtils, csConfig, esHttp, mkRecord) {
   'ngInject';
 
-  console.log("TODO start mkTx")
   var
     listeners,
     constants= {
-      COMMENTS_PREFIX: "GCHANGE:"
+      COMMENTS_PREFIX: "GCHANGE"
     },
     raw = {
       postSearchByCurrency: {
@@ -29,7 +28,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
 
   function getRecordPrefix(record) {
     if (!record || !record.id) throw Error('Missing record or record.id');
-    return constants.COMMENTS_PREFIX + ':' + record.id;
+    return [constants.COMMENTS_PREFIX, record.id].join(':').toUpperCase();
   }
 
   function postSearch(currency, request) {
@@ -48,7 +47,8 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
     var now = Date.now();
     console.debug("[market] [tx] Loading TX stats of record {{0}}...".format(record.id));
 
-    var commentPrefix = getRecordPrefix(record);
+    // Compute prefix, if need
+    options.prefix = options.prefix || getRecordPrefix(record);
 
     var request = {
       size: 0,
@@ -59,7 +59,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
           ],
           must: {
             prefix: {
-              comment: commentPrefix
+              comment: options.prefix
             }
           }
         }
@@ -136,6 +136,33 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
     return deferred.promise;
   }
 
+  function computeTxUris(options) {
+    if (!options || !options.pubkey) return $q.reject('Missing options.pubkey');
+    options.currency = options.currency || 'g1';
+
+    if (options.currency === 'g1') {
+      var uri = 'june://' + options.pubkey;
+      var uriParams = [];
+      if (options.amount) {
+        uriParams.push('amount=' + options.amount / 100);
+      }
+      if (options.comment) {
+        uriParams.push('comment=' + options.comment);
+      }
+      if (uriParams.length) {
+        uri += '?' + uriParams.join('&');
+      }
+
+      // TODO: add g1.duniter.org
+      return $q.when([
+        uri,
+        'web+' + uri
+      ]);
+    }
+
+    return $q.when([]);
+
+  }
 
   function addListeners() {
     // Extend csWot events
@@ -151,8 +178,11 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
 
   return {
     record: {
-      getPrefix: getRecordPrefix,
+      computePrefix: getRecordPrefix,
       fillTx: fillRecordTx
+    },
+    uri: {
+      compute: computeTxUris
     },
     constants : constants
   };

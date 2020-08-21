@@ -182,7 +182,7 @@
             <button class="button button-stable button-small-padding icon ion-compose"
                     ng-if="!canEdit"
                     ng-click="showNewMessageModal()"
-                    title="{{'MARKET.VIEW.BTN_WRITE_'+formData.type |upper|translate}}">
+                    title="{{'MARKET.VIEW.BTN_WRITE'|translate}}">
             </button>
 
             <!-- Like button -->
@@ -232,6 +232,7 @@
             </p>
           </ion-item>
 
+          <!-- desktop price -->
           <ion-item class="item-icon-left item-button-right hidden-xs" ng-if="formData.price||formData.fees">
             <ng-if ng-if="formData.price">
               <i class="calm icon ion-pricetag"></i>
@@ -239,6 +240,14 @@
                   ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative}"></h1>
             </ng-if>
             <h3>
+              <!-- Tx progress -->
+              <div ng-if="::formData.price && formData.tx"
+                   ng-class="{'badge-secondary': !rec.stock, 'badge-balanced badge-shadow': formData.tx.pct>=100, 'badge-calm badge-shadow': formData.tx.pct < 100 && formData.tx.pct > 0, 'badge-stable': formData.tx.pct === 0}">
+                <i class="ion-android-checkmark-circle" ng-if="::formData.tx.pct>=100"></i>
+                <span>{{'MARKET.COMMON.CROWDFUNDING_PROGRESS'|translate: formData.tx}}</span>
+              </div>
+
+              <!-- Fees -->
               <ng-if ng-if="formData.fees">
                 <span class="dark">
                   <i class="ion-plus" ng-if="::formData.price"></i>
@@ -246,7 +255,9 @@
                 </span>
                  <span class="gray">{{'MARKET.VIEW.RECORD_FEES_PARENTHESIS'|translate}} | </span>
               </ng-if>
-              <span class="gray">
+
+              <!-- stock -->
+              <span class="gray" ng-if="formData.type==='offer' || formData.type==='auction'">
                 <i class="ion-pie-graph"></i>
                 {{'MARKET.VIEW.RECORD_STOCK'|translate}}
                 <ng-if ng-if="formData.stock > 0"><span class="dark">{{::formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
@@ -262,10 +273,24 @@
                target="_blank"
                translate>MARKET.COMMON.BTN_PAY</a> -->
 
+
+
           </ion-item>
           <span class="item hidden-xs" ng-if="!formData.price && !formData.fees && formData.stock === 0">
             <div class="badge badge-secondary badge-assertive"><i class="ion-close"></i> <span class="bold" translate>MARKET.COMMON.SOLD</span></div>
           </span>
+          <!-- Payment details -->
+          <ion-item class="item-button-right" ng-if="canPay">
+            <p ng-if="paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT_WITH_COMMENT'|translate: paymentData"></p>
+            <p ng-if="!paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT'|translate: paymentData"></p>
+
+            <!-- pay help button -->
+            <a class="button  button-clear button-positive ink"
+               title="{{'MARKET.VIEW.BTN_PAYMENT_HELP'}}"
+               ng-click="showPaymentModal($event)">
+              <i class="icon ion-help-circled"></i>
+            </a>
+          </ion-item>
 
           <div class="lazy-load">
             <!-- pictures -->

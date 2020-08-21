@@ -45,12 +45,12 @@
         <div ng-if="::!rec.stock" class="badge badge-assertive"  translate>MARKET.COMMON.SOLD</div>
         <ion-range></ion-range>
 
-        <!-- progress -->
+        <!-- Tx progress -->
         <div class="badge"
              ng-if="::rec.price && rec.tx"
              ng-class="{'badge-secondary': !rec.stock, 'badge-balanced badge-shadow': rec.tx.pct>=100, 'badge-calm badge-shadow': rec.tx.pct < 100 && rec.tx.pct > 0, 'badge-stable': rec.tx.pct === 0}">
           <i class="ion-android-checkmark-circle" ng-if="::rec.tx.pct>=100"></i>
-          <span>Financé à {{::rec.tx.pct|formatInteger}} %</span>
+          <span>{{'MARKET.COMMON.CROWDFUNDING_PROGRESS'|translate: rec.tx}}</span>
         </div>
     </div>
   </div>

@@ -422,7 +422,6 @@ function ESSocialsViewController($scope)  {
         });
     };
 
-
     $scope.filterFn = function(social) {
         return !social.recipient || social.valid;
     };

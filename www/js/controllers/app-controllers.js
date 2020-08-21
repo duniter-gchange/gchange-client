@@ -363,7 +363,7 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   // Link management
   ////////////////////////////////////////
 
-  $scope.openLink = function($event, uri, options) {
+  $rootScope.openLink = function($event, uri, options) {
     $event.stopPropagation();
     $event.preventDefault();
 
@@ -387,6 +387,9 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
 
     return false;
   };
+
+  // Publish to root scope
+  //=$scope.openLink;
 
   /**
    * Parse an external URI (see g1lien), and open the expected state
