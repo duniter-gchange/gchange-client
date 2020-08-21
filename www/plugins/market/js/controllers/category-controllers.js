@@ -5,29 +5,29 @@ angular.module('cesium.market.category.controllers', ['cesium.market.record.serv
 
     $stateProvider
 
-    .state('app.market_categories', {
-      url: "/market/categories",
-      views: {
-        'menuContent': {
-          templateUrl: "plugins/market/templates/category/view_categories.html",
-          controller: 'MkViewCategoriesCtrl'
+      .state('app.market_categories', {
+        url: "/market/categories",
+        views: {
+          'menuContent': {
+            templateUrl: "plugins/market/templates/category/view_categories.html",
+            controller: 'MkViewCategoriesCtrl'
+          }
+        },
+        data: {
+          large: 'app.market_categories_lg'
         }
-      },
-      data: {
-        large: 'app.market_categories_lg'
-      }
-    })
+      })
 
-    .state('app.market_categories_lg', {
-      url: "/market/categories/lg",
-      views: {
-        'menuContent': {
-          templateUrl: "plugins/market/templates/category/view_categories_lg.html",
-          controller: 'MkViewCategoriesCtrl'
+      .state('app.market_categories_lg', {
+        url: "/market/categories/lg",
+        views: {
+          'menuContent': {
+            templateUrl: "plugins/market/templates/category/view_categories_lg.html",
+            controller: 'MkViewCategoriesCtrl'
+          }
         }
-      }
-    })
-;
+      });
+
   })
 
  .controller('MkListCategoriesCtrl', MkListCategoriesController)
@@ -51,12 +51,12 @@ function MkListCategoriesController($scope, UIUtils, csConfig, mkRecord) {
   }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
   $scope.load = function(options) {
-
-    $scope.loading = true;
-
     options = options || {};
     options.filter = options.filter || ($scope.options && $scope.options.category && $scope.options.category.filter);
     options.withStock = (!$scope.options || !$scope.options.showClosed);
+    options.silent = angular.isDefined(options.silent) ? options.silent : true;
+
+    if (!options.silent) $scope.loading = true;
 
     return mkRecord.category.stats(options)
       .then(function(res) {
@@ -65,7 +65,7 @@ function MkListCategoriesController($scope, UIUtils, csConfig, mkRecord) {
          return res + cat.count;
         }, 0);
         $scope.loading = false;
-        if ($scope.motion.show) $scope.motion.show();
+        if ($scope.motion.show && !options.silent) $scope.motion.show();
       });
   };
 
@@ -82,21 +82,24 @@ function MkListCategoriesController($scope, UIUtils, csConfig, mkRecord) {
 function MkViewCategoriesController($scope, $controller, $state) {
     'ngInject';
 
+    $scope.entered = false;
+
     // Initialize the super class and extend it.
     angular.extend(this, $controller('MkListCategoriesCtrl', {$scope: $scope}));
 
     // When view enter: load data
     $scope.enter = function(e, state) {
 
-        // Load data
-        return $scope.load()
-            .then(function() {
-                $scope.loading = false;
-                if (!$scope.entered) {
-                    $scope.motion.show();
-                }
-                $scope.entered = true;
-            });
+      // Load data
+      return $scope.load({silent: true})
+          .then(function() {
+
+            $scope.loading = false;
+            if (!$scope.entered) {
+              $scope.motion.show();
+            }
+            $scope.entered = true;
+          });
     };
     $scope.$on('$ionicView.enter',$scope.enter);
 

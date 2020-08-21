@@ -1,50 +1,9 @@
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 293.406 320" enable-background="new 0 0 293.406 320" xml:space="preserve">
-    <defs>
-        <style type="text/css">
-            #Map .regions
-            {
-                fill: #472b67;
-                fill-opacity: 1;
-                stroke: white;
-                stroke-opacity: 1;
-                stroke-width:0.5;
-                stroke-linecap: round;
-                stroke-linejoin: round;
-                stroke-miterlimit: 10;
-                -webkit-transition: all 500ms;
-                cursor: pointer;
-            }
-            #Map &gt; .regions:hover
-            {
-                fill: #70b002;
-            }
-            #Map &gt; g:hover &gt; .regions
-            {
-                fill: #70b002;
-            }
-            .map-svg
-            {
-                                        margin-left: 10%;
-                text-align: right;
-                                    }
-            #regions_list
-            {
-                text-align: left;
-                column-count: 2;
-            }
-            @media (max-width: 900px)
-            {
-                .map-svg
-                {
-                    margin: auto;
-                }
-            }
-
-        </style>
-    </defs>
-
-    <g id="Map">
-        <path data-name="Auvergne-Rhône-Alpes" data-ann-count="1 annonce" data-link="annonces/offres/Auvergne-Rhone-Alpes" data-fillover="#70b002" data-fillout="#472b67" class="regions reg_1" d="
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     x="0px" y="0px" viewBox="0 0 293.406 320"
+     xml:space="preserve">
+    <path data-name="Auvergne-Rhône-Alpes" data-ann-count="1 annonce" data-link="annonces/offres/Auvergne-Rhone-Alpes" data-fillover="#70b002" data-fillout="#472b67" class="regions reg_1" d="
         M184.553,206.132l0.277-0.092l2.09,5.326l2.996-0.924l0.222-1.387h1.165l0.462,1.609
         l2.145-0.518l2.663,3.402l0.277,0.352l0.813,4.253l1.96,2.127l-0.333,2.441l2.459,1.479v3.273l1.313-0.666l2.774,1.813l1.313,0.48
         l0.314-2.293l1.646-0.314l0.481,1.793l1.646-0.167l0.314-1.793l3.754,2.108l0.61-1.239l1.59-0.241l1.535-0.222l0.685,0.813
@@ -211,7 +170,7 @@
         l1.036-0.795l0.092,0.093l0.259-1.942l0.462-2.312l0.813-1.054l0.111-1.387l1.608-0.684v-0.925l-1.72,0.111l-0.351-0.813
         l0.573-1.036l-0.462-1.738l-0.925-0.573l0.241-1.609l0.924-0.592l-0.129-0.684l0.333-0.407l-1.942-0.407l-0.591-1.387l-1.036-0.351
         l-3.107-2.996l-0.351-2.552l-1.276-0.924l-0.703,0.351l-1.146,0.925l-1.146-0.352l-1.979,0.814l-1.609-0.925l-0.703,0.925
-        l-1.036,0.111l-0.703-0.573l-1.146-0.685l-1.387,0.925L165.358,67.995z"></path>
+        l-1.036,0.111l-0.703-0.573l-1.146-0.685l-1.387,0.925L165.358,67.995z" style="fill: rgb(71, 43, 103);"></path>
     <path data-name="Normandie" data-ann-count="0 annonce" data-link="annonces/offres/Normandie" data-fillover="#70b002" data-fillout="#472b67" class="regions reg_9" d="
         M114.929,55.458l0.536-0.092l-3.347-0.684l-2.312-1.738l0.573-3.236l2.774-4.161l4.734-2.552l5.788-2.071
         l8.784-2.201l4.956-3.81l0.758-0.924l0.999,0.425l1.276-0.111l0.573,1.146l5.085,4.974l0.351,2.071l1.146,2.089l-1.146,1.387
@@ -841,5 +800,4 @@
         c0.018-0.021,0.051-0.025,0.046-0.066c0.009-0.031-0.016-0.096,0.014-0.107c0-0.039,0.073-0.002,0.056-0.055
         c0.008-0.031,0.05-0.027,0.048-0.064c0.011-0.027,0.032-0.041,0.021-0.09c-0.013-0.053,0.063-0.02,0.092-0.027
         C16.25,317.459,16.249,317.475,16.249,317.49z"></path>
-    </g>
-    </svg>
+</svg>

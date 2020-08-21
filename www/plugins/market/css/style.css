@@ -24,12 +24,16 @@
     -webkit-line-clamp: 2;
 }
 
-
 .card-record .badge-price {
     font-size: 12px;
     position: absolute !important;
     bottom: 10px !important;
     right: 10px;
+    top: inherit !important;
+}
+
+.card-record .badge-price-pct {
+    bottom: 46px !important;
     top: inherit !important;
 }
 

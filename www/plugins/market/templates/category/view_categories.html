@@ -34,7 +34,7 @@
         <!-- children categories-->
         <a ng-repeat="cat in cat.children track by cat.id"
            class="item item-border item-icon-left item-icon-right"
-           ng-class="{'bold': cat.count}"
+           ng-class="{'text-italic': !cat.count}"
            ng-click="onCategoryClick(cat)">
           <span ng-bind-html="cat.name"></span><span ng-if="cat.count"> ({{cat.count}})</span>
           <i class="icon ion-ios-arrow-right"></i>

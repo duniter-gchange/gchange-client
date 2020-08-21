@@ -36,7 +36,7 @@
         "geoDistance": "50km",
         "cesiumApi": {
           "enable": true,
-          "baseUrl": "https://g1.duniter.fr/api"
+          "baseUrl": "https://demo.cesium.app/api"
         }
       },
       "converse": {

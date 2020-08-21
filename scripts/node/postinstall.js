@@ -18,6 +18,7 @@ try {
 catch(e ) {
   // Silent
 }
+
 try {
   fs.symlinkSync(path.resolve('node_modules/@bower_components'), 'www/lib', 'junction');
 } catch (e) {

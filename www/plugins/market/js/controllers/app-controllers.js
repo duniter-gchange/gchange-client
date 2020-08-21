@@ -22,19 +22,23 @@ angular.module('cesium.market.app.controllers', ['ngResource', 'cesium.es.servic
 
         // Home extension points
         PluginServiceProvider.extendState('app.home', {
-            points: {
-                'buttons': {
-                    templateUrl: "plugins/market/templates/home/home_extend.html",
-                    controller: "MarketHomeExtendCtrl"
-                }
+          points: {
+            'buttons': {
+                templateUrl: "plugins/market/templates/home/home_buttons.html",
+                controller: "MarketHomeButtonsCtrl"
+            },
+            'bottom': {
+              templateUrl: "plugins/market/templates/home/home_categories.html",
+              controller: "PluginExtensionPointCtrl"
             }
+          }
         });
     }
   })
 
  .controller('MarketMenuExtendCtrl', MarketMenuExtendController)
 
- .controller('MarketHomeExtendCtrl', MarketHomeExtendController)
+ .controller('MarketHomeButtonsCtrl', MarketHomeButtonsController)
 ;
 
 
@@ -56,9 +60,11 @@ function MarketMenuExtendController($scope, esSettings, PluginService) {
 /**
  * Control home extension
  */
-function MarketHomeExtendController($scope, $rootScope, $state, $controller, $focus, $timeout, $translate,
-                                    ModalUtils, UIUtils, csConfig, esSettings, mkModals) {
+function MarketHomeButtonsController($scope, $rootScope, $state, $controller, $focus, $timeout, $translate,
+                                    PluginService, ModalUtils, UIUtils, csConfig, esSettings, mkModals) {
     'ngInject';
+
+    $scope.extensionPoint = PluginService.extensions.points.current.get();
 
     // Initialize the super class and extend it.
     angular.extend(this, $controller('ESLookupPositionCtrl', {$scope: $scope}));

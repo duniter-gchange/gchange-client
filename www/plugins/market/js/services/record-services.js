@@ -1,7 +1,7 @@
-angular.module('cesium.market.record.services', ['ngResource', 'cesium.services', 'cesium.es.services', 'cesium.market.category.services',
-  'cesium.market.settings.services'])
+angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'cesium.es.services',
+  'cesium.market.settings.services', 'cesium.market.category.services'])
 
-.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, esGeo, csWot, csCurrency, mkSettings, mkCategory) {
+.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, esGeo, csWot, csCurrency, mkSettings, mkCategory, Api) {
   'ngInject';
 
   var
@@ -16,6 +16,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
       get: esHttp.get('/market/record/:id'),
       getCommons: esHttp.get('/market/record/:id?_source=' + fields.commons.join(','))
     },
+    api = new Api(this, "mkRecord"),
     filters = {
         localSale: {
             excludes: [
@@ -168,10 +169,15 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
           return result.concat(record);
         }, []);
 
-        return {
-          total: res.hits.total,
-          hits: hits
-        };
+        // call extension point
+        return api.record.raisePromise.search(hits)
+          .then(function() {
+
+            return {
+              total: res.hits.total,
+              hits: hits
+            };
+          });
       });
   }
 
@@ -180,6 +186,7 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
     options.fetchPictures = angular.isDefined(options.fetchPictures) ? options.fetchPictures : true;
     options.convertPrice = angular.isDefined(options.convertPrice) ? options.convertPrice : false;
 
+    var hit;
     return $q.all([
         // load categories
         mkCategory.all(),
@@ -199,42 +206,54 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
       .then(function(res) {
         var categories = res[0];
         var currentUD = res[1];
-        var hit = res[2];
+        hit = res[2];
 
         var record = readRecordFromHit(hit, categories, currentUD, options);
+        record.id = hit._id;
 
-        // Load issuer (avatar, name, uid, etc.)
-        return csWot.extend({pubkey: record.issuer})
-          .then(function(issuer) {
-            var data = {
-              id: hit._id,
+        // Fill currency with default, if need (e.g. fix old data)
+        if (!record.currency && record.price) {
+          return mkSettings.currencies()
+            .then(function (currencies) {
+              record.currency = currencies && currencies[0];
+              return record;
+            });
+        }
+        return record;
+      })
+      .then(function (record) {
+
+        return $q.all([
+          // Load issuer (avatar, name, uid, etc.)
+          csWot.extend({pubkey: record.issuer}),
+
+          // API extension (e.g. See market TX service)
+          api.record.raisePromise.load(record)
+            .catch(function(err) {
+              console.debug('[market] [record-service] Error while executing extension point on record load.');
+              console.error(err);
+            })
+          ])
+          .then(function(res) {
+            var issuer = res[0];
+            return {
+              id: record.id,
               issuer: issuer,
               record: record
             };
-
-            // Make sure currency if present (fix old data)
-            if (record.price && !record.currency) {
-              return mkSettings.currencies()
-                .then(function(currencies) {
-                  record.currency = currencies && currencies[0];
-                  return data;
-                });
-            }
-
-            return data;
           });
       });
   }
 
   function setStockToRecord(id, stock) {
-        return raw.get({id: id})
-            .then(function(res) {
-                if (!res || !res._source) return;
-                var record = res._source;
-                record.stock = stock||0;
-                record.id = id;
-                return exports.record.update(record, {id: id});
-            });
+    return raw.get({id: id})
+        .then(function(res) {
+            if (!res || !res._source) return;
+            var record = res._source;
+            record.stock = stock||0;
+            record.id = id;
+            return exports.record.update(record, {id: id});
+        });
   }
 
   function searchPictures(options) {
@@ -441,6 +460,10 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
       });
   }
 
+  // Register extension points
+  api.registerEvent('record', 'load');
+  api.registerEvent('record', 'search');
+
   return {
     category: mkCategory,
     record: {
@@ -465,7 +488,9 @@ angular.module('cesium.market.record.services', ['ngResource', 'cesium.services'
         toggle: esHttp.like.toggle('market', 'record'),
         count: esHttp.like.count('market', 'record')
       }
-    }
+    },
+    // api extension
+    api: api
   };
 })
 ;

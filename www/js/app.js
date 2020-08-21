@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('gchange', ['ionic', 'ionic-material', 'ngMessages', 'pascalprecht.translate',
   'ngApi', 'angular-cache', 'angular.screenmatch', 'angular.bind.notifier', 'angular-fullscreen-toggle',
-  'ImageCropper', 'ngFileSaver', 'ngIdle',
+  'ImageCropper', 'ngFileSaver', 'ngIdle', 'ngSvgStylingMap',
   // removeIf(no-device)
   'ngCordova',
   // endRemoveIf(no-device)

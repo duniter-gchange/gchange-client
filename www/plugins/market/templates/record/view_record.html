@@ -72,9 +72,9 @@
             <h4>
               <ng-include src="'plugins/es/templates/common/view_likes.html'"></ng-include>
             </h4>
-            <div class="badge"
+            <div class="badge badge-shadow"
                  ng-if="options.type.show"
-                 ng-class="{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}">
+                 ng-class="{'badge-calm': formData.type==='offer'||formData.type==='auction', 'badge-energized': formData.type==='need'||formData.type==='crowdfunding'}">
               <i class="cion-market-{{formData.type}}"></i>
               <span>{{'MARKET.TYPE.'+formData.type|upper|translate}}</span>
             </div>
@@ -142,12 +142,12 @@
           <!-- mobile: price -->
           <div class="item visible-xs no-padding-top no-padding-bottom">
 
-            <div class="badge badge-price"
-                 ng-class="::{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}"
-                 ng-if="formData.price">
-              <i class="icon "
-                 ng-class="::{'cion-market-need': formData.type === 'need', 'ion-pricetag': formData.type === 'offer'}"></i>
-              <span ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative} "></span>
+            <div class="badge badge-price badge-shadow"
+                 ng-if="options.type.show && !loading"
+                 ng-class="::{'badge-calm': formData.type==='offer'||formData.type==='auction', 'badge-energized': formData.type==='need'||formData.type==='crowdfunding'}">
+              <i class="icon cion-market-{{formData.type}}"></i>
+              <span ng-if="::formData.price" ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative} "></span>
+              <span ng-if="::!formData.price">{{'MARKET.TYPE.'+formData.type+'_SHORT'|upper|translate}}</span>
             </div>
             <div class="badge badge-secondary" ng-if="formData.fees">
               <span class="dark">

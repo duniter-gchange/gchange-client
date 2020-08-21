@@ -11,7 +11,7 @@
     <div class="item-text-wrap">
       <span ng-repeat="cat in cat.children"
             class="padding-right">
-        <a ng-class="{'bold': cat.count}"
+        <a ng-class="{'text-italic': !cat.count}"
            ng-click="onCategoryClick(cat)"
           ><ng-bind-html ng-bind-html="cat.name"></ng-bind-html><ng-if ng-if="cat.count"> ({{cat.count}})</ng-if></a>
       </span>

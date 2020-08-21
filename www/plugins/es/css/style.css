@@ -220,7 +220,6 @@
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  cursor: pointer;
 }
 
 .list.dropdown-list .item {

@@ -24,7 +24,7 @@
 
               <div class="item hidden-xs item-text-wrap">
                 <h1 ng-if="id" ng-bind-html="formData.title"></h1>
-                <h1 ng-if="!id && formData.type">{{'MARKET.EDIT.' + formData.type + '.TITLE_NEW'|uppercase|translate}}</h1>
+                <h1 ng-if="!id && formData.type">{{'MARKET.EDIT.' + formData.type + '.TITLE_NEW'|upper|translate}}</h1>
 
               </div>
               <div class="item" ng-if="id||options.type.show">

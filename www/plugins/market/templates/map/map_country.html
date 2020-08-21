@@ -1,0 +1,46 @@
+
+<div class="map-container">
+  <div class="center padding" ng-if="loading">
+    <ion-spinner icon="android"></ion-spinner>
+  </div>
+
+  <svg-map ng-if="!loading" src="{{'img/maps/' + selectedCountry + '.svg'}}"
+           init="initProps"
+           props="props"
+           events="bindingEvents"
+           on-event="handleEvent($event)">
+  </svg-map>
+
+  <!--<svg id="mysvg" width="1096px" height="672px" viewBox="0 0 1096 672" version="1.1"
+       xmlns="http://www.w3.org/2000/svg"
+       xmlns:xlink="http://www.w3.org/1999/xlink"
+       xmlns:mapsvg="http://mapsvg.com"
+       mapsvg:geoViewBox="-10.476361 60.846142 1.765083 49.162600">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g stroke="#979797">
+        <Polyline id="Path-1" points="14.6171875 10.2890625 150.796875 205.199219 267.863281 25.1914062 394.09375 198.679688"></Polyline>
+        <rect id="path-1" fill="#D8D8D8" x="647" y="10" width="221" height="203"></rect>
+        <circle id="Oval-1" fill="#D8D8D8" cx="145.5" cy="370.5" r="75.5"></circle>
+        <rect id="path-3" fill="#D8D8D8" x="411" y="278" width="251" height="206" rx="8"></rect>
+        <polygon id="Polygon-1" fill="#D8D8D8" points="957 308 1087.29474 393.681893 1037.52658 532.318107 876.47342 532.318107 826.705257 393.681893"></polygon>
+        <ellipse id="Oval-2" fill="#D8D8D8" cx="304" cy="614.5" rx="205" ry="43.5"></ellipse>
+      </g>
+    </g>
+  </svg>-->
+
+  <br/>
+
+  <p>
+    <a ng-click="convert()" target="_blank">Convert !</a>
+    <a href="" id="demolink" target="_blank">View on a map, as GeoJSON</a>
+  </p>
+
+  <p>
+    <a ng-repeat="country in countries"
+       ng-class="{'bold': country === selectedCountry}"
+       ng-click="onChangeCountry(country)">
+      <span ng-if="$index">&nbsp;|&nbsp;</span>
+      {{countriesMap[country]}}
+    </a>
+  </p>
+</div>

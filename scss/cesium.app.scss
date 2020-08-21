@@ -787,17 +787,12 @@ html, body {
     background-size: 64px 64px;
   }
 
-  #home .button {
+  #home .main-container{
     max-width: 350px;
-    margin-top: 20px;
+    .button {
+      margin-top: 20px;
+    }
   }
-  #home .list{
-    max-width: 350px;
-  }
-}
-
-
-@media screen and (min-width: $screen-md) {
 
 }
 

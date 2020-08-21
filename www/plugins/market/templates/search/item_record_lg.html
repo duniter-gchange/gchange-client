@@ -26,17 +26,14 @@
     <div class="col col-20" style="max-width: 180px;">
       <h3 class="gray" ng-if="::rec.category" ng-bind-html="::rec.category.name"></h3>
       <h5 ng-if="::rec.stock>1" class="gray hidden-xs hidden-sm"><i class="icon ion-pie-graph"></i> <span class="">{{::rec.stock}} <i class="ion-checkmark balanced"></i></span></h5>
-      <div class="badge badge-price"
-           ng-if="::rec.price"
-           ng-class="{'badge-calm': rec.type=='offer', 'badge-energized': rec.type=='need'}">
+
+
+      <div class="badge badge-price badge-shadow"
+           ng-class="{'badge-calm': rec.type==='offer'||rec.type==='auction', 'badge-energized': rec.type==='need'||rec.type==='crowdfunding'}">
         <i class="cion-market-{{rec.type}}"></i>
-        <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: $root.settings.useRelative}"></span>
-      </div>
-      <div class="badge badge-price"
-           ng-if="::!search.type && !rec.price"
-           ng-class="::{'badge-calm': rec.type=='offer', 'badge-energized': rec.type=='need'}">
-        <i class="cion-market-{{::rec.type}}"></i>
-        {{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
+
+        <span ng-if="::rec.price" ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: $root.settings.useRelative, decimalCount: 0}"></span>
+        <span ng-if="::!rec.price">{{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
       </div>
     </div>
     <div class="col hidden-sm hidden-xs">
@@ -45,6 +42,15 @@
           <span ng-bind-html="::rec.description | truncText:500"></span>
         </h4>
         <div ng-if="::!rec.stock" class="badge badge-assertive"  translate>MARKET.COMMON.SOLD</div>
+        <ion-range></ion-range>
+
+        <!-- Progress (e.g. crowdfunding) -->
+        <div class="badge "
+             ng-if="::rec.price && rec.tx"
+             ng-class="{'bagde-secondary badge-shadow': !rec.stock, 'badge-balanced badge-shadow': rec.tx.pct>=100, 'badge-calm': rec.tx.pct < 100 && rec.tx.pct > 0, 'badge-stable': rec.tx.pct === 0}">
+          <i class="ion-android-checkmark-circle" ng-if="::rec.tx.pct>=100"></i>
+          <span>Financé à {{::rec.tx.pct|formatInteger}} %</span>
+        </div>
     </div>
   </div>
 </a>
