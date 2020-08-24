@@ -9,7 +9,8 @@
       "BTN_NEW_AD": "New ad",
       "SOLD": "Close ad",
       "LAST_UPDATE": "Last update",
-      "AROUND_ME": "Around me"
+      "AROUND_ME": "Around me",
+      "CROWDFUNDING_PROGRESS": "{{pct|formatInteger}}% funded"
     },
     "JOIN": {
       "PROFILE": {
@@ -78,6 +79,8 @@
       "BTN_LAST_RECORDS": "Recent ads",
       "BTN_SHOW_CATEGORIES": "Show categories",
       "BTN_OFFERS": "Offers",
+      "BTN_CROWDFUNDING": "Crowdfunding",
+      "BTN_AUCTION": "Auction",
       "BTN_NEEDS": "Needs",
       "SHOW_CLOSED_RECORD": "Display closed ads?",
       "SHOW_OLD_RECORD": "Display old ads?",
@@ -100,6 +103,7 @@
       "BTN_WRITE": "Write a message",
       "BTN_FOLLOW": "Follow this ad",
       "BTN_STOP_FOLLOW": "Stop following this ad",
+      "BTN_PAYMENT_HELP": "How to make a payment?",
       "MENU_TITLE": "Options",
       "RECORD_FEES_PARENTHESIS": "(fees)",
       "RECORD_STOCK": "Available stock:",
@@ -108,7 +112,11 @@
       "SOLD_CONFIRMATION" : "<b>Are you sure</b> you want to close this ad?",
       "REOPEN_CONFIRMATION" : "<b>Are you sure</b> you want to repoen this ad?",
       "NEW_MESSAGE_TITLE": "About your ad \"{{title}}\"...",
-      "MORE_LIKE_THIS": "This might interest you:"
+      "MORE_LIKE_THIS": "This might interest you:",
+      "PAYMENT": "<b> To make a payment </b>, send {{currency | abbreviate}}:<ul><li> - to the public key <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum || pubkey}} \"title=\"Copy key\">{{pubkey}}</a></li></p>",
+      "PAYMENT_WITH_COMMENT": "<b> To make a payment </b>, send {{currency | abbreviate}}:<ul><li> - to the public key <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum || pubkey}} \"title=\"Copy key\">{{pubkey}}</a></li>- with the comment <a class=\"positive\" copy-on-click=\"{{comment}}\" title=\"Copy the comment\">{{comment}}</a> for monitoring.</li></p>",
+      "CROWDFUNDING_ISSUERS": "{{issuers.length}} donor{{issuers.length > 1 ? 's' : ''}}",
+      "SHOW_CROWDFUNDING_ISSUERS": "Show donors"
     },
     "WALLET": {
       "DUNITER_PUBKEY": "Public key to receive payments",
@@ -121,8 +129,12 @@
       "SELECT_TYPE": "Kind of ad:",
       "OFFER": "Offer",
       "OFFER_SHORT": "Offer",
+      "CROWDFUNDING": "Crowdfunding",
+      "CROWDFUNDING_SHORT": "Crowdfunding",
       "NEED": "Need",
-      "NEED_SHORT": "Need"
+      "NEED_SHORT": "Need",
+      "AUCTION": "Auction",
+      "AUCTION_SHORT": "Auction"
     },
     "LOCAL_SALE": {
       "LOCATION": "Stand number",
@@ -131,7 +143,6 @@
     },
     "EDIT": {
       "TITLE": "Edit",
-      "TITLE_NEW": "New ad",
       "RECORD_TITLE": "Title",
       "RECORD_TITLE_HELP": "Title",
       "RECORD_DESCRIPTION": "Description",
@@ -144,15 +155,28 @@
       "RECORD_FEES": "Fees",
       "RECORD_FEES_HELP": "Fees (optional)",
       "RECORD_STOCK": "Available stock",
-      "RECORD_STOCK_HELP": "Available stock"
+      "RECORD_STOCK_HELP": "Available stock",
+      "AUCTION": {
+        "TITLE_NEW": "New auction",
+        "START_PRICE_HELP": "Starting price (optional)"
+      },
+      "OFFER": {
+        "TITLE_NEW": "New ad"
+      },
+      "NEED": {
+        "TITLE_NEW": "Nouvelle demande",
+        "MAX_PRICE_HELP": "Prix maximum (optionnel)"
+      },
+      "CROWDFUNDING": {
+        "TITLE_NEW": "New crowdfunding campaign",
+        "TITLE_HELP": "Campaign title",
+        "DESCRIPTION_HELP": "Description: Describe your project here",
+        "PRICE_HELP": "Expected amount"
+      }
     },
     "WOT": {
       "VIEW": {
-        "STARS": "Trust level",
-        "STAR_HIT_COUNT": "{{total}} rate{{total>1 ? 's' : ''}}",
         "BTN_RECORDS": "Ads",
-        "BTN_STAR_HELP": "Rate this profile",
-        "BTN_REDO_STAR_HELP": "Update your rate for this profile",
         "DUNITER_PUBKEY": "Public key to receive payments",
         "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
         "DUNITER_ACCOUNT_HELP": "The public key (above) is the account to be used to pay for this user.",
@@ -160,6 +184,13 @@
       },
       "ERROR": {
         "FAILED_STAR_PROFILE": "Error sending your rate. Please try again later."
+      }
+    },
+    "PAYMENT": {
+      "MODAL": {
+        "TITLE": "Make a payment",
+        "SOFTWARE_HELP": "Don't know <b> how to send {{currency | abbreviate}}?</b><ul><li> - <a ng-click=\"openHelpSite($event)\"> Consult the user forum;</a><li> - Install compatible software: <a ng-click=\"openLink($event,'https://cesium.app')\"> Cesium </a> (Linux, Windows, Mac), Silkaj (Linux) or Sakia (Linux).</li>",
+        "PAYMENT_LINK_HELP": "Payment links (bêta) :"
       }
     },
     "ERROR": {

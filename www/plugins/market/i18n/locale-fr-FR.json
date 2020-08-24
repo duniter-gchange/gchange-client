@@ -10,7 +10,6 @@
       "SOLD": "Annonce close",
       "LAST_UPDATE": "Dernière mise à jour",
       "AROUND_ME": "Autour de moi",
-      "BTN_PAY": "Payer",
       "CROWDFUNDING_PROGRESS": "Financé à {{pct|formatInteger}} %"
     },
     "JOIN": {
@@ -171,7 +170,7 @@
       "CROWDFUNDING": {
         "TITLE_NEW": "Nouvelle campagne de financement",
         "TITLE_HELP": "Titre de la campagne",
-        "DESCRIPTION_HELP": "Description : Decrivez votre projet ici",
+        "DESCRIPTION_HELP": "Description : Décrivez votre projet ici",
         "PRICE_HELP": "Montant recherché"
       }
     },
