@@ -26,6 +26,7 @@
          id="market-record-title"
          ng-model="formData.title"
          ng-minlength="3"
+         ng-maxlength="50"
          required>
 </div>
 <div class="form-errors"
@@ -36,6 +37,9 @@
   </div>
   <div class="form-error" ng-message="minlength">
     <span translate="ERROR.FIELD_TOO_SHORT"></span>
+  </div>
+  <div class="form-error" ng-message="maxlength">
+    <span translate="ERROR.FIELD_TOO_LONG_WITH_LENGTH" translate-values="{maxLength: 50}"></span>
   </div>
 </div>
 

@@ -382,7 +382,7 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
       }
 
 
-      var validProtocol = parts.protocol === 'g1:' ||
+      var validProtocol = parts.protocol === 'june:' || 'web+june:' ||
         // Check if device is enable, on special tel: or mailto: protocol
         (Device.enable && (parts.protocol === 'mailto:' || parts.protocol === 'tel:'));
       if (!validProtocol) {

@@ -22,7 +22,7 @@ angular.module('cesium.home.controllers', ['cesium.platform', 'cesium.services']
   .controller('HomeCtrl', HomeController)
 ;
 
-function HomeController($scope, $state, $timeout, $ionicHistory, $translate, $http, $q, $location,
+function HomeController($scope, $state, $timeout, $ionicHistory, $http, $translate, $q, $location,
                         UIUtils, csConfig, csCache, csPlatform, csCurrency, csSettings) {
   'ngInject';
 

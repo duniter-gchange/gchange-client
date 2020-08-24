@@ -114,33 +114,48 @@ angular.module('cesium.directives', [])
   })
 
   // Add a copy-on-click directive
-  .directive('copyOnClick', function ($window, $document, Device, UIUtils) {
+  .directive('copyOnClick', function ($window, $document, $timeout, Device, UIUtils) {
     'ngInject';
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {
         var showCopyPopover = function (event) {
           var value = attrs.copyOnClick;
-          if (value && Device.clipboard.enable) {
-            // copy to clipboard
+          if (value === undefined || value === null) return; // Skip if no value
+
+          if (Device.clipboard.enable) {
+            // copy to clipboard, using cordova
             Device.clipboard.copy(value)
               .then(function(){
                  UIUtils.toast.show('INFO.COPY_TO_CLIPBOARD_DONE');
               })
               .catch(UIUtils.onError('ERROR.COPY_CLIPBOARD'));
           }
-          else if (value) {
+          else {
+
             var rows = value && value.indexOf('\n') >= 0 ? value.split('\n').length : 1;
             UIUtils.popover.show(event, {
               scope: scope,
               templateUrl: 'templates/common/popover_copy.html',
               bindings: {
                 value: attrs.copyOnClick,
-                rows: rows
+                rows: rows,
+                copied: false
               },
-              autoselect: '.popover-copy ' + (rows <= 1 ? 'input' : 'textarea')
+              autoselect: '.popover-copy ' + (rows <= 1 ? 'input' : 'textarea'),
+
+              // After popover, try to copy the selection
+              afterShow: document.execCommand ? function(popover) {
+                try {
+                  document.execCommand("copy");
+                  UIUtils.toast.show('INFO.COPY_TO_CLIPBOARD_DONE', 1000);
+                } catch (err) {
+                  console.error("[copy-on-click] Failed to copy using document.execCommand('copy')", err);
+                }
+              } : undefined
             });
           }
+
         };
         element.bind('click', showCopyPopover);
         element.bind('hold', showCopyPopover);

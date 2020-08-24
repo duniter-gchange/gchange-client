@@ -114,8 +114,8 @@
       "REOPEN_CONFIRMATION" : "<b>Êtes-vous sûr</b> de vouloir réouvrir cette annonce ?",
       "NEW_MESSAGE_TITLE": "Au sujet de l'annonce \"{{title}}\"...",
       "MORE_LIKE_THIS": "Ceci pourrait vous intéresser :",
-      "PAYMENT": "<b>Pour faire un paiement</b>, envoyer de la monnaie {{currency|abbreviate}} :<ul><li>- à la clé publique <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum||pubkey}}\" title=\"Copier la clef\">{{pubkey}} <i class=\"icon ion-ios-copy-outline\"></i></a></li></p>",
-      "PAYMENT_WITH_COMMENT": "<b>Pour faire un paiement</b>, envoyer de la monnaie {{currency|abbreviate}} :<ul><li>- à la clé publique <code>{{pubkey}}</code> (<a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum||pubkey}}\" title=\"Copier la clef\">copier</a>)</li><li> - avec le commentaire <a class=\"positive\" copy-on-click=\"{{comment}}\" title=\"Copier le commentaire\">{{comment}}</a> pour le suivi.</li></ul></p>"
+      "PAYMENT": "<b>Pour faire un paiement</b>, envoyer de la monnaie {{currency|abbreviate}} :<ul><li>- à la clé publique <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum||pubkey}}\" title=\"Copier la clef\">{{pubkey}}</a></li></p>",
+      "PAYMENT_WITH_COMMENT": "<b>Pour faire un paiement</b>, envoyer de la monnaie {{currency|abbreviate}} :<ul><li>- à la clé publique  <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum||pubkey}}\" title=\"Copier la clef\">{{pubkey}}</a></li><li> - avec le commentaire <a class=\"positive\" copy-on-click=\"{{comment}}\" title=\"Copier le commentaire\">{{comment}}</a> pour le suivi.</li></ul></p>"
     },
     "WALLET": {
       "DUNITER_PUBKEY": "Clé publique de réception des paiements",

@@ -48,7 +48,7 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
     }
 
     return $q(function(resolve) {
-      $translate([err, 'ERROR.POPUP_TITLE', 'ERROR.UNKNOWN_ERROR', 'COMMON.BTN_OK'].concat(subtitle ? [subtitle] : []))
+      $translate([err, 'ERROR.POPUP_TITLE', 'ERROR.UNKNOWN_ERROR', 'COMMON.BTN_OK', subtitle || '_NON_NULL_'])
         .then(function (translations) {
           var message = err.message || translations[err];
           return $ionicPopup.show({
@@ -76,7 +76,7 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
     options.okText = options.okText || 'COMMON.BTN_OK';
 
     return $q(function(resolve) {
-      $translate([message, 'INFO.POPUP_TITLE', options.okText].concat(subtitle ? [subtitle] : []))
+      $translate([message, 'INFO.POPUP_TITLE', options.okText, subtitle || '_NON_NULL_'])
         .then(function (translations) {
           $ionicPopup.show({
             template: '<p>' + translations[message] + '</p>',
@@ -102,12 +102,13 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
   }
 
   function askConfirm(message, title, options) {
+    if (!message) return $q.reject("Missing 'message' argument");
     title = title || 'CONFIRM.POPUP_TITLE';
 
     options = options || {};
     options.cssClass = options.cssClass || 'confirm';
-    options.okText = options.okText || 'COMMON.BTN_OK';
     options.cancelText = options.cancelText || 'COMMON.BTN_CANCEL';
+    options.okText = options.okText || 'COMMON.BTN_OK';
 
     return $translate([message, title, options.cancelText, options.okText])
       .then(function (translations) {
@@ -170,13 +171,13 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
     duration = duration || 'short';
     position = position || 'bottom';
 
-    return $translate([message])
-      .then(function(translations){
+    return $translate(message)
+      .then(function(message){
 
         // removeIf(no-device)
         // Use the Cordova Toast plugin
         if (!!window.cordova) {
-          $cordovaToast.show(translations[message], duration, position);
+          $cordovaToast.show(message, duration, position);
           return;
         }
         // endRemoveIf(no-device)
@@ -192,7 +193,7 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
             duration = 5000;
           }
         }
-        return $ionicLoading.show({ template: translations[message], noBackdrop: true, duration: duration });
+        return $ionicLoading.show({ template: message, noBackdrop: true, duration: duration });
         // endRemoveIf(device)
       });
   }
@@ -574,6 +575,9 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
       .then(function(instance) {
         // If there is no cached instance/domain, then insert a "https://" with no domain at the start of the prompt.
         options.bindings.instance = instance || "https://";
+        // Remove auto select, if instance already set
+        if (instance) options.autoselect = undefined;
+
         return showPopover(event, options);
       })
       .then(function(instance) {

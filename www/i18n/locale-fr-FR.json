@@ -23,6 +23,7 @@
     "BTN_IMPORT": "Importer",
     "BTN_CANCEL": "Annuler",
     "BTN_CLOSE": "Fermer",
+    "BTN_COPY": "Copier",
     "BTN_LATER": "Plus tard",
     "BTN_LOGIN": "Se connecter",
     "BTN_LOGOUT": "Déconnexion",
@@ -79,7 +80,7 @@
       "SHARE_ON_FACEBOOK": "Partager sur Facebook",
       "SHARE_ON_DIASPORA": "Partager sur Diaspora*",
       "SHARE_ON_MASTODON": "Partager sur Mastodon",
-      "INSTANCE_ADDRESS_HELP": "Entrer l'adresse de l'instance (ex: https://linuxrocks.online) :"
+      "INSTANCE_ADDRESS_HELP": "Entrer l'adresse de l'instance (ex: https://framapiaf.org) :"
     },
     "FILE": {
       "DATE": "Date :",

@@ -1806,7 +1806,7 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
 .item-button-right .item-content > .button,
 .item-button-right > .buttons,
 .item-button-right .item-content > .buttons {
-  top: 16px;
+  //top: 16px;
 
 }
 
@@ -2686,4 +2686,11 @@ div[dropzone]:hover {
   background-repeat: no-repeat;
   background-position-y: 7px;
   background-position-x: 7px;
+}
+
+/* -- share popover / Mastodon instance -- */
+
+.popover-instance-address {
+  width: 400px;
+  height: 250px;
 }
