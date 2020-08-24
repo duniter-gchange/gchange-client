@@ -534,6 +534,12 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       $scope.paymentData);
   };
 
+  $scope.showIssuers = function(event) {
+    var comment = $scope.paymentData.comment;
+    if (!comment) return; // Skip
+    return $scope.openLink(event, 'https://demo.cesium.app/#/app/data/search/g1/movement?q=comment:\"'+comment+'\"');
+  }
+
   /* -- context aware-- */
 
   // When wallet login/logout -> update buttons

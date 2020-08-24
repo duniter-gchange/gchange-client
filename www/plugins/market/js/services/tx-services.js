@@ -27,7 +27,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
     };
 
   function getRecordPrefix(record) {
-    if (!record || !record.id) throw Error('Missing record or record.id');
+    if (!record || !record.id) throw Error('Invalid record: missing record or record.id');
     return [constants.COMMENTS_PREFIX, record.id].join(':').toUpperCase();
   }
 
@@ -43,6 +43,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
   function fillRecordTx(record, options) {
     options = options || {};
     options.withAvg = angular.isDefined(options.withAvg) ? options.withAvg : false;
+    options.withIssuers = angular.isDefined(options.withIssuers) ? options.withIssuers : false;
 
     var now = Date.now();
     console.debug("[market] [tx] Loading TX stats of record {{0}}...".format(record.id));
@@ -54,9 +55,6 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
       size: 0,
       query: {
         bool: {
-          filter: [
-            {term : {recipient : record.issuer}}
-          ],
           must: {
             prefix: {
               comment: options.prefix
@@ -65,21 +63,32 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
         }
       },
       aggs: {
-        amount_sum: {
+        sum: {
           sum : { field : "amount" }
         }
       }
     };
 
+    // Add filter on recipient pubkey
+    if (record.pubkey) {
+      request.query.bool['filter'] = [{term : {recipient : record.pubkey}}]
+    }
+
     if (options.withAvg) {
-      request.aggs['amount_avg'] = {
+      request.aggs['avg'] = {
         avg : { field : "amount" }
       };
+    }
+    if (options.withIssuers) {
+      request.aggs['issuers'] = {
+        terms : { field : "issuer" }
+      };
+
     }
 
     return postSearch(record.currency, request)
       .then(function (res) {
-        var sum = res.aggregations && res.aggregations.amount_sum && res.aggregations.amount_sum.value;
+        var sum = res.aggregations && res.aggregations.sum && res.aggregations.sum.value;
         var pct = record.price > 0 ?
           (sum * 100 / record.price)
           : undefined;
@@ -88,7 +97,13 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
           pct: pct
         };
         if (options.withAvg) {
-          record.sum = res.aggregations && res.aggregations.amount_avg && res.aggregations.amount_avg.value;
+          record.tx.avg = res.aggregations && res.aggregations.avg && res.aggregations.avg.value;
+        }
+        if (options.withIssuers) {
+          record.tx.issuers = (res.aggregations && res.aggregations.issuers && res.aggregations.issuers.buckets || [])
+            .reduce(function(res, bucket) {
+              return res.concat(bucket.key);
+            }, []);
         }
         console.debug("[market] [tx] TX stats loaded in {1}ms".format(record.id, Date.now() - now), record.tx);
 
@@ -101,7 +116,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
 
     var jobs = (records||[]).reduce(function(res, record){
       // Crowdfunding
-      if (record.type === 'crowdfunding') {
+      if (record.type === 'crowdfunding' && record.pubkey) {
         return res.concat(fillRecordTx(record));
       }
       return res;
@@ -124,7 +139,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
 
     // Crowdfunding
     if (record.type === 'crowdfunding') {
-      return fillRecordTx(record, {withAvg: true})
+      return fillRecordTx(record, {withAvg: true, withIssuers: true})
         .then(deferred.resolve)
         .catch(deferred.reject);
     }

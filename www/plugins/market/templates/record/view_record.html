@@ -241,10 +241,17 @@
             </ng-if>
             <h3>
               <!-- Tx progress -->
-              <div ng-if="::formData.price && formData.tx"
-                   ng-class="{'badge-secondary': !rec.stock, 'badge-balanced badge-shadow': formData.tx.pct>=100, 'badge-calm badge-shadow': formData.tx.pct < 100 && formData.tx.pct > 0, 'badge-stable': formData.tx.pct === 0}">
-                <i class="ion-android-checkmark-circle" ng-if="::formData.tx.pct>=100"></i>
-                <span>{{'MARKET.COMMON.CROWDFUNDING_PROGRESS'|translate: formData.tx}}</span>
+              <div ng-if="formData.price && formData.tx">
+                <span ng-class="{'balanced': formData.tx.pct &gt;= 100, 'dark': formData.tx.pct > 0 && formData.tx.pct < 100, 'assertive&': formData.tx.pct === 0}">
+                  <i class="ion-android-checkmark-circle" ng-if="::formData.tx.pct>=100"></i>
+                  <b>{{'MARKET.COMMON.CROWDFUNDING_PROGRESS'|translate: formData.tx}}</b>
+                </span>
+                ({{formData.tx.sum | formatAmount: {currency: formData.currency} }})
+                <!-- issuers -->
+                <ng-if ng-if="formData.tx.issuers.length">
+                  <span class="gray"> | </span>
+                  <small><a ng-click="showIssuers($event)" title="{{'MARKET.VIEW.SHOW_CROWDFUNDING_ISSUERS'|translate}}">{{'MARKET.VIEW.CROWDFUNDING_ISSUERS'|translate: formData.tx}}</a></small>
+                </ng-if>
               </div>
 
               <!-- Fees -->
@@ -264,17 +271,6 @@
                 <ng-if ng-if="formData.stock === 0"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
               </span>
             </h3>
-
-            <!-- TODO G1lien
-            <a class="button button-right ink"
-                ng-if="showPayButton"
-               title="Payer"
-               href="web+june://{{formData.issuer}}?amount={{formData.price}}&comment=REF"
-               target="_blank"
-               translate>MARKET.COMMON.BTN_PAY</a> -->
-
-
-
           </ion-item>
           <span class="item hidden-xs" ng-if="!formData.price && !formData.fees && formData.stock === 0">
             <div class="badge badge-secondary badge-assertive"><i class="ion-close"></i> <span class="bold" translate>MARKET.COMMON.SOLD</span></div>
@@ -285,7 +281,7 @@
             <p ng-if="!paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT'|translate: paymentData"></p>
 
             <!-- pay help button -->
-            <a class="button  button-clear button-positive ink"
+            <a class="button button-clear button-positive ink"
                title="{{'MARKET.VIEW.BTN_PAYMENT_HELP'|translate}}"
                ng-click="showPaymentModal($event)">
               <i class="icon ion-help-circled"></i>

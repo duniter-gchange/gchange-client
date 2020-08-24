@@ -8,7 +8,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     fields = {
       commons: ["category", "title", "description", "issuer", "time", "creationTime", "location", "address", "city", "price",
           "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
-          "geoPoint"]
+          "geoPoint", "pubkey"]
     },
     raw = {
       postSearch: esHttp.post('/market/record/_search'),
@@ -49,6 +49,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       record.category = categories[record.category.id];
     }
 
+    // Always convert relative price/fees into absolute price
     if (record.price && options.convertPrice && currentUD) {
       if (record.unit==='UD') {
         record.price = record.price * currentUD;

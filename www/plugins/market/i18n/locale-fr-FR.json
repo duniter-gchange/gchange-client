@@ -115,7 +115,9 @@
       "NEW_MESSAGE_TITLE": "Au sujet de l'annonce \"{{title}}\"...",
       "MORE_LIKE_THIS": "Ceci pourrait vous intéresser :",
       "PAYMENT": "<b>Pour faire un paiement</b>, envoyer de la monnaie {{currency|abbreviate}} :<ul><li>- à la clé publique <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum||pubkey}}\" title=\"Copier la clef\">{{pubkey}}</a></li></p>",
-      "PAYMENT_WITH_COMMENT": "<b>Pour faire un paiement</b>, envoyer de la monnaie {{currency|abbreviate}} :<ul><li>- à la clé publique  <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum||pubkey}}\" title=\"Copier la clef\">{{pubkey}}</a></li><li> - avec le commentaire <a class=\"positive\" copy-on-click=\"{{comment}}\" title=\"Copier le commentaire\">{{comment}}</a> pour le suivi.</li></ul></p>"
+      "PAYMENT_WITH_COMMENT": "<b>Pour faire un paiement</b>, envoyer de la monnaie {{currency|abbreviate}} :<ul><li>- à la clé publique  <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum||pubkey}}\" title=\"Copier la clef\">{{pubkey}}</a></li><li> - avec le commentaire <a class=\"positive\" copy-on-click=\"{{comment}}\" title=\"Copier le commentaire\">{{comment}}</a> pour le suivi.</li></ul></p>",
+      "CROWDFUNDING_ISSUERS": "{{issuers.length}} donateur{{issuers.length > 1 ? 's' : ''}}",
+      "SHOW_CROWDFUNDING_ISSUERS": "Voir les donateurs"
     },
     "WALLET": {
       "DUNITER_PUBKEY": "Clé publique de réception des paiements",
@@ -129,7 +131,7 @@
       "OFFER": "Offre, Vente",
       "OFFER_SHORT": "Offre",
       "CROWDFUNDING": "Financement participatif",
-      "CROWDFUNDINGR_SHORT": "Financement",
+      "CROWDFUNDING_SHORT": "Financement",
       "NEED": "Demande, Recherche",
       "NEED_SHORT": "Demande",
       "AUCTION": "Vente aux enchères",
