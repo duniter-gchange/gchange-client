@@ -370,7 +370,6 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     var search = mixedSearch ? that.raw.mixedSearch : that.raw.search;
     search(request)
       .then(function(res) {
-        console.log("TODO: ", res);
         _fillSearchResultsFromHits(datas, res, dataByPubkey, pubkeyAtributeName);
         deferred.resolve(datas);
       })

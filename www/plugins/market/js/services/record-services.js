@@ -240,7 +240,6 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
           ])
           .then(function(res) {
             var issuer = res[0];
-            console.log("TODO: check payment pubkey", issuer);
             return {
               id: record.id,
               issuer: issuer,

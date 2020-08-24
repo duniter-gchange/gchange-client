@@ -480,7 +480,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 
   $scope.updatePaymentData = function() {
     var record = $scope.formData;
-    var canPay = !$scope.canEdit && record && record.stock > 0;
+    var canPay = record && record.stock > 0;
     if (!canPay) {
       $scope.canPay = false;
       return;
@@ -504,7 +504,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 
     var pubkey = $scope.issuer.pubkey;
     if (!pubkey) {
-      console.error('TODO: use the profile.pubkey !!');
+      console.error('[market] [record] No record.pubkey found in the record!');
       $scope.canPay = false;
       $scope.paymentData = null;
       return;
