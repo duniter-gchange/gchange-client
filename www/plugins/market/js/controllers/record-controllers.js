@@ -505,7 +505,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     var pubkey = $scope.issuer.pubkey;
     if (!pubkey) {
       console.error('[market] [record] No record.pubkey found in the record!');
-      $scope.canPay = false;
+      $scope.showPayment = false;
       $scope.paymentData = null;
       return;
     }
@@ -525,11 +525,11 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         $scope.paymentData.uris = uris;
       });
 
-    $scope.canPay = true;
+    $scope.showPayment = true;
   }
 
   $scope.showPaymentModal = function() {
-    if (!$scope.canPay) return;
+    if (!$scope.showPayment || !$scope.paymentData) return;
     return ModalUtils.show('plugins/market/templates/record/modal_payment.html', 'MkRecordPaymentModalCtrl',
       $scope.paymentData);
   };

@@ -276,7 +276,7 @@
             <div class="badge badge-secondary badge-assertive"><i class="ion-close"></i> <span class="bold" translate>MARKET.COMMON.SOLD</span></div>
           </span>
           <!-- Payment details -->
-          <ion-item class="item-button-right" ng-if="canPay">
+          <ion-item class="item-button-right" ng-if="paymentData">
             <p ng-if="paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT_WITH_COMMENT'|translate: paymentData"></p>
             <p ng-if="!paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT'|translate: paymentData"></p>
 
