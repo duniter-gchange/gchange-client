@@ -1,0 +1,22 @@
+<ion-popover-view class="popover-instance-address" >
+  <ion-content scroll="false" class="padding">
+    <p>
+      {{'COMMON.POPOVER_SHARE.INSTANCE_ADDRESS_HELP'|translate}}
+    </p>
+    <div class="item item-input">
+      <input type="text" ng-model="instance">
+    </div>
+
+    <div></div>
+
+    <div class="padding text-right">
+      <button class="button button-raised button-stable ink"
+              ng-click="closePopover()"
+              translate>COMMON.BTN_CANCEL</button>
+
+      <button class="button button-raised button-positive ink"
+              ng-click="closePopover(instance)"
+              translate>COMMON.BTN_OK</button>
+    </div>
+  </ion-content>
+</ion-popover-view>

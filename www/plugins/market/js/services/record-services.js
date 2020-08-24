@@ -228,7 +228,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
 
         return $q.all([
           // Load issuer (avatar, name, uid, etc.)
-          csWot.extend({pubkey: record.issuer}),
+          csWot.extend({issuer: record.issuer}, "issuer", true/*skipAddUid*/),
 
           // API extension (e.g. See market TX service)
           api.record.raisePromise.load(record)
@@ -457,7 +457,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
         return processHits(categories, currentUD, size, res);
       })
       .then(function(res) {
-        return csWot.extendAll(res.hits, 'issuer')
+        return csWot.extendAll(res.hits, 'issuer', true /*skipAddUid*/)
           .then(function(_) {
             return res;
           });

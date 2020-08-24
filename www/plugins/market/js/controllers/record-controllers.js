@@ -58,8 +58,10 @@ angular.module('cesium.market.record.controllers', ['cesium.market.record.servic
 
 
 function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover, $state, $ionicHistory, $q, $controller,
-                                $timeout, $filter, $translate, UIUtils, csCrypto, ModalUtils, csConfig, csCurrency, csWallet,
-                                esModals, esProfile, esHttp, mkRecord, mkTx) {
+                                $timeout, $filter, $translate, UIUtils, ModalUtils,
+                                csCrypto, csConfig, csSettings, csCurrency, csWallet,
+                                esModals, esProfile, esHttp,
+                                mkRecord, mkTx) {
   'ngInject';
 
 
@@ -410,8 +412,21 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     $scope.hideActionsPopover();
 
     var title = $scope.formData.title;
+
+    // Add price to title
+    if ($scope.formData.price && $scope.formData.currency) {
+      title += " | {0} {1}".format($scope.formData.price / 100, $filter('abbreviate')($scope.formData.currency));
+    }
+
     // Use pod share URL - see issue #69
     var url = esHttp.getUrl('/market/record/' + $scope.id + '/_share');
+
+    // Compute hashtags
+    var hashtags = ($scope.formData.tags && $scope.formData.tags.slice() || []).join(' #');
+    hashtags = hashtags.length ? ('#' + hashtags + ' ') : '';
+    if (csSettings.data.share.defaultHastags) {
+      hashtags += csSettings.data.share.defaultHastags;
+    }
 
     // Override default position, is small screen - fix #25
     if (UIUtils.screen.isSmall()) {
@@ -426,7 +441,8 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         titleValues: {title: title},
         time: $scope.formData.time,
         postMessage: title,
-        postImage: $scope.pictures.length > 0 ? $scope.pictures[0] : null
+        postImage: $scope.pictures.length > 0 ? $scope.pictures[0] : null,
+        postHashtags: hashtags
       }
     });
   };

@@ -61,7 +61,11 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     //userForumUrl: "https://forum.gchange.fr",
     userForumUrl: "https://forum.monnaie-libre.fr",
     latestReleaseUrl: "https://api.github.com/repos/duniter-gchange/gchange-client/releases/latest",
-    httpsMode: false
+    httpsMode: false,
+    share: {
+      mastodonAuthor: "@gchange@framapiaf.org",
+      defaultHastags: "#gchange"
+    }
   },
   defaultSettings = angular.merge({
     useRelative: false,

@@ -2677,3 +2677,13 @@ div[dropzone]:hover {
   }
 }
 
+/** -- More social icons -- */
+
+.ion-social-mastodon:after {
+  background-image: url('../img/mastodon.svg');
+  margin: 5px 12px;
+  background-size: 22px;
+  background-repeat: no-repeat;
+  background-position-y: 7px;
+  background-position-x: 7px;
+}

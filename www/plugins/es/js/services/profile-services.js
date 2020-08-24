@@ -129,6 +129,11 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     data.description = hit._source.description || data.description;
     data.city = hit._source.city || data.city;
 
+    // Fecth payment pubkey (need by Gchange)
+    if (hit._source.pubkey) {
+      data.pubkey = hit._source.pubkey;
+    }
+
     if (hit.highlight) {
       if (hit.highlight.title) {
         data.name = hit.highlight.title[0];
@@ -266,6 +271,8 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       deferred.resolve(datas);
       return deferred.promise;
     }
+
+    console.debug("[ES] [profile] Searching on user profiles...");
 
     pubkeyAtributeName = pubkeyAtributeName || 'pubkey';
     text = text ? text.toLowerCase().trim() : text;

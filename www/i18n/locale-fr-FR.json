@@ -78,7 +78,8 @@
       "SHARE_ON_TWITTER": "Partager sur Twitter",
       "SHARE_ON_FACEBOOK": "Partager sur Facebook",
       "SHARE_ON_DIASPORA": "Partager sur Diaspora*",
-      "SHARE_ON_GOOGLEPLUS": "Partager sur Google+"
+      "SHARE_ON_MASTODON": "Partager sur Mastodon",
+      "INSTANCE_ADDRESS_HELP": "Entrer l'adresse de l'instance (ex: https://linuxrocks.online) :"
     },
     "FILE": {
       "DATE": "Date :",
