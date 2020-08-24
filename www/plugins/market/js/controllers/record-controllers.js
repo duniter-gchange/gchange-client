@@ -549,7 +549,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 }
 
 function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $timeout, mkRecord, $ionicHistory, $focus, $controller,
-                                      UIUtils, ModalUtils, csConfig, esHttp, csSettings, csCurrency, mkSettings) {
+                                      UIUtils, ModalUtils, BMA, csConfig, esHttp, csSettings, csCurrency, mkSettings) {
   'ngInject';
 
   // Screen options
@@ -582,6 +582,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
       }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
 
+
   // Initialize the super class and extend it.
   angular.extend(this, $controller('ESPositionEditCtrl', {$scope: $scope}));
 
@@ -590,7 +591,8 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
     price: null,
     category: {},
     geoPoint: null,
-    useRelative: csSettings.data.useRelative
+    useRelative: csSettings.data.useRelative,
+    pubkey: null
   };
   $scope.id = null;
   $scope.pictures = [];
@@ -598,6 +600,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
 
   //console.debug("[market] Screen options: ", $scope.options);
 
+  $scope.pubkeyPattern = BMA.regexp.PUBKEY;
   $scope.motion = UIUtils.motion.ripple;
 
   $scope.setForm =  function(form) {
@@ -615,6 +618,8 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
     ])
     .then(function(res) {
       $scope.currencies = res[0];
+      var walletData = res[1];
+      console.log(walletData);
 
       if (state.stateParams && state.stateParams.id) { // Load by id
         $scope.load(state.stateParams.id);
@@ -626,6 +631,23 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
         }
         $scope.formData.type = $scope.formData.type || ($scope.options.type && $scope.options.type.default) || 'offer'; // default: offer
         $scope.formData.currency = $scope.currencies && $scope.currencies[0]; // use the first one, if any
+
+        // Use profile
+        if (walletData.profile) {
+          // Set the pubkey, using the profile pubkey (if any)
+          if ($scope.formData.type === 'crowdfunding' && walletData.profile.pubkey) {
+            $scope.formData.pubkey = walletData.profile.pubkey;
+          }
+
+          // Fill city and address
+          if (walletData.profile.city) {
+            $scope.formData.address = walletData.profile.address;
+            $scope.formData.city = walletData.profile.city;
+            if (walletData.profile.geoPoint && walletData.profile.geoPoint.lat && walletData.profile.geoPoint.lon) {
+              $scope.formData.geoPoint = walletData.profile.geoPoint;
+            }
+          }
+        }
 
         $scope.loading = false;
         UIUtils.loading.hide();
