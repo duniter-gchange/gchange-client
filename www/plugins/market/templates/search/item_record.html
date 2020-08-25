@@ -34,8 +34,9 @@
            ng-class="{'badge-price': rec.price, 'badge-calm': rec.type==='offer' || rec.type==='auction', 'badge-energized': rec.type==='need'||rec.type==='crowdfunding'}">
         <i class="cion-market-{{rec.type}}"></i>
         <span ng-if="::rec.price" ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: $root.settings.useRelative}"></span>
+        <span ng-if="::rec.price === 0">{{::'MARKET.COMMON.FREE'|translate}}</span>
         <span ng-if="::!rec.price && rec.freePrice">{{::'MARKET.COMMON.FREE_PRICE'|translate}}</span>
-        <span ng-if="::!rec.price && !rec.freePrice">{{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
+        <span ng-if="::!rec.price && rec.price !== 0 && !rec.freePrice">{{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
       </div>
 
       <!-- progress -->
