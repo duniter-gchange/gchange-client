@@ -47,29 +47,46 @@
             rows="8" cols="10"></textarea>
 </div>
 
+
 <!-- price -->
-<ion-item class="item-input item-floating-label item-button-right"
-          ng-class="{'item-input-error': form.$submitted && form.price.$invalid}">
+<ion-item class="row responsive-sm no-padding ">
 
-  <div class="input-label">
-    <span translate>MARKET.EDIT.RECORD_PRICE</span>
-    (<span ng-bind-html="formData.currency| currencySymbol:formData.useRelative"></span>)
-  </div>
+  <div class="col item-button-right padding-left no-margin item-input item-floating-label">
+    <div class="input-label" ng-class="{'gray': formData.freePrice}">
+      <span translate>MARKET.EDIT.RECORD_PRICE</span>
+      (<span ng-bind-html="formData.currency| currencySymbol:formData.useRelative"></span>)
+    </div>
 
-  <input type="number"
-         autocomplete="off"
-         name="price"
-         placeholder="{{::'MARKET.EDIT.RECORD_PRICE_HELP' | translate}}"
-         ng-model="formData.price"
-         number-float>
-  <a class="button button-clear button-stable dark ink"
-     tabindex="-1"  style="z-index:110; padding: 0 16px;"
-     ng-if="options.unit.canEdit"
-     ng-click="showUnitPopover($event)">
+    <input type="number"
+           autocomplete="off"
+           name="price"
+           placeholder="{{::'MARKET.EDIT.RECORD_PRICE_HELP' | translate}}"
+           ng-model="formData.price"
+           ng-disabled="formData.freePrice"
+           number-float
+          >
+    <a class="button button-clear button-stable button-small-padding dark ink"
+       tabindex="-1"  style="z-index:110; padding: 0 16px;"
+       ng-if="options.unit.canEdit"
+       ng-disabled="formData.freePrice"
+       ng-click="showUnitPopover($event)">
       <span ng-bind-html="$root.currency.name | currencySymbol:formData.useRelative">
       </span>
-    &nbsp;<b class="ion-arrow-down-b" style="font-size: 12pt;"></b>
-  </a>
+      &nbsp;<b class="ion-arrow-down-b" style="font-size: 12pt;"></b>
+    </a>
+  </div>
+
+  <div class="col col-20 item-input item-text-wrap padding-top" style="min-width: 160px;">
+    <ion-checkbox
+        ng-model="formData.freePrice"
+        ng-change="onFreePriceChanged()"
+        class="done in">
+      <div class="item-content" translate>
+        MARKET.EDIT.FREE_PRICE
+      </div>
+    </ion-checkbox>
+  </div>
+
 </ion-item>
 <div class="form-errors"
      ng-show="form.$submitted && form.price.$invalid"
@@ -97,12 +114,14 @@
          placeholder="{{::'MARKET.EDIT.RECORD_FEES_HELP' | translate}}"
          ng-model="formData.fees"
          number-float>
-  <div class="button button-clear button-stable dark ink"
-       tabindex="-1"  style="z-index:110; padding: 0 16px;"
-       ng-if="options.unit.canEdit">
+  <a class="button button-clear button-stable button-small-padding dark ink"
+     tabindex="-1"  style="z-index:110; padding: 0 16px;"
+     ng-if="options.unit.canEdit"
+     ng-click="formData.freePrice && showUnitPopover($event)">
       <span ng-bind-html="$root.currency.name | currencySymbol:formData.useRelative">
       </span>
-  </div>
+    &nbsp;<b class="ion-arrow-down-b" style="font-size: 12pt;" ng-if="formData.freePrice"></b>
+  </a>
 </div>
 <div class="form-errors"
      ng-show="form.$submitted && form.fees.$invalid"

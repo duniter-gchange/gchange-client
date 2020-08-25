@@ -8,7 +8,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     fields = {
       commons: ["category", "title", "description", "issuer", "time", "creationTime", "location", "address", "city", "price",
           "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
-          "geoPoint", "pubkey"]
+          "geoPoint", "pubkey", "freePrice"]
     },
     raw = {
       postSearch: esHttp.post('/market/record/_search'),

@@ -121,9 +121,9 @@
     "REPORT_ISSUE": "Remonter un problème"
   },
   "HOME": {
-    "TITLE": "Cesium",
-    "MESSAGE": "Bienvenue sur {{'COMMON.APP_NAME'|translate}} !",
-    "MESSAGE_CURRENCY": "Échanger en {{currency|abbreviate}} devient... juste simple !",
+    "TITLE": "ğ<b>change</b>",
+    "MESSAGE": "",
+    "MESSAGE_CURRENCY": "Les petites annonces en {{currency|abbreviate}},<br/>simples et décentraslisés !",
     "BTN_CURRENCY": "Explorer la monnaie {{name|abbreviate}}",
     "BTN_ABOUT": "à propos",
     "BTN_HELP": "Aide en ligne",

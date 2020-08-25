@@ -10,7 +10,9 @@
       "SOLD": "Annonce close",
       "LAST_UPDATE": "Dernière mise à jour",
       "AROUND_ME": "Autour de moi",
-      "CROWDFUNDING_PROGRESS": "Financé à {{pct|formatInteger}} %"
+      "CROWDFUNDING_PROGRESS": "Financé à {{pct|formatInteger}} %",
+      "FREE": "Gratuit",
+      "FREE_PRICE": "Prix libre"
     },
     "JOIN": {
       "PROFILE": {
@@ -151,6 +153,7 @@
       "RECORD_LOCATION_HELP": "Code postal, Ville",
       "RECORD_PRICE": "Prix",
       "RECORD_PRICE_HELP": "Prix (optionnel)",
+      "FREE_PRICE": "Prix libre ?",
       "RECORD_CURRENCY": "Monnaie",
       "RECORD_FEES": "Frais d'envoi",
       "RECORD_FEES_HELP": "Frais (optionnel)",

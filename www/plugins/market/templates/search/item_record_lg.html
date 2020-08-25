@@ -34,7 +34,9 @@
         <i class="cion-market-{{rec.type}}"></i>
 
         <span ng-if="::rec.price" ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: $root.settings.useRelative, decimalCount: 0}"></span>
-        <span ng-if="::!rec.price">{{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
+        <span ng-if="::rec.price === 0">{{::'MARKET.COMMON.FREE'|translate}}</span>
+        <span ng-if="::!rec.price && rec.freePrice">{{::'MARKET.COMMON.FREE_PRICE'|translate}}</span>
+        <span ng-if="::!rec.price && rec.price !== 0 && !rec.freePrice">{{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
       </div>
     </div>
     <div class="col hidden-sm hidden-xs">

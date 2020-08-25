@@ -234,10 +234,12 @@
 
           <!-- desktop price -->
           <ion-item class="item-icon-left item-button-right hidden-xs" ng-if="formData.price||formData.fees">
-            <ng-if ng-if="formData.price">
+            <ng-if >
               <i class="calm icon ion-pricetag"></i>
-              <h1 class="calm"
+              <h1 class="calm" ng-if="formData.price"
                   ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative}"></h1>
+              <h1 class="calm" ng-if="formData.price === 0" translate>MARKET.COMMON.FREE</h1>
+              <h1 class="calm" ng-if="!formData.price && formData.price !== 0 && formData.freePrice" translate>MARKET.COMMON.FREE_PRICE</h1>
             </ng-if>
             <h3>
               <!-- Tx progress -->

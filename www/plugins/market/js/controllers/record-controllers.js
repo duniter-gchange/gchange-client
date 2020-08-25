@@ -673,6 +673,13 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
     });
   });
 
+  $scope.onFreePriceChanged = function() {
+    if ($scope.formData.freePrice) {
+      // Clean price
+      $scope.formData.price = null;
+    }
+  }
+
   /* -- popover -- */
 
   $scope.showUnitPopover = function($event) {

@@ -9,9 +9,11 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
       get: esHttp.get('/market/category/:id'),
       all: esHttp.get('/market/category/_search?sort=order&size=1000&_source=name,parent'),
       search: esHttp.post('/market/category/_search'),
+      add: esHttp.record.post('/market/category', { creationTime: true}),
+      update: esHttp.record.post('/market/category/:id/_update', { creationTime: true}),
       record: {
         postSearch: esHttp.post('/market/record/_search'),
-      }
+      },
     },
     cache = {};
 
@@ -193,14 +195,26 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
         });
   }
 
-  exports = {
+  function addCategory(category) {
+    console.debug('[market] [category] Adding category', category);
+    return raw.add(category);
+  }
+
+  function updateCategory(category) {
+    console.debug('[market] [category] Updating category', category);
+    return raw.update(category);
+
+  }
+
+  return {
     all: getCategories,
     filtered: getFilteredCategories,
     get: getCategory,
     searchText: esHttp.get('/market/category/_search?q=:search'),
     search: esHttp.post('/market/category/_search'),
-    stats: getCategoriesStats
+    stats: getCategoriesStats,
+    add: addCategory,
+    update: updateCategory
   };
-  return exports;
 })
 ;
