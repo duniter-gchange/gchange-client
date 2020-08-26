@@ -57,6 +57,7 @@
     },
     "CATEGORY": {
       "ALL": "Toutes les catégories",
+      "UNKNOWN": "Catégorie inconnue",
       "EDIT": {
         "TITLE": "Gestion des catégories",
         "ID": "Identifiant",
@@ -68,14 +69,18 @@
           "TITLE_EDIT": "Modifier la catégorie",
           "TITLE_NEW": "Nouvelle catégorie"
         },
+        "CONFIRM": {
+          "CANCEL": "Des modifications n'ont pas été enregistrées.<br/><br/><b>Êtes-vous sûr</b> de vouloir continuer cette opération ?"
+        },
+        "INFO": {
+          "SAVED": "Catégories enregistrées avec succès"
+        },
         "ERROR": {
           "CANNOT_SAVE": "Erreur lors de la sauvegarde des categories",
           "INVALID_ID_PATTERN": "Format 'catNNN' non respecté",
           "ID_ALREADY_USED": "Identifiant déjà utilisé"
-        },
-        "INFO": {
-          "SAVED": "Catégories enregistrées avec succès"
         }
+
       }
     },
     "SEARCH": {

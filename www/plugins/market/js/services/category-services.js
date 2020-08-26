@@ -14,6 +14,7 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
         search: esHttp.post('/market/category/_search'),
         add: esHttp.record.post('/market/category', {creationTime: true}),
         update: esHttp.record.post('/market/category/:id/_update', {creationTime: true}),
+        remove: esHttp.record.remove("market","category"),
         record: {
           postSearch: esHttp.post('/market/record/_search'),
         },
@@ -126,11 +127,29 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
         });
     }
 
-    function getCategory(params) {
+    function getCategory(params, options) {
+      options = options || {};
+      options.withCache = angular.isDefined(options.withCache) ? options.withCache : true;
+      options.withChildren = angular.isDefined(options.withChildren) ? options.withChildren : true;
+
+      // If children is need, get
+      if (options.withChildren || options.withCache) {
+        return getCategories(options)
+
+          .then(function(categories) {
+            var cat = categories[params.id];
+
+            // Make sure to fill tree
+            if (options.withChildren) asCategoriesTree(categories);
+
+            return cat;
+          })
+      }
+
       return raw.get(params)
         .then(function (hit) {
-          var res = hit._source;
-          res.id = hit._id;
+          var res = readFromHit(hit);
+
           return res;
         });
     }
@@ -243,6 +262,11 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
       return raw.update(category, {id: category.id});
     }
 
+    function removeCategoryById(id) {
+      console.debug('[market] [category] Removing category: ' + id);
+      return raw.remove(id);
+    }
+
     function asCategoriesTree(categories) {
       var catByParent = _.groupBy(categories, function (cat) {
         return cat.parent || 'roots';
@@ -258,19 +282,29 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
 
       options = options || {};
 
-      if (!options.silent) {
+      if (!options.parent) {
         var now = Date.now();
         console.debug('[market] [category] Saving all categories...', cats);
       }
 
+      // Avoid to reload categories, when processing children categories
       var existingPromise = options.existingCategories ? $q.when(options.existingCategories) :
         getCategories(false/*no cache*/);
+
+      var idsToDelete;
 
       // Get all existing (from pod, without cache)
       return existingPromise
         .then(function (existingCategories) {
-          return _.map(cats || [], function (cat) {
+          // Collect all ids (once), to be able to apply deletion, later
+          idsToDelete = options.idsToDelete || _.pluck(existingCategories, 'id');
+
+          return $q.all(_.map(cats || [], function (cat) {
             var existingCat = existingCategories[cat.id];
+
+            // Remove the id, from the delete list
+            idsToDelete = _.without(idsToDelete, cat.id);
+
             var isNew = !existingCat;
             console.debug("[market] [category] - {0} {1}".format(isNew ? 'Add' : 'Update', cat.id));
 
@@ -282,19 +316,25 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
             if (cat.parent) record.parent = cat.parent;
             if (existingCat && existingCat.name) record.name = cat.name || null;
 
+            // Send save request
             var savePromise = isNew ? addCategory(record, {id: cat.id}) : updateCategory(record, {id: cat.id});
-            return savePromise
+
+            // save children (if any), AFTER the current parent
+            return (cat.children && cat.children.length) ? savePromise
               .then(function () {
-                // Save children
-                if (cat.children && cat.children.length) {
-                  return saveAllCategories(cat.children, {silent: true, existingCategories: existingCategories})
-                }
-              });
-          }, []);
+                return saveAllCategories(cat.children, {parent: cat, existingCategories: existingCategories, idsToDelete: idsToDelete});
+              }) : savePromise;
+          }, []));
         })
-        .then($q.all)
+        // Delete (if any)
         .then(function () {
-          if (!options.silent) {
+          if (!options.parent && idsToDelete.length > 0) {
+            console.debug("[market] [category] Deleting categories with id:", idsToDelete);
+            return $q.all(_.map(idsToDelete, raw.remove));
+          }
+        })
+        .then(function () {
+          if (!options.parent) {
             console.debug("[market] [category] Saved in {0}ms".format(Date.now() - now));
           }
         });
@@ -310,6 +350,7 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
       stats: getCategoriesStats,
       add: addCategory,
       update: updateCategory,
+      remove: removeCategoryById,
       saveAll: saveAllCategories,
       regexp: regexp
     };

@@ -42,25 +42,21 @@
 
   .categories {
     background-color: rgba(255,255,255,0.8);
-    .card h3 {
-      text-transform: uppercase;
-    }
   }
-
-
 }
+
 
 @media screen and (min-width: $screen-menu) {
   #home {
-
     ion-content > .scroll > .row:first-child {
       height: calc(100vh - 43px);
     }
-
-
   }
+}
 
-
+// Categories
+.card.card-category h3 {
+  text-transform: uppercase;
 }
 
 // Header button

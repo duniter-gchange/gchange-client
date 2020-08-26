@@ -53,7 +53,8 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
 ;
 
 function MkLookupAbstractController($scope, $state, $filter, $q, $location, $translate, $controller, $timeout,
-                                    UIUtils, esHttp, ModalUtils, csConfig, csSettings, mkRecord, BMA, mkSettings, esProfile) {
+                                    UIUtils, ModalUtils, csConfig, csSettings, BMA, esProfile, esHttp,
+                                    mkCategory, mkRecord, mkSettings) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -199,21 +200,37 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       }
     }
 
-    if ($scope.search.category) {
-      filters.push({
-        nested: {
-          path: "category",
-          query: {
-            bool: {
-              filter: {
-                term: { "category.id": $scope.search.category.id}
+    if ($scope.search.category && $scope.search.category.id) {
+      var childrenIds = $scope.search.category.children && _.pluck($scope.search.category.children, 'id');
+      if (childrenIds && childrenIds.length) {
+        filters.push({
+          nested: {
+            path: "category",
+            query: {
+              bool: {
+                filter: {
+                  terms: {"category.id": childrenIds}
+                }
               }
             }
           }
-        }
-      });
+        });
+      }
+      else {
+        filters.push({
+          nested: {
+            path: "category",
+            query: {
+              bool: {
+                filter: {
+                  term: {"category.id": $scope.search.category.id}
+                }
+              }
+            }
+          }
+        });
+      }
     }
-
 
     if (tags) {
       filters.push({terms: {tags: tags}});
@@ -316,7 +333,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
     if ($scope.search.sortAttribute) {
       request.sort = request.sort || {};
-      request.sort[$scope.search.sortAttribute] = $scope.search.sortDirection == "asc" ? "asc" : "desc";
+      request.sort[$scope.search.sortAttribute] = $scope.search.sortDirection === "asc" ? "asc" : "desc";
     }
 
     return $scope.doRequest(request);
@@ -356,19 +373,37 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       filters.push({terms: {currency: $scope.currencies}});
     }
     // Category
-    if ($scope.search.category) {
-      filters.push({
-        nested: {
-          path: "category",
-          query: {
-            bool: {
-              filter: {
-                term: { "category.id": $scope.search.category.id}
+    if ($scope.search.category && $scope.search.category.id) {
+      var childrenIds = $scope.search.category.children && _.pluck($scope.search.category.children, 'id');
+      if (childrenIds && childrenIds.length) {
+        filters.push({
+          nested: {
+            path: "category",
+            query: {
+              bool: {
+                filter: {
+                  terms: {"category.id": childrenIds}
+                }
               }
             }
           }
-        }
-      });
+        });
+      }
+
+      else {
+        filters.push({
+          nested: {
+            path: "category",
+            query: {
+              bool: {
+                filter: {
+                  term: { "category.id": $scope.search.category.id}
+                }
+              }
+            }
+          }
+        });
+      }
     }
 
     var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
@@ -483,7 +518,6 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         $scope.search.results = (options.from > 0) ? $scope.search.results : [];
         $scope.search.total = (options.from > 0) ? $scope.search.total : 0;
         $scope.search.hasMore = false;
-        $scope.search.loading = false;
         return;
       }
 
@@ -513,7 +547,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       $scope.search.loading = false;
 
       // motion
-      $scope.motion.show();
+      if ($scope.search.total > 0) $scope.motion.show();
     })
     .catch(function(err) {
       $scope.search.loading = false;
@@ -528,7 +562,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
   $scope.showCategoryModal = function() {
     // load categories
-    return mkRecord.category.all()
+    return mkCategory.all()
       .then(function(categories){
         return ModalUtils.show('plugins/es/templates/common/modal_category.html', 'ESCategoryModalCtrl as ctrl',
           {categories : categories},
@@ -574,7 +608,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 }
 
 
-function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $ionicPopover, mkRecord, csSettings) {
+function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $ionicPopover, $translate,
+                            mkCategory, mkRecord, csSettings) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -648,15 +683,29 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
       }
 
       // Search on category
-      if (state.stateParams && (state.stateParams.category || state.stateParams.cat)) {
-        mkRecord.category.get({id: state.stateParams.category || state.stateParams.cat})
-            .then(function (cat) {
-              $scope.search.category = cat;
-              return $scope.init();
-            })
-            .then(function() {
-              return $scope.finishEnter(showAdvanced);
-            });
+      var category = state.stateParams && (state.stateParams.category || state.stateParams.cat);
+      if (category) {
+        var categoryName;
+        var catParts = category.split(':');
+        if (catParts.length > 1) {
+          category = catParts[0];
+          categoryName = catParts[1];
+        }
+        mkCategory.get({id: category})
+          .catch(function(err){
+            console.error(err && err.message || err);
+            return {
+              id: category,
+              name: categoryName || category
+            };
+          })
+          .then(function (cat) {
+            $scope.search.category = cat;
+            return $scope.init();
+          })
+          .then(function() {
+            return $scope.finishEnter(showAdvanced);
+          });
       }
       else {
         $scope.init()
@@ -772,12 +821,11 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   $scope.$watch('search.geoDistance', $scope.onGeoDistanceChanged, true);
 
   $scope.onCategoryClick = function(cat) {
-    if (cat && cat.parent) {
-      $scope.search.category = cat;
-      $scope.options.category.show = true;
-      $scope.search.showCategories=false; // hide categories
-      $scope.doSearch();
-    }
+    if (!cat) return; // Skip
+    $scope.search.category = cat;
+    $scope.options.category.show = true;
+    $scope.search.showCategories=false; // hide categories
+    $scope.doSearch();
   };
 
   $scope.removeCategory = function() {

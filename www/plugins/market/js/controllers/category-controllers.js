@@ -58,7 +58,8 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
     category: {
       filter: undefined,
       withCache: false,
-      withStats: true
+      withStats: true,
+      nbsp: true
     },
     showClosed: false
   }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
@@ -70,6 +71,7 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
     options.withStock = options.withStock && (!$scope.options || !$scope.options.showClosed);
     options.silent = angular.isDefined(options.silent) ? options.silent : true;
     options.localeId = angular.isDefined(options.localeId) ? options.localeId : $translate.use();
+    options.nbsp = angular.isDefined(options.nbsp) ? options.nbsp : ($scope.options && $scope.options.category && $scope.options.category.nbsp);
 
     if (!options.silent) $scope.loading = true;
 
@@ -79,6 +81,13 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
 
     return categoriesPromise
       .then(function(res) {
+        res = res || [];
+        if (options.nbsp) {
+          res = _.map(res, function(cat) {
+            cat.name = cat.name && cat.name.split(' ').join('&nbsp;');
+            return cat;
+          })
+        }
         $scope.categories = res;
         $scope.totalCount = $scope.categories.reduce(function(res, cat) {
          return res + cat.count;
@@ -163,8 +172,6 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
     // Load data
     return $scope.load({silent: true, withStats: false, withCache: false})
       .then(function() {
-        $scope.categories = [$scope.categories[0]];
-
         $scope.loading = false;
         if (!$scope.entered) {
           $scope.motion.show({selector: '.list .item'});
@@ -178,7 +185,7 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
 
     // Ask confirmation
     if ($scope.dirty && !confirmed) {
-      return UIUtils.alert.confirm('MARKET.CATEGORY.EDIT.CONFIRM_CANCEL')
+      return UIUtils.alert.confirm('MARKET.CATEGORY.EDIT.CONFIRM.CANCEL')
         .then(function (confirm) {
           if (!confirm) return; // user cancelled
           return $scope.cancel(true);
@@ -203,13 +210,14 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
       })
       .catch(function(err) {
         $scope.saving = false;
+        console.error(err && err.message || err);
         return UIUtils.onError('MARKET.CATEGORY.EDIT.ERROR.CANNOT_SAVE')(err);
       });
 
   }
 
   $scope.getName = function(cat, useItalicIfMissing) {
-    if (cat && cat.id === 'cat72') console.log(cat);
+    if (!cat) throw new Error('Missing category');
     var name = cat.localizedNames && cat.localizedNames[$scope.localeId];
     if (!name) {
       if (useItalicIfMissing && $scope.defaultLocale !== $scope.localeId) {
@@ -272,6 +280,7 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
     return $scope.showEditPopup()
       .then(function(res) {
         if (!res) return; // User cancelled
+        rootCategory.children = rootCategory.children || [];
         rootCategory.children.push(res);
         $scope.dirty = true;
       })
@@ -284,7 +293,7 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
 
   $scope.removeChildCategory = function(rootCat, index) {
     var child = rootCat.children[index];
-    console.debug('Removing category: ' + child.name);
+    rootCat.children = rootCat.children || [];
     rootCat.children.splice(index, 1);
     rootCat.count -= child.count || 0;
     $scope.dirty = true;
@@ -359,9 +368,9 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
                 delete updatedCategory.name;
               }
 
-              console.log(updatedCategory);
               resolve(updatedCategory);
-            });
+            })
+            .catch(reject);
         });
     });
   };

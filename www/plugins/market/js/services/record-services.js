@@ -46,7 +46,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     var record = hit._source;
 
     if (record.category && record.category.id) {
-      record.category = categories[record.category.id];
+      record.category = categories[record.category.id] || record.category;
     }
 
     // Always convert relative price/fees into absolute price
@@ -285,7 +285,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
               }
           });
       }
-      if (options.categories) {
+      if (options.categories && options.categories.length) {
           filters.push({
               nested: {
                   path: "category",

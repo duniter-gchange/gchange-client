@@ -27,9 +27,11 @@
 
       <!-- loop on root categories -->
       <ng-repeat ng-repeat="cat in categories track by cat.id">
-        <div class="item item-divider" ng-class="{'bold': cat.count}">
+        <a class="item stable-bg item-border item-icon-right" ng-class="{'bold': cat.count}"
+           ng-click="onCategoryClick(cat)">
           <span ng-bind-html="cat.name"></span><ng-if ng-if="cat.count">&nbsp;({{cat.count}})</ng-if>
-        </div>
+          <i class="icon ion-ios-arrow-right"></i>
+        </a>
 
         <!-- children categories-->
         <a ng-repeat="cat in cat.children track by cat.id"

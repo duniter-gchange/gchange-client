@@ -38,7 +38,7 @@
                 {{::options.location.prefix|translate}}<span ng-bind-html="::formData.city"></span>
               </a>
               <span ng-if="formData.city && formData.category.name">&nbsp;|&nbsp;</span>
-              <a ng-if="formData.category.name" ui-sref="app.market_lookup({category:formData.category.id})">
+              <a ng-if="formData.category.name" ui-sref="app.market_lookup({category: (formData.category.id + ':' + formData.category.name)})">
                 <i class="icon ion-flag"></i>
                 <span ng-bind-html="::formData.category.name"></span>
               </a>

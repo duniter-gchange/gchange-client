@@ -2,7 +2,7 @@
 <div class="padding-xs" style="display: block; height: 60px;">
   <div class="pull-left ng-hide" ng-show="!search.loading">
     <ng-if ng-if="search.lastRecords">
-        <h4  translate>MARKET.SEARCH.LAST_RECORDS</h4>
+        <h4 translate>MARKET.SEARCH.LAST_RECORDS</h4>
         <small class="gray no-padding" ng-if="search.total">
             <span ng-if="search.geoPoint && search.total">{{'MARKET.SEARCH.LAST_RECORD_COUNT_LOCATION'|translate:{count: search.total, location: search.location} }}</span>
             <span ng-if="!search.geoPoint && search.total">{{'MARKET.SEARCH.LAST_RECORD_COUNT'|translate:{count: search.total} }}</span>
@@ -24,7 +24,7 @@
   <ion-spinner icon="android"></ion-spinner>
 </div>
 
-<div class="padding assertive" ng-if="!search.loading && search.results.length===0 && search.advanced != null" translate>
+<div class="padding assertive" ng-if="!search.loading && search.results.length===0 && (search.advanced != null || search.lastRecords)" translate>
   COMMON.SEARCH_NO_RESULT
 </div>
 
