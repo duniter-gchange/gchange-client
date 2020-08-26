@@ -54,6 +54,7 @@
   },
 
   "dev": {
+    "fallbackLanguage": "fr-FR",
     "defaultLanguage": "fr-FR",
     "timeout": 300000,
     "cacheTimeMs": 300000,
@@ -96,6 +97,7 @@
   },
 
   "dev-pod": {
+    "fallbackLanguage": "fr-FR",
     "defaultLanguage": "fr-FR",
     "timeout": 300000,
     "cacheTimeMs": 300000,

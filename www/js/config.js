@@ -9,6 +9,7 @@
 angular.module("cesium.config", [])
 
 .constant("csConfig", {
+	"fallbackLanguage": "fr-FR",
 	"defaultLanguage": "fr-FR",
 	"timeout": 300000,
 	"cacheTimeMs": 300000,

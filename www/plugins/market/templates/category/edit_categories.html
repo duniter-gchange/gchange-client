@@ -1,0 +1,137 @@
+<ion-view left-buttons="leftButtons" class="market">
+  <ion-nav-title>
+    <span translate>MARKET.CATEGORY.EDIT.TITLE</span>
+  </ion-nav-title>
+  <ion-content>
+
+    <div class="row">
+      <div class="col col-20 hidden-xs hidden-sm">&nbsp;</div>
+      <div class="col">
+
+
+        <div class="center" ng-if="loading">
+          <ion-spinner icon="android"></ion-spinner>
+        </div>
+
+        <div class="padding assertive" ng-if="!loading && categories.length===0" translate>
+          COMMON.SEARCH_NO_RESULT
+        </div>
+
+        <!-- filter: locales and add/reorder buttons -->
+        <div class="list no-padding {{::motion.ionListClass}}">
+          <div class="item item-text-wrap">
+            <div class="col-60">
+              <ng-repeat ng-repeat="l in locales">
+                <span class="gray" ng-if="$index">|&nbsp;</span>
+                <a class="button button-text button-small no-padding-bottom ink"
+                   ng-click="changeLocale(l)"
+                   ng-class="{'button-text-positive': l.id === localeId, 'gray': l.id !== localeId}"
+                >{{l.label}}</a>
+              </ng-repeat>
+            </div>
+            <div class="badge">
+              <a class="button button-text button-small button-small-padding"
+                 ng-click="addRootCategory()">
+                <span translate>MARKET.CATEGORY.EDIT.BTN_ADD</span>
+              </a>
+
+              <a class="button button-text button-small button-small-padding"
+                 ng-class="{'button-text-positive': reorderRoot}"
+                 ng-click="reorderRoot=!reorderRoot">
+                <span translate>MARKET.CATEGORY.EDIT.BTN_REORDER</span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- List of root categories ONLY, when reorderRoot enable -->
+        <ion-list show-reorder="true" ng-if="reorderRoot">
+
+          <!-- loop on root categories -->
+          <ion-item ng-repeat="rootCat in categories track by rootCat.id"
+                    class="item-no-border item-icon-right stable-bg dark" ng-class="{'bold': rootCat.count}">
+            <span ng-bind-html="getName(rootCat)"></span><ng-if ng-if="rootCat.count">&nbsp;({{rootCat.count}})</ng-if>
+            <ion-reorder-button class="ion-drag"
+                                on-reorder="reorderRootCategory(rootCat, $fromIndex, $toIndex)">
+            </ion-reorder-button>
+          </ion-item>
+
+        </ion-list>
+
+        <!-- Categories tree -->
+        <ng-if ng-if="!reorderRoot">
+
+          <!-- loop on root categories -->
+          <div class="card stable-bg padding" ng-repeat="rootCat in categories track by rootCat.id">
+            <div class="item item-no-border item-icon-right bold">
+              <span ng-bind-html="getName(rootCat, true)"></span><ng-if ng-if="rootCat.count">&nbsp;({{rootCat.count}})</ng-if>
+              <a class="gray hidden-device"
+                 ng-click="removeRootCategory($index)">
+                &nbsp;<b class="ion ion-trash-a"></b>&nbsp;
+              </a>
+              <a class="gray hidden-device"
+                 ng-click="editRootCategory($index)">
+                &nbsp;<b class="ion ion-edit"></b>&nbsp;
+              </a>
+
+              <div class="badge">
+                <a class="button button-text button-small button-small-padding"
+                   ng-click="addChildCategory(rootCat)">
+                  <span translate>MARKET.CATEGORY.EDIT.BTN_ADD</span>
+                </a>
+                <a class="button button-text button-small button-small-padding"
+                   ng-class="{'button-text-positive': reorderChildren === rootCat.id}"
+                   ng-click="reorderChildren=!(reorderChildren === rootCat.id) && rootCat.id">
+                  <span translate>MARKET.CATEGORY.EDIT.BTN_REORDER</span>
+                </a>
+              </div>
+            </div>
+
+            <ion-list show-reorder="reorderChildren === rootCat.id">
+
+
+              <!-- children categories-->
+              <ion-item ng-repeat="child in rootCat.children track by child.id"
+                        class="item item-icon-right item-border"
+                        id="{{child.id}}">
+                <span ng-bind-html="getName(child, true)"></span><span ng-if="child.count">&nbsp;({{child.count}})</span>
+
+                <a class="gray hidden-device"
+                   ng-if="reorderChildren !== rootCat.id"
+                   ng-click="removeChildCategory(rootCat, $index)">
+                  &nbsp;<b class="ion ion-trash-a"></b>&nbsp;
+                </a>
+                <a class="gray hidden-device"
+                   ng-if="reorderChildren !== rootCat.id"
+                   ng-click="editChildCategory(rootCat, $index)">
+                  &nbsp;<b class="ion ion-edit"></b>&nbsp;
+                </a>
+
+                <ion-reorder-button class="ion-drag"
+                                    on-reorder="reorderChildrenCategory(rootCat, child, $fromIndex, $toIndex)">
+                </ion-reorder-button>
+
+              </ion-item>
+            </ion-list>
+          </div>
+
+        </ng-if>
+
+
+        <div class="item hidden-xs hidden-sm text-right no-border ng-hide" ng-show="!loading">
+          <button class="button button-clear button-dark ink"
+                  ng-click="cancel()" type="button"
+                  translate>COMMON.BTN_CANCEL</button>
+          <button class="button button-calm ink"
+                  ng-class="{'button-assertive': dirty}"
+                  ng-click="save()" type="button"
+                  translate>COMMON.BTN_SAVE</button>
+        </div>
+      </div>
+      <div class="col col-20 hidden-xs hidden-sm">&nbsp;</div>
+    </div>
+
+
+  </ion-content>
+</ion-view>

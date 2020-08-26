@@ -47,9 +47,7 @@
     }
   }
 
-  .map-container {
 
-  }
 }
 
 @media screen and (min-width: $screen-menu) {
@@ -63,6 +61,11 @@
   }
 
 
+}
+
+// Header button
+.buttons .button.button-flag {
+  top: 5px;
 }
 
 /* -- Menu -- */

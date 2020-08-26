@@ -1,172 +1,214 @@
 angular.module('cesium.market.category.services', ['ngResource', 'cesium.services', 'cesium.es.services', 'cesium.market.settings.services'])
 
-.factory('mkCategory', function($q, csSettings, BMA, csConfig, esHttp, esComment, esGeo, csWot, csCurrency, mkSettings) {
-  'ngInject';
+  .factory('mkCategory', function ($q, $translate, csSettings, BMA, csConfig, esHttp, esComment, esGeo, csWot, csCurrency, mkSettings) {
+    'ngInject';
 
-  var
-    filters = {},
-    raw = {
-      get: esHttp.get('/market/category/:id'),
-      all: esHttp.get('/market/category/_search?sort=order&size=1000&_source=name,parent'),
-      search: esHttp.post('/market/category/_search'),
-      add: esHttp.record.post('/market/category', { creationTime: true}),
-      update: esHttp.record.post('/market/category/:id/_update', { creationTime: true}),
-      record: {
-        postSearch: esHttp.post('/market/record/_search'),
+    var
+      filters = {},
+      regexp = {
+        ID: /^cat[0-9]+$/
       },
-    },
-    cache = {};
+      raw = {
+        get: esHttp.get('/market/category/:id'),
+        all: esHttp.get('/market/category/_search?sort=order&size=1000&_source=name,parent,localizedNames'),
+        search: esHttp.post('/market/category/_search'),
+        add: esHttp.record.post('/market/category', {creationTime: true}),
+        update: esHttp.record.post('/market/category/:id/_update', {creationTime: true}),
+        record: {
+          postSearch: esHttp.post('/market/record/_search'),
+        },
+      },
+      cache = {
+        localeId: undefined
+      };
 
-  function getCategories() {
-    if (cache.categories && cache.categories.length) {
-      var deferred = $q.defer();
-      deferred.resolve(cache.categories);
-      return deferred.promise;
+    function readFromHit(hit, options) {
+      var cat = hit._source;
+      cat.id = hit._id;
+
+      // Replace name by the current locale, when possible
+      if (cat.localizedNames) {
+        cat.name = cat.localizedNames[options.localId]
+          // Fallback to default locale, or keep existing name
+          || (options.fallbackLocalId && cat.localizedNames[options.fallbackLocalId])
+          || cat.name;
+      }
+
+      return cat;
     }
 
-    return raw.all()
-      .then(function(res) {
-        if (res.hits.total === 0) {
-          cache.categories = [];
-        }
-        else {
-          var categories = res.hits.hits.reduce(function(result, hit) {
-            var cat = hit._source;
-            cat.id = hit._id;
-            return result.concat(cat);
-          }, []);
-          // add as map also
-          _.forEach(categories, function(cat) {
-            categories[cat.id] = cat;
-          });
-          cache.categories = categories;
-        }
-        return cache.categories;
-      });
-  }
+    function getCategories(options) {
+      options = options || {};
+      options.withCache = angular.isDefined(options.withCache) ? options.withCache : true;
+      options.localId = angular.isDefined(options.localId) ? options.localId : $translate.use();
+      options.fallbackLocalId = csSettings.fixLocale(csConfig.defaultLanguage) || 'en';
 
-  function getFilteredCategories(options) {
+      if (options.withCache && cache.categories && cache.categories.length && cache.localeId === options.localId) {
+        var deferred = $q.defer();
+        deferred.resolve(cache.categories);
+        return deferred.promise;
+      }
+
+
+      return raw.all()
+        .then(function (res) {
+          var categories;
+          if (res.hits.total === 0) {
+            categories = [];
+          } else {
+            var categories = res.hits.hits.reduce(function (result, hit) {
+              var cat = readFromHit(hit, options);
+              return result.concat(cat);
+            }, []);
+            // add as map also
+            _.forEach(categories, function (cat) {
+              categories[cat.id] = cat;
+            });
+          }
+          // Update the cache
+          cache.categories = categories;
+          if (cache.localeId !== options.localId) {
+            cache.localeId = options.localId;
+            cache.filteredCategories = undefined;
+          }
+
+          return categories;
+        });
+    }
+
+    function getFilteredCategories(options) {
       options = options || {};
       options.filter = angular.isDefined(options.filter) ? options.filter : undefined;
+      options.withCache = angular.isDefined(options.withCache) ? options.withCache : true;
+      options.localId = angular.isDefined(options.localId) ? options.localId : $translate.use();
+      options.fallbackLocalId = csSettings.fixLocale(csConfig.defaultLanguage) || 'en';
 
-      var cachedResult = cache.filteredCategories && cache.filteredCategories[options.filter];
-      if (cachedResult && cachedResult.length) {
-          var deferred = $q.defer();
-          deferred.resolve(cachedResult);
-          return deferred.promise;
+      var cachedResult = options.withCache && cache.filteredCategories && cache.filteredCategories[options.filter];
+      if (cachedResult && cachedResult.length && cache.localeId === options.localId) {
+        var deferred = $q.defer();
+        deferred.resolve(cachedResult);
+        return deferred.promise;
       }
 
       // Prepare filter exclude function
       var excludes = options.filter && filters[options.filter] && filters[options.filter].excludes;
-      var isExclude = excludes && function(value) {
-          return _.contains(excludes, value);
+      var isExclude = excludes && function (value) {
+        return _.contains(excludes, value);
       };
 
       return raw.all()
-        .then(function(res) {
+        .then(function (res) {
           // no result
           if (res.hits.total === 0) return [];
 
-          var categories = res.hits.hits.reduce(function(result, hit) {
-              var cat = hit._source;
-              cat.id = hit._id;
-              return (isExclude &&
-                  ((cat.parent && isExclude(cat.parent)) || isExclude(cat.id))) ?
-                  result :
-                  result.concat(cat);
+          var categories = res.hits.hits.reduce(function (result, hit) {
+            var cat = readFromHit(hit, options);
+            return (isExclude &&
+              ((cat.parent && isExclude(cat.parent)) || isExclude(cat.id))) ?
+              result :
+              result.concat(cat);
           }, []);
 
           // add as map also
-          _.forEach(categories, function(cat) {
-              categories[cat.id] = cat;
+          _.forEach(categories, function (cat) {
+            categories[cat.id] = cat;
           });
+
+          // Update cache
           cache.filteredCategories = cache.filteredCategories || {};
           cache.filteredCategories[options.type] = categories;
+          if (cache.localeId !== options.localId) {
+            cache.localeId = options.localId;
+            cache.categories = undefined;
+          }
+
           return categories;
         });
-  }
+    }
 
-  function getCategory(params) {
-    return raw.get(params)
-      .then(function(hit) {
-        var res = hit._source;
-        res.id = hit._id;
-        return res;
-      });
-  }
+    function getCategory(params) {
+      return raw.get(params)
+        .then(function (hit) {
+          var res = hit._source;
+          res.id = hit._id;
+          return res;
+        });
+    }
 
-  function getCategoriesStats(options) {
+    function getCategoriesStats(options) {
       options = options || {};
 
       // Make sure to have currency
       if (!options.currencies) {
-          return mkSettings.currencies()
-              .then(function (currencies) {
-                  options.currencies = currencies;
-                  return getCategoriesStats(options); // loop
-              });
+        return mkSettings.currencies()
+          .then(function (currencies) {
+            options.currencies = currencies;
+            return getCategoriesStats(options); // loop
+          });
       }
 
+      options.asTree = angular.isDefined(options.asTree) ? options.asTree : true;
 
       var request = {
-          size: 0,
-          aggs: {
-              category: {
-                  nested: {
-                      path: 'category'
-                  },
-                  aggs: {
-                      by_id: {
-                          terms: {
-                              field: 'category.id',
-                              size: 1000
-                          }
-                      }
-                  }
+        size: 0,
+        aggs: {
+          category: {
+            nested: {
+              path: 'category'
+            },
+            aggs: {
+              by_id: {
+                terms: {
+                  field: 'category.id',
+                  size: 1000
+                }
               }
+            }
           }
+        }
       };
 
       var filters = [];
       var matches = [];
       if (options.withStock) {
-          filters.push({range: {stock: {gt: 0}}});
+        filters.push({range: {stock: {gt: 0}}});
       }
       if (!options.withOld) {
-        var minTime = options.minTime ? options.minTime : Date.now() / 1000  - 24 * 365 * 60 * 60; // last year
+        var minTime = options.minTime ? options.minTime : Date.now() / 1000 - 24 * 365 * 60 * 60; // last year
         // Round to hour, to be able to use cache
-        minTime = Math.floor(minTime / 60 / 60 ) * 60 * 60;
+        minTime = Math.floor(minTime / 60 / 60) * 60 * 60;
         filters.push({range: {time: {gte: minTime}}});
       }
       if (options.currencies && options.currencies.length) {
-          filters.push({terms: {currency: options.currencies}});
+        filters.push({terms: {currency: options.currencies}});
       }
       // Add query to request
       if (matches.length || filters.length) {
-          request.query = {bool: {}};
-          if (matches.length) {
-              request.query.bool.should =  matches;
-          }
-          if (filters.length) {
-              request.query.bool.filter =  filters;
-          }
+        request.query = {bool: {}};
+        if (matches.length) {
+          request.query.bool.should = matches;
+        }
+        if (filters.length) {
+          request.query.bool.filter = filters;
+        }
       }
-      var params = {
-          request_cache: angular.isDefined(options.cache) ? options.cache : true // enable by default
+      var statsRequestParams = {
+        request_cache: true // Always enable stats cache
       };
 
-    return $q.all([
+      return $q.all([
         getFilteredCategories(options),
-        raw.record.postSearch(request, params)
-    ]).then(function(res) {
+        raw.record.postSearch(request, statsRequestParams)
+      ]).then(function (res) {
         var categories = res[0];
         res = res[1];
 
+        // Add stats
         var buckets = (res.aggregations.category && res.aggregations.category.by_id && res.aggregations.category.by_id.buckets || []);
         var countById = {};
-        buckets.forEach(function(bucket){
+        buckets.forEach(function (bucket) {
           var cat = categories[bucket.key];
-          if (cat){
+          if (cat) {
             countById[bucket.key] = bucket.doc_count;
             if (cat.parent) {
               countById[cat.parent] = (countById[cat.parent] || 0) + bucket.doc_count;
@@ -174,47 +216,102 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
           }
         });
 
-        return categories.reduce(function(res, cat) {
+        return categories.reduce(function (res, cat) {
           return res.concat(angular.merge({
             count: countById[cat.id] || 0
           }, cat));
         }, []);
       })
-        .then(function(res) {
-
-          //var parents = _.filter(res, function(cat) {return !cat.parent;});
-          var catByParent = _.groupBy(res, function(cat) {return cat.parent || 'roots';});
-          _.forEach(catByParent.roots, function(parent) {
-              parent.children = catByParent[parent.id];
-          });
-          // group by parent category
-          return catByParent.roots;
+        // Convert to root categories
+        .then(function (res) {
+          return options.asTree ? asCategoriesTree(res) : res;
         })
-        .catch(function(err) {
-           console.error(err);
+        // Handle error
+        .catch(function (err) {
+          console.error(err);
+          return undefined;
         });
-  }
+    }
 
-  function addCategory(category) {
-    console.debug('[market] [category] Adding category', category);
-    return raw.add(category);
-  }
+    function addCategory(category) {
+      console.debug('[market] [category] Adding category', category);
+      return raw.add(category);
+    }
 
-  function updateCategory(category) {
-    console.debug('[market] [category] Updating category', category);
-    return raw.update(category);
+    function updateCategory(category) {
+      console.debug('[market] [category] Updating category', category);
+      return raw.update(category, {id: category.id});
+    }
 
-  }
+    function asCategoriesTree(categories) {
+      var catByParent = _.groupBy(categories, function (cat) {
+        return cat.parent || 'roots';
+      });
+      _.forEach(catByParent.roots, function (parent) {
+        parent.children = catByParent[parent.id];
+      });
+      // group by parent category
+      return catByParent.roots;
+    }
 
-  return {
-    all: getCategories,
-    filtered: getFilteredCategories,
-    get: getCategory,
-    searchText: esHttp.get('/market/category/_search?q=:search'),
-    search: esHttp.post('/market/category/_search'),
-    stats: getCategoriesStats,
-    add: addCategory,
-    update: updateCategory
-  };
-})
+    function saveAllCategories(cats, options) {
+
+      options = options || {};
+
+      if (!options.silent) {
+        var now = Date.now();
+        console.debug('[market] [category] Saving all categories...', cats);
+      }
+
+      var existingPromise = options.existingCategories ? $q.when(options.existingCategories) :
+        getCategories(false/*no cache*/);
+
+      // Get all existing (from pod, without cache)
+      return existingPromise
+        .then(function (existingCategories) {
+          return _.map(cats || [], function (cat) {
+            var existingCat = existingCategories[cat.id];
+            var isNew = !existingCat;
+            console.debug("[market] [category] - {0} {1}".format(isNew ? 'Add' : 'Update', cat.id));
+
+            // Prepare a fresh record, to save
+            var record = {
+              id: cat.id,
+              localizedNames: cat.localizedNames
+            };
+            if (cat.parent) record.parent = cat.parent;
+            if (existingCat && existingCat.name) record.name = cat.name || null;
+
+            var savePromise = isNew ? addCategory(record, {id: cat.id}) : updateCategory(record, {id: cat.id});
+            return savePromise
+              .then(function () {
+                // Save children
+                if (cat.children && cat.children.length) {
+                  return saveAllCategories(cat.children, {silent: true, existingCategories: existingCategories})
+                }
+              });
+          }, []);
+        })
+        .then($q.all)
+        .then(function () {
+          if (!options.silent) {
+            console.debug("[market] [category] Saved in {0}ms".format(Date.now() - now));
+          }
+        });
+    }
+
+    return {
+      all: getCategories,
+      filtered: getFilteredCategories,
+      asTree: asCategoriesTree,
+      get: getCategory,
+      searchText: esHttp.get('/market/category/_search?q=:search'),
+      search: esHttp.post('/market/category/_search'),
+      stats: getCategoriesStats,
+      add: addCategory,
+      update: updateCategory,
+      saveAll: saveAllCategories,
+      regexp: regexp
+    };
+  })
 ;

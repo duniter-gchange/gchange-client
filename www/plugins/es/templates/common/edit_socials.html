@@ -1,55 +1,75 @@
+<div class="list no-padding {{::motion.ionListClass}}">
+  <!-- divider -->
+  <div class="item item-divider">
 
-  <div class="item item-divider" translate>PROFILE.SOCIAL_NETWORKS_DIVIDER</div>
+    <span translate>PROFILE.SOCIAL_NETWORKS_DIVIDER</span>
 
-  <ion-item class="item-remove-animate item-icon-left "
-       type="no-padding item-text-wrap"
-       ng-if="formData.socials && formData.socials.length"
-       ng-repeat="social in formData.socials | filter:filterFn track by social.url"
-       id="social-{{social.url|formatSlug}}">
-      <i class="icon ion-social-{{social.type}}"
-         ng-class="{'ion-bookmark': social.type == 'other', 'ion-link': social.type == 'web', 'ion-email': social.type == 'email', 'ion-iphone': social.type == 'phone'}"></i>
-      <p ng-if="social.type && social.type != 'web'">
-          {{social.type}}
-          <i class="ion-locked" ng-if="social.recipient"></i>
-      </p>
-      <h2>
-        <a href="{{social.url}}" ng-if="social.type != 'email' && social.type != 'phone'" target="_blank">{{social.url}}</a>
-        <a href="mailto:{{social.url}}" ng-if="social.type == 'email'">{{social.url}}</a>
-        <a href="tel:{{social.url}}" ng-if="social.type == 'phone'">{{social.url}}</a>
-        <a class="gray hidden-device"
-           ng-if="!social.recipient"
-           ng-click="formData.socials.splice($index, 1); dirty = true;">
-          &nbsp;<b class="ion ion-trash-a"></b>&nbsp;
-        </a>
-        <a class="gray hidden-device"
-           ng-if="!social.recipient"
-           ng-click="editSocialNetwork($index)">
-          &nbsp;<b class="ion ion-edit"></b>&nbsp;
-        </a>
-      </h2>
-      <ion-option-button class="button-assertive"
-                         ng-if="!social.recipient"
-                         ng-click="formData.socials.splice($index, 1); dirty = true;">
-        {{'COMMON.BTN_DELETE'|translate}}
-      </ion-option-button>
-      <ion-option-button class="button-info"
-                         ng-if="!social.recipient"
-                         ng-click="editSocialNetwork($index)">
-        {{'COMMON.BTN_EDIT'|translate}}
-      </ion-option-button>
+    <a class="badge button button-text button-small button-small-padding"
+       ng-class="{'button-text-positive': socialData.reorder}"
+       ng-if="formData.socials && formData.socials.length &gt; 1"
+       ng-click="socialData.reorder=!socialData.reorder">
+      <span translate>PROFILE.BTN_REORDER</span>
+    </a>
+  </div>
+</div>
+
+<ion-list show-reorder="socialData.reorder">
+
+  <ion-item class="item-icon-left item-social-edit done in"
+            type="no-padding item-text-wrap"
+            ng-if="formData.socials && formData.socials.length"
+            ng-repeat="social in formData.socials | filter:filterFn track by social.url"
+            id="social-{{social.url|formatSlug}}">
+    <i class="icon ion-social-{{social.type}}"
+       ng-class="{'ion-bookmark': social.type === 'other', 'ion-link': social.type === 'web', 'ion-email': social.type === 'email', 'ion-iphone': social.type === 'phone'}"></i>
+    <p ng-if="social.type && social.type != 'web'">
+        {{social.type}}
+        <i class="ion-locked" ng-if="social.recipient"></i>
+    </p>
+    <h2>
+      <a href="{{social.url}}" ng-if="social.type != 'email' && social.type != 'phone'" target="_blank">{{social.url}}</a>
+      <a href="mailto:{{social.url}}" ng-if="social.type == 'email'">{{social.url}}</a>
+      <a href="tel:{{social.url}}" ng-if="social.type == 'phone'">{{social.url}}</a>
+      <a class="gray hidden-device"
+         ng-if="!social.recipient && !socialData.reorder"
+         ng-click="formData.socials.splice($index, 1); dirty = true;">
+        &nbsp;<b class="ion ion-trash-a"></b>&nbsp;
+      </a>
+      <a class="gray hidden-device"
+         ng-if="!social.recipient && !socialData.reorder"
+         ng-click="editSocialNetwork($index)">
+        &nbsp;<b class="ion ion-edit"></b>&nbsp;
+      </a>
+    </h2>
+    <ion-option-button class="button-assertive"
+                       ng-if="!social.recipient"
+                       ng-click="formData.socials.splice($index, 1); dirty = true;">
+      {{'COMMON.BTN_DELETE'|translate}}
+    </ion-option-button>
+    <ion-option-button class="button-info"
+                       ng-if="!social.recipient"
+                       ng-click="editSocialNetwork($index)">
+      {{'COMMON.BTN_EDIT'|translate}}
+    </ion-option-button>
+    <ion-reorder-button class="ion-drag"
+                        on-reorder="reorderSocialNetwork(social, $fromIndex, $toIndex)">
+    </ion-reorder-button>
   </ion-item>
+</ion-list>
 
+<ion-list class="no-padding">
   <div class="item item-complex item-input-inset">
     <label class="item-input-wrapper">
       <input type="text" style="width:100%" placeholder="{{'PROFILE.SOCIAL_HELP'|translate}}"
              id="socialUrl"
-             on-return="addSocialNetwork();"
+             on-return="addSocialNetwork($event);"
              ng-model="socialData.url"/>
     </label>
-    <button class="button button-small hidden-xs" type="button" ng-click="addSocialNetwork()">
-      {{'COMMON.BTN_ADD'|translate}}
-    </button>
+    <button class="button button-small hidden-xs" type="button" ng-click="addSocialNetwork($event)"
+            translate>COMMON.BTN_ADD</button>
     <button class="button button-small button-icon icon ion-android-add visible-xs" type="button"
-            ng-click="addSocialNetwork()">
+            ng-click="addSocialNetwork($event)">
     </button>
   </div>
+
+</ion-list>

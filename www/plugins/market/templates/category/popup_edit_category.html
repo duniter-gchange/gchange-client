@@ -1,0 +1,52 @@
+<form name="editForm" ng-submit="">
+  <div class="list" ng-init="setEditForm(editForm)">
+    <!-- id -->
+    <label class="item item-input item-floating-label"
+           ng-class="{'item-input-error': editForm.$submitted && editForm.id.$invalid}">
+      <span class="input-label">{{'MARKET.CATEGORY.EDIT.ID' | translate}}</span>
+      <input name="id" type="text" placeholder="{{'MARKET.CATEGORY.EDIT.ID' | translate}}"
+             ng-model="formData.id"
+             ng-minlength="4"
+             ng-pattern="idPattern"
+             required>
+    </label>
+    <div class="form-errors"
+         ng-if="editForm.$submitted && editForm.id.$error"
+         ng-messages="editForm.id.$error">
+      <div class="form-error" ng-message="required">
+        <span translate="ERROR.FIELD_REQUIRED"></span>
+      </div>
+      <div class="form-error" ng-message="minlength">
+        <span translate="ERROR.FIELD_TOO_SHORT"></span>
+      </div>
+      <div class="form-error" ng-message="pattern">
+        <span translate="MARKET.CATEGORY.EDIT.ERROR.INVALID_ID_PATTERN"></span>
+      </div>
+      <div class="form-error" ng-message="duplicated">
+        <span translate="MARKET.CATEGORY.EDIT.ERROR.ID_ALREADY_USED"></span>
+      </div>
+    </div>
+
+    <!-- name -->
+    <label class="item item-input item-floating-label"
+           ng-class="{'item-input-error': editForm.$submitted && editForm.name.$invalid}">
+      <span class="input-label">{{'MARKET.CATEGORY.EDIT.NAME' | translate}}</span>
+      <input name="name" type="text" placeholder="{{'MARKET.CATEGORY.EDIT.NAME' | translate}}"
+             ng-model="formData.name"
+             ng-minlength="3"
+             required>
+    </label>
+    <div class="form-errors"
+         ng-if="editForm.$submitted && editForm.name.$error"
+         ng-messages="editForm.name.$error">
+      <div class="form-error" ng-message="required">
+        <span translate="ERROR.FIELD_REQUIRED"></span>
+      </div>
+      <div class="form-error" ng-message="minlength">
+        <span translate="ERROR.FIELD_TOO_SHORT"></span>
+      </div>
+    </div>
+
+    <!-- TODO: parent -->
+  </div>
+</form>

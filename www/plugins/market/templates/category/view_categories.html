@@ -28,15 +28,15 @@
       <!-- loop on root categories -->
       <ng-repeat ng-repeat="cat in categories track by cat.id">
         <div class="item item-divider" ng-class="{'bold': cat.count}">
-          <span ng-bind-html="cat.name"></span> <ng-if ng-if="cat.count">({{cat.count}})</ng-if>
+          <span ng-bind-html="cat.name"></span><ng-if ng-if="cat.count">&nbsp;({{cat.count}})</ng-if>
         </div>
 
         <!-- children categories-->
         <a ng-repeat="cat in cat.children track by cat.id"
-           class="item item-border item-icon-left item-icon-right"
+           class="item item-border item-icon-right"
            ng-class="{'text-italic': !cat.count}"
            ng-click="onCategoryClick(cat)">
-          <span ng-bind-html="cat.name"></span><span ng-if="cat.count"> ({{cat.count}})</span>
+          <span ng-bind-html="cat.name"></span><span ng-if="cat.count">&nbsp;({{cat.count}})</span>
           <i class="icon ion-ios-arrow-right"></i>
         </a>
       </ng-repeat>

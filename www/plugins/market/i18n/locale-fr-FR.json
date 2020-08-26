@@ -56,7 +56,27 @@
       }
     },
     "CATEGORY": {
-      "ALL": "Toutes les catégories"
+      "ALL": "Toutes les catégories",
+      "EDIT": {
+        "TITLE": "Gestion des catégories",
+        "ID": "Identifiant",
+        "NAME": "Libellé",
+        "ROOT_CATEGORIES": "Catégories parentes",
+        "BTN_ADD": "Ajouter",
+        "BTN_REORDER": "Réordonner",
+        "POPUP": {
+          "TITLE_EDIT": "Modifier la catégorie",
+          "TITLE_NEW": "Nouvelle catégorie"
+        },
+        "ERROR": {
+          "CANNOT_SAVE": "Erreur lors de la sauvegarde des categories",
+          "INVALID_ID_PATTERN": "Format 'catNNN' non respecté",
+          "ID_ALREADY_USED": "Identifiant déjà utilisé"
+        },
+        "INFO": {
+          "SAVED": "Catégories enregistrées avec succès"
+        }
+      }
     },
     "SEARCH": {
       "TITLE": "Annonces",

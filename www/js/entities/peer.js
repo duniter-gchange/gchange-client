@@ -59,7 +59,7 @@ Peer.prototype.json = function() {
 Peer.prototype.getBMA = function() {
   if (this.bma) return this.bma;
   var bma = null;
-  var bmaRegex = this.regex.BMA_REGEXP;
+  var bmaRegex = this.regexp.BMA_REGEXP;
   this.endpoints.forEach(function(ep){
     var matches = !bma && bmaRegex.exec(ep);
     if (matches) {

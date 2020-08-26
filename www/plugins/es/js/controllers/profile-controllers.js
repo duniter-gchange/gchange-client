@@ -11,6 +11,7 @@ angular.module('cesium.es.profile.controllers', ['cesium.es.services'])
           controller: 'ESViewEditProfileCtrl'
         }
       },
+      cache: false,
       data: {
         auth: true
       }
@@ -45,22 +46,23 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
   $scope.socialData = {
     url: null
   };
+  $scope.socialReorder = true;
 
   $scope.pubkeyPattern = BMA.regexp.PUBKEY;
 
-  $scope.$on('$ionicView.enter', function(e) {
+  $scope.enter = function(e, state) {
     $scope.loadWallet()
-      .then(function(walletData) {
-        return $scope.load(walletData);
-      })
+      .then($scope.load)
       .catch(function(err){
-        if (err == 'CANCELLED') {
-          return $scope.close()
-            .then(UIUtils.loading.hide);
+        if (err === 'CANCELLED') {
+          UIUtils.loading.hide(10);
+          $scope.cancel();
+          return;
         }
         UIUtils.onError('PROFILE.ERROR.LOAD_PROFILE_FAILED')(err);
       });
-  });
+  };
+  $scope.$on('$ionicView.enter', $scope.enter);
 
   $scope.$on('$stateChangeStart', function (event, next, nextParams, fromState) {
     if (!$scope.dirty || $scope.saving || event.defaultPrevented) return;
@@ -124,14 +126,19 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
           $scope.updateView(walletData, {});
         }
 
+        UIUtils.loading.hide();
+
+        // Update loading - done with a delay, to avoid trigger onFormDataChanged()
+        return $timeout(function() {
+          $scope.loading = false;
+        }, 1000);
+      })
+      .then(function() {
         // removeIf(device)
         $focus('profile-name');
         // endRemoveIf(device)
       })
-      .catch(function(err){
-        UIUtils.loading.hide(10);
-        UIUtils.onError('PROFILE.ERROR.LOAD_PROFILE_FAILED')(err);
-      });
+      .catch(UIUtils.onError('PROFILE.ERROR.LOAD_PROFILE_FAILED'));
   };
 
   $scope.setForm = function(form) {
@@ -147,12 +154,6 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
     $scope.formData.geoPoint = $scope.formData.geoPoint || {};
 
     $scope.motion.show();
-    UIUtils.loading.hide();
-
-    // Update loading - done with a delay, to avoid trigger onFormDataChanged()
-    $timeout(function() {
-      $scope.loading = false;
-    }, 1000);
   };
 
   $scope.onFormDataChanged = function() {
@@ -162,18 +163,18 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
   $scope.$watch('formData', $scope.onFormDataChanged, true);
 
   $scope.save = function(silent, hasWaitDebounce) {
-    if(!$scope.form.$valid || !$rootScope.walletData || $scope.saving) {
+    if($scope.form.$invalid || !$rootScope.walletData || ($scope.saving && !hasWaitDebounce)) {
       return $q.reject();
     }
 
     if (!hasWaitDebounce) {
       console.debug('[ES] [profile] Waiting debounce end, before saving...');
+      $scope.saving = true;
       return $timeout(function() {
         return $scope.save(silent, true);
       }, 650);
     }
 
-    $scope.saving = true;
     console.debug('[ES] [profile] Saving user profile...');
 
     // removeIf(no-device)
@@ -227,20 +228,22 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
 
       // Workaround for old data
       if (formData.position) {
-        delete formData.position;
+        formData.position = null;
       }
+
+      // Make sure to convert lat/lon to float
       if (formData.geoPoint && formData.geoPoint.lat && formData.geoPoint.lon) {
         formData.geoPoint.lat =  parseFloat(formData.geoPoint.lat);
         formData.geoPoint.lon =  parseFloat(formData.geoPoint.lon);
       }
       else{
-        formData.geoPoint = null;
+        formData.geoPoint = null; // force to null, need by ES update request
       }
 
       if (!$scope.existing) {
         return esProfile.add(formData)
           .then(function() {
-            console.info("[ES] [profile] successfully created.");
+            console.info("[ES] [profile] Successfully created.");
             $scope.existing = true;
             $scope.saving = false;
             $scope.dirty = false;
@@ -291,7 +294,7 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
 
   $scope.cancel = function() {
     $scope.dirty = false; // force not saved
-    $scope.close();
+    return $state.go('app.view_wallet');
   };
 
   $scope.close = function() {
@@ -339,7 +342,63 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
       });
   };
 
+  $scope.removeProfile = function(){
+    // Hide popover if need
+    $scope.hideActionsPopover();
 
+    return $scope.existing && wallet.auth({minData: true})
+        .then(function(walletData) {
+
+          UIUtils.loading.hide();
+          UIUtils.alert.confirm('PROFILE.CONFIRM.DELETE', undefined, {okText: 'COMMON.BTN_DELETE'})
+            .then(function(confirm) {
+              if (confirm){
+
+                console.debug('[ES] [profile] Deleting user profile...');
+                // removeIf(no-device)
+                UIUtils.loading.show();
+                // endRemoveIf(no-device)
+                return esProfile.remove(walletData.pubkey, {wallet: wallet})
+                  .then(function () {
+                    if (wallet.isDefault()) {
+                      walletData.name=null; // keep local name, on children wallets
+                    }
+                    walletData.profile = null;
+                    walletData.avatar = null;
+                    console.debug('[ES] [profile] Successfully deleted');
+                    $scope.dirty = false;
+                    return $scope.close();
+                  })
+                  .then(function() {
+                    return $timeout(function() {
+                      UIUtils.toast.show('PROFILE.INFO.PROFILE_REMOVED');
+                    }, 750);
+                  })
+                  .catch(UIUtils.onError('PROFILE.ERROR.REMOVE_PROFILE_FAILED'));
+              }
+            });
+        });
+  };
+
+  /* -- Popover -- */
+
+  $scope.showActionsPopover = function(event) {
+    UIUtils.popover.show(event, {
+      templateUrl: 'plugins/es/templates/user/edit_popover_actions.html',
+      scope: $scope,
+      autoremove: true,
+      afterShow: function(popover) {
+        $scope.actionsPopover = popover;
+      }
+    });
+  };
+
+  $scope.hideActionsPopover = function() {
+    if ($scope.actionsPopover) {
+      $scope.actionsPopover.hide();
+      $scope.actionsPopover = null;
+    }
+  };
 }
 
 

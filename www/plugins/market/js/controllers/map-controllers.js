@@ -72,9 +72,19 @@ angular.module('cesium.market.map.controllers', ['cesium.market.record.services'
     }
 
     $scope.onChangeCountry = function(country) {
+      if (!country) return; // Skip
       console.debug('[country-map] Select country map:', country);
       return $scope.load({country: country});
     }
+
+    // Watch locale change, to reload categories
+    $scope.onLocaleChange = function(localeId) {
+      console.debug('[market] [map] Reloading map, because locale changed to ' + localeId);
+      var locale = _.findWhere(csSettings.locales, {id: localeId}) || {id : $translate.use()};
+      var country = locale && (locale.country || locale.id.split('-')[1]);
+      return $scope.onChangeCountry(country);
+    };
+    csSettings.api.locale.on.changed($scope, $scope.onLocaleChange, this);
 
     $scope.handleEvent = function(event) {
       if (event.name === 'mouseover') {
