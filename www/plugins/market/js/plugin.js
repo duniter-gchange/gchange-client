@@ -13,9 +13,11 @@ angular.module('cesium.market.services', [
 
 angular.module('cesium.market.plugin', [
   'cesium.market.app.controllers',
+  'cesium.market.home.controllers',
   'cesium.market.join.controllers',
   'cesium.market.login.controllers',
   'cesium.market.search.controllers',
+  'cesium.market.gallery.controllers',
   'cesium.market.record.controllers',
   'cesium.market.wallet.controllers',
   'cesium.market.category.controllers',

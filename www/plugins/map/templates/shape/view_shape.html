@@ -1,0 +1,38 @@
+
+<div class="padding">
+  <div class="center padding" ng-if="loading">
+    <ion-spinner icon="android"></ion-spinner>
+  </div>
+
+  <!-- Leaflet
+  <div id="svg">
+
+    <leaflet
+        id="{{::mapId}}"
+        height="100%"
+        lf-center="map.center"
+        bounds="map.bounds">
+    </leaflet>
+  </div>-->
+
+  <!-- Shape -->
+  <div id="{{::shapeId}}">
+
+  </div>
+
+  <p>
+    <a ng-repeat="country in countries"
+       ng-class="{'bold': country === selectedCountry}"
+       ng-click="onCountryChange(country)">
+      <span ng-if="$index">&nbsp;|&nbsp;</span>
+      {{countriesMap[country]}}
+    </a>
+  </p>
+
+  <!-- DEV ONLY-->
+  <br/>
+  <p>
+    <a ng-click="convert()" target="_blank">Convert !</a>
+    <a href="" id="demolink" target="_blank">View on a map, as GeoJSON</a>
+  </p>
+</div>

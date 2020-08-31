@@ -109,7 +109,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
   }
 
 
-  function search(request) {
+  function search(request, options) {
     request = request || {};
     request.from = request.from || 0;
     request.size = request.size || 20;
@@ -121,6 +121,10 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
         "category.name" : {},
         tags: {}
       }
+    };
+
+    var requestParams = {
+      request_cache: options && options.withCache === true || false
     };
 
     return $q.all([
@@ -138,7 +142,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
         }),
 
       // Do search
-      raw.postSearch(request)
+      raw.postSearch(request, requestParams)
     ])
       .then(function(res) {
         var categories = res[0];

@@ -1,4 +1,4 @@
-<ion-view left-buttons="leftButtons" class="market">
+<ion-view left-buttons="leftButtons">
   <ion-nav-title>
     <span translate>MARKET.CATEGORY.EDIT.TITLE</span>
   </ion-nav-title>
@@ -24,8 +24,8 @@
               <ng-repeat ng-repeat="l in locales">
                 <span class="gray" ng-if="$index">|&nbsp;</span>
                 <a class="button button-text button-small no-padding-bottom ink"
-                   ng-click="changeLocale(l)"
-                   ng-class="{'button-text-positive': l.id === localeId, 'gray': l.id !== localeId}"
+                   ng-click="onChangeLocale(l)"
+                   ng-class="{'button-text-positive': l.id === locale, 'gray': l.id !== locale}"
                 >{{l.label}}</a>
               </ng-repeat>
             </div>

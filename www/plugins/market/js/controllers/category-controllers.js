@@ -50,8 +50,10 @@ angular.module('cesium.market.category.controllers', ['cesium.market.record.serv
 function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCategory, csSettings) {
   'ngInject';
 
+  $scope.locale = undefined;
   $scope.loading = true;
   $scope.motion = UIUtils.motion.ripple;
+  $scope.listeners = undefined;
 
   // Screen options
   $scope.options = $scope.options || angular.merge({
@@ -61,19 +63,27 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
       withStats: true,
       nbsp: true
     },
-    showClosed: false
+    showClosed: false,
+    showOld: false
   }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
   $scope.load = function(options) {
     options = options || {};
     options.filter = options.filter || ($scope.options && $scope.options.category && $scope.options.category.filter);
     options.withStats = angular.isDefined($scope.options && $scope.options.category && $scope.options.category.withStats) ? $scope.options.category.withStats : true;
-    options.withStock = options.withStock && (!$scope.options || !$scope.options.showClosed);
+    options.withStock = angular.isDefined(options.withStock) ? options.withStock : (!$scope.options || !$scope.options.showClosed);
+    options.withOld = angular.isDefined(options.withOld) ? options.withOld : (!$scope.options || $scope.options.showOld);
     options.silent = angular.isDefined(options.silent) ? options.silent : true;
-    options.localeId = angular.isDefined(options.localeId) ? options.localeId : $translate.use();
+    options.locale = angular.isDefined(options.locale) ? options.locale : $translate.use();
     options.nbsp = angular.isDefined(options.nbsp) ? options.nbsp : ($scope.options && $scope.options.category && $scope.options.category.nbsp);
 
     if (!options.silent) $scope.loading = true;
+
+    // Remember locale
+    $scope.locale = options.locale;
+    angular.merge($scope.options.category, options);
+
+    console.debug('[market] [categories] Loading...', options);
 
     var categoriesPromise = options.withStats
       ? mkCategory.stats(options)
@@ -94,28 +104,42 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
         }, 0);
         $scope.loading = false;
         if ($scope.motion.show && !options.silent) $scope.motion.show();
+
+        // Add listeners, if need
+        if (!$scope.listeners) {
+          $scope.addListeners();
+        }
       });
   };
 
-  $scope.refresh = function(options) {
-    if ($scope.loading) return;
+  $scope.onOptionsChange = function() {
+    if ($scope.loading || !$scope.locale) return; // Skip if not loaded
 
-    if (!options || !options.silent) {
-      $scope.loading = true;
+    var changed = ($scope.options.category.withStock === $scope.options.showClosed)
+      || ($scope.options.category.withOld !== $scope.options.showOld);
+
+    // Reload data
+    if (changed) {
+      $scope.load();
     }
-
-    // Load data
-    return $scope.load(options);
   };
-  $scope.$watch('options.showClosed', $scope.refresh, true);
 
-  // Watch locale change, to reload categories
-  $scope.onLocaleChange = function(localeId) {
-    console.debug('[market] [categories] Reloading categories list (no cache), because locale changed to ' + localeId);
-    // Reload categories
-    $scope.load({localeId: localeId, silent: true});
+
+  // Watch locale change, reload categories
+  $scope.onLocaleChange = function(locale) {
+    if (!$scope.locale || $scope.locale === locale) return; // Skip
+    console.debug('[market] [categories] Need reload for locale {{0]]...'.format(locale));
+    $scope.load({locale: locale, silent: true});
   };
-  csSettings.api.locale.on.changed($scope, $scope.onLocaleChange, this);
+
+  $scope.addListeners = function() {
+    $scope.listeners = [
+      $scope.$watch('options.showClosed', $scope.onOptionsChange, true),
+      $scope.$watch('options.showOld', $scope.onOptionsChange, true),
+      csSettings.api.locale.on.changed($scope, $scope.onLocaleChange, this)
+    ];
+  };
+
 }
 
 function MkViewCategoriesController($scope, $controller, $state) {
@@ -156,7 +180,6 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
   $scope.dirty = false;
   $scope.locales = angular.merge({}, csSettings.locales); // Copy locales
   $scope.defaultLocale = csSettings.fixLocale(csConfig.defaultLanguage) || 'en';
-  $scope.localeId = $translate.use();
   $scope.idPattern = mkCategory.regexp.ID;
 
   // Initialize the super class and extend it.
@@ -218,9 +241,9 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
 
   $scope.getName = function(cat, useItalicIfMissing) {
     if (!cat) throw new Error('Missing category');
-    var name = cat.localizedNames && cat.localizedNames[$scope.localeId];
+    var name = cat.localizedNames && cat.localizedNames[$scope.locale];
     if (!name) {
-      if (useItalicIfMissing && $scope.defaultLocale !== $scope.localeId) {
+      if (useItalicIfMissing && $scope.defaultLocale !== $scope.locale) {
         var defaultName = cat.localizedNames && $scope.defaultLocale && cat.localizedNames[$scope.defaultLocale] || cat.name;
         return '<span class="text-italic">' + defaultName + '</span>';
       }
@@ -299,9 +322,9 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
     $scope.dirty = true;
   }
 
-  $scope.changeLocale = function(locale) {
+  $scope.onChangeLocale = function(locale) {
     console.debug('[market] [category] Changing categories locale to: ' + locale.label);
-    $scope.localeId = locale.id;
+    $scope.locale = locale.id;
   }
 
   /* -- popups -- */
@@ -358,7 +381,7 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
               }
 
               // Copy name into to map
-              updatedCategory.localizedNames[$scope.localeId] = updatedCategory.name;
+              updatedCategory.localizedNames[$scope.locale] = updatedCategory.name;
 
               // Restore the original name, for backward compatibility
               if (category && category.name) {

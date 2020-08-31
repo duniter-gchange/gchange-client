@@ -52,12 +52,12 @@
           <div class="animate-show-hide ng-hide" ng-show="entered">
 
             <!-- selected location -->
-            <div ng-show="!search.loading && search.geoPoint && search.location"
+            <div ng-show="search.location && (search.geoPoint || search.geoShape)"
                  class="button button-small button-text button-stable button-icon-event stable-900-bg"
                  style="margin-right: 10px;">
               &nbsp;<i class="icon ion-location"></i>
               {{search.location.split(',')[0]}}
-              <span ng-if="search.geoDistance">({{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }})</span>
+              <span ng-if="search.geoDistance && search.geoPoint">({{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }})</span>
               <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
             </div>
 
@@ -92,7 +92,7 @@
 
       <!-- location -->
       <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
-                  ng-if="entered && !search.geoPoint && options.location.show"
+                  ng-if="entered && options.location.show && (!search.geoPoint && !search.geoShape)"
                   ng-controller="ESSearchPositionItemCtrl"></ng-include>
 
       <!-- options -->

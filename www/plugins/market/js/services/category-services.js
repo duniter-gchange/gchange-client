@@ -20,7 +20,7 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
         },
       },
       cache = {
-        localeId: undefined
+        locale: undefined
       };
 
     function readFromHit(hit, options) {
@@ -29,7 +29,7 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
 
       // Replace name by the current locale, when possible
       if (cat.localizedNames) {
-        cat.name = cat.localizedNames[options.localId]
+        cat.name = cat.localizedNames[options.locale]
           // Fallback to default locale, or keep existing name
           || (options.fallbackLocalId && cat.localizedNames[options.fallbackLocalId])
           || cat.name;
@@ -41,10 +41,10 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
     function getCategories(options) {
       options = options || {};
       options.withCache = angular.isDefined(options.withCache) ? options.withCache : true;
-      options.localId = angular.isDefined(options.localId) ? options.localId : $translate.use();
+      options.locale = angular.isDefined(options.locale) ? options.locale : $translate.use();
       options.fallbackLocalId = csSettings.fixLocale(csConfig.defaultLanguage) || 'en';
 
-      if (options.withCache && cache.categories && cache.categories.length && cache.localeId === options.localId) {
+      if (options.withCache && cache.categories && cache.categories.length && cache.locale === options.locale) {
         var deferred = $q.defer();
         deferred.resolve(cache.categories);
         return deferred.promise;
@@ -68,8 +68,8 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
           }
           // Update the cache
           cache.categories = categories;
-          if (cache.localeId !== options.localId) {
-            cache.localeId = options.localId;
+          if (cache.locale !== options.locale) {
+            cache.locale = options.locale;
             cache.filteredCategories = undefined;
           }
 
@@ -81,11 +81,11 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
       options = options || {};
       options.filter = angular.isDefined(options.filter) ? options.filter : undefined;
       options.withCache = angular.isDefined(options.withCache) ? options.withCache : true;
-      options.localId = angular.isDefined(options.localId) ? options.localId : $translate.use();
+      options.locale = angular.isDefined(options.locale) ? options.locale : $translate.use();
       options.fallbackLocalId = csSettings.fixLocale(csConfig.defaultLanguage) || 'en';
 
       var cachedResult = options.withCache && cache.filteredCategories && cache.filteredCategories[options.filter];
-      if (cachedResult && cachedResult.length && cache.localeId === options.localId) {
+      if (cachedResult && cachedResult.length && cache.locale === options.locale) {
         var deferred = $q.defer();
         deferred.resolve(cachedResult);
         return deferred.promise;
@@ -118,8 +118,8 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
           // Update cache
           cache.filteredCategories = cache.filteredCategories || {};
           cache.filteredCategories[options.type] = categories;
-          if (cache.localeId !== options.localId) {
-            cache.localeId = options.localId;
+          if (cache.locale !== options.locale) {
+            cache.locale = options.locale;
             cache.categories = undefined;
           }
 

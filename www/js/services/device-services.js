@@ -253,6 +253,10 @@ angular.module('cesium.device.services', ['cesium.utils.services', 'cesium.setti
         return !exports.enable && !exports.isDesktop();
       };
 
+      exports.isMobile = function() {
+        return exports.enable
+      }
+
       exports.ready = function() {
         if (started) return $q.when();
         return startPromise || exports.start();

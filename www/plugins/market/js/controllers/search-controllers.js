@@ -31,24 +31,11 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
         silentLocationChange: true
       }
     })
-
-    .state('app.market_gallery', {
-      cache: true,
-      url: "/gallery/market",
-      views: {
-        'menuContent': {
-          templateUrl: "plugins/market/templates/gallery/view_gallery.html",
-          controller: 'MkViewGalleryCtrl'
-        }
-      }
-    });
   })
 
  .controller('MkLookupAbstractCtrl', MkLookupAbstractController)
 
  .controller('MkLookupCtrl', MkLookupController)
-
- .controller('MkViewGalleryCtrl', MkViewGalleryController)
 
 ;
 
@@ -71,6 +58,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     category: null,
     location: null,
     geoPoint: null,
+    geoShape: null,
     options: null,
     loadingMore: false,
     showClosed: false,
@@ -151,7 +139,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       $scope.search.advanced = false;
     }
 
-    if ($scope.search.location && !$scope.search.geoPoint) {
+    // When a location has been set, but NOT position found: resolve position
+    if ($scope.search.location && !$scope.search.geoPoint && !$scope.search.geoShape) {
       return $scope.searchPosition($scope.search.location)
         .then(function(res) {
           if (!res) {
@@ -161,7 +150,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
           //console.debug('[market] search by location results:', res);
           $scope.search.geoPoint = res;
           $scope.search.location = res.name && res.name.split(',')[0] || $scope.search.location;
-          return $scope.doSearch(from);
+          return $scope.doSearch(from); // Loop
         });
     }
 
@@ -177,7 +166,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       }
       else {
         text = text.toLowerCase();
-        var matchFields = ["title", "description"];
+        var matchFields = ["title^2", "description"];
         matches.push({multi_match : { query: text,
           fields: matchFields,
           type: "phrase_prefix"
@@ -250,7 +239,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         var locationCity = location.split(',')[0];
         filters.push({
           or : [
-            // No position defined
+            // No position defined: search on text
             {
               and: [
                 {not: {exists: { field : "geoPoint" }}},
@@ -260,7 +249,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
                 }}
               ]
             },
-            // Has position
+            // Has position: use spatial filter
             {geo_distance: {
               distance: $scope.search.geoDistance + $scope.geoUnit,
               geoPoint: {
@@ -285,6 +274,38 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       }
       stateParams.lat=$scope.search.geoPoint.lat;
       stateParams.lon=$scope.search.geoPoint.lon;
+    }
+    else if ($scope.search.geoShape) {
+      var coordinates = $scope.search.geoShape.coordinates;
+      var type = $scope.search.geoShape.type;
+      if (location && type && coordinates && coordinates.length) {
+        switch (type.toLowerCase()) {
+          case "polygon":
+            filters.push(
+              {geo_polygon: {
+                  geoPoint: {
+                    points: coordinates.length === 1 ? coordinates[0] : coordinates
+                  }
+                }});
+            break;
+          case "multipolygon":
+            filters.push({
+              or: coordinates.reduce(function (res, coords) {
+                return res.concat(coords.reduce(function(res, points) {
+                  return res.concat({geo_polygon: {
+                      geoPoint: {
+                        points: points
+                      }
+                    }});
+                }, []))
+                }, [])
+              });
+            break;
+          default:
+            console.error("[market] [search] Unknown geometry type: " + type);
+
+        }
+      }
     }
 
     if ($scope.search.showClosed) {
@@ -344,7 +365,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     $scope.hideActionsPopover();
     $scope.search.lastRecords = true;
 
-    var options = {
+    var request = {
       sort: {
         "creationTime" : "desc"
       },
@@ -448,16 +469,48 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
             }});
       }
     }
+    else if ($scope.search.geoShape) {
+      var coordinates = $scope.search.geoShape.coordinates;
+      var type = $scope.search.geoShape.type;
+      if (location && type && coordinates && coordinates.length) {
+        switch (type.toLowerCase()) {
+          case "polygon":
+            filters.push(
+              {geo_polygon: {
+                  geoPoint: {
+                    points: coordinates.length === 1 ? coordinates[0] : coordinates
+                  }
+                }});
+            break;
+          case "multipolygon":
+            filters.push({
+              or: coordinates.reduce(function (res, coords) {
+                return res.concat(coords.reduce(function(res, points) {
+                  return res.concat({geo_polygon: {
+                      geoPoint: {
+                        points: points
+                      }
+                    }});
+                }, []))
+              }, [])
+            });
+            break;
+          default:
+            console.error("[market] [search] Unknown geometry type: " + type);
+
+        }
+      }
+    }
 
 
     if (matches.length) {
-      options.query = {bool: {}};
-      options.query.bool.should =  matches;
-      options.query.bool.minimum_should_match = 1;
+      request.query = {bool: {}};
+      request.query.bool.should =  matches;
+      request.query.bool.minimum_should_match = 1;
     }
     if (filters.length) {
-      options.query = options.query || {bool: {}};
-      options.query.bool.filter =  filters;
+      request.query = request.query || {bool: {}};
+      request.query.bool.filter =  filters;
     }
 
     // Update location href
@@ -472,7 +525,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       }).replace();
     }
 
-    return $scope.doRequest(options);
+    return $scope.doRequest(request, {withCache: true});
   };
 
   $scope.doRefresh = function() {
@@ -504,19 +557,19 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       });
   };
 
-  $scope.doRequest = function(options) {
-    options = options || {};
-    options.from = options.from || 0;
-    options.size = options.size || defaultSearchLimit;
-    if (options.size < defaultSearchLimit) options.size = defaultSearchLimit;
-    $scope.search.loading = (options.from === 0);
+  $scope.doRequest = function(request, options) {
+    request = request || {};
+    request.from = request.from || 0;
+    request.size = request.size || defaultSearchLimit;
+    if (request.size < defaultSearchLimit) request.size = defaultSearchLimit;
+    $scope.search.loading = (request.from === 0);
 
-    return  mkRecord.record.search(options)
+    return  mkRecord.record.search(request, options)
     .then(function(res) {
 
       if (!res || !res.hits || !res.hits.length) {
-        $scope.search.results = (options.from > 0) ? $scope.search.results : [];
-        $scope.search.total = (options.from > 0) ? $scope.search.total : 0;
+        $scope.search.results = (request.from > 0) ? $scope.search.results : [];
+        $scope.search.total = (request.from > 0) ? $scope.search.total : 0;
         $scope.search.hasMore = false;
         return;
       }
@@ -532,7 +585,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       return esProfile.fillAvatars(res.hits, 'issuer')
         .then(function(hits) {
           // Replace results, or concat if offset
-          if (!options.from) {
+          if (!request.from) {
             $scope.search.results = hits;
             $scope.search.total = res.total;
           }
@@ -551,8 +604,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     })
     .catch(function(err) {
       $scope.search.loading = false;
-      $scope.search.results = (options.from > 0) ? $scope.search.results : [];
-      $scope.search.total = (options.from > 0) ? $scope.search.total : 0;
+      $scope.search.results = (request.from > 0) ? $scope.search.results : [];
+      $scope.search.total = (request.from > 0) ? $scope.search.total : 0;
       $scope.search.hasMore = false;
       UIUtils.onError('MARKET.ERROR.LOOKUP_RECORDS_FAILED')(err);
     });
@@ -650,6 +703,9 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
         else if (state.stateParams.location) {
           // Try to get geoPoint from root scope
           $scope.search.geoPoint = $rootScope.geoPoints && $rootScope.geoPoints[state.stateParams.location] || null;
+
+          // Try to get geoShape from root scope
+          $scope.search.geoShape = $rootScope.geoShapes && $rootScope.geoShapes[state.stateParams.location] || null;
         }
         else {
           var defaultSearch = csSettings.data.plugins.es.market && csSettings.data.plugins.es.market.defaultSearch;
@@ -870,243 +926,5 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   $scope.toggleShowClosed = function() {
     $scope.hideActionsPopover();
     $scope.search.showClosed = !$scope.search.showClosed;
-  };
-}
-
-function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $ionicSlideBoxDelegate, $ionicModal, $interval, mkRecord) {
-
-  // Initialize the super class and extend it.
-  $scope.zoomMin = 1;
-  $scope.categories = [];
-  $scope.pictures = [];
-  $scope.activeSlide = 0;
-  $scope.activeCategory = null;
-  $scope.activeCategoryIndex = 0;
-  $scope.started = false;
-
-  $scope.options = $scope.options || angular.merge({
-        category: {
-          filter: undefined
-        },
-        slideDuration: 5000, // 5 sec
-        showClosed: false
-      }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
-
-  $scope.slideDurationLabels = {
-    3000: {
-      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
-      labelParams: {value: 3}
-    },
-    5000: {
-      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
-      labelParams: {value: 5}
-    },
-    10000: {
-      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
-      labelParams: {value: 10}
-    },
-    15000: {
-      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
-      labelParams: {value: 15}
-    },
-    20000: {
-      labelKey: 'MARKET.GALLERY.SLIDE_DURATION_OPTION',
-      labelParams: {value: 20}
-    }
-  };
-  $scope.slideDurations = _.keys($scope.slideDurationLabels);
-
-  $scope.resetSlideShow = function() {
-    delete $scope.activeCategory;
-    delete $scope.activeCategoryIndex;
-    delete $scope.activeSlide;
-    delete $scope.categories;
-  };
-
-  $scope.startSlideShow = function(options) {
-
-
-    // Already load: continue
-    if ($scope.activeCategory && $scope.activeCategory.pictures && $scope.activeCategory.pictures.length) {
-      return $scope.showPicturesModal($scope.activeCategoryIndex,$scope.activeSlide);
-    }
-
-    options = options || {};
-    options.filter = options.filter || ($scope.options && $scope.options.category && $scope.options.category.filter);
-    options.withStock = (!$scope.options || !$scope.options.showClosed);
-    options.withOld = $scope.options && $scope.options.showOld;
-
-    $scope.stop();
-
-    $scope.loading = true;
-
-    delete $scope.activeCategory;
-    delete $scope.activeCategoryIndex;
-    delete $scope.activeSlide;
-
-    return mkRecord.category.stats(options)
-        .then(function(res) {
-          // Exclude empty categories
-          $scope.categories = _.filter(res, function(cat) {
-            return cat.count > 0 && cat.children && cat.children.length;
-          });
-
-          // Increment category
-          return $scope.nextCategory();
-        })
-        .then(function() {
-          $scope.loading = false;
-        })
-        .catch(function(err) {
-          console.error(err);
-          $scope.loading = false;
-        })
-      .then(function() {
-        if ($scope.categories && $scope.categories.length) {
-          return $scope.showPicturesModal(0,0);
-        }
-      });
-  };
-
-  $scope.showPicturesModal = function(catIndex, picIndex, pause) {
-    $scope.activeCategoryIndex = catIndex;
-    $scope.activeSlide = picIndex;
-
-    $scope.activeCategory = $scope.categories[catIndex];
-
-    if ($scope.modal) {
-      $ionicSlideBoxDelegate.slide(picIndex);
-      $ionicSlideBoxDelegate.update();
-      return $scope.modal.show()
-        .then(function() {
-          if (!pause) {
-            $scope.start();
-          }
-        });
-    }
-
-    return $ionicModal.fromTemplateUrl('plugins/market/templates/gallery/modal_slideshow.html',
-        {
-        scope: $scope
-      })
-      .then(function(modal) {
-        $scope.modal = modal;
-        $scope.modal.scope.closeModal = $scope.hidePictureModal;
-        // Cleanup the modal when we're done with it!
-        $scope.$on('$destroy', function() {
-          if ($scope.modal) {
-            $scope.modal.remove();
-            delete $scope.modal;
-          }
-        });
-
-        return $scope.modal.show()
-          .then(function() {
-            if (!pause) {
-              $scope.start();
-            }
-          });
-      });
-
-  };
-
-  $scope.hidePictureModal = function() {
-    $scope.stop();
-    if ($scope.modal && $scope.modal.isShown()) {
-      return $scope.modal.hide();
-    }
-    return $q.when();
-  };
-
-  $scope.start = function() {
-    if ($scope.interval) {
-      $interval.cancel($scope.interval);
-    }
-
-    console.debug('[market] [gallery] Start slideshow');
-    $scope.interval = $interval(function() {
-      $scope.nextSlide();
-    }, $scope.options.slideDuration);
-
-  };
-
-  $scope.stop = function() {
-    if ($scope.interval) {
-      console.debug('[market] [gallery] Stop slideshow');
-      $interval.cancel($scope.interval);
-      delete $scope.interval;
-    }
-  };
-
-  /* -- manage slide box slider-- */
-
-  $scope.nextCategory = function(started) {
-    if (!$scope.categories || !$scope.categories.length) return $q.when();
-
-    started = started || !!$scope.interval;
-
-    // Make sure sure to stop slideshow
-    if (started && $scope.modal.isShown()) {
-      return $scope.hidePictureModal()
-        .then(function(){
-          return $scope.nextCategory(started);
-        });
-    }
-
-    $scope.activeCategoryIndex = $scope.loading ? 0 : $scope.activeCategoryIndex+1;
-
-    // End of slideshow: restart (reload all)
-    if ($scope.activeCategoryIndex === $scope.categories.length) {
-
-      $scope.resetSlideShow();
-
-      if (started) {
-        return $scope.startSlideShow();
-      }
-      return $q.when();
-    }
-
-    var category = $scope.categories[$scope.activeCategoryIndex];
-
-    // Load pictures
-    return mkRecord.record.pictures({
-        categories:  _.pluck(category.children, 'id'),
-        size: 1000,
-        withStock: (!$scope.options || !$scope.options.showClosed)
-      })
-      .then(function(pictures) {
-        category.pictures = pictures;
-        if (started) {
-          return $scope.showPicturesModal($scope.activeCategoryIndex,0);
-        }
-      });
-  };
-
-  $scope.nextSlide = function() {
-
-    // If end of category pictures
-    if (!$scope.activeCategory || !$scope.activeCategory.pictures || !$scope.activeCategory.pictures.length || $ionicSlideBoxDelegate.currentIndex() == $scope.activeCategory.pictures.length-1) {
-      $scope.nextCategory();
-    }
-    else {
-      $ionicSlideBoxDelegate.next();
-    }
-  };
-
-  $scope.updateSlideStatus = function(slide) {
-    var zoomFactor = $ionicScrollDelegate.$getByHandle('scrollHandle' + slide).getScrollPosition().zoom;
-    if (zoomFactor == $scope.zoomMin) {
-      $ionicSlideBoxDelegate.enableSlide(true);
-    } else {
-      $ionicSlideBoxDelegate.enableSlide(false);
-    }
-  };
-
-  $scope.isLoadedCategory = function(cat) {
-    return cat.pictures && cat.pictures.length>0;
-  };
-
-  $scope.slideChanged = function(index) {
-    $scope.activeSlide = index;
   };
 }

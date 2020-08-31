@@ -1,0 +1,142 @@
+<ion-view left-buttons="leftButtons">
+  <ion-nav-title>
+    <span translate>MAP.SHAPE.EDIT.TITLE</span>
+  </ion-nav-title>
+
+  <ion-header-bar class="stable-bg " style="top:45px;">
+    <label class="item item-input item-select">
+      <div class="input-label pull-right" translate>MAP.SHAPE.EDIT.CHOOSE_COUNTRY_HELP</div>
+      <select ng-model="selectedCountry"
+              ng-change="onCountryChange(selectedCountry)"
+              ng-options="country as (countriesMap[country] || country) for country in countries track by country">
+      </select>
+    </label>
+
+  </ion-header-bar>
+
+  <ion-content style="top:90px;">
+
+    <div class="block padding" ng-if="canSelectShape">
+      <!-- Add file drop zone -->
+      <div drop-zone="onFileChanged(file)">
+        <div file-select="onFileChanged(file)" accept="*.json">
+          <i class="ion-image stable" style="font-size:150px"></i>
+          <b class="ion-plus gray" style="position:relative; font-size:80px; top:-51px; right: 19px;"></b>
+          <p class="gray" translate>COMMON.CHOOSE_FILE</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 50%; width: 100%;"  ng-if="!canSelectShape">
+      <leaflet
+          height="100%"
+          id="{{::mapId}}"
+          lf-center="map.center"
+          bounds="map.bounds">
+      </leaflet>
+    </div>
+
+    <!--form -->
+    <form name="form" novalidate="" ng-submit="save()"  class="ng-hide" ng-show="!canSelectShape">
+
+      <div class="row no-padding no-margin"
+           style="height: calc(500vh)"
+           ng-init="setForm(form)" >
+
+        <div class="col col-75 padding">
+
+          <div class="list no-border">
+
+            <div class="item item-input item-floating-label"
+                 ng-class="{'item-input-error': form.$submitted && form.country.$invalid}">
+              <span class="input-label" translate>MAP.SHAPE.EDIT.COUNTRY_CODE</span>
+              <input type="text" name="country"
+                     placeholder="{{'MAP.SHAPE.EDIT.COUNTRY_CODE'|translate}}"
+                     ng-model="formData.country"
+                     autocomplete="off"
+                     ng-pattern="iso2Pattern"
+                     required>
+            </div>
+            <div class="form-errors"
+                 ng-show="form.$submitted && form.country.$invalid"
+                 ng-messages="form.country.$error">
+              <div class="form-error" ng-message="required">
+                <span translate="ERROR.FIELD_REQUIRED"></span>
+              </div>
+              <div class="form-error" ng-message="pattern">
+                <span translate="MAP.SHAPE.EDIT.ERROR.INVALID_COUNTRY_CODE"></span>
+              </div>
+            </div>
+
+            <div class="item no-border padding-top">
+
+              <div class="buttons pull-right" >
+                <button class="button button-stable" type="button"
+                        ng-click="cancel()"
+                translate>COMMON.BTN_CANCEL</button>
+                <button class="button"
+                        ng-class="{'button-assertive': dirty}"
+                        type="submit"
+                        translate>COMMON.BTN_SAVE</button>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- SVG output -->
+          <div id="svg-container" class="item no-padding no-margin no-border" ng-class="{'ng-hide': options.showLeaflet}">
+          </div>
+        </div>
+
+
+        <div class="col col-25 padding no-margin  list"
+             ng-if="selectedElement">
+
+          <div class="item item-divider" translate>
+            MAP.SHAPE.EDIT.EDITING_AREA
+          </div>
+
+          <div class="item item-input item-floating-label">
+            <span class="input-label" translate>MAP.SHAPE.EDIT.ID</span>
+            <input type="text"
+                   placeholder="{{'MAP.SHAPE.EDIT.ID'|translate}}"
+                   ng-model="formData.id">
+          </div>
+
+          <div class="item item-input item-floating-label">
+            <span class="input-label" translate>MAP.SHAPE.EDIT.NAME</span>
+            <input type="text"
+                   placeholder="{{'MAP.SHAPE.EDIT.NAME'|translate}}"
+                   ng-model="formData.name">
+          </div>
+
+          <div class="buttons padding-top">
+
+            <button class="button button-positive pull-right button-small button-small-padding" type="button"
+                    ng-click="updateElement()"
+                    translate>MAP.SHAPE.EDIT.BTN_APPLY</button>
+
+            <button class="button button-assertive pull-right button-small  button-small-padding" type="button"
+                    ng-click="deleteElement()"
+                    translate>COMMON.BTN_DELETE</button>
+
+          </div>
+          <div class="block padding-top">
+            <p>
+              <a ng-click="searchOnPath()"
+                 translate>MAP.SHAPE.EDIT.BTN_TEST_SEARCH</a>
+            </p>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </form>
+
+  </ion-content>
+
+
+</ion-view>

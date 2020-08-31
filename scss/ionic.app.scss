@@ -40,7 +40,7 @@
     padding: 0 !important;
   }
 
-  .categories {
+  .footer {
     background-color: rgba(255,255,255,0.8);
   }
 }
@@ -49,7 +49,8 @@
 @media screen and (min-width: $screen-menu) {
   #home {
     ion-content > .scroll > .row:first-child {
-      height: calc(100vh - 43px);
+      // TODO: enable this
+      //height: calc(100vh - 43px);
     }
   }
 }
