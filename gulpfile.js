@@ -33,7 +33,8 @@ const gulp = require('gulp'),
   argv = require('yargs').argv,
   sriHash = require('gulp-sri-hash'),
   sort = require('gulp-sort'),
-  map = require('map-stream');
+  map = require('map-stream'),
+  simplifyGeoJson = require('simplify-geojson');
 
   // Workaround because @ioni/v1-toolkit use gulp v3.9.2 instead of gulp v4
   let jsonlint;
@@ -1232,6 +1233,25 @@ function cdvAsHook(wrapper) {
   }
 }
 
+/* --------------------------------------------------------------------------
+   -- Tools
+   --------------------------------------------------------------------------*/
+
+
+function geoJson(done) {
+
+  var geojson = fs.readFileSync('./www/img/maps/fr.geojson');
+  var json = simplifyGeoJson( JSON.parse(geojson), 0.01, true);
+
+  fs.writeFileSync('./www/img/maps2/fr.geojson', JSON.stringify(json));
+
+  /*return gulp.src(['./www/img/maps/!*.geojson'])
+    .pipe(gulp.dest('./www/img/maps2/'));
+*/
+  //var simplified = simplify(geojson, tolerance)
+  if (done) done();
+}
+
 function help() {
   log(colors.green("Usage: gulp {config|webBuild|webExtBuild} OPTIONS"));
   log(colors.green(""));
@@ -1248,9 +1268,12 @@ function help() {
   log(colors.green("  --uglify                    Build using uglify plugin"));
 }
 
+
+
 /* --------------------------------------------------------------------------
    -- Combine task
    --------------------------------------------------------------------------*/
+
 const translate = gulp.series(appNgTranslate, pluginNgTranslate);
 const template = gulp.series(appNgTemplate, pluginNgTemplate);
 const appAndPluginSass = gulp.series(appSass, pluginSass);
@@ -1343,3 +1366,8 @@ exports.cdvBeforeCompile = cdvAsHook(cdvBeforeCompile);
 exports.default = gulp.series(appConfig, build);
 exports.serveBefore = gulp.series(build, appAndPluginWatch);
 exports['ionic:serve:before'] = exports.serveBefore; // Alias need need by @ionic/cli
+
+exports.geoJson = geoJson;
+
+gulp.task('sass', appAndPluginSass);
+gulp.task('ionic:serve:before', gulp.series(build, appAndPluginWatch));
