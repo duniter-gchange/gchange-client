@@ -6,23 +6,27 @@
       "BTN_MOVE_DOWN": "Déplacer vers le bas",
       "BTN_MOVE_UP": "Déplacer vers le haut",
       "BTN_MOVE_LEFT": "Déplacer vers la gauche",
-      "BTN_MOVE_RIGHT": "Déplacer vers la droite"
+      "BTN_MOVE_RIGHT": "Déplacer vers la droite",
+      "CHOOSE_FILE": "Déposze votre fichier (svg, geojson)<br/>ou cliquez pour le sélectionner"
     },
     "SHAPE": {
       "EDIT": {
         "TITLE": "Cartes des pays",
-        "COUNTRY_CODE": "Code pays",
-        "ID": "Identifiant de la zone",
-        "NAME": "Libellé zone",
-        "EDITING_AREA": "Edition de la zone :",
-        "CHOOSE_COUNTRY_HELP": "Veuillez choisir une carte: ",
+        "COUNTRY_DOTS": "Pays :",
+        "COUNTRY_HELP": "Code pays (ISO2)",
+        "EDIT_AREA_DIVIDER": "Edition de la zone :",
+        "ID": "Identifiant unique",
+        "NAME": "Libellé",
+        "POSITION_DOTS": "Position :",
+        "ORDER": "Ordre de tri",
         "BTN_APPLY": "Appliquer",
+        "BTN_DELETE": "Supprimer la zone",
         "BTN_TEST_SEARCH": "Tester une recherche sur cette zone",
         "INFO": {
           "SAVED": "La carte a bien été sauvegardée"
         },
         "ERROR": {
-          "CONVERSION_FAILED": "Format SVG incorrect.",
+          "INVALID_SVG": "Format SVG incorrect.",
           "INVALID_COUNTRY_CODE": "Code pays incorrect (need ISO2)",
           "SAVE_FAILED": "Erreur lors de la sauvegarde de la carte"
         }

@@ -4,35 +4,23 @@
     <ion-spinner icon="android"></ion-spinner>
   </div>
 
-  <!-- Leaflet
-  <div id="svg">
-
-    <leaflet
-        id="{{::mapId}}"
-        height="100%"
-        lf-center="map.center"
-        bounds="map.bounds">
-    </leaflet>
-  </div>-->
-
   <!-- Shape -->
-  <div id="{{::shapeId}}">
+  <div id="{{::shapeId}}" class="shape-container compacted"></div>
 
-  </div>
-
-  <p>
-    <a ng-repeat="country in countries"
-       ng-class="{'bold': country === selectedCountry}"
-       ng-click="onCountryChange(country)">
+  <!-- Country links  -->
+  <p ng-if="!loading && countries.length &gt; 1" class="padding-top">
+    <ng-repeat ng-repeat="country in countries">
       <span ng-if="$index">&nbsp;|&nbsp;</span>
-      {{countriesMap[country]}}
-    </a>
+      <a ng-class="{'bold': country === selectedCountry}"
+         ng-click="onCountryChange(country)">
+        {{countriesMap[country]}}
+      </a>
+    </ng-repeat>
   </p>
 
-  <!-- DEV ONLY-->
+  <!-- DEV ONLY
   <br/>
   <p>
-    <a ng-click="convert()" target="_blank">Convert !</a>
     <a href="" id="demolink" target="_blank">View on a map, as GeoJSON</a>
-  </p>
+  </p>-->
 </div>

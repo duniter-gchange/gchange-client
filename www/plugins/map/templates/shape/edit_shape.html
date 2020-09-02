@@ -3,138 +3,222 @@
     <span translate>MAP.SHAPE.EDIT.TITLE</span>
   </ion-nav-title>
 
-  <ion-header-bar class="stable-bg " style="top:45px;">
-    <label class="item item-input item-select">
-      <div class="input-label pull-right" translate>MAP.SHAPE.EDIT.CHOOSE_COUNTRY_HELP</div>
-      <select ng-model="selectedCountry"
-              ng-change="onCountryChange(selectedCountry)"
-              ng-options="country as (countriesMap[country] || country) for country in countries track by country">
-      </select>
-    </label>
+  <!-- country form -->
+  <form name="countryForm" novalidate="" ng-submit="save()">
 
-  </ion-header-bar>
+    <ion-header-bar class="stable-bg has-header"  style="top:45px;" ng-init="setCountryForm(countryForm)">
+
+      <div class="row no-padding no-margin" >
+        <div class="col no-padding no-margin">&nbsp;
+        </div>
+        <div class="col  no-margin floating" >
+
+          <!-- country (select) -->
+          <label ng-if="!map.geojson.data"
+                 class="item item-input item-select  stable-bg no-padding" >
+            <div class="input-label padding-left" translate>MAP.SHAPE.EDIT.COUNTRY_DOTS</div>
+            <input type="text" name="country"
+                   ng-model="formData.country"
+                   class="ng-hide"
+                   required>
+            <select ng-model="formData.country"
+                    ng-change="onCountryChange(formData.country)"
+                    ng-options="country as (countriesMap[country] || country) for country in countries track by country">
+            </select>
+          </label>
+
+          <!-- country (input) -->
+          <div ng-if="map.geojson.data"
+               class="item item-input  stable-bg no-padding"
+               ng-class="{'item-input-error': countryForm.$submitted && countryForm.country.$invalid}">
+            <span class="input-label padding-left" translate>MAP.SHAPE.EDIT.COUNTRY_DOTS</span>
+            <input type="text" name="country"
+                   placeholder="{{'MAP.SHAPE.EDIT.COUNTRY_HELP'|translate}}"
+                   ng-model="formData.country"
+                   autocomplete="off"
+                   ng-pattern="iso2Pattern"
+                   required>
+          </div>
+          <div class="form-errors light-bg"
+               ng-show="countryForm.$submitted && countryForm.country.$invalid"
+               ng-messages="countryForm.country.$error">
+            <div class="form-error" ng-message="required">
+              <span translate="ERROR.FIELD_REQUIRED"></span>
+            </div>
+            <div class="form-error" ng-message="pattern">
+              <span translate="MAP.SHAPE.EDIT.ERROR.INVALID_COUNTRY_CODE"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col no-padding no-margin " >
+
+          <div class="pull-right ng-hide" ng-show="map.geojson.data">
+            <button class="button button-clear button-small ink " type="button"
+                    ng-click="cancel()">
+              <span class="dark" translate>COMMON.BTN_CANCEL</span>
+            </button>
+            <button class="button button-clear button-small ink " type="button"
+                    ng-disabled="!dirty"
+                    ng-click="save()">
+              <span class="dark" translate>COMMON.BTN_SAVE</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </ion-header-bar>
+  </form>
 
   <ion-content style="top:90px;">
 
-    <div class="block padding" ng-if="canSelectShape">
-      <!-- Add file drop zone -->
+    <!-- Add file drop zone -->
+    <div class="block padding" ng-if="!map.geojson.data">
       <div drop-zone="onFileChanged(file)">
         <div file-select="onFileChanged(file)" accept="*.json">
-          <i class="ion-image stable" style="font-size:150px"></i>
+          <i class="ion-map stable" style="font-size:150px"></i>
           <b class="ion-plus gray" style="position:relative; font-size:80px; top:-51px; right: 19px;"></b>
-          <p class="gray" translate>COMMON.CHOOSE_FILE</p>
+          <p class="gray" translate>MAP.COMMON.CHOOSE_FILE</p>
         </div>
       </div>
     </div>
 
-    <div style="height: 50%; width: 100%;"  ng-if="!canSelectShape">
+    <!-- leaflet map -->
+    <div style="height: 50%; width: 100%;"  ng-if="map.geojson.data">
       <leaflet
           height="100%"
           id="{{::mapId}}"
           lf-center="map.center"
-          bounds="map.bounds">
+          bounds="map.bounds"
+          geojson="map.geojson">
       </leaflet>
     </div>
 
-    <!--form -->
-    <form name="form" novalidate="" ng-submit="save()"  class="ng-hide" ng-show="!canSelectShape">
+    <div class="row no-padding no-margin"
+         style="height: calc(500vh)">
 
-      <div class="row no-padding no-margin"
-           style="height: calc(500vh)"
-           ng-init="setForm(form)" >
+      <!-- Shape -->
+      <div class="col col-75 padding">
+        <div id="{{::shapeId}}" class="shape-container compacted"></div>
+      </div>
 
-        <div class="col col-75 padding">
+      <!-- Selected element form -->
+      <div class="col col-25 padding no-margin" ng-if="elementData.element">
 
-          <div class="list no-border">
-
-            <div class="item item-input item-floating-label"
-                 ng-class="{'item-input-error': form.$submitted && form.country.$invalid}">
-              <span class="input-label" translate>MAP.SHAPE.EDIT.COUNTRY_CODE</span>
-              <input type="text" name="country"
-                     placeholder="{{'MAP.SHAPE.EDIT.COUNTRY_CODE'|translate}}"
-                     ng-model="formData.country"
-                     autocomplete="off"
-                     ng-pattern="iso2Pattern"
-                     required>
-            </div>
-            <div class="form-errors"
-                 ng-show="form.$submitted && form.country.$invalid"
-                 ng-messages="form.country.$error">
-              <div class="form-error" ng-message="required">
-                <span translate="ERROR.FIELD_REQUIRED"></span>
-              </div>
-              <div class="form-error" ng-message="pattern">
-                <span translate="MAP.SHAPE.EDIT.ERROR.INVALID_COUNTRY_CODE"></span>
-              </div>
-            </div>
-
-            <div class="item no-border padding-top">
-
-              <div class="buttons pull-right" >
-                <button class="button button-stable" type="button"
-                        ng-click="cancel()"
-                translate>COMMON.BTN_CANCEL</button>
-                <button class="button"
-                        ng-class="{'button-assertive': dirty}"
-                        type="submit"
-                        translate>COMMON.BTN_SAVE</button>
-              </div>
-            </div>
+        <form name="elementForm" novalidate="" ng-submit="confirmEditElement()" class="list">
+          <div class="item item-divider"ng-init="setElementForm(elementForm)"  translate>
+            MAP.SHAPE.EDIT.EDIT_AREA_DIVIDER
           </div>
 
-
-          <!-- SVG output -->
-          <div id="svg-container" class="item no-padding no-margin no-border" ng-class="{'ng-hide': options.showLeaflet}">
-          </div>
-        </div>
-
-
-        <div class="col col-25 padding no-margin  list"
-             ng-if="selectedElement">
-
-          <div class="item item-divider" translate>
-            MAP.SHAPE.EDIT.EDITING_AREA
-          </div>
-
-          <div class="item item-input item-floating-label">
+          <!-- ID -->
+          <div class="item item-input"
+               ng-class="{'item-input-error': elementForm.$submitted && elementForm.id.$invalid}">
             <span class="input-label" translate>MAP.SHAPE.EDIT.ID</span>
-            <input type="text"
+            <input type="text" name="id"
+                   autocomplete="off"
                    placeholder="{{'MAP.SHAPE.EDIT.ID'|translate}}"
-                   ng-model="formData.id">
+                   ng-model="elementData.id"
+                   required>
+          </div>
+          <div class="form-errors"
+               ng-show="elementForm.$submitted && elementForm.id.$invalid"
+               ng-messages="elementForm.id.$error">
+            <div class="form-error" ng-message="required">
+              <span translate="ERROR.FIELD_REQUIRED"></span>
+            </div>
           </div>
 
-          <div class="item item-input item-floating-label">
+          <!-- name -->
+          <div class="item item-input item-floating-label"
+               ng-class="{'item-input-error': elementForm.$submitted && elementForm.name.$invalid}">
             <span class="input-label" translate>MAP.SHAPE.EDIT.NAME</span>
-            <input type="text"
+            <input type="text" name="name"
+                   autocomplete="off"
                    placeholder="{{'MAP.SHAPE.EDIT.NAME'|translate}}"
-                   ng-model="formData.name">
+                   ng-model="elementData.name"
+                   required>
+          </div>
+          <div class="form-errors"
+               ng-show="elementForm.$submitted && elementForm.name.$invalid"
+               ng-messages="elementForm.name.$error">
+            <div class="form-error" ng-message="required">
+              <span translate="ERROR.FIELD_REQUIRED"></span>
+            </div>
           </div>
 
-          <div class="buttons padding-top">
+          <!-- position -->
+          <label class="item item-input item-select" style="margin-top: 2px;"
+                 ng-class="{'item-input-error': elementForm.$submitted && elementForm.position.$invalid}">
+            <div class="input-label pull-right" translate>MAP.SHAPE.EDIT.POSITION_DOTS</div>
+            <input type="text" name="position"
+                   ng-model="elementData.position"
+                   class="ng-hide"
+                   required>
+            <select ng-model="elementData.position"
+                    ng-change="onPositionChange(elementData.position)"
+                    ng-options="position for position in positions track by position">
+            </select>
+          </label>
+          <div class="form-errors"
+               ng-show="elementForm.$submitted && elementForm.position.$invalid"
+               ng-messages="elementForm.position.$error">
+            <div class="form-error" ng-message="required">
+              <span translate="ERROR.FIELD_REQUIRED"></span>
+            </div>
+          </div>
 
-            <button class="button button-positive pull-right button-small button-small-padding" type="button"
-                    ng-click="updateElement()"
+          <!-- order -->
+          <div class="item item-input item-floating-label"
+               ng-class="{'item-input-error': elementForm.$submitted && elementForm.order.$invalid}">
+            <span class="input-label" translate>MAP.SHAPE.EDIT.ORDER</span>
+            <input type="number" name="order"
+                   min="1"
+                   autocomplete="off"
+                   ng-disabled="elementData.position === 'main'"
+                   placeholder="{{'MAP.SHAPE.EDIT.ORDER'|translate}}"
+                   ng-model="elementData.order"
+                   required-if="elementData.position !== 'main'">
+          </div>
+          <div class="form-errors"
+               ng-show="elementForm.$submitted && elementForm.order.$invalid"
+               ng-messages="elementForm.order.$error">
+            <div class="form-error" ng-message="required">
+              <span translate="ERROR.FIELD_REQUIRED"></span>
+            </div>
+            <div class="form-error" ng-message="min">
+              <span translate="ERROR.FIELD_MIN" translate-values="{min: 1}"></span>
+            </div>
+          </div>
+
+          <!-- element form buttons -->
+          <div class="padding-top text-right">
+            <!-- cancel -->
+            <button class="button button-clear button-dark button-small button-small-padding ink" type="button"
+                    ng-click="cancelEditElement()"
+                    translate>COMMON.BTN_CANCEL</button>
+            <!-- apply -->
+            <button class="button button-positive button-small button-small-padding ink"
+                    type="submit"
                     translate>MAP.SHAPE.EDIT.BTN_APPLY</button>
-
-            <button class="button button-assertive pull-right button-small  button-small-padding" type="button"
-                    ng-click="deleteElement()"
-                    translate>COMMON.BTN_DELETE</button>
-
           </div>
-          <div class="block padding-top">
+
+          <!-- more actions (delete, test search) -->
+          <div class="block padding-top text-center">
             <p>
+              <a class="assertive" ng-click="deleteElement()"
+              translate>MAP.SHAPE.EDIT.BTN_DELETE</a>
+              <br/>
               <a ng-click="searchOnPath()"
                  translate>MAP.SHAPE.EDIT.BTN_TEST_SEARCH</a>
             </p>
-
           </div>
 
-        </div>
-
-
+        </form>
       </div>
 
-    </form>
+
+    </div>
+
 
   </ion-content>
 
