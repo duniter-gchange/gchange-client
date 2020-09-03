@@ -379,7 +379,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       };
     }
 
-    function getSvgPathCoords(element, viewBox) {
+    function getSvgPathAsGeometry(element, viewBox) {
       if (typeof element.node !== 'function') {
         element = d3.select(element);
       }
@@ -392,13 +392,16 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         var y = element.y.baseVal.value;
         var height = element.height.baseVal.value;
         var width = element.width.baseVal.value;
-        return [
-          [x, y],
-          [x, y + height],
-          [x + width, y + height],
-          [x + width, y],
-          [x, y]
-        ];
+        return {
+          type: 'Polygon',
+          coordinates: [
+            [x, y],
+            [x, y + height],
+            [x + width, y + height],
+            [x + width, y],
+            [x, y]
+          ]
+        };
       }
 
       if (element.node().tagName === 'path') {
@@ -414,13 +417,33 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         var pathData = pathDataStr.split(' ');
         var actionRegexp = /^[a-zA-Z]/;
 
+        var res = [];
         var coords = [];
         var action;
         _(pathData || []).forEach(function (pathitem, index) {
 
+
           // Parse action
           if (actionRegexp.test(pathitem)) {
             action = pathitem.substr(0, 1);
+
+            switch (action) {
+              // Close
+              case 'z':
+              case 'Z':
+                if (coords.length) {
+                  coords.push(coords[0])
+                  // Add to final result
+                  res.push(coords);
+                  // Consume the action
+                  action = undefined;
+                  // reset coords
+                  coords = [];
+                }
+                break;
+              default:
+                 // continue
+            }
             // Remove the action, then continue
             pathitem = pathitem.substr(1);
           }
@@ -430,20 +453,12 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
             parts = _(parts).map(parseFloat);
             var prevLength = coords.length;
             var prevCoords = prevLength && coords[prevLength - 1];
+            if (!prevCoords && res.length) {
+              var previRes = res[res.length-1];
+              prevCoords = previRes.length && previRes[previRes.length-1];
+            }
 
             switch (action) {
-              // Close
-              case 'z':
-              case 'Z':
-                /**
-                 * If Close Path command found, copy first pathData value
-                 * into last position, as per GeoJSON requirements for
-                 * closed polygons.
-                 */
-                if (coords.length) {
-                  coords.push(coords[0])
-                }
-                break;
 
               // Move (absolute)
               case 'M':
@@ -540,127 +555,163 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
             }
           }
         });
-        return coords;
+
+        return {
+          type: 'Polygon',
+          coordinates: res
+        };
       }
     }
 
-    function convertSvgToGeoJson(svgElement, options) {
-      if (!svgElement) throw new Error("Missing required 'svgElement' argument");
+    function createSvgFromText(svgText, options) {
+      if (!svgText || typeof svgText !== 'string') throw new Error("Missing required 'svgText' argument");
 
       options = options || {};
-      options.attributes = options.attributes || [];
-      options.multiplier = options.multiplier || 1;
       var selector = options.selector || 'body';
 
       var container = d3.select(selector);
       if (options.selector && container.empty()) throw new Error("Cannot found element: '{0}'".format(selector));
 
-      var viewBox;
-      if (typeof svgElement === 'string') {
-        svgElement = d3.select(selector)
-          //.append('div')
-          //.attr('class', 'ng-hide')
-          .html(svgElement)
-          .select('svg');
-        if (svgElement.empty()) throw new Error("Invalid 'svgElement' argument");
-        viewBox = findSvgViewBox(svgElement);
+      var svg = container
+        .html(svgText)
+        .select('svg');
 
-        // Force width and height
-        svgElement
-          .attr('width', viewBox.width)
-          .attr('height', viewBox.height);
+      if (svg.empty()) throw new Error("Invalid value of 'svgText' argument: no <svg> tag found");
+
+      // Add CSS class
+      if (options.class) {
+        svg.classed(options.class, true);
+      }
+
+      // Set width
+      if (options.width) {
+        svg.attr('width', options.width);
+        svg.attr('height', options.height || options.width);
+      }
+
+      // Make sure width and height are filled
+      if (!svg.attr('width') || !svg.attr('height')) {
+        var viewBox = findSvgViewBox(svg);
+        svg.attr('width', viewBox && viewBox.width || options.width || 800)
+          .attr('height', viewBox && viewBox.height || options.height || 800);
+      }
+      return svg;
+    }
+
+    function convertSvgToGeoJson(svg, options) {
+      if (!svg) throw new Error("Missing required 'svgElement' argument");
+
+      options = options || {};
+      options.attributes = options.attributes || [];
+      options.scale = options.scale || 1;
+      var selector = options.selector || 'body';
+
+      var container = d3.select(selector);
+      if (options.selector && container.empty()) throw new Error("Cannot found element: '{0}'".format(selector));
+
+      if (typeof svg === 'string') {
+        svg = createSvgFromText(svg, options);
       }
       else {
-        svgElement = container.select('svg');
-        viewBox = findSvgViewBox(svgElement);
+        svg = svg || container.select('svg');
       }
+      if (svg.empty()) throw new Error("Cannot found element <svg> element");
 
+      var viewBox = findSvgViewBox(svg);
       if (!viewBox) {
         throw new Error("Bad SVG format: missing attribute '{0}'".format(constants.attributes.viewBox));
       }
       
-      var geoViewBox = options.geoViewBox || findSvgGeoViewBox(svgElement);
+      var geoViewBox = options.geoViewBox || findSvgGeoViewBox(svg);
       if (!geoViewBox) {
         throw new Error("Bad SVG format: missing attribute '{0}'".format(constants.attributes.geoViewBox));
       }
-
-      var mapX = d3.scaleLinear()
-        .range([geoViewBox.leftLng, geoViewBox.rightLng])
-        .domain([viewBox.minX, viewBox.width])
-      ;
-      var mapY = d3.scaleLinear()
-        .range([geoViewBox.topLat, geoViewBox.bottomLat])
-        .domain([viewBox.minY, viewBox.height]);
 
       var geoJson = {
         type: 'FeatureCollection',
         features: []
       };
 
-      /*
-      leftLng: parseFloat(parts[0]),
-        topLat: parseFloat(parts[1]),
-        rightLng: parseFloat(parts[2]),
-        bottomLat: parseFloat(parts[3])
-       */
-      var width = viewBox.width - viewBox.minX,
-        height = viewBox.height,
-        geoWidth = geoViewBox.rightLng - geoViewBox.leftLng,
-        geoHeight = geoViewBox.topLat - geoViewBox.bottomLat,
-        dx = geoWidth / width,
-        dy = geoHeight / height
+      var projection;
+
+      // Geo projection
+      var projData = computeSvgProjectionData(svg, options);
+      if (projData) {
+        projection = d3.geoMercator()
+          .translate(projData.translate || [0,0])
+          .scale(projData.scale || 1)
+          .invert;
+      }
+      // Linear projection
+      else {
+        var mapX = d3.scaleLinear()
+          .range([geoViewBox.leftLng, geoViewBox.rightLng])
+          .domain([viewBox.minX, viewBox.width])
         ;
-      var projection = d3.geoMercator()
-        //.translate([viewBox.minX / 1000, viewBox.minY / 1000])
-        //.translate([geoViewBox.leftLng / dx, geoViewBox.topLat / dy])
-        .translate([-300, 9900])
-        .scale(9400);
+        var mapY = d3.scaleLinear()
+          .range([geoViewBox.topLat, geoViewBox.bottomLat])
+          .domain([viewBox.minY, viewBox.height]);
 
-      // Define path generator
-      var path = d3.geoPath()
-        .projection(projection);
+        projection = function(coord) {
+          return [
+            mapX(coord[0]) * options.scale,
+            mapY(coord[1]) * options.scale
+          ]
+        };
+      }
 
-      svgElement.selectAll('path').each(function(arg1, i) {
+      svg.selectAll('path').each(function(arg1, i) {
         var ele = d3.select(this);
-        var coords = getSvgPathCoords(ele);
-        if (i === 0) console.log(ele.data());
+        var geometry = getSvgPathAsGeometry(ele);
 
-        const mappedCoords = [];
-        _(coords||[]).forEach(function(coord, j) {
-          if (coord[0] !== null && coord[1] !== null) {
-            // Map points onto d3 scale
-            var newCoords = projection.invert(coord) || [
-              mapX(coord[0]) * options.multiplier,
-              mapY(coord[1]) * options.multiplier,
-            ];
-            mappedCoords.push(newCoords);
-
-            if (i === 0 && j === 0) {
-              console.table(coord[0], coord[1], newCoords[0], newCoords[1]);
-              console.log(projection.invert(coord));
-              console.log(path);
-            }
-          }
+        geometry.coordinates = _(geometry.coordinates).map(function(coords){
+          return _(coords||[]).map(projection);
         });
 
         var properties = {};
         _(options.attributes||[]).forEach(function (attr) {
           var value = ele.attr(attr);
           if (value)
-            properties[attr] = value;
+            feature.properties[attr] = value;
         });
 
         geoJson.features.push({
           type: 'Feature',
           properties: properties,
           geometry: {
-            type: (ele.node().tagName === 'polyline') ? 'LineString' : 'Polygon',
-            coordinates: (ele.node().tagName === 'polyline') ? mappedCoords : [mappedCoords],
+            type: (ele.node().tagName === 'polyline') ? 'LineString' : (geometry.type || 'Polygon'),
+            coordinates: (ele.node().tagName === 'polyline') ? geometry.coordinates[0] : geometry.coordinates
           }
         });
       })
 
       return geoJson;
+    }
+
+    function computeSvgProjectionData(svg, options) {
+      options = options || {};
+
+      if (options.scale && options.translate) {
+        return options;
+      }
+      var viewBox = options.viewBox || findSvgViewBox(svg);
+      var geoViewBox = options.geoViewBox || findSvgGeoViewBox(svg);
+      if (viewBox && geoViewBox) {
+        console.debug('[shape-service] Computing projection...', viewBox, geoViewBox);
+        var width = viewBox.width - viewBox.minX,
+          height = viewBox.height,
+          geoWidth = geoViewBox.rightLng - geoViewBox.leftLng,
+          geoHeight = geoViewBox.topLat - geoViewBox.bottomLat,
+          dx = geoWidth / width,
+          dy = geoHeight / height
+        ;
+        return {
+          scale: 11119,
+          translate: [-492, 11698]
+        }
+      }
+
+      throw new Error('Cannot compute projection. Missing options scale and translate, or <svg> viewBox and/or geoViewBox');
     }
 
     return {
@@ -677,6 +728,9 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         remove: removeSvg,
         createMosaic: createSvgMosaic,
 
+        findGeoViewBox: findSvgGeoViewBox,
+        createFromText: createSvgFromText,
+        projectionData: computeSvgProjectionData,
         toGeoJson: convertSvgToGeoJson
       },
 

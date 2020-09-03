@@ -7,14 +7,22 @@
       "BTN_MOVE_UP": "Déplacer vers le haut",
       "BTN_MOVE_LEFT": "Déplacer vers la gauche",
       "BTN_MOVE_RIGHT": "Déplacer vers la droite",
-      "CHOOSE_FILE": "Déposze votre fichier (svg, geojson)<br/>ou cliquez pour le sélectionner"
+      "CHOOSE_FILE": "Déposez votre fichier (svg, geojson)<br/>ou cliquez pour le sélectionner"
     },
     "SHAPE": {
       "EDIT": {
         "TITLE": "Cartes des pays",
         "COUNTRY_DOTS": "Pays :",
         "COUNTRY_HELP": "Code pays (ISO2)",
-        "EDIT_AREA_DIVIDER": "Edition de la zone :",
+        "CONFIG_FORM_DIVIDER": "Configuration :",
+        "LEFT_LNG": "Ouest",
+        "RIGHT_LNG": "Est",
+        "TOP_LAT": "North",
+        "BOTTOM_LAT": "Sud",
+        "SCALE": "Echelle",
+        "TRANSLATE_X": "Décalage X",
+        "TRANSLATE_Y": "Décalage Y",
+        "AREA_FORM_DIVIDER": "Edition de la zone :",
         "ID": "Identifiant unique",
         "NAME": "Libellé",
         "POSITION_DOTS": "Position :",

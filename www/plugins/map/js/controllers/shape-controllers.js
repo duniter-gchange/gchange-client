@@ -170,8 +170,20 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
   $scope.entered = false;
   $scope.saving = false;
   $scope.formData = {
-    country: null,
+    country: null
   };
+  $scope.configData = {
+    geoViewBox: {
+      leftLng: null,
+      rightLng: null,
+      topLat: null,
+      bottomLat: null,
+    },
+    scale: 1,
+    translateX: 0,
+    translateY: 0
+  };
+  $scope.showConfig = false;
   $scope.elementData = {
     country: null,
     id: null,
@@ -252,13 +264,29 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
   }
 
   $scope.resetForms = function(data) {
-    $scope.resetCountryForm(data);
+    $scope.resetForm(data);
+    $scope.resetConfigForm(data);
     $scope.resetElementForm(data);
   };
 
-  $scope.resetCountryForm = function(data) {
+  $scope.resetForm = function(data) {
     angular.merge($scope.formData, {
-      country: (data && data.country) || ($scope.formData && $scope.formData.country)
+      country: (data && data.country) || null
+    });
+  };
+
+  $scope.resetConfigForm = function(data) {
+    angular.merge($scope.configData, {
+      geoViewBox: {
+        leftLng: (data && data.geoViewBox && data.geoViewBox.leftLng) || -180,
+        rightLng: (data && data.geoViewBox && data.geoViewBox.rightLng) || 180,
+        topLat: (data && data.geoViewBox && data.geoViewBox.topLat) || 90,
+        bottomLat: (data && data.geoViewBox && data.geoViewBox.bottomLat) || -90
+      },
+      scale: (data && data.scale) || 1,
+      translateX: (data && data.translateX) || 0,
+      translateY: (data && data.translateY) || 0,
+      svgText: (data && data.svgText) || null
     });
   };
 
@@ -283,6 +311,9 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
   $scope.setCountryForm = function(form) {
     $scope.countryForm = form;
   };
+  $scope.setConfigForm = function(form) {
+    $scope.configForm = form;
+  };
   $scope.setElementForm = function(form) {
     $scope.elementForm = form;
   };
@@ -290,28 +321,65 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
   $scope.onFileChanged = function(event) {
     if (!event || !event.file || !event.fileContent) return; // Skip
 
+    $scope.loading = true;
     try {
       var geoJson;
+      // SVG file
       if (event.file.type.startsWith('image/svg')) {
-        geoJson = esShape.svg.toGeoJson(event.fileContent, {
-          selector: '#' + $scope.shapeId
+        console.debug('[map] [shape] Loading SVG file {0}'.format(event.fileData && event.fileData.name));
+
+        // Create a SVG element, to be able to read bounds
+        var svg = esShape.svg.createFromText(event.fileContent, {
+          selector: '#' + $scope.shapeId,
+          //class: 'ng-hide'
         });
-      }
-      else {
-        geoJson = event.fileContent && JSON.parse(event.fileContent);
+
+        // Get bounds
+        var geoViewBox = esShape.svg.findGeoViewBox(svg) || {
+          leftLng: -180,
+          rightLng: 180,
+          topLat: 90,
+          bottomLat: 90
+        };
+        var projectionData = esShape.svg.projectionData(svg, {
+          geoViewBox: geoViewBox
+        });
+
+        $scope.resetConfigForm({
+          geoViewBox: geoViewBox,
+          scale: projectionData.scale,
+          translateX: projectionData.translate[0],
+          translateY: projectionData.translate[1],
+          svgText: event.fileContent
+        });
+
+        $scope.showConfig = true;
+        $scope.applyConfig(svg);
+
+        //svg.remove();
       }
 
-      if (geoJson) {
+      // Geo json file
+      else {
+        geoJson = event.fileContent && JSON.parse(event.fileContent);
+        $scope.showConfigForm = false;
         $scope.resetForms();
         $scope.markAsDirty();
 
         $scope.updateView(geoJson);
       }
     }
-     catch(err) {
+    catch(err) {
       console.error(err);
       UIUtils.onError('MAP.SHAPE.EDIT.ERROR.INVALID_SVG')(err);
-     }
+
+      $scope.resetForms();
+      $scope.dirty = false;
+      $scope.showConfigForm = false;
+    }
+    finally {
+      $scope.loading = false;
+    }
 
   }
 
@@ -333,6 +401,32 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
     $scope.resetElementForm({country: options && options.country});
     $scope.map.geojson.data = geoJson;
     return $q.when();
+  }
+
+  $scope.applyConfig = function(svg) {
+    //if ($scope.loading) return; // Skip
+
+    if ($scope.configForm) {
+      $scope.configForm.$submitted = true;
+      if(!$scope.configForm.$valid) return;
+    }
+
+    console.debug('[map] [shape] Apply config: ', $scope.configData);
+
+    // Converting SVG into geojson, using the config
+    var svg = svg || esShape.svg.createFromText($scope.configData.svgText, {
+      selector: '#' + $scope.shapeId
+      //class: 'ng-hide'
+    });
+
+    var geoJson = esShape.svg.toGeoJson(svg,{
+      selector: '#' + $scope.shapeId,
+      geoViewBox: $scope.configData.geoViewBox,
+      scale: $scope.configData.scale || 1,
+      translate: [$scope.configData.translateX||0, $scope.configData.translateY||0]
+    });
+
+    $scope.updateView(geoJson);
   }
 
   $scope.onPathClick = function(event, element) {
@@ -409,6 +503,7 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
   $scope.cancel = function() {
     $scope.resetForms();
     $scope.map.geojson.data = null;
+    $scope.showConfig = false;
 
     d3.select('#' + $scope.shapeId + ' *').remove();
   }

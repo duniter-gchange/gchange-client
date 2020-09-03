@@ -83,31 +83,196 @@
       </div>
     </div>
 
-    <!-- leaflet map -->
-    <div style="height: 50%; width: 100%;"  ng-if="map.geojson.data">
-      <leaflet
-          height="100%"
-          id="{{::mapId}}"
-          lf-center="map.center"
-          bounds="map.bounds"
-          geojson="map.geojson">
-      </leaflet>
-    </div>
-
     <div class="row no-padding no-margin"
-         style="height: calc(500vh)">
+         style="height: calc(100vh - 90px); " >
 
-      <!-- Shape -->
-      <div class="col col-75 padding">
+      <div class="col col-75 no-padding"
+           ng-style="{'overflow-y': map.geojson.data ? 'scroll' : ''}">
+
+        <!-- leaflet map -->
+        <leaflet ng-if="map.geojson.data"
+                 height="40%"
+                 id="{{::mapId}}"
+                 lf-center="map.center"
+                 bounds="map.bounds"
+                 geojson="map.geojson">
+        </leaflet>
+
+        <!-- Shape -->
         <div id="{{::shapeId}}" class="shape-container compacted"></div>
       </div>
 
-      <!-- Selected element form -->
-      <div class="col col-25 padding no-margin" ng-if="elementData.element">
 
-        <form name="elementForm" novalidate="" ng-submit="confirmEditElement()" class="list">
+      <div class="col col-25 no-margin"
+           style="border-left: 1px solid lightgrey;"
+           ng-if="elementData.element || showConfig">
+
+        <!-- ******** Config form ******** -->
+
+        <form name="configForm" novalidate="" ng-submit="applyConfig()" class="list" ng-if="showConfig">
+          <div class="item item-divider"ng-init="setConfigForm(configForm)"  translate>
+            MAP.SHAPE.EDIT.CONFIG_FORM_DIVIDER
+          </div>
+          <!-- top lat -->
+          <div class="item col-50 col-offset-25 item-input item-floating-label"
+               ng-class="{'item-input-error': configForm.$submitted && configForm.topLat.$invalid}">
+            <span class="input-label" translate>MAP.SHAPE.EDIT.TOP_LAT</span>
+            <input type="number" name="topLat" class=""
+                   placeholder="{{'MAP.SHAPE.EDIT.TOP_LAT'|translate}}"
+                   ng-model="configData.geoViewBox.topLat"
+                   step="0.001"
+                   min="-90"
+                   max="90"
+                   required>
+          </div>
+          <div class="form-errors"
+               ng-show="configForm.$submitted && configForm.topLat.$invalid"
+               ng-messages="configForm.topLat.$error">
+            <div class="form-error" ng-message="required">
+              <span translate="ERROR.FIELD_REQUIRED"></span>
+            </div>
+          </div>
+
+
+          <div class="item row no-margin no-padding">
+            <div class="col col-50">
+              <!-- left lng -->
+              <div class="item-input item-floating-label"
+                   ng-class="{'item-input-error': configForm.$submitted && configForm.leftLng.$invalid}">
+                <span class="input-label" translate>MAP.SHAPE.EDIT.LEFT_LNG</span>
+                <input type="number" name="leftLng"
+                       placeholder="{{'MAP.SHAPE.EDIT.LEFT_LNG'|translate}}"
+                       ng-model="configData.geoViewBox.leftLng"
+                       step="0.001"
+                       min="-180"
+                       max="180"
+                       required>
+              </div>
+              <div class="form-errors"
+                   ng-show="configForm.$submitted && configForm.leftLng.$invalid"
+                   ng-messages="configForm.leftLng.$error">
+                <div class="form-error" ng-message="required">
+                  <span translate="ERROR.FIELD_REQUIRED"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col col-50">
+              <!-- right lng -->
+              <div class="item-input item-floating-label"
+                   ng-class="{'item-input-error': configForm.$submitted && configForm.rightLng.$invalid}">
+                <span class="input-label" translate>MAP.SHAPE.EDIT.RIGHT_LNG</span>
+                <input type="number" name="rightLng"
+                       placeholder="{{'MAP.SHAPE.EDIT.RIGHT_LNG'|translate}}"
+                       ng-model="configData.geoViewBox.rightLng"
+                       step="0.001"
+                       min="-180"
+                       max="180"
+                       required>
+              </div>
+              <div class="form-errors"
+                   ng-show="configForm.$submitted && configForm.rightLng.$invalid"
+                   ng-messages="configForm.rightLng.$error">
+                <div class="form-error" ng-message="required">
+                  <span translate="ERROR.FIELD_REQUIRED"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- bottom lat -->
+          <div class="item col-50 col-offset-25 item-input item-floating-label"
+               ng-class="{'item-input-error': configForm.$submitted && configForm.bottomLat.$invalid}">
+            <span class="input-label" translate>MAP.SHAPE.EDIT.BOTTOM_LAT</span>
+            <input type="number" name="leftLng"
+                   placeholder="{{'MAP.SHAPE.EDIT.BOTTOM_LAT'|translate}}"
+                   ng-model="configData.geoViewBox.bottomLat"
+                   step="0.001"
+                   min="-90"
+                   max="90"
+                   required>
+          </div>
+          <div class="form-errors"
+               ng-show="configForm.$submitted && configForm.leftLng.$invalid"
+               ng-messages="configForm.leftLng.$error">
+            <div class="form-error" ng-message="required">
+              <span translate="ERROR.FIELD_REQUIRED"></span>
+            </div>
+          </div>
+
+          <!-- translate-->
+          <div class="item row no-margin no-padding">
+            <div class="col col-50">
+              <!-- translate X -->
+              <div class="item-input item-floating-label"
+                   ng-class="{'item-input-error': configForm.$submitted && configForm.translateX.$invalid}">
+                <span class="input-label" translate>MAP.SHAPE.EDIT.TRANSLATE_X</span>
+                <input type="number" name="translateX"
+                       placeholder="{{'MAP.SHAPE.EDIT.TRANSLATE_X'|translate}}"
+                       ng-model="configData.translateX"
+                       required>
+              </div>
+              <div class="form-errors"
+                   ng-show="configForm.$submitted && configForm.translateX.$invalid"
+                   ng-messages="configForm.translateX.$error">
+                <div class="form-error" ng-message="required">
+                  <span translate="ERROR.FIELD_REQUIRED"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col col-50">
+              <!-- translate Y -->
+              <div class="item-input item-floating-label"
+                   ng-class="{'item-input-error': configForm.$submitted && configForm.translateY.$invalid}">
+                <span class="input-label" translate>MAP.SHAPE.EDIT.TRANSLATE_Y</span>
+                <input type="number" name="translateY"
+                       placeholder="{{'MAP.SHAPE.EDIT.TRANSLATE_Y'|translate}}"
+                       ng-model="configData.translateY"
+                       required>
+              </div>
+              <div class="form-errors"
+                   ng-show="configForm.$submitted && configForm.translateY.$invalid"
+                   ng-messages="configForm.translateY.$error">
+                <div class="form-error" ng-message="required">
+                  <span translate="ERROR.FIELD_REQUIRED"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- scale -->
+          <div class="item item-input item-floating-label"
+               ng-class="{'item-input-error': configForm.$submitted && configForm.scale.$invalid}">
+            <span class="input-label" translate>MAP.SHAPE.EDIT.SCALE</span>
+            <input type="number" name="scale"
+                   placeholder="{{'MAP.SHAPE.EDIT.SCALE'|translate}}"
+                   ng-model="configData.scale"
+                   required>
+          </div>
+          <div class="form-errors"
+               ng-show="configForm.$submitted && configForm.scale.$invalid"
+               ng-messages="configForm.scale.$error">
+            <div class="form-error" ng-message="required">
+              <span translate="ERROR.FIELD_REQUIRED"></span>
+            </div>
+          </div>
+
+          <!-- config form buttons -->
+          <div class="padding-top text-right">
+            <!-- apply -->
+            <button class="button button-positive button-small button-small-padding ink"
+                    type="submit"
+                    translate>MAP.SHAPE.EDIT.BTN_APPLY</button>
+          </div>
+
+        </form>
+
+        <!-- Edit properties form -->
+        <form name="elementForm" novalidate="" ng-submit="confirmEditElement()" class="list"
+              ng-if="elementData.element">
           <div class="item item-divider"ng-init="setElementForm(elementForm)"  translate>
-            MAP.SHAPE.EDIT.EDIT_AREA_DIVIDER
+            MAP.SHAPE.EDIT.AREA_FORM_DIVIDER
           </div>
 
           <!-- ID -->
