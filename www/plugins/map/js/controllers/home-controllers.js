@@ -19,7 +19,7 @@ angular.module('cesium.map.home.controllers', ['ngResource', 'cesium.es.services
 
 ;
 
-function MapHomeController($scope, $rootScope, $controller, $state) {
+function MapHomeController($scope, $rootScope, $controller, $state, esShape) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -31,20 +31,32 @@ function MapHomeController($scope, $rootScope, $controller, $state) {
   $scope.onClick = function(event, element) {
     if (event && event.defaultPrevented) return;
 
-    console.debug('[map] [home] Handle click event, on a SVG element');
+    console.debug('[map] [home] Handling click on a SVG element...');
 
     // Update the leaflet map
     var features = d3.select(element).data();
 
-    if (!features || !features.length) return; // Skip
+    if (!features || !features.length) {
+      console.error('[map] [home] Invalid SVG element: no geoJson data found.');
+      return;
+    }
 
     var feature = features[0];
     var properties = feature.properties;
-    var location = properties.name;
+    var location = properties.name && properties.name.trim();
 
-    $rootScope.geoShapes = $rootScope.geoShapes || {};
-    $rootScope.geoShapes[location] = feature.geometry;
-    $state.go('app.market_lookup', {location: properties.name});
+    if (!location || !location.length) {
+      console.error("[map] [home] Invalid GeoJson data. Missing or empty attribute 'properties.name'.");
+      return;
+    }
+
+    // Store shape into root scope, to be able to read it again later (see MarketSearchController)
+    return esShape.cache.put(feature)
+      .then(function(id) {
+        // Redirect to market search
+        return $state.go('app.market_lookup', { shape: id, location: location });
+      })
+
   };
 
 }

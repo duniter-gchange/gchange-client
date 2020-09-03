@@ -121,7 +121,11 @@ function HomeController($scope, $state, $timeout, $ionicHistory, $http, $transla
     var now = Date.now();
     console.debug("[home] Loading feeds from {0}...".format(feedUrl));
 
-    $http.get(feedUrl, {responseType: 'json', cache: csCache.get(null, csCache.constants.LONG)})
+    $http.get(feedUrl, {
+      timeout: csSettings.data.timeout,
+      responseType: 'json',
+      cache: csCache.get(null, csCache.constants.LONG)
+    })
       .success(function(feed) {
         console.debug('[home] Feeds loaded in {0}ms'.format(Date.now()-now));
         if (!feed || !feed.items || !feed.items.length) return; // skip if empty

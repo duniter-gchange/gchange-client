@@ -1,10 +1,9 @@
 angular.module('cesium.graph.data.services', ['cesium.es.http.services'])
 
-  .factory('gpData', function($rootScope, $q, $timeout, esHttp, BMA, csCache) {
+  .factory('gpData', function($rootScope, $q, $timeout, esHttp) {
     'ngInject';
 
     var
-      currencyCache = csCache.get('gpData-currency-', csCache.constants.SHORT),
       exports = {
         node: {},
         wot: {},

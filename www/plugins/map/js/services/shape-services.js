@@ -5,12 +5,16 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
   /**
    * Shape service
    */
-  .factory('esShape', function(esHttp, gpColor) {
+  .factory('esShape', function($rootScope, $q, csPlatform, csCache, esHttp, gpColor) {
     'ngInject'
 
     var defaultSearchLimit = 100;
 
     var
+      cachePrefix = 'esShape-',
+      caches = {
+        shapesById: null // Lazy init
+      },
       fields = {
         commons: ['type', 'geometry', 'properties']
       },
@@ -41,14 +45,14 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         remove: esHttp.record.remove('shape', 'record')
       };
 
-    function readFromHit(hit, options) {
+    function readFromHit(hit) {
       var record = hit._source;
       record.id = hit._id;
 
       return record;
     }
 
-    function getShape(options) {
+    function searchShapes(options) {
       if (!options) throw new Error("Missing 'options' argument");
 
       console.debug("[map] [shape] Loading shape from options: ", options);
@@ -93,10 +97,8 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         .then(function(res) {
           if (!res || !res.hits || !res.hits.total) return undefined;
 
-          var features = (res.hits.hits || []).reduce(function(res, hit) {
-            var record = readFromHit(hit, options);
-            return res.concat(record);
-          }, []);
+          // Read hits
+          var features = (res.hits.hits || []).map(readFromHit);
 
           return {
             type: 'FeatureCollection',
@@ -714,15 +716,69 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       throw new Error('Cannot compute projection. Missing options scale and translate, or <svg> viewBox and/or geoViewBox');
     }
 
+    function putShapeInCache(shape, id) {
+      if (!shape) throw new Error("Require 'shape' argument");
+
+      id = id || (shape.properties && shape.properties.id);
+      if (!id) throw new Error("Invalid GeoJSon feature : missing required attribute 'properties.id'");
+
+      console.info('[shape] Saving GeoJson feature {{0}} locally...'.format(id));
+
+      caches.shapesById = caches.shapesById || csCache.get(cachePrefix, csCache.constants.LONG);
+      caches.shapesById.put(id, shape);
+
+      return $q.when(id);
+    }
+
+    function getShapeById(id, options) {
+      if (!id) throw new Error("Missing 'id' argument")
+
+      if (!options || options.cache !== false) {
+        caches.shapesById = caches.shapesById || csCache.get(cachePrefix, csCache.constants.LONG);
+        var shape = caches.shapesById.get(id);
+        if (shape) return $q.when(shape);
+      }
+
+      return raw.getCommons({id: id})
+        .then(function(hit) {
+          var feature = readFromHit(hit);
+
+          // Add to cache
+          caches.shapesById.put(id, feature);
+
+          return feature;
+        });
+    }
+
+    function clearCache() {
+      console.debug('[shape] Cleaning cache...');
+      csCache.clear(cachePrefix);
+    }
+
+    // Default actions
+    csPlatform.ready().then(function() {
+      esHttp.api.node.on.stop($rootScope, clearCache, this);
+    });
+
     return {
+
+      get: getShapeById,
       add: raw.add,
       update: raw.update,
       remove: raw.remove,
 
-      // TODO : dev
-      get: getShape,
       getAllIds: getAllShapeIds,
       getAllCountries: getAllCountries,
+
+      geoJson: {
+        search: searchShapes, // e.g. search by country
+      },
+
+      cache: {
+        put: putShapeInCache,
+        clear: clearCache
+      },
+
       svg: {
         create: createSvg,
         remove: removeSvg,

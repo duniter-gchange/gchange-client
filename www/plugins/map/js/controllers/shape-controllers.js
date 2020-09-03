@@ -53,7 +53,6 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
         });
     }
 
-
     var country = $scope.getDefaultCountry(options);
     $scope.formData.country = country;
 
@@ -64,7 +63,7 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
       console.debug('[shape] Loading shape for country {{0}}...'.format(country));
     }
 
-    return esShape.get({country: country})
+    return esShape.geoJson.search({country: country})
       .then(function(data) {
         // Display data
         $scope.updateView(data);
@@ -151,13 +150,8 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
   $scope.onClick = function(event, element) {
     if (event && event.defaultPrevented) return;
 
-    console.debug('[shape] Handle click event, on a SVG element', element);
+    console.warn('[shape] No handler for SVG element click', element);
 
-
-    if (geoJson) {
-      //console.log(geoJson);
-      document.getElementById('demolink').href = "http://geojson.io/#data=data:application/json," + encodeURIComponent(JSON.stringify(geoJson));
-    }
   };
 }
 
@@ -244,7 +238,7 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
     }
     return $q.all([
       // Load shape
-      options.country ? esShape.get({country: options.country}) : $q.when(),
+      options.country ? esShape.geoJson.search({country: options.country}) : $q.when(),
       // Load countries
       $scope.loadAllCountries()
     ])

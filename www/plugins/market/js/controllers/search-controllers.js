@@ -1,4 +1,4 @@
-angular.module('cesium.market.search.controllers', ['cesium.market.record.services', 'cesium.es.services', 'cesium.es.common.controllers'])
+angular.module('cesium.market.search.controllers', ['cesium.market.record.services', 'cesium.es.services', 'cesium.map.services', 'cesium.es.common.controllers'])
 
   .config(function($stateProvider) {
     'ngInject';
@@ -6,7 +6,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     $stateProvider
 
     .state('app.market_lookup', {
-      url: "/market?q&category&location&reload&type&hash&lat&lon&last&old",
+      url: "/market?q&category&shape&location&reload&type&hash&lat&lon&last&old",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup.html",
@@ -20,7 +20,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     })
 
     .state('app.market_lookup_lg', {
-      url: "/market/lg?q&category&location&reload&type&hash&closed&lat&lon&last&old",
+      url: "/market/lg?q&category&shape&location&reload&type&hash&closed&lat&lon&last&old",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup_lg.html",
@@ -157,30 +157,33 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     var text = $scope.search.text.trim();
     var matches = [];
     var filters = [];
+    var stateParams = {};
     var tags = text ? esHttp.util.parseTags(text) : undefined;
     if (text.length > 1) {
+      stateParams.q = text;
+
       // pubkey : use a special 'term', because of 'non indexed' field
       if (BMA.regexp.PUBKEY.test(text /*case sensitive*/)) {
         matches = [];
         filters.push({term : { issuer: text}});
       }
       else {
-        text = text.toLowerCase();
+        var lowerText = text.toLowerCase();
         var matchFields = ["title^2", "description"];
-        matches.push({multi_match : { query: text,
+        matches.push({multi_match : { query: lowerText,
           fields: matchFields,
           type: "phrase_prefix"
         }});
-        matches.push({match: {title: {query: text, boost: 2}}});
-        matches.push({prefix: {title: text}});
-        matches.push({match: {description: text}});
+        matches.push({match: {title: {query: lowerText, boost: 2}}});
+        matches.push({prefix: {title: lowerText}});
+        matches.push({match: {description: lowerText}});
         matches.push({
            nested: {
              path: "category",
              query: {
                bool: {
                  filter: {
-                   match: { "category.name": text}
+                   match: { "category.name": lowerText}
                  }
                }
              }
@@ -219,6 +222,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
           }
         });
       }
+      stateParams.category = $scope.search.category.id;
     }
 
     if (tags) {
@@ -229,14 +233,14 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       return $scope.doGetLastRecords();
     }
 
-    var stateParams = {};
 
-    var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
+
+    var location = $scope.search.location && $scope.search.location.trim();
     if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
 
       // match location OR geo distance
       if (location && location.length) {
-        var locationCity = location.split(',')[0];
+        var locationCity = location.toLowerCase().split(',')[0];
         filters.push({
           or : [
             // No position defined: search on text
@@ -259,7 +263,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
             }}
           ]
         });
-        stateParams.location = $scope.search.location.trim();
+        stateParams.location = location;
       }
 
       else {
@@ -274,37 +278,42 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       }
       stateParams.lat=$scope.search.geoPoint.lat;
       stateParams.lon=$scope.search.geoPoint.lon;
+      stateParams.location = location;
     }
-    else if ($scope.search.geoShape) {
-      var coordinates = $scope.search.geoShape.coordinates;
-      var type = $scope.search.geoShape.type;
-      if (location && type && coordinates && coordinates.length) {
-        switch (type.toLowerCase()) {
-          case "polygon":
-            filters.push(
-              {geo_polygon: {
-                  geoPoint: {
-                    points: coordinates.length === 1 ? coordinates[0] : coordinates
-                  }
-                }});
-            break;
-          case "multipolygon":
-            filters.push({
-              or: coordinates.reduce(function (res, coords) {
-                return res.concat(coords.reduce(function(res, points) {
-                  return res.concat({geo_polygon: {
-                      geoPoint: {
-                        points: points
-                      }
-                    }});
-                }, []))
-                }, [])
-              });
-            break;
-          default:
-            console.error("[market] [search] Unknown geometry type: " + type);
-
+    else if ($scope.search.geoShape && $scope.search.geoShape.geometry) {
+      var coordinates = $scope.search.geoShape.geometry.coordinates;
+      var type = $scope.search.geoShape.geometry.type;
+      if (location
+        && (type === 'Polygon' || type === 'MultiPolygon')
+        && coordinates && coordinates.length) {
+        // One polygon
+        if (coordinates.length === 1) {
+          filters.push(
+            {
+              geo_polygon: {
+                geoPoint: {
+                  points: coordinates.length === 1 ? coordinates[0] : coordinates
+                }
+              }
+            });
         }
+        // Multi polygon
+        else {
+          filters.push({
+            or: coordinates.reduce(function (res, coords) {
+              return res.concat(coords.reduce(function(res, points) {
+                return res.concat({geo_polygon: {
+                    geoPoint: {
+                      points: points
+                    }
+                  }});
+              }, []))
+            }, [])
+          });
+        }
+
+        stateParams.shape = $scope.search.geoShape.id;
+        stateParams.location = location;
       }
     }
 
@@ -324,7 +333,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
 
     if ($scope.search.type) {
-      var types = $scope.search.type === 'offer' ? ['offer', 'auction'] : ['need', 'crowdfunding'];
+      var types = $scope.search.type === 'offer' ?
+        ['offer', 'auction'] :
+        ($scope.search.type === 'need' ? ['need', 'crowdfunding'] : [$scope.search.type]);
       filters.push({terms: {type: types}});
       stateParams.type = $scope.search.type;
     }
@@ -333,7 +344,6 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     if ($scope.currencies) {
       filters.push({terms: {currency: $scope.currencies}});
     }
-    stateParams.q = $scope.search.text;
 
     var query = {bool: {}};
     if (matches.length > 0) {
@@ -387,7 +397,10 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
     // filter on type
     if ($scope.search.type) {
-      filters.push({term: {type: $scope.search.type}});
+      var types = $scope.search.type === 'offer' ?
+        ['offer', 'auction'] :
+        ($scope.search.type === 'need' ? ['need', 'crowdfunding'] : [$scope.search.type]);
+      filters.push({terms: {type: types}});
     }
     // filter on currencies
     if ($scope.currencies) {
@@ -469,20 +482,25 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
             }});
       }
     }
-    else if ($scope.search.geoShape) {
-      var coordinates = $scope.search.geoShape.coordinates;
-      var type = $scope.search.geoShape.type;
-      if (location && type && coordinates && coordinates.length) {
-        switch (type.toLowerCase()) {
-          case "polygon":
-            filters.push(
-              {geo_polygon: {
-                  geoPoint: {
-                    points: coordinates.length === 1 ? coordinates[0] : coordinates
-                  }
-                }});
-            break;
-          case "multipolygon":
+    else if ($scope.search.geoShape && $scope.search.geoShape.geometry) {
+      var coordinates = $scope.search.geoShape.geometry.coordinates;
+      var type = $scope.search.geoShape.geometry.type;
+      if (location
+        && (type === 'Polygon' || type === 'MultiPolygon')
+        && coordinates && coordinates.length) {
+        // One polygon
+        if (coordinates.length === 1) {
+          filters.push(
+            {
+              geo_polygon: {
+                geoPoint: {
+                  points: coordinates.length === 1 ? coordinates[0] : coordinates
+                }
+              }
+            });
+        }
+        // Multi polygon
+        else {
             filters.push({
               or: coordinates.reduce(function (res, coords) {
                 return res.concat(coords.reduce(function(res, points) {
@@ -494,14 +512,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
                 }, []))
               }, [])
             });
-            break;
-          default:
-            console.error("[market] [search] Unknown geometry type: " + type);
-
         }
       }
     }
-
 
     if (matches.length) {
       request.query = {bool: {}};
@@ -517,8 +530,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     if (!from) {
       $location.search({
         last: true,
-        category: $scope.search.category && $scope.search.category.id,
         type: $scope.search.type,
+        category: $scope.search.category && $scope.search.category.id,
+        shape: $scope.search.geoShape && ($scope.search.geoShape.id || $scope.search.geoShape.properties && $scope.search.geoShape.properties.id),
         location: $scope.search.location,
         lat: $scope.search.geoPoint && $scope.search.geoPoint.lat,
         lon: $scope.search.geoPoint && $scope.search.geoPoint.lon
@@ -661,8 +675,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 }
 
 
-function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $ionicPopover, $translate,
-                            mkCategory, mkRecord, csSettings) {
+function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $ionicPopover, $translate, $q,
+                            mkCategory, mkRecord, csSettings, esShape) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -672,6 +686,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   $scope.enter = function(e, state) {
     if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
       var showAdvanced = false;
+      var jobs = [];
 
       if (state.stateParams) {
         // Search by text
@@ -700,12 +715,13 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
             lon: parseFloat(state.stateParams.lon)
           };
         }
-        else if (state.stateParams.location) {
-          // Try to get geoPoint from root scope
-          $scope.search.geoPoint = $rootScope.geoPoints && $rootScope.geoPoints[state.stateParams.location] || null;
-
-          // Try to get geoShape from root scope
-          $scope.search.geoShape = $rootScope.geoShapes && $rootScope.geoShapes[state.stateParams.location] || null;
+        else if (state.stateParams.shape) {
+          // Resolve shape
+          jobs.push(esShape.get(state.stateParams.shape)
+            .then(function(shape) {
+              // Store in scope
+              $scope.search.geoShape = shape;
+            }));
         }
         else {
           var defaultSearch = csSettings.data.plugins.es.market && csSettings.data.plugins.es.market.defaultSearch;
@@ -747,8 +763,11 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
           category = catParts[0];
           categoryName = catParts[1];
         }
-        mkCategory.get({id: category})
+
+        // Resolve the category
+        jobs.push(mkCategory.get({id: category})
           .catch(function(err){
+            // category is not in the pod: log and continue
             console.error(err && err.message || err);
             return {
               id: category,
@@ -757,18 +776,15 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
           })
           .then(function (cat) {
             $scope.search.category = cat;
-            return $scope.init();
           })
-          .then(function() {
-            return $scope.finishEnter(showAdvanced);
-          });
+        )
       }
-      else {
-        $scope.init()
-          .then(function() {
-            return $scope.finishEnter(showAdvanced);
-          });
-      }
+      // Wait all jobs are finished, before calling init() and finishEnter()
+      return (jobs.length ? $q.all(jobs) : $q.when())
+        .then($scope.init)
+        .then(function() {
+          return $scope.finishEnter(showAdvanced);
+        });
     }
   };
   $scope.$on('$ionicView.enter', $scope.enter);
@@ -893,6 +909,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   $scope.removeLocation = function() {
     $scope.search.location = null;
     $scope.search.geoPoint = null;
+    $scope.search.geoShape = null;
     $scope.updateSettings();
     $scope.doSearch();
   };
