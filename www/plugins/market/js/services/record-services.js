@@ -278,14 +278,14 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       if (options.category) {
           filters.push({
               nested: {
-                  path: "category",
-                      query: {
-                      bool: {
-                          filter: {
-                              term: { "category.id": options.category}
-                          }
-                      }
+                path: "category",
+                query: {
+                  bool: {
+                    filter: {
+                        term: { "category.id": options.category}
+                    }
                   }
+                }
               }
           });
       }

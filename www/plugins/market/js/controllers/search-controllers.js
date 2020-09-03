@@ -6,7 +6,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     $stateProvider
 
     .state('app.market_lookup', {
-      url: "/market?q&category&shape&location&reload&type&hash&lat&lon&last&old",
+      url: "/market?q&category&shape&location&reload&type&hash&closed&lat&lon&last&old",
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup.html",
