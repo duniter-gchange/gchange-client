@@ -34,6 +34,9 @@
   padding: 0;
   width: 100%;
 }
+.shape-container .main {
+  width: 100%;
+}
 .shape-container .bottomleft,
 .shape-container .bottomright,
 .shape-container .topleft,

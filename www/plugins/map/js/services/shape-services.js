@@ -21,6 +21,8 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       constants = {
         attributes: {
           geoViewBox: 'gchange:geoViewBox',
+          geoScale: 'gchange:geoScale',
+          geoTranslate: 'gchange:geoTranslate',
           viewBox: 'viewBox'
         },
         defaults: {
@@ -381,6 +383,45 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       };
     }
 
+    function findSvgGeoScale(svgElement) {
+      if (!svgElement) return undefined;
+
+      var scale = svgElement.attr(':' + constants.attributes.geoScale)
+        // Retry in lowercase
+        || svgElement.attr(':' + constants.attributes.geoScale.toLowerCase());
+
+      // Not found: try on parent node
+      if (!scale) {
+        var parent = svgElement.node().tagName !== 'svg' && d3.select(svgElement.node().parentNode);
+        if (!parent || parent.empty()) return undefined;
+        return findSvgGeoScale(parent);
+      }
+
+      return parseFloat(scale);
+    }
+
+    function findSvgGeoTranslate(svgElement) {
+      if (!svgElement) return undefined;
+
+      var translate = svgElement.attr(':' + constants.attributes.geoTranslate)
+        // Retry in lowercase
+        || svgElement.attr(':' + constants.attributes.geoTranslate.toLowerCase());
+
+      // Not found: try on parent node
+      if (!translate) {
+        var parent = svgElement.node().tagName !== 'svg' && d3.select(svgElement.node().parentNode);
+        if (!parent || parent.empty()) return undefined;
+        return findSvgGeoScale(parent);
+      }
+
+      var parts = translate.split(' ');
+      if (parts.length !== 2) throw new Error('Invalid geoTranslate value. Expected: "x y"');
+      return [
+        parseFloat(parts[0]),
+        parseFloat(parts[1])
+      ];
+    }
+
     function getSvgPathAsGeometry(element, viewBox) {
       if (typeof element.node !== 'function') {
         element = d3.select(element);
@@ -388,7 +429,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       if (element.node().tagName === 'svg') {
         throw new Error("Invalid 'svgElement': must be child of <svg> tag, but not the <svg> tag itself.");
       }
-      
+
       if (element.node().tagName === 'rect') {
         var x = element.x.baseVal.value;
         var y = element.y.baseVal.value;
@@ -604,7 +645,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       if (!svg) throw new Error("Missing required 'svgElement' argument");
 
       options = options || {};
-      options.attributes = options.attributes || [];
+      options.attributes = options.attributes || ['id', 'name', 'title'];
       options.scale = options.scale || 1;
       var selector = options.selector || 'body';
 
@@ -637,7 +678,10 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       var projection;
 
       // Geo projection
-      var projData = computeSvgProjectionData(svg, options);
+      var projData = computeSvgProjectionData(svg, angular.merge({}, options, {
+        viewBox: viewBox,
+        geoViewBox: geoViewBox
+      }));
       if (projData) {
         projection = d3.geoMercator()
           .translate(projData.translate || [0,0])
@@ -664,6 +708,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
 
       svg.selectAll('path').each(function(arg1, i) {
         var ele = d3.select(this);
+        var title = ele.attr('title');
         var geometry = getSvgPathAsGeometry(ele);
 
         geometry.coordinates = _(geometry.coordinates).map(function(coords){
@@ -674,7 +719,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         _(options.attributes||[]).forEach(function (attr) {
           var value = ele.attr(attr);
           if (value)
-            feature.properties[attr] = value;
+            properties[attr] = value;
         });
 
         geoJson.features.push({
@@ -693,27 +738,148 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
     function computeSvgProjectionData(svg, options) {
       options = options || {};
 
+      options.scale = options.scale || findSvgGeoScale(svg);
+      options.translate = options.translate || findSvgGeoTranslate(svg);
       if (options.scale && options.translate) {
+        console.debug('[shape] Find project {scale: {0}, translate: {1}}'.format(options.scale, options.translate));
         return options;
       }
+
       var viewBox = options.viewBox || findSvgViewBox(svg);
       var geoViewBox = options.geoViewBox || findSvgGeoViewBox(svg);
-      if (viewBox && geoViewBox) {
-        console.debug('[shape-service] Computing projection...', viewBox, geoViewBox);
-        var width = viewBox.width - viewBox.minX,
-          height = viewBox.height,
-          geoWidth = geoViewBox.rightLng - geoViewBox.leftLng,
-          geoHeight = geoViewBox.topLat - geoViewBox.bottomLat,
-          dx = geoWidth / width,
-          dy = geoHeight / height
+      if (!geoViewBox || !viewBox) throw new Error('Cannot compute projection. Missing options scale and translate, or <svg> viewBox and/or geoViewBox');
+
+      console.debug('[shape-service] Computing projection...', viewBox, geoViewBox);
+
+      var
+        geoTopLeft = [geoViewBox.leftLng, geoViewBox.topLat],
+        geoBottomRight = [geoViewBox.rightLng, geoViewBox.bottomLat],
+        svgTopLeft = [viewBox.minX, viewBox.minY],
+        svgBottomRight = [viewBox.minX + viewBox.width, viewBox.minY + viewBox.height],
+        geoWidth = geoViewBox.rightLng - geoViewBox.leftLng,
+        geoHeight = geoViewBox.topLat - geoViewBox.bottomLat
         ;
-        return {
-          scale: 11119,
-          translate: [-492, 11698]
+
+      var projection = d3.geoMercator();
+
+      // Start parameters
+      var translateX=0,
+        translateY=0,
+        scale=1000,
+        fixScaleDelta = 100,
+        fixXDelta = 100,
+        fixYDelta = 100;
+
+      //var maxDurationMs = 10000; // 10s
+      var timeout = 2000; // 1min
+      var now = Date.now();
+      var checkTimeout = function() {
+        if ((Date.now() - now) >= timeout) {
+          throw 'TIMEOUT';
         }
       }
 
-      throw new Error('Cannot compute projection. Missing options scale and translate, or <svg> viewBox and/or geoViewBox');
+      try {
+        var previousFix;
+        var previousFixSign;
+        while (true) {
+
+          // Prepare projection
+          projection
+            .translate([translateX, translateY])
+            .scale(scale);
+
+          var testTopLeft = projection.invert(svgTopLeft);
+          var testBottomRight = projection.invert(svgBottomRight);
+          var testWidth = testBottomRight[0] - testTopLeft[0];
+          var testHeight = testTopLeft[1] - testBottomRight[1];
+
+          var errorWidth = testWidth - geoWidth;
+          var errorHeight = testHeight - geoHeight;
+          var errorTopX = testTopLeft[0] - geoTopLeft[0];
+          var errorTopY = testTopLeft[1] - geoTopLeft[1];
+          var errorBottomX = testBottomRight[0] - geoBottomRight[0];
+          var errorBottomY = testBottomRight[1] - geoBottomRight[1];
+          var errorX = Math.abs(errorTopX) > Math.abs(errorBottomX) ? errorTopX : errorBottomX;
+          var errorY = Math.abs(errorTopY) > Math.abs(errorBottomY) ? errorTopY : errorBottomY;
+
+          var fix, fixSign;
+
+          if (Math.abs(errorWidth) >= 0.001) {
+            fix = 'width;'
+            fixSign = (errorWidth < 0 ? -1 : 1);
+            // Same error, but sign changed: reduce the fix delta
+            if (previousFix === fix && fixSign !== previousFixSign) {
+              fixScaleDelta = fixScaleDelta / 2;
+            }
+            if (fixScaleDelta > 0.00001) {
+              // Need to reduce : increase scale
+              scale += fixSign * fixScaleDelta;
+              previousFix = fix;
+              previousFixSign = fixSign;
+              console.debug('Bad width > New scale=' + scale);
+              checkTimeout();
+              continue;
+            }
+          }
+
+          if (Math.abs(errorX) >= 0.001) {
+            fix = 'x'
+            fixSign = (errorX < 0 ? -1 : 1);
+            // Same error, but sign changed: reduce the fix delta
+            if (previousFix === fix && fixSign !== previousFixSign) {
+              fixXDelta = fixXDelta / 2;
+            }
+            if (fixXDelta > 0.00001) {
+              // Need to reduce : increase scale
+              translateX += fixSign * fixXDelta;
+              previousFix = fix;
+              previousFixSign = fixSign;
+              console.debug('Bad X > New translateX=' + translateX);
+              checkTimeout();
+              continue;
+            }
+          }
+
+          if (Math.abs(errorY) >= 0.001) {
+            fix = 'y'
+            fixSign = (errorY < 0 ? 1 : -1); // inverse, because
+            // Same error, but sign changed: reduce the fix delta
+            if (previousFix === fix && fixSign !== previousFixSign) {
+              fixYDelta = fixYDelta / 2;
+            }
+            if (fixYDelta > 0.00001) {
+              // Need to reduce : increase scale
+              translateY += fixSign * fixYDelta;
+              previousFix = fix;
+              previousFixSign = fixSign;
+              console.debug('Bad Y > New translateY=' + translateY);
+              checkTimeout();
+              continue;
+            }
+          }
+
+          /*if (Math.abs(errorHeight) >= 0.01) {
+            // Need to reduce : increase scale
+            scale += (errorHeight < 0 ? -1 : 1) * fixScaleDelta * 0.1;
+            console.debug('Bad Height > New scale=' + scale);
+            checkTimeout();
+            continue;
+          }*/
+
+          // No more error: success !
+          console.debug('Projection resolved in {0}ms => {translate: [{1}, {2}], scale: {3}}'.format(Date.now()-now, translateX, translateY, scale));
+          break;
+        }
+      } catch(err) {
+        if (err === 'TIMEOUT') {
+          console.error('[shape-service] Stopping projection computation (timeout)');
+        }
+        else {
+          throw err;
+        }
+      }
+      return {translate: [translateX, translateY], scale: scale};
     }
 
     function putShapeInCache(shape, id) {
@@ -749,6 +915,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           return feature;
         });
     }
+
 
     function clearCache() {
       console.debug('[shape] Cleaning cache...');

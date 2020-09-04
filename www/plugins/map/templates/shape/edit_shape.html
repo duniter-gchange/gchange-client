@@ -109,7 +109,7 @@
 
         <!-- ******** Config form ******** -->
 
-        <form name="configForm" novalidate="" ng-submit="applyConfig()" class="list" ng-if="showConfig">
+        <form name="configForm" novalidate="" ng-submit="applySvgConfig()" class="list" ng-if="showConfig">
           <div class="item item-divider"ng-init="setConfigForm(configForm)"  translate>
             MAP.SHAPE.EDIT.CONFIG_FORM_DIVIDER
           </div>
@@ -181,27 +181,35 @@
           </div>
 
           <!-- bottom lat -->
-          <div class="item col-50 col-offset-25 item-input item-floating-label"
-               ng-class="{'item-input-error': configForm.$submitted && configForm.bottomLat.$invalid}">
-            <span class="input-label" translate>MAP.SHAPE.EDIT.BOTTOM_LAT</span>
-            <input type="number" name="leftLng"
-                   placeholder="{{'MAP.SHAPE.EDIT.BOTTOM_LAT'|translate}}"
-                   ng-model="configData.geoViewBox.bottomLat"
-                   step="0.001"
-                   min="-90"
-                   max="90"
-                   required>
-          </div>
-          <div class="form-errors"
-               ng-show="configForm.$submitted && configForm.leftLng.$invalid"
-               ng-messages="configForm.leftLng.$error">
-            <div class="form-error" ng-message="required">
-              <span translate="ERROR.FIELD_REQUIRED"></span>
+          <div class="row no-margin no-padding">
+            <div class="item col col-offset-25 col-50 item-input item-floating-label"
+                 ng-class="{'item-input-error': configForm.$submitted && configForm.bottomLat.$invalid}">
+              <span class="input-label" translate>MAP.SHAPE.EDIT.BOTTOM_LAT</span>
+              <input type="number" name="leftLng"
+                     placeholder="{{'MAP.SHAPE.EDIT.BOTTOM_LAT'|translate}}"
+                     ng-model="configData.geoViewBox.bottomLat"
+                     step="0.001"
+                     min="-90"
+                     max="90"
+                     required>
+            </div>
+            <div class="form-errors"
+                 ng-show="configForm.$submitted && configForm.leftLng.$invalid"
+                 ng-messages="configForm.leftLng.$error">
+              <div class="form-error" ng-message="required">
+                <span translate="ERROR.FIELD_REQUIRED"></span>
+              </div>
             </div>
           </div>
 
+          <!-- Auto compute project -->
+          <ion-checkbox ng-model="configData.customProjection"
+                        class="item ink item-text-wrap">
+            <div class="item-content dark" translate>MAP.SHAPE.EDIT.CUSTOM_PROJECTION</div>
+          </ion-checkbox>
+
           <!-- translate-->
-          <div class="item row no-margin no-padding">
+          <div class="item row no-margin no-padding" ng-if="configData.customProjection">
             <div class="col col-50">
               <!-- translate X -->
               <div class="item-input item-floating-label"
@@ -242,7 +250,8 @@
           </div>
 
           <!-- scale -->
-          <div class="item item-input item-floating-label"
+          <div class="item item-input item-floating-label item-button-right"
+               ng-if="configData.customProjection"
                ng-class="{'item-input-error': configForm.$submitted && configForm.scale.$invalid}">
             <span class="input-label" translate>MAP.SHAPE.EDIT.SCALE</span>
             <input type="number" name="scale"

@@ -29,6 +29,7 @@
         "ORDER": "Ordre de tri",
         "BTN_APPLY": "Appliquer",
         "BTN_DELETE": "Supprimer la zone",
+        "CUSTOM_PROJECTION": "Saisie manuelle de la projection spatial (Degrés -> px SVG)",
         "BTN_TEST_SEARCH": "Tester une recherche sur cette zone",
         "INFO": {
           "SAVED": "La carte a bien été sauvegardée"
