@@ -158,7 +158,7 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
 
 
 function MapShapeEditController($scope, $rootScope, $state, $controller, $timeout, $q, leafletData, $translate,
-                                UIUtils, MapUtils, csWallet, esShape) {
+                                FileSaver, UIUtils, MapUtils, csWallet, esShape) {
   'ngInject';
 
   $scope.entered = false;
@@ -378,7 +378,9 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
       $scope.resetConfigForm(config);
 
       $scope.showConfig = true;
-      $scope.applySvgConfig(svg);
+      $scope.applySvgConfig(svg, angular.merge(config, {
+        customProjection: true // Force to use computed projection
+      }));
       svg.remove();
 
     }
@@ -416,7 +418,9 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
     return $q.when();
   }
 
-  $scope.applySvgConfig = function(svg) {
+  $scope.applySvgConfig = function(svg, config) {
+
+    config = config || $scope.configData;
     //if ($scope.loading) return; // Skip
 
     if ($scope.configForm) {
@@ -424,21 +428,21 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
       if(!$scope.configForm.$valid) return;
     }
 
-    console.debug('[map] [shape] Apply config: ', $scope.configData);
+    console.debug('[map] [shape] Apply config: ', config);
 
     // Converting SVG into geojson, using the config
-    var svg = svg || esShape.svg.createFromText($scope.configData.svgText, {
+    var svg = svg || esShape.svg.createFromText(config.svgText, {
       selector: '#' + $scope.shapeId,
       class: 'ng-hide'
     });
 
     var convertOptions = {
       selector: '#' + $scope.shapeId,
-      geoViewBox: $scope.configData.geoViewBox
+      geoViewBox: config.geoViewBox
     };
-    if ($scope.configData.customProjection) {
-      convertOptions.scale = $scope.configData.scale || 1;
-      convertOptions.translate = [$scope.configData.translateX||0, $scope.configData.translateY||0];
+    if (config.customProjection) {
+      convertOptions.scale = config.scale || 1;
+      convertOptions.translate = [config.translateX||0, config.translateY||0];
     }
 
     var geoJson = esShape.svg.toGeoJson(svg, convertOptions);
@@ -546,6 +550,7 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
 
     var country = $scope.formData.country || 'fr';
 
+    var errors = [];
     // Get existing ids
     return esShape.getAllIds()
       .then(function(existingIds) {
@@ -565,19 +570,29 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
             }
             console.debug("[map] [shape] - Add {id: " + feature.properties.id + "}");
             existingIds.push(feature.properties.id);
-            return esShape.add(feature);
+            return esShape.add(feature)
+              .catch(function(err) {
+                errors.push('Error while adding {id: {0}}: {1}'.format(feature.properties.id, err && err.message || err));
+              });
           }
           else {
             console.debug("[map] [shape] - Update {id: " + feature.properties.id + "}");
             existingIds[feature.properties.id] = true;
             return esShape.update(feature, {id: feature.properties.id})
+              .catch(function(err) {
+                errors.push('Error while updating {id: {0}}: {1}'.format(feature.properties.id, err && err.message || err));
+              });
           }
         }))
       })
 
       .then(function() {
-        console.debug('[map] [shape] Shape saved in {0}ms'.format(Date.now() - now));
         $scope.saving = false;
+        if (errors.length) {
+          return UIUtils.onError("MAP.SHAPE.EDIT.ERROR.SAVE_FAILED")(errors.join('<br/>'));
+        }
+
+        console.debug('[map] [shape] Shape saved in {0}ms'.format(Date.now() - now));
 
         // Wait 2s (for pod propagation), then reload
         return $timeout(function() {
@@ -586,11 +601,6 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
       })
       .then(function() {
         return UIUtils.toast.show("MAP.SHAPE.EDIT.INFO.SAVED");
-      })
-      .catch(function(err) {
-        $scope.saving = false;
-        UIUtils.toast.show("MAP.SHAPE.EDIT.INFO.SAVED");
-        return UIUtils.onError("MAP.SHAPE.EDIT.ERROR.SAVE_FAILED")(err);
       });
   }
 
@@ -628,4 +638,13 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
     $state.go('app.market_lookup', {location: location});
   }
 
+  $scope.download = function() {
+    if ($scope.loading || $scope.saving || !$scope.map.geojson.data) return;
+
+    var content = JSON.stringify($scope.map.geojson.data);
+    var file = new Blob([content], {type: 'application/geo+json; charset=utf-8'});
+    var filename = ($scope.formData.country || 'export') + '.geojson';
+
+    FileSaver.saveAs(file, filename);
+  }
 }

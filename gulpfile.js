@@ -30,11 +30,12 @@ const gulp = require('gulp'),
   merge = require('merge2'),
   log = require('fancy-log'),
   colors = require('ansi-colors'),
-  argv = require('yargs').argv,
+  {argv} = require('yargs'),
   sriHash = require('gulp-sri-hash'),
   sort = require('gulp-sort'),
   map = require('map-stream'),
-  simplifyGeoJson = require('simplify-geojson');
+  simplifyGeoJson = require('simplify-geojson'),
+  {serial} = require('gulp-fun');
 
   // Workaround because @ioni/v1-toolkit use gulp v3.9.2 instead of gulp v4
   let jsonlint;
@@ -1239,17 +1240,23 @@ function cdvAsHook(wrapper) {
 
 
 function geoJson(done) {
+  log(colors.green('Simplifying GeoJSON files...'));
 
-  var geojson = fs.readFileSync('./www/img/maps/fr.geojson');
-  var json = simplifyGeoJson( JSON.parse(geojson), 0.01, true);
+  const projectRoot = argv.root || '.';
+  const srcPath = path.join(projectRoot, 'www', 'img', 'maps');
+  const targetPath = path.join(projectRoot, 'www', 'img', 'maps2');
 
-  fs.writeFileSync('./www/img/maps2/fr.geojson', JSON.stringify(json));
+  return gulp.src(srcPath + '/**.geojson')
+    .pipe(debug({...debugBaseOptions, title: 'Simplifying', showFiles: true}))
+    .pipe(serial((file, stream) => {
+      let geojson = JSON.parse(fs.readFileSync(file.path));
+      geojson = simplifyGeoJson(geojson, 1, true);
+      file.content = JSON.stringify(geojson);
+      stream.push(file);
+    }))
+    .pipe(gulp.dest(targetPath))
+    .on('end', done);
 
-  /*return gulp.src(['./www/img/maps/!*.geojson'])
-    .pipe(gulp.dest('./www/img/maps2/'));
-*/
-  //var simplified = simplify(geojson, tolerance)
-  if (done) done();
 }
 
 function help() {

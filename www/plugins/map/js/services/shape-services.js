@@ -32,10 +32,13 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         active: {
           fill: gpColor.rgba.balanced(),
         },
+        // WArn: should be ordered, from let to right
         positions: [
+          'topleft',
+          'bottomleft',
           'main',
-          'bottomleft', 'bottomright',
-          'topleft', 'topright'
+          'topright',
+          'bottomright'
         ]
       },
       raw = {
@@ -269,12 +272,15 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       // Remove existing content
       container.selectAll('*').remove();
 
-      _(Object.keys(featuresByPosition)).each(function(position) {
+      _(constants.positions).each(function(position) {
+
+        var features = featuresByPosition[position];
+        if (!features) return; // No feature at this position: skip
+
+        var svgSelector = selector + ' .' + position,
+          svgWidth;
 
         container.append('div').classed(position, true);
-        var svgSelector = selector + ' .' + position,
-          features = featuresByPosition[position],
-          svgWidth;
 
         // Add main features, as a features collection
         if (position === 'main') {
@@ -293,7 +299,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         // For secondary position (left or right)
         else {
           // Sort features (using properties.order)
-          _.sortBy(features, function(f) { return f.properties && f.properties.order || 999; });
+          features = _.sortBy(features, function(f) { return f.properties && f.properties.order || 999; });
 
           // Add a SVG per feature
           svgWidth = width * 0.1; // 10% of global width
@@ -430,6 +436,8 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         throw new Error("Invalid 'svgElement': must be child of <svg> tag, but not the <svg> tag itself.");
       }
 
+
+      // Rectangle
       if (element.node().tagName === 'rect') {
         var x = element.x.baseVal.value;
         var y = element.y.baseVal.value;
@@ -447,6 +455,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         };
       }
 
+      // Path
       if (element.node().tagName === 'path') {
         var pathDataStr = element.attr('d');
         if (!pathDataStr) return [];
@@ -465,22 +474,25 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         var action;
         _(pathData || []).forEach(function (pathitem, index) {
 
-
           // Parse action
           if (actionRegexp.test(pathitem)) {
             action = pathitem.substr(0, 1);
 
+            // Process close action first
             switch (action) {
               // Close
               case 'z':
               case 'Z':
                 if (coords.length) {
-                  coords.push(coords[0])
-                  // Add to final result
-                  res.push(coords);
-                  // Consume the action
+                  if (coords.length > 1) {
+                    // Re add the first polygon point
+                    coords.push(coords[0])
+                    // Add to final result
+                    res.push(coords);
+                  }
+                  // Reset the action
                   action = undefined;
-                  // reset coords
+                  // Create a new polygon
                   coords = [];
                 }
                 break;
@@ -495,46 +507,55 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
             var parts = pathitem.split(',');
             parts = _(parts).map(parseFloat);
             var prevLength = coords.length;
-            var prevCoords = prevLength && coords[prevLength - 1];
-            if (!prevCoords && res.length) {
-              var previRes = res[res.length-1];
-              prevCoords = previRes.length && previRes[previRes.length-1];
+            var prevPoint = prevLength && coords[prevLength - 1];
+            // No previous point in the current polygon: try to get last of the previous polygon
+            if (!prevPoint && res.length) {
+              var previousPolygon = res[res.length-1];
+              prevPoint = previousPolygon.length && previousPolygon[previousPolygon.length-1];
             }
+            var currentPoint;
 
+            // Process other action (not close)
             switch (action) {
 
               // Move (absolute)
               case 'M':
-                if (parts.length === 2) coords.push(parts);
+                if (parts.length === 2) {
+                  currentPoint = parts;
+                }
+                action = 'L';
                 break;
 
               // Move (relative)
               case 'm':
                 if (parts.length === 2) {
-                  if (!prevCoords) {
+                  if (!prevPoint) {
                     if (viewBox) {
-                      coords.push([parts[0] + viewBox.minX, parts[1] + viewBox.minY]);
+                      currentPoint = [parts[0] + viewBox.minX, parts[1] + viewBox.minY];
                     } else {
-                      coords.push(parts);
+                      currentPoint = parts;
                     }
-                  } else coords.push([parts[0] + prevCoords[0], parts[1] + prevCoords[1]]);
+                  } else {
+                    currentPoint = [parts[0] + prevPoint[0], parts[1] + prevPoint[1]];
+                  }
                 }
+                action = 'l';
                 break;
 
               // Line (absolute)
               case 'L':
                 if (parts.length === 2) {
-                  coords.push(parts);
+                  currentPoint = parts;
                 }
                 break;
 
               // Line (relative)
               case 'l':
                 if (parts.length === 2) {
-                  if (!prevCoords) {
-                    coords.push(parts);
+                  if (!prevPoint) {
+                    currentPoint = parts;
                   } else {
-                    coords.push([parts[0] + prevCoords[0], parts[1] + prevCoords[1]]);
+                    currentPoint = [parts[0] + prevPoint[0], parts[1] + prevPoint[1]];
                   }
                 }
                 break; // skip
@@ -542,10 +563,10 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
               // Line horizontal (absolute)
               case 'H':
                 if (parts.length === 1) {
-                  if (!prevCoords) {
-                    coords.push([parts[0], 0]);
+                  if (!prevPoint) {
+                    currentPoint = [parts[0], 0];
                   } else {
-                    coords.push([parts[0], prevCoords[1]]);
+                    currentPoint = [parts[0], prevPoint[1]];
                   }
                 }
                 break;
@@ -553,10 +574,15 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
               // Line horizontal (relative)
               case 'h':
                 if (parts.length === 1) {
-                  if (!prevCoords) {
-                    coords.push([parts[0], 0]);
+                  if (!prevPoint) {
+                    if (viewBox) {
+                      currentPoint = [parts[0] + viewBox.minX, viewBox.minY];
+                    } else {
+                      currentPoint = [parts[0], 0];
+                    }
+
                   } else {
-                    coords.push([parts[0] + prevCoords[0], prevCoords[1]]);
+                    currentPoint = [parts[0] + prevPoint[0], prevPoint[1]];
                   }
                 }
                 break;
@@ -564,10 +590,10 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
               // Line vertical (absolute)
               case 'V':
                 if (parts.length === 1) {
-                  if (!prevCoords) {
-                    coords.push([0, parts[0]]);
+                  if (!prevPoint) {
+                    currentPoint = [0, parts[0]];
                   } else {
-                    coords.push([prevCoords[0], parts[0]]);
+                    currentPoint = [prevPoint[0], parts[0]];
                   }
                 }
                 break;
@@ -575,35 +601,62 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
               // Line vertical (relative)
               case 'v':
                 if (parts.length === 1) {
-                  if (!prevCoords) {
-                    coords.push([0, parts[0]]);
+                  if (!prevPoint) {
+                    if (viewBox) {
+                      currentPoint = [viewBox.minX, parts[0] + viewBox.minY];
+                    } else {
+                      currentPoint = [0, parts[0]];
+                    }
                   } else {
-                    coords.push([prevCoords[0], parts[0] + prevCoords[1]]);
+                    currentPoint = [prevPoint[0], parts[0] + prevPoint[1]];
                   }
                 }
                 break; // skip
 
-              // Other case
+              // Other case (not managed. e.g. Curve)
+              case 'C':
+              case 'c':
+                console.warn("[svg] SVG curve action. Skipping");
               default:
 
                 break; // skip
             }
 
-            // If nothing changed : warn
-            if (prevLength === coords.length) {
-              console.warn("[svg] Ignoring unknown SVG action '{0}' '{1}'".format(action, pathitem));
-              if (parts && parts.length === 2) {
-                //coords.push([parseFloat(parts[0]), parseFloat(parts[1])]);
+            // A new point must be add
+            if (currentPoint) {
+              // Check is not same as previous
+              if (coords.length > 1 && isSamePoint(currentPoint, prevPoint)) {
+                console.warn("[svg] Ignoring duplicated data: {action: {0}, point: {1}}".format(action, parts));
               }
+              else {
+                coords.push(currentPoint);
+              }
+            }
+            else {
+              console.warn("[svg] Ignoring data in path: {action: {0}, point: {1}}".format(action, parts));
             }
           }
         });
+
+        // make sure polygon is closed
+        if (coords.length > 1) {
+          console.debug("[svg] Bad polygon (not closed). Will force last point.")
+          if (!isSamePoint(coords[0], coords[coords.length -1 ])) {
+            coords.push(coords[0])
+          }
+          // Add to final result
+          res.push(coords);
+        }
 
         return {
           type: 'Polygon',
           coordinates: res
         };
       }
+    }
+
+    function isSamePoint(p1, p2) {
+      return p1 === p2 || (p1[0] === p2[0] && p1[1] === p2[1]);
     }
 
     function createSvgFromText(svgText, options) {

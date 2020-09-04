@@ -114,7 +114,7 @@ angular.module('cesium.directives', [])
   })
 
   // Add a copy-on-click directive
-  .directive('copyOnClick', function ($window, $document, $timeout, Device, UIUtils) {
+  .directive('copyOnClick', function ($window, Device, UIUtils) {
     'ngInject';
     return {
       restrict: 'A',
@@ -122,7 +122,6 @@ angular.module('cesium.directives', [])
         var showCopyPopover = function (event) {
           var value = attrs.copyOnClick;
           if (value === undefined || value === null) return; // Skip if no value
-
           if (Device.clipboard.enable) {
             // copy to clipboard, using cordova
             Device.clipboard.copy(value)
@@ -465,6 +464,10 @@ angular.module('cesium.directives', [])
                   fileContent: onLoadEvent.target.result,
                   fileData : fileData}
               });
+
+              // Reset the input file
+              fileInput[0].value = '';
+
             });
           };
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);

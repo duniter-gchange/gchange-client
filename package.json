@@ -90,6 +90,7 @@
     "d3-interpolate": "^2.0.1",
     "d3-scale": "^3.2.2",
     "d3-transform": "^1.0.5",
+    "gulp-fun": "^1.1.1",
     "through2": "^4.0.2",
     "uuid": "3.2.1"
   },

@@ -55,6 +55,10 @@
 
           <div class="pull-right ng-hide" ng-show="map.geojson.data">
             <button class="button button-clear button-small ink " type="button"
+                    ng-click="download()">
+              <span class="dark" translate>COMMON.BTN_DOWNLOAD</span>
+            </button>
+            <button class="button button-clear button-small ink " type="button"
                     ng-click="cancel()">
               <span class="dark" translate>COMMON.BTN_CANCEL</span>
             </button>
