@@ -18,6 +18,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       fields = {
         commons: ['type', 'geometry', 'properties']
       },
+      d3Projection = d3.geoMercator,
       constants = {
         attributes: {
           geoViewBox: 'gchange:geoViewBox',
@@ -25,14 +26,20 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           geoTranslate: 'gchange:geoTranslate',
           viewBox: 'viewBox'
         },
-        defaults: {
-          fill: '#1a237e', //
-          stroke: 'lightgrey'
+        style: {
+          defaults: {
+            fill: '#1a237e', //
+            stroke: 'lightgrey'
+          },
+          active: {
+            fill: gpColor.rgba.balanced(),
+          },
         },
-        active: {
-          fill: gpColor.rgba.balanced(),
+        projection: {
+          // Min precision, in degres
+          degreePrecision: 0.000001
         },
-        // WArn: should be ordered, from let to right
+        // Warn: should be ordered, from let to right
         positions: [
           'topleft',
           'bottomleft',
@@ -112,11 +119,37 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         });
     }
 
-    function getAllShapeIds() {
-      return raw.postSearch({
+    function getAllShapeIds(options) {
+      var filters = [];
+
+      // Add country filter
+      if (options && options.country) {
+
+        filters.push({
+          nested: {
+            path: "properties",
+            query: {
+              bool: {
+                filter: {
+                  term: {"properties.country": options.country}
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // Create the request
+      var request = {
         size: 1000,
         _source: 'properties.id'
-      })
+      };
+      if (filters.length) {
+        request.query = request.query || {bool: {}};
+        request.query.bool.filter =  filters;
+      }
+
+      return raw.postSearch(request)
         .then(function(res) {
           if (!res || !res.hits || !res.hits.total) return [];
 
@@ -155,6 +188,99 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         })
     }
 
+    function saveShape(geoJson, options) {
+      options = options || {};
+      if (!geoJson) throw new Error("Missing 'geoJson' argument");
+
+      //geoJson = makeOgcCompatible(geoJson);
+
+      var country = options.country || geoJson.properties && geoJson.properties.country;
+      if (!country) throw new Error("Missing 'options.country' argument");
+      country = country.toLowerCase();
+
+      var progressFn = typeof options.updateProgression === 'function' ? options.updateProgression : null;
+
+      var now = Date.now();
+      console.debug('[shape-service] Saving shape {country: {0}}...'.format(country));
+
+      var errors = [];
+      var existingIds;
+      var idsToRemove;
+      var featureCount = geoJson.features.length;
+
+      // Get existing ids
+      return $q.all([
+          getAllShapeIds(), // All ids
+          getAllShapeIds({country: country}) // Country ids
+      ])
+        .then(function(ids) {
+          existingIds = ids[0];
+          idsToRemove = ids[1];
+
+          return geoJson.features.reduce(function(promise, feature, index) {
+
+            // Normalize features properties
+            feature.properties = feature.properties || {};
+            feature.properties.country = country;
+
+            var id = feature.properties.id;
+            var isNew = angular.isUndefined(id)
+              // if id already somewhere, force isNew = true (will compute another id)
+              || !existingIds.includes(id)
+              || !id.toLowerCase().startsWith(country);
+
+            var executeFn;
+            if (isNew) {
+              // Generate new id
+              for(var i = index; !feature.properties.id || existingIds.includes(id); i++) {
+                id = country + '-' + i;
+              }
+              feature.properties.id = id;
+              existingIds.push(id);
+              executeFn = function() {
+                console.debug("[shape-service] - Add {id: {0}}".format(id));
+                // Update progression
+                if (progressFn) progressFn(feature, index, featureCount);
+                return raw.add(feature);
+              };
+            }
+
+            // Update existing feature
+            else {
+              idsToRemove.splice(idsToRemove.indexOf(feature.properties.id), 1);
+              executeFn = function() {
+                // Update progression
+                if (progressFn) progressFn(id, index, featureCount);
+                console.debug("[shape-service] - Update {id: {0}}".format(feature.properties.id));
+                return raw.update(feature, {id: feature.properties.id});
+              };
+            }
+
+            return promise.then(executeFn)
+              // If error: trace but continue
+              .catch(function(err) {
+                errors.push('Error while updating {id: {0}}: {1}'.format(feature.properties.id, err && err.message || err));
+              });
+
+          }, $q.when());
+        })
+
+        .then(function() {
+          if (errors.length) {
+            console.error(" - " + errors.join('\n -'));
+            throw {message: "MAP.SHAPE.EDIT.ERROR.SAVE_FAILED"};
+          }
+
+          // Delete shapes
+          if (idsToRemove.length) {
+            console.debug('[shape-service] Removing shapes ids: ', idsToRemove);
+            // TODO
+          }
+
+          console.debug('[shape-service] Shape saved in {0}ms'.format(Date.now() - now));
+        });
+    }
+
     function createSvg(geoJson, options) {
       if (!geoJson) throw new Error('Missing geoJson argument');
       options = options || {};
@@ -173,7 +299,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         height = options.height || width;
 
       // Define map projection
-      var projection = d3.geoMercator()
+      var projection = d3Projection()
         .translate([0, 0])
         .scale(1);
 
@@ -222,20 +348,20 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         .attr("d", path)
         .on("mouseover", function(d) {
           d3.select(this)
-            .style("fill", constants.active.fill)
+            .style("fill", constants.style.active.fill)
             .style("cursor", "pointer")
           ;
         })
         .on("mouseout", function(d) {
-          d3.select(this).style("fill", constants.defaults.fill);
+          d3.select(this).style("fill", constants.style.defaults.fill);
         })
         .on("click", function(event) {
           options.onclick(event, this);
         })
-        .style("fill", constants.defaults.fill)
-        .style("stroke", constants.defaults.stroke)
+        .style("fill", constants.style.defaults.fill)
+        .style("stroke", constants.style.defaults.stroke)
         .append("svg:title").text(function(d){
-          return d.properties['name'];
+          return d.properties && d.properties.title;
         });
 
       return svg;
@@ -428,17 +554,18 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       ];
     }
 
-    function getSvgPathAsGeometry(element, viewBox) {
+    function svgElementToGeometry(element, projection) {
+      if (!element || !projection) throw new Error("Missing 'element' or 'projection' argument");
       if (typeof element.node !== 'function') {
         element = d3.select(element);
       }
-      if (element.node().tagName === 'svg') {
+      var tagName = element.node().tagName;
+      if (tagName === 'svg') {
         throw new Error("Invalid 'svgElement': must be child of <svg> tag, but not the <svg> tag itself.");
       }
 
-
       // Rectangle
-      if (element.node().tagName === 'rect') {
+      if (tagName === 'rect') {
         var x = element.x.baseVal.value;
         var y = element.y.baseVal.value;
         var height = element.height.baseVal.value;
@@ -446,17 +573,53 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         return {
           type: 'Polygon',
           coordinates: [
-            [x, y],
-            [x, y + height],
-            [x + width, y + height],
-            [x + width, y],
-            [x, y]
+            [
+              projection([x, y]),
+              projection([x, y + height]),
+              projection([x + width, y + height]),
+              projection([x + width, y]),
+              projection([x, y])
+            ]
           ]
         };
       }
 
+      // Function to apply projection AND remove duplicated points
+
+      var toMappedCoords = function(coords, index) {
+        var res = [];
+        var degreePrecision = constants.projection.degreePrecision;
+        var duplicateCount = 0;
+        _(coords).each(function(point) {
+          if (point.length !== 2) throw new Error('Invalid point: ' + point.join(','));
+          var projectedPoint = projection(point);
+
+          // Round to the expected precision
+          projectedPoint = [
+            Math.floor(projectedPoint[0] / degreePrecision) * degreePrecision,
+            Math.floor(projectedPoint[1] / degreePrecision) * degreePrecision
+          ];
+
+          // Check is not same as previous
+          if (!res.length || !isSamePoint(projectedPoint, res[res.length - 1])) {
+            // Append to result
+            res.push(projectedPoint);
+          }
+          else {
+            duplicateCount++;
+          }
+        });
+        if (duplicateCount > 0) console.debug('[shape-service] Removed {0} duplicated points'.format(duplicateCount));
+        return res;
+      }
+
+      if (tagName === 'polyline') {
+        // TODO get data
+        throw new Error('polyline not implemented yet');
+      }
+
       // Path
-      if (element.node().tagName === 'path') {
+      if (tagName === 'path') {
         var pathDataStr = element.attr('d');
         if (!pathDataStr) return [];
 
@@ -487,8 +650,15 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
                   if (coords.length > 1) {
                     // Re add the first polygon point
                     coords.push(coords[0])
-                    // Add to final result
-                    res.push(coords);
+
+                    // Check if valid polygon, for ES geo_shape type
+                    if (coords.length < 4) {
+                      console.debug('[shape-service] An invalid polygon has been ignore', coords);
+                    }
+                    else {
+                      // Add to final result
+                      res.push(coords);
+                    }
                   }
                   // Reset the action
                   action = undefined;
@@ -505,7 +675,9 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
 
           if (pathitem && pathitem.trim().length > 0) {
             var parts = pathitem.split(',');
+            if (parts.length > 2) return; // skip
             parts = _(parts).map(parseFloat);
+
             var prevLength = coords.length;
             var prevPoint = prevLength && coords[prevLength - 1];
             // No previous point in the current polygon: try to get last of the previous polygon
@@ -530,15 +702,12 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
               case 'm':
                 if (parts.length === 2) {
                   if (!prevPoint) {
-                    if (viewBox) {
-                      currentPoint = [parts[0] + viewBox.minX, parts[1] + viewBox.minY];
-                    } else {
-                      currentPoint = parts;
-                    }
+                    currentPoint = parts;
                   } else {
                     currentPoint = [parts[0] + prevPoint[0], parts[1] + prevPoint[1]];
                   }
                 }
+
                 action = 'l';
                 break;
 
@@ -575,12 +744,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
               case 'h':
                 if (parts.length === 1) {
                   if (!prevPoint) {
-                    if (viewBox) {
-                      currentPoint = [parts[0] + viewBox.minX, viewBox.minY];
-                    } else {
-                      currentPoint = [parts[0], 0];
-                    }
-
+                    currentPoint = [parts[0], 0];
                   } else {
                     currentPoint = [parts[0] + prevPoint[0], prevPoint[1]];
                   }
@@ -602,11 +766,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
               case 'v':
                 if (parts.length === 1) {
                   if (!prevPoint) {
-                    if (viewBox) {
-                      currentPoint = [viewBox.minX, parts[0] + viewBox.minY];
-                    } else {
-                      currentPoint = [0, parts[0]];
-                    }
+                    currentPoint = [0, parts[0]];
                   } else {
                     currentPoint = [prevPoint[0], parts[0] + prevPoint[1]];
                   }
@@ -615,8 +775,13 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
 
               // Other case (not managed. e.g. Curve)
               case 'C':
+                console.warn("[svg] SVG curve action. Skipping");
+                action = 'L'; // Continue in absolute
+                break;
               case 'c':
                 console.warn("[svg] SVG curve action. Skipping");
+                action = 'l'; // Continue in relative
+                break;
               default:
 
                 break; // skip
@@ -624,39 +789,40 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
 
             // A new point must be add
             if (currentPoint) {
-              // Check is not same as previous
-              if (coords.length > 1 && isSamePoint(currentPoint, prevPoint)) {
-                console.warn("[svg] Ignoring duplicated data: {action: {0}, point: {1}}".format(action, parts));
-              }
-              else {
-                coords.push(currentPoint);
-              }
+              coords.push(currentPoint);
             }
             else {
-              console.warn("[svg] Ignoring data in path: {action: {0}, point: {1}}".format(action, parts));
+              console.warn("[svg] Invalid {0} data: " + pathitem);
+              //console.warn("[svg] Ignoring data in path: {action: {0}, point: {1}}".format(action, parts));
             }
           }
         });
 
         // make sure polygon is closed
-        if (coords.length > 1) {
-          console.debug("[svg] Bad polygon (not closed). Will force last point.")
-          if (!isSamePoint(coords[0], coords[coords.length -1 ])) {
-            coords.push(coords[0])
-          }
+        if (coords.length >= 4) {
+          console.warn("[svg] Invalid polygon found (not closed). Will force last point.")
           // Add to final result
           res.push(coords);
         }
 
+
+        /*if (res.length > 1) {
+          return {
+            type: 'MultiPolygon',
+            coordinates: _(res).map(function(coords){ return [toMappedCoords(coords)]; })
+          };
+        }*/
+
         return {
           type: 'Polygon',
-          coordinates: res
+          //orientation : "clockwise",
+          coordinates: _.map(res, toMappedCoords)
         };
       }
     }
 
     function isSamePoint(p1, p2) {
-      return p1 === p2 || (p1[0] === p2[0] && p1[1] === p2[1]);
+      return (p1[0] === p2[0] && p1[1] === p2[1]);
     }
 
     function createSvgFromText(svgText, options) {
@@ -717,26 +883,20 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       if (!viewBox) {
         throw new Error("Bad SVG format: missing attribute '{0}'".format(constants.attributes.viewBox));
       }
-      
+
       var geoViewBox = options.geoViewBox || findSvgGeoViewBox(svg);
       if (!geoViewBox) {
         throw new Error("Bad SVG format: missing attribute '{0}'".format(constants.attributes.geoViewBox));
       }
-
-      var geoJson = {
-        type: 'FeatureCollection',
-        features: []
-      };
-
-      var projection;
 
       // Geo projection
       var projData = computeSvgProjectionData(svg, angular.merge({}, options, {
         viewBox: viewBox,
         geoViewBox: geoViewBox
       }));
+      var projection;
       if (projData) {
-        projection = d3.geoMercator()
+        projection = d3Projection()
           .translate(projData.translate || [0,0])
           .scale(projData.scale || 1)
           .invert;
@@ -759,33 +919,30 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         };
       }
 
-      svg.selectAll('path').each(function(arg1, i) {
+      var features = [];
+      svg.selectAll('path').each(function() {
         var ele = d3.select(this);
-        var title = ele.attr('title');
-        var geometry = getSvgPathAsGeometry(ele);
 
-        geometry.coordinates = _(geometry.coordinates).map(function(coords){
-          return _(coords||[]).map(projection);
-        });
+        var geometry = svgElementToGeometry(ele, projection);
 
+        // Copy properties
         var properties = {};
         _(options.attributes||[]).forEach(function (attr) {
           var value = ele.attr(attr);
-          if (value)
-            properties[attr] = value;
+          if (value) properties[attr] = value;
         });
 
-        geoJson.features.push({
+        features.push({
           type: 'Feature',
           properties: properties,
-          geometry: {
-            type: (ele.node().tagName === 'polyline') ? 'LineString' : (geometry.type || 'Polygon'),
-            coordinates: (ele.node().tagName === 'polyline') ? geometry.coordinates[0] : geometry.coordinates
-          }
+          geometry: geometry
         });
-      })
+      });
 
-      return geoJson;
+      return {
+        type: 'FeatureCollection',
+        features: features
+      };
     }
 
     function computeSvgProjectionData(svg, options) {
@@ -811,36 +968,39 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         svgBottomRight = [viewBox.minX + viewBox.width, viewBox.minY + viewBox.height],
         geoWidth = geoViewBox.rightLng - geoViewBox.leftLng,
         geoHeight = geoViewBox.topLat - geoViewBox.bottomLat
-        ;
+      ;
 
-      var projection = d3.geoMercator();
+      var projection = d3Projection();
 
       // Start parameters
-      var translateX=0,
-        translateY=0,
-        scale=1000,
-        fixScaleDelta = 100,
-        fixXDelta = 100,
-        fixYDelta = 100;
+      var currentX=0,
+        currentY=0,
+        currentScale=1000,
+        scaleFixAbsolute = 100,
+        xFixAbsolute = 100,
+        yFixAbsolute = 100,
+        expectedPrecision = constants.projection.degreePrecision;
 
       //var maxDurationMs = 10000; // 10s
       var timeout = 2000; // 1min
       var now = Date.now();
       var checkTimeout = function() {
-        if ((Date.now() - now) >= timeout) {
-          throw 'TIMEOUT';
-        }
+        if ((Date.now() - now) >= timeout) throw 'TIMEOUT';
       }
 
+      var counter = 0;
       try {
         var previousFix;
         var previousFixSign;
         while (true) {
 
+          counter++;
+          if (counter % 20 === 0) checkTimeout();
+
           // Prepare projection
           projection
-            .translate([translateX, translateY])
-            .scale(scale);
+            .translate([currentX, currentY])
+            .scale(currentScale);
 
           var testTopLeft = projection.invert(svgTopLeft);
           var testBottomRight = projection.invert(svgBottomRight);
@@ -849,79 +1009,70 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
 
           var errorWidth = testWidth - geoWidth;
           var errorHeight = testHeight - geoHeight;
+
           var errorTopX = testTopLeft[0] - geoTopLeft[0];
-          var errorTopY = testTopLeft[1] - geoTopLeft[1];
           var errorBottomX = testBottomRight[0] - geoBottomRight[0];
-          var errorBottomY = testBottomRight[1] - geoBottomRight[1];
           var errorX = Math.abs(errorTopX) > Math.abs(errorBottomX) ? errorTopX : errorBottomX;
-          var errorY = Math.abs(errorTopY) > Math.abs(errorBottomY) ? errorTopY : errorBottomY;
+
+          var errorLeftY = testTopLeft[1] - geoTopLeft[1];
+          var errorRightY = testBottomRight[1] - geoBottomRight[1];
+          var errorY = Math.abs(errorLeftY) > Math.abs(errorRightY) ? errorLeftY : errorRightY;
 
           var fix, fixSign;
 
-          if (Math.abs(errorWidth) >= 0.001) {
-            fix = 'width;'
+          if (Math.abs(errorWidth) >= expectedPrecision) {
+            fix = 'scale';
             fixSign = (errorWidth < 0 ? -1 : 1);
             // Same error, but sign changed: reduce the fix delta
             if (previousFix === fix && fixSign !== previousFixSign) {
-              fixScaleDelta = fixScaleDelta / 2;
+              scaleFixAbsolute = scaleFixAbsolute / 2;
             }
-            if (fixScaleDelta > 0.00001) {
+            if (scaleFixAbsolute >= expectedPrecision / 10) {
               // Need to reduce : increase scale
-              scale += fixSign * fixScaleDelta;
+              currentScale += fixSign * scaleFixAbsolute;
               previousFix = fix;
               previousFixSign = fixSign;
-              console.debug('Bad width > New scale=' + scale);
-              checkTimeout();
+              console.debug('Bad width. New scale={0} (delta: {1}}'.format(currentScale, scaleFixAbsolute));
               continue;
             }
           }
 
-          if (Math.abs(errorX) >= 0.001) {
-            fix = 'x'
+          if (Math.abs(errorX) >= expectedPrecision) {
+            fix = (Math.abs(errorTopX) > Math.abs(errorBottomX) ? 'top' : 'bottom');
             fixSign = (errorX < 0 ? -1 : 1);
             // Same error, but sign changed: reduce the fix delta
             if (previousFix === fix && fixSign !== previousFixSign) {
-              fixXDelta = fixXDelta / 2;
+              xFixAbsolute = xFixAbsolute / 2;
             }
-            if (fixXDelta > 0.00001) {
+            if (xFixAbsolute >= expectedPrecision / 10) {
               // Need to reduce : increase scale
-              translateX += fixSign * fixXDelta;
+              currentX += fixSign * xFixAbsolute;
               previousFix = fix;
               previousFixSign = fixSign;
-              console.debug('Bad X > New translateX=' + translateX);
-              checkTimeout();
+              console.debug('Bad Y. New={0} (delta: {1}}'.format(currentX, xFixAbsolute));
               continue;
             }
           }
 
-          if (Math.abs(errorY) >= 0.001) {
-            fix = 'y'
+          if (Math.abs(errorY) >= expectedPrecision) {
+            fix = (Math.abs(errorLeftY) > Math.abs(errorRightY) ? 'left' : 'right');
             fixSign = (errorY < 0 ? 1 : -1); // inverse, because
             // Same error, but sign changed: reduce the fix delta
             if (previousFix === fix && fixSign !== previousFixSign) {
-              fixYDelta = fixYDelta / 2;
+              yFixAbsolute = yFixAbsolute / 2;
             }
-            if (fixYDelta > 0.00001) {
+            if (yFixAbsolute >= expectedPrecision / 10) {
               // Need to reduce : increase scale
-              translateY += fixSign * fixYDelta;
+              currentY += fixSign * yFixAbsolute;
               previousFix = fix;
               previousFixSign = fixSign;
-              console.debug('Bad Y > New translateY=' + translateY);
-              checkTimeout();
+              console.debug('Bad Y. New={0} (delta: {1}}'.format(currentY, yFixAbsolute));
               continue;
             }
           }
 
-          /*if (Math.abs(errorHeight) >= 0.01) {
-            // Need to reduce : increase scale
-            scale += (errorHeight < 0 ? -1 : 1) * fixScaleDelta * 0.1;
-            console.debug('Bad Height > New scale=' + scale);
-            checkTimeout();
-            continue;
-          }*/
-
           // No more error: success !
-          console.debug('Projection resolved in {0}ms => {translate: [{1}, {2}], scale: {3}}'.format(Date.now()-now, translateX, translateY, scale));
+          console.debug('Projection resolved in {0}ms => {translate: [{1}, {2}], scale: {3}}'.format(Date.now()-now, currentX, currentY, currentScale));
           break;
         }
       } catch(err) {
@@ -932,7 +1083,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           throw err;
         }
       }
-      return {translate: [translateX, translateY], scale: scale};
+      return {translate: [currentX, currentY], scale: currentScale};
     }
 
     function putShapeInCache(shape, id) {
@@ -969,6 +1120,63 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         });
     }
 
+    /**
+     * Make sure the GeoJson created is valid (right hand polygon)
+     * @param geoJson
+     * @returns {{features}|*}
+     */
+    function makeOgcCompatible(geoJson){
+      if (!geoJson) throw new Error("Missing 'geoJson' argument");
+
+      if (geoJson.type !== 'FeatureCollection') throw new Error("Need a FeatureCollection");
+
+      var features = [];
+
+      _(geoJson.features).each(function(feature) {
+        if (feature.geometry && feature.geometry.type === 'Polygon') {
+
+          var coordinates = [];
+          _(feature.geometry.coordinates).each(function (coords, index) {
+            // A line ring must have at least 4 points (see GeoJson RFC)
+            if (coords.length < 4) {
+              console.debug('[shape-service] Invalid line ring {0} (less than 4 points)'.format(index));
+              return;
+            }
+
+            // Detect if clockwise, then inverse
+            var clockwise = (coords[1][0] - coords[0][0]) > 0;
+            if (clockwise) console.debug('[shape-service] line ring {0} is clockwise. Will inverse'.format(index), coords[0], coords[1])
+            else console.debug('[shape-service] line ring {0}: counter clockwise'.format(index));
+
+            // First line ring must be counter clockwise
+            if (index === 0 && clockwise) {
+              //coords = coords.reverse();
+            }
+            // Second line ring should be clockwise
+            if (index > 0 && clockwise) {
+              //coords = coords.reverse();
+              //coordinates.push(coords.reverse());
+            }
+
+            clockwise = (coords[1][0] - coords[0][0]) > 0;
+            if (clockwise) {
+              console.debug('[shape-service] WARN: line ring {0} is still clockwise. Ignoring'.format(index));
+              //return; // Skip
+            }
+
+            coordinates.push(coords);
+          });
+          feature.geometry.coordinates = coordinates;
+
+          features.push(feature);
+        }
+      });
+
+      geoJson.features = features;
+
+      return geoJson;
+    }
+
 
     function clearCache() {
       console.debug('[shape] Cleaning cache...');
@@ -983,15 +1191,14 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
     return {
 
       get: getShapeById,
-      add: raw.add,
-      update: raw.update,
-      remove: raw.remove,
+      save: saveShape,
 
       getAllIds: getAllShapeIds,
       getAllCountries: getAllCountries,
 
       geoJson: {
         search: searchShapes, // e.g. search by country
+        toOgc: makeOgcCompatible
       },
 
       cache: {

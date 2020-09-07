@@ -13,7 +13,7 @@
       <span ng-if="$index">&nbsp;|&nbsp;</span>
       <a ng-class="{'bold': country === selectedCountry}"
          ng-click="onCountryChange(country)">
-        {{countriesMap[country]}}
+        {{countriesMap[country] || (country|uppercase) }}
       </a>
     </ng-repeat>
   </p>

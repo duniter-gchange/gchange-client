@@ -7,12 +7,12 @@ angular.module('cesium.map.shape.controllers', ['cesium.services', 'cesium.map.s
 
     $stateProvider
 
-      .state('app.map_shape_edit', {
-        url: "/map/shape/edit",
+      .state('app.map_shape_country_edit', {
+        url: "/map/country/edit",
         views: {
           'menuContent': {
             templateUrl: "plugins/map/templates/shape/edit_shape.html",
-            controller: 'MapShapeEditCtrl'
+            controller: 'MapCountryEditCtrl'
           }
         }
       })
@@ -20,7 +20,7 @@ angular.module('cesium.map.shape.controllers', ['cesium.services', 'cesium.map.s
 
   .controller('MapShapeViewCtrl', MapShapeViewController)
 
-  .controller('MapShapeEditCtrl', MapShapeEditController);
+  .controller('MapCountryEditCtrl', MapCountryEditController);
 
 
 function MapShapeViewController($scope, $translate, $timeout, $q, $document,
@@ -157,8 +157,8 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
 
 
 
-function MapShapeEditController($scope, $rootScope, $state, $controller, $timeout, $q, leafletData, $translate,
-                                FileSaver, UIUtils, MapUtils, csWallet, esShape) {
+function MapCountryEditController($scope, $rootScope, $state, $controller, $timeout, $q, leafletData, $translate,
+                                  FileSaver, UIUtils, MapUtils, csWallet, esShape) {
   'ngInject';
 
   $scope.entered = false;
@@ -181,8 +181,9 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
   $scope.elementData = {
     country: null,
     id: null,
-    name: null,
-    position: 'main'
+    title: null,
+    position: 'main',
+    order: undefined
   };
   $scope.dirty = false;
   $scope.countries = [];
@@ -208,9 +209,9 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
     geojson: {
       data: null,
       style: {
-        fillColor: esShape.constants.defaults.fill,
+        fillColor: esShape.constants.style.defaults.fill,
         fillOpacity: 0.7,
-        color: esShape.constants.defaults.stroke,
+        color: esShape.constants.style.defaults.stroke,
         opacity: 1,
         weight: 1
       }
@@ -288,7 +289,7 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
     var position = (data && data.position) || 'main';
     angular.merge($scope.elementData, {
       id: data && data.id || null,
-      name: data && data.name || null,
+      title: data && data.title || null,
       country: (data && data.country) || ($scope.formData && $scope.formData.country),
       position: position,
       order: (position !== 'main' && data.order) || undefined
@@ -320,12 +321,12 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
       var geoJson;
       // Add SVG file
       if (event.file.type.startsWith('image/svg')) {
-        geoJson = $scope.updateFromSvgFile(event);
+        $scope.updateFromSvgFile(event);
       }
 
       // Geo json file
       else {
-        geoJson = $scope.updateFromGeoJsonFile(event);
+        $scope.updateFromGeoJsonFile(event);
       }
 
     }
@@ -407,6 +408,12 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
       _($scope.positions).each(function(position) {
         d3.selectAll([selector, '.' + position, 'svg'].join(' ')).remove();
       })
+
+      // Normalize each features properties
+      _(geoJson.features||[]).each(function(feature) {
+        feature.properties = $scope.getNormalizeProperties(feature.properties||{}, options);
+      })
+
       esShape.svg.createMosaic(geoJson, {
         selector: selector,
         onclick: $scope.onPathClick
@@ -544,55 +551,20 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
     }
 
     $scope.saving = true;
-    var now = Date.now();
-    console.debug('[map] [shape] Saving shape...');
-    UIUtils.loading.show({template: 'Saving...'});
-
     var country = $scope.formData.country || 'fr';
 
-    var errors = [];
-    // Get existing ids
-    return esShape.getAllIds()
-      .then(function(existingIds) {
-        return $q.all(_(geoJson.features||[]).map(function(feature, index) {
-
-          // Normalize features properties
-          feature.properties = $scope.getNormalizeProperties(feature.properties, {country: country});
-
-          var isNew = angular.isUndefined(feature.properties.id)
-            // if id already somewhere, force isNew = true (will compute another id)
-            || !existingIds.includes(feature.properties.id);
-
-          // Generate an id
-          if (isNew) {
-            for(var i = index; !feature.properties.id || existingIds.includes(feature.properties.id); i++) {
-              feature.properties.id = country + '-' + i;
-            }
-            console.debug("[map] [shape] - Add {id: " + feature.properties.id + "}");
-            existingIds.push(feature.properties.id);
-            return esShape.add(feature)
-              .catch(function(err) {
-                errors.push('Error while adding {id: {0}}: {1}'.format(feature.properties.id, err && err.message || err));
-              });
+    return UIUtils.loading.show({template: 'Saving...'})
+      .then(function() {
+        return esShape.save(geoJson, {
+          country: country,
+          updateProgression: function(feature, index, total) {
+            var title = feature.properties && (feature.properties.title || feature.properties.id) || (''+ index);
+            UIUtils.loading.show({template: 'Saving <b>{0}</b>... ({1}/{2})'.format(title, index+1, total)});
           }
-          else {
-            console.debug("[map] [shape] - Update {id: " + feature.properties.id + "}");
-            existingIds[feature.properties.id] = true;
-            return esShape.update(feature, {id: feature.properties.id})
-              .catch(function(err) {
-                errors.push('Error while updating {id: {0}}: {1}'.format(feature.properties.id, err && err.message || err));
-              });
-          }
-        }))
+        })
       })
-
       .then(function() {
         $scope.saving = false;
-        if (errors.length) {
-          return UIUtils.onError("MAP.SHAPE.EDIT.ERROR.SAVE_FAILED")(errors.join('<br/>'));
-        }
-
-        console.debug('[map] [shape] Shape saved in {0}ms'.format(Date.now() - now));
 
         // Wait 2s (for pod propagation), then reload
         return $timeout(function() {
@@ -601,14 +573,19 @@ function MapShapeEditController($scope, $rootScope, $state, $controller, $timeou
       })
       .then(function() {
         return UIUtils.toast.show("MAP.SHAPE.EDIT.INFO.SAVED");
-      });
+      })
+      .catch(UIUtils.onError("MAP.SHAPE.EDIT.ERROR.SAVE_FAILED"))
+      .then(function() {
+        $scope.saving = false;
+      })
+      ;
   }
 
   $scope.getNormalizeProperties = function(properties, defaults) {
     return {
+      id: (properties && properties.id) || (defaults && defaults.id) || (properties && properties.code),
+      title: properties && (properties.title || properties.name || properties.label || properties.nom),
       country: properties && properties.country || (defaults && defaults.country),
-      name: properties && (properties.name || properties.title || properties.label || properties.nom),
-      id: (properties && properties.id) || (defaults && defaults.id) || (properties && properties.code) ,
       position: properties && properties.position,
       order: properties && properties.order || undefined,
     };

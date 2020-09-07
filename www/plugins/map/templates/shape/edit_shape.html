@@ -306,25 +306,25 @@
             </div>
           </div>
 
-          <!-- name -->
+          <!-- element title -->
           <div class="item item-input item-floating-label"
-               ng-class="{'item-input-error': elementForm.$submitted && elementForm.name.$invalid}">
+               ng-class="{'item-input-error': elementForm.$submitted && elementForm.title.$invalid}">
             <span class="input-label" translate>MAP.SHAPE.EDIT.NAME</span>
-            <input type="text" name="name"
+            <input type="text" name="title"
                    autocomplete="off"
                    placeholder="{{'MAP.SHAPE.EDIT.NAME'|translate}}"
-                   ng-model="elementData.name"
+                   ng-model="elementData.title"
                    required>
           </div>
           <div class="form-errors"
-               ng-show="elementForm.$submitted && elementForm.name.$invalid"
-               ng-messages="elementForm.name.$error">
+               ng-show="elementForm.$submitted && elementForm.title.$invalid"
+               ng-messages="elementForm.title.$error">
             <div class="form-error" ng-message="required">
               <span translate="ERROR.FIELD_REQUIRED"></span>
             </div>
           </div>
 
-          <!-- position -->
+          <!-- element position -->
           <label class="item item-input item-select" style="margin-top: 2px;"
                  ng-class="{'item-input-error': elementForm.$submitted && elementForm.position.$invalid}">
             <div class="input-label pull-right" translate>MAP.SHAPE.EDIT.POSITION_DOTS</div>

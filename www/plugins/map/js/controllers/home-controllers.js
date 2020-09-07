@@ -43,10 +43,10 @@ function MapHomeController($scope, $rootScope, $controller, $state, esShape) {
 
     var feature = features[0];
     var properties = feature.properties;
-    var location = properties.name && properties.name.trim();
+    var location = properties.title && properties.title.trim();
 
     if (!location || !location.length) {
-      console.error("[map] [home] Invalid GeoJson data. Missing or empty attribute 'properties.name'.");
+      console.error("[map] [home] Invalid GeoJson data. Missing or empty attribute 'properties.title'.");
       return;
     }
 

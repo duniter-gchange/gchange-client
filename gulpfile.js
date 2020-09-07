@@ -1246,15 +1246,19 @@ function geoJson(done) {
   const srcPath = path.join(projectRoot, 'www', 'img', 'maps');
   const targetPath = path.join(projectRoot, 'www', 'img', 'maps2');
 
+  const tolerance = argv.tolerance || 0.01;
+
   return gulp.src(srcPath + '/**.geojson')
     .pipe(debug({...debugBaseOptions, title: 'Simplifying', showFiles: true}))
     .pipe(serial((file, stream) => {
+      // Create target dir, if need
+      if (!fs.existsSync(targetPath)) {
+        fs.mkdirSync(targetPath);
+      }
       let geojson = JSON.parse(fs.readFileSync(file.path));
-      geojson = simplifyGeoJson(geojson, 1, true);
-      file.content = JSON.stringify(geojson);
-      stream.push(file);
+      geojson = simplifyGeoJson(geojson, tolerance, true);
+      fs.writeFileSync(file.path += '.new', JSON.stringify(geojson));
     }))
-    .pipe(gulp.dest(targetPath))
     .on('end', done);
 
 }
