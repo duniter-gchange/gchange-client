@@ -10,7 +10,9 @@
       "SOLD": "Close ad",
       "LAST_UPDATE": "Last update",
       "AROUND_ME": "Around me",
-      "CROWDFUNDING_PROGRESS": "{{pct|formatInteger}}% funded"
+      "CROWDFUNDING_PROGRESS": "{{pct|formatInteger}}% funded",
+      "FREE": "Free",
+      "FREE_PRICE": "Free price"
     },
     "JOIN": {
       "PROFILE": {
@@ -54,12 +56,36 @@
       }
     },
     "CATEGORY": {
-      "ALL": "All categories"
+      "ALL": "All categories",
+      "UNKNOWN": "Unlnown category",
+      "EDIT": {
+        "TITLE": "Categories management",
+        "ID": "Identifier",
+        "NAME": "Name",
+        "ROOT_CATEGORIES": "Root categories",
+        "BTN_ADD": "Add",
+        "BTN_REORDER": "Reorder",
+        "POPUP": {
+          "TITLE_EDIT": "Edit the category",
+          "TITLE_NEW": "New category"
+        },
+        "CONFIRM": {
+          "CANCEL": "Some changes has not been saved.<br/><br/><b>Are you sure</b> you want to continue this operation?"
+        },
+        "INFO": {
+          "SAVED": "Categories successfully saved"
+        },
+        "ERROR": {
+          "CANNOT_SAVE": "Erreur lors de la sauvegarde des categories",
+          "INVALID_ID_PATTERN": "Format 'catNNN' not respected",
+          "ID_ALREADY_USED": "Identifier already in use"
+        }
+      }
     },
     "SEARCH": {
       "TITLE": "Market",
       "CATEGORY": "Category: ",
-      "SEARCH_HELP": "What, Where: car, Columbia city, ...",
+      "SEARCH_HELP": "Search (car, sweat...)",
       "BY": "by",
       "BTN_ADD": "New",
       "BTN_OPTIONS": "Advanced search",
@@ -68,8 +94,8 @@
       "GEO_DISTANCE_OPTION": "{{value}} km",
       "SHOW_MORE": "Show more",
       "SHOW_MORE_COUNT": "(current limit to {{limit}})",
-      "LOCATION": "Location",
-      "LOCATION_HELP": "City",
+      "LOCATION": "City",
+      "LOCATION_HELP": "City, Country",
       "RESULTS": "Results",
       "RESULT_COUNT_LOCATION": "{{count}} result{{count>0?'s':''}}, near {{location}}",
       "RESULT_COUNT": "{{count}} result{{count>0?'s':''}}",
@@ -151,6 +177,7 @@
       "RECORD_LOCATION_HELP": "City, Country",
       "RECORD_PRICE": "Price",
       "RECORD_PRICE_HELP": "Price (optional)",
+      "FREE_PRICE": "Free price ?",
       "RECORD_CURRENCY": "Currency",
       "RECORD_FEES": "Fees",
       "RECORD_FEES_HELP": "Fees (optional)",
