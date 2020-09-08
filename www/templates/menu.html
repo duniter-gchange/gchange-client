@@ -7,7 +7,9 @@
       </ion-nav-back-button>
 
       <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear icon ion-navicon visible-nomenu" menu-toggle="left" ></button>
+        <button class="button button-bar button-clear visible-nomenu" menu-toggle="left" >
+          <i class="icon ion-navicon"></i>
+        </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
         <!-- Allow extension here -->
@@ -74,7 +76,7 @@
          ng-click="toggleFullscreen()"
          class="button-icon visible-sm visible-xs"
          style="position: absolute; top: 5px; right: 5px; z-index: 999;">
-        <i class="icon ion-arrow-expand light" ng-class="{'ion-arrow-shrink': fullscreen}"></i>
+        <i class="icon ion-arrow-expand" ng-class="{'ion-arrow-shrink': fullscreen}"></i>
       </a>
       <!-- endRemoveIf(device) -->
     </ion-header-bar>

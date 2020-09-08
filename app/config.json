@@ -23,6 +23,9 @@
       "host": "data.gchange.fr",
       "port": "443"
     },
+    "share": {
+      mastodonAuthor: "@gchange@framapiaf.org"
+    },
     "plugins":{
       "es": {
         "enable": true,
@@ -36,7 +39,7 @@
         "geoDistance": "50km",
         "cesiumApi": {
           "enable": true,
-          "baseUrl": "https://g1.duniter.fr/api"
+          "baseUrl": "https://demo.cesium.app/api"
         }
       },
       "converse": {
@@ -51,6 +54,7 @@
   },
 
   "dev": {
+    "fallbackLanguage": "fr-FR",
     "defaultLanguage": "fr-FR",
     "timeout": 300000,
     "cacheTimeMs": 300000,
@@ -93,6 +97,7 @@
   },
 
   "dev-pod": {
+    "fallbackLanguage": "fr-FR",
     "defaultLanguage": "fr-FR",
     "timeout": 300000,
     "cacheTimeMs": 300000,
@@ -109,8 +114,8 @@
       "maxContentLength": 1300
     },
     "node": {
-      "host": "g1.duniter.fr",
-      "port": "443"
+      "host": "localhost",
+      "port": "9200"
     },
     "plugins":{
       "es": {

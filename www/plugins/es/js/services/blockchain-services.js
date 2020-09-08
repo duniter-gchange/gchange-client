@@ -65,7 +65,7 @@ angular.module('cesium.es.blockchain.services', ['cesium.services', 'cesium.es.h
 
           var hasExcludedCurrent = false;
           var hits = res && res.hits ? res.hits.hits.reduce(function(res, hit) {
-            if (hit._id == 'current' && options.excludeCurrent) {
+            if (hit._id === 'current' && options.excludeCurrent) {
               hasExcludedCurrent = true;
               return res;
             }
@@ -94,7 +94,7 @@ angular.module('cesium.es.blockchain.services', ['cesium.services', 'cesium.es.h
           request.from = request.from || 0;
           request.size = request.size || CONSTANTS.DEFAULT_SEARCH_SIZE;
           request._source = options._source || FIELDS.COMMONS;
-          if (options._source && options._source == '*') {
+          if (options._source && options._source === '*') {
             delete request._source;
           }
 

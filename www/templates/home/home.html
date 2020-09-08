@@ -4,7 +4,7 @@
 
   <ion-nav-buttons side="secondary" >
     <!-- locales  -->
-    <button class="button button-clear hidden-xs hidden-sm gray " ng-if="!login"
+    <button class="button button-flag button-clear hidden-xs hidden-sm gray " ng-if="!login"
             ng-click="showLocalesPopover($event)" style="align-content: center">
       <img ng-if=":locale:$root.settings.locale.country"
            ng-src="https://www.countryflags.io/{{:locale:$root.settings.locale.country}}/shiny/32.png">
@@ -16,7 +16,7 @@
   <ion-content class="has-header text-center padding-xs bg-image-cover"
                style="background-image: url({{bgImage}})">
 
-    <div class="row padding-horizontal no-padding-xxs responsive-lg">
+    <div class="row padding-horizontal no-padding-xxs no-padding-xs responsive-lg">
       <div class="col col-30 no-padding hidden-xs hidden-sm">&nbsp;</div>
       <div class="col text-center no-padding-xs main-container">
 
@@ -170,6 +170,16 @@
       </div>
     </div>
 
+    <!-- footer -->
+    <div class="row responsive-lg footer no-margin no-padding" >
+
+      <div class="col no-padding no-margin">
+        <cs-extension-point name="footer-start"></cs-extension-point>
+      </div>
+      <div class="col col-33 no-padding no-margin">
+        <cs-extension-point name="footer-end"></cs-extension-point>
+      </div>
+    </div>
 
   </ion-content>
 

@@ -8,8 +8,8 @@
       <i class="item-image" ng-if="::rec.thumbnail" style="background-image: url('{{::rec.thumbnail.src}}')" ></i>
       <h2 class="padding-top" ng-bind-html="::rec.title | truncText:100"></h2>
       <h4 class="gray">
-        <span class="positive" ng-if="::rec.location">
-          <i class="icon ion-location"></i> {{::options.location.prefix|translate}}<span ng-bind-html="rec.location"></span>
+        <span class="positive" ng-if="::rec.city">
+          <i class="icon ion-location"></i> {{::options.location.prefix|translate}}<span ng-bind-html="rec.city"></span><br/>
         </span>
         <span ng-show="rec.time">
           <br ng-show="rec.location"/>
@@ -17,7 +17,7 @@
           {{::'MARKET.SEARCH.BY'|translate}}
           <span class="dark">{{::rec.name || (rec.pubkey|formatPubkey)}}</span>
         </span>
-        <span ng-if="rec.stock>1"><i class="icon ion-pie-graph"></i> {{::rec.stock}}</span>
+        <span ng-if="rec.stock>1 && rec.type==='offer'"><i class="icon ion-pie-graph"></i> {{::rec.stock}}</span>
       </h4>
       <div  ng-if="rec.picturesCount > 1"
              class="badge badge-balanced badge-picture-count">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i>
@@ -28,17 +28,23 @@
       </div>
 
     </div>
-    <div class="card-footer" style="height: 45px">
-      <div class="badge badge-price badge-calm" ng-if="rec.type==='offer' && rec.price" >
-        <span ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: $root.settings.useRelative}"></span>
+    <div class="card-footer float-left" style="height: 45px">
+      <!-- price -->
+      <div class="badge badge-shadow"
+           ng-class="{'badge-price': rec.price, 'badge-calm': rec.type==='offer' || rec.type==='auction', 'badge-energized': rec.type==='need'||rec.type==='crowdfunding'}">
+        <i class="cion-market-{{rec.type}}"></i>
+        <span ng-if="::rec.price" ng-bind-html=":rebind:rec.price|formatAmount:{currency: rec.currency, useRelative: $root.settings.useRelative}"></span>
+        <span ng-if="::rec.price === 0">{{::'MARKET.COMMON.FREE'|translate}}</span>
+        <span ng-if="::!rec.price && rec.freePrice">{{::'MARKET.COMMON.FREE_PRICE'|translate}}</span>
+        <span ng-if="::!rec.price && rec.price !== 0 && !rec.freePrice">{{::'MARKET.TYPE.'+rec.type+'_SHORT'|upper|translate}}</span>
       </div>
-      <div class="badge badge-calm" ng-if="rec.type=='offer' && !rec.price && options.type.show">
-        <i class="cion-market-offer"></i>
-        <span translate>MARKET.TYPE.OFFER_SHORT</span>
-      </div>
-      <div class="badge badge-energized" ng-if="rec.type=='need' && options.type.show">
-        <i class="cion-market-need"></i>
-          <span translate>MARKET.TYPE.NEED_SHORT</span>
+
+      <!-- progress -->
+      <div class="badge badge-price-pct"
+           ng-if="::rec.price && rec.tx"
+           ng-class="{'balanced': rec.tx.pct >= 100}">
+        <i class="ion-android-checkmark-circle" ng-if="::rec.tx.pct>=100"></i>
+        <span>Financé à {{::rec.tx.pct|formatInteger}} %</span>
       </div>
     </div>
   </a>

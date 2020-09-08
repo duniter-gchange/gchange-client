@@ -215,7 +215,7 @@ function ESRegistryLookupController($scope, $focus, $timeout, $filter, $controll
 
       // Search on type
       if (state.stateParams && (state.stateParams.type || state.stateParams.last)) {
-        if (state.stateParams.last || state.stateParams.type == 'last') {
+        if (state.stateParams.last || state.stateParams.type === 'last') {
           $scope.search.lastRecords = true;
           $scope.search.type = undefined;
         }

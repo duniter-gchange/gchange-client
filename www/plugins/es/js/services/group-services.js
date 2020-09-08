@@ -124,9 +124,8 @@ angular.module('cesium.es.group.services', ['cesium.platform', 'cesium.es.http.s
 
       return exports._internal.search(request)
         .then(function(res) {
-          if (!res || !res.hits || !res.hits.total) {
-            return [];
-          }
+          if (!res || !res.hits || !res.hits.total) return [];
+
           var groups = res.hits.hits.reduce(function(res, hit) {
             var record = readRecordFromHit(hit, true/*html*/);
             record.id = hit._id;

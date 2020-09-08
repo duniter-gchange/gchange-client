@@ -25,24 +25,21 @@
            title="{{'COMMON.POPOVER_SHARE.SHARE_ON_TWITTER'|translate}}">
         </a>
 
-        <a class="button button-icon positive icon ion-social-googleplus"
-           href="https://plus.google.com/share?url={{postUrl|formatEncodeURI}}"
-           onclick="window.open(this.href, 'google-plus-share', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=296,width=580');return false;"
-           title="{{'COMMON.POPOVER_SHARE.SHARE_ON_GOOGLEPLUS'|translate}}">
-        </a>
-
         <a class="button button-icon positive icon ion-social-diaspora"
            href="https://sharetodiaspora.github.io/?title={{postMessage|formatEncodeURI}}&amp;url={{postUrl|formatEncodeURI}}"
            onclick="window.open(this.href, 'diaspora-share','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=580,height=296');return false;"
            title="{{'COMMON.POPOVER_SHARE.SHARE_ON_DIASPORA'|translate}}">
         </a>
 
+        <a class="button button-icon positive icon ion-social-mastodon"
+           ng-click="shareOnMastodon()"
+           title="{{'COMMON.POPOVER_SHARE.SHARE_ON_MASTODON'|translate}}">
+        </a>
+
         <a class="button-close"
-           title="{{'COMMON.BTN_CLOSE'|translate}}"
-        ng-click="closePopover()">
+           title="{{'COMMON.BTN_CLOSE'|translate}}" ng-click="closePopover()">
           <i class="icon ion-close"></i>
         </a>
-        </div>
     </div>
   </ion-content>
 </ion-popover-view>

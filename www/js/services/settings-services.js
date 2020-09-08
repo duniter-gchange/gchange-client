@@ -10,6 +10,7 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     {id:'en-GB', label:'English (UK)', country: 'gb'},
     {id:'eo-EO', label:'Esperanto'},
     {id:'fr-FR', label:'Français', country: 'fr'},
+    {id:'fr-BE', label:'Français (BE)', country: 'be'},
     {id:'es-ES', label:'Spanish', country: 'es'}
   ];
   var fallbackLocale = csConfig.fallbackLanguage ? fixLocale(csConfig.fallbackLanguage) : 'en';
@@ -61,7 +62,11 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     //userForumUrl: "https://forum.gchange.fr",
     userForumUrl: "https://forum.monnaie-libre.fr",
     latestReleaseUrl: "https://api.github.com/repos/duniter-gchange/gchange-client/releases/latest",
-    httpsMode: false
+    httpsMode: false,
+    share: {
+      mastodonAuthor: "@gchange@framapiaf.org",
+      defaultHastags: "#gchange"
+    }
   },
   defaultSettings = angular.merge({
     useRelative: false,
@@ -357,6 +362,7 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     // api extension
     api: api,
     locales: locales,
-    constants: constants
+    constants: constants,
+    fixLocale: fixLocale
   };
 });

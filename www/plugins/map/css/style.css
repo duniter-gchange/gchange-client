@@ -26,62 +26,68 @@
 }
 
 /**********
-   Map network: Peer items
+   Shape mosaic
 **********/
+.shape-container {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  width: 100%;
+}
+.shape-container .main {
+  width: 100%;
+}
+.shape-container .bottomleft,
+.shape-container .bottomright,
+.shape-container .topleft,
+.shape-container .topright
+{
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 310%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 10%;
+  -ms-flex: 0 0 10%;
+  flex: 0 0 10%;
+  max-width: 10%;
 
-.leaflet-popup .item-peer {
-  padding-top: 9px;
-  padding-bottom: 3px;
+  display: flex !important;
+  flex-direction: column;
+  box-sizing: border-box;
+  flex-wrap: wrap;
 }
 
-.leaflet-popup .item.item-icon-left > i.avatar:first-child {
-  left: 9px;
-  top: 0;
+.shape-container .bottomright,
+.shape-container .bottomleft {
+  justify-content: flex-end;
+}
+.shape-container .bottomright:before,
+.shape-container .bottomleft:before {
+  flex: 1 1 auto;
+}
+.shape-container .bottomright,
+.shape-container .bottomleft {
+  justify-content: flex-end;
 }
 
-.leaflet-popup .item-peer .badge {
-  top: inherit;
-  bottom: 0px;
-  right: 5px;
-  font-size: 12px;
+.shape-container.compacted .topright,
+.shape-container.compacted .bottomright {
+  margin-left: -10%;
 }
 
-.leaflet-popup .item-peer .badge.badge-secondary,
-.leaflet-popup .item-peer .badge .badge-secondary {
-  top: inherit;
-  bottom: -16px;
-  right: 5px;
-  font-size: 9px;
-  padding-right: 0px;
+.shape-container.compacted .topleft,
+.shape-container.compacted .bottomleft {
+  margin-right: -10%;
 }
-
-.leaflet-popup .item-peer {
-  padding-top: 0px;
-}
-
-.view-map-network .leaflet-popup-content{
-  max-height: 250px
-}
-.view-map-network .leaflet-popup-content .item-peer .row {
+.shape-container.compacted .main svg {
+  z-index: 50;
+  flex: 1;
   display: block;
+  width: 100%;
 }
-.view-map-network .leaflet-popup-content .item-peer .col.col-15 {
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 0 15%;
-  -moz-box-flex: 0;
-  -moz-flex: 0 0 15%;
-  -ms-flex: 0 0 15%;
-  flex: 0 0 15%;
-  max-width: 70px;
-  text-align: start !important;
-}
-.view-map-network .leaflet-popup-content .item-peer .col.col-20 {
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 0 20%;
-  -moz-box-flex: 0;
-  -moz-flex: 0 0 20%;
-  -ms-flex: 0 0 20%;
-  flex: 0 0 20%;
-  max-width: 70px;
-  text-align: start !important;
+.shape-container.compacted .topright svg,
+.shape-container.compacted .bottomright svg,
+.shape-container.compacted .topleft svg,
+.shape-container.compacted .bottomleft svg {
+  z-index: 99;
+  /*//flex: 0 0 10%;*/
 }

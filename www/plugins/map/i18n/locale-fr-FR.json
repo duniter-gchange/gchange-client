@@ -2,19 +2,51 @@
   "MAP": {
     "COMMON": {
       "SEARCH_DOTS": "Rechercher...",
-      "BTN_LOCALIZE_ME": "Me localiser"
+      "BTN_SHOW_ON_MAP": "Voir sur la carte",
+      "BTN_LOCALIZE_ME": "Me localiser",
+      "BTN_MOVE_DOWN": "Déplacer vers le bas",
+      "BTN_MOVE_UP": "Déplacer vers le haut",
+      "BTN_MOVE_LEFT": "Déplacer vers la gauche",
+      "BTN_MOVE_RIGHT": "Déplacer vers la droite",
+      "CHOOSE_FILE": "Déposez votre fichier (svg, geojson)<br/>ou cliquez pour le sélectionner"
     },
-    "NETWORK": {
-      "LOOKUP": {
-        "BTN_MAP": "Carte",
-        "BTN_MAP_HELP": "Ouvrir la carte des noeuds"
-      },
-      "VIEW": {
-        "TITLE": "Carte des noeuds",
-        "LAYER": {
-          "MEMBER": "Nœuds membre",
-          "MIRROR": "Nœuds miroir",
-          "OFFLINE": "Nœuds hors ligne"
+    "SHAPE": {
+      "EDIT": {
+        "TITLE": "Cartes des pays",
+        "COUNTRY_DOTS": "Pays :",
+        "COUNTRY_HELP": "Code pays (ISO2)",
+        "CONFIG_FORM_DIVIDER": "Configuration :",
+        "ERROR_DIVIDER": "Erreurs dectectées :",
+        "LEFT_LNG": "Ouest",
+        "RIGHT_LNG": "Est",
+        "TOP_LAT": "North",
+        "BOTTOM_LAT": "Sud",
+        "SCALE": "Echelle",
+        "TRANSLATE_X": "Décalage X",
+        "TRANSLATE_Y": "Décalage Y",
+        "AREA_FORM_DIVIDER": "Edition de la zone :",
+        "ID": "Identifiant unique",
+        "NAME": "Libellé",
+        "POSITION_DOTS": "Position :",
+        "ORDER": "Ordre de tri",
+        "BTN_APPLY": "Appliquer",
+        "BTN_DELETE": "Supprimer la zone",
+        "CUSTOM_PROJECTION": "Saisie manuelle des paramètres de projection",
+        "BTN_TEST_SEARCH": "Tester une recherche sur cette zone",
+        "STRICT_MODE": "Compatibilité OCG (hand right rule)",
+        "REMOVE_HOLE": "Supprimer les trous intérieurs aux polygones",
+        "APPLY_ROUND": "Arrondir à la précision :",
+        "DEGREES_PRECISION": "Précision (degrés décimaux)",
+        "INFO": {
+          "SAVED": "La carte a bien été sauvegardée"
+        },
+        "ERROR": {
+          "INVALID_SVG": "Format SVG incorrect.",
+          "INVALID_COUNTRY_CODE": "Code pays incorrect (ISO2 attendu, en minuscule)",
+          "SAVE_FAILED": "Erreur lors de la sauvegarde de la carte",
+          "SELF_INTERSECTION": "Auto-intersection dans le polygone <b>{{id}}</b>",
+          "HOLE_LIES_OUTSIDE": "Le trou se trouve à l'extérieur du polygone <b>{{id}}</b>",
+          "HOLE_NOT_WITHIN_POLYGON": "Trou invalid (pas dans un polygon) <b>{{id}}</b>"
         }
       }
     },

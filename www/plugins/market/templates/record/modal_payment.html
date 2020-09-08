@@ -1,0 +1,50 @@
+<ion-modal-view id="transfer" class=" modal-full-height">
+  <ion-header-bar class="bar-positive">
+    <button class="button button-clear visible-xs" ng-click="closeModal()" translate>COMMON.BTN_CANCEL</button>
+    <h1 class="title" translate>MARKET.PAYMENT.MODAL.TITLE</h1>
+
+  </ion-header-bar>
+
+  <ion-content scroll="true">
+    <div class=" padding item-no-border">
+      <p ng-if="formData.comment" trust-as-html="'MARKET.VIEW.PAYMENT_WITH_COMMENT'|translate: formData"></p>
+      <p ng-if="!formData.comment" trust-as-html="'MARKET.VIEW.PAYMENT'|translate: formData"></p>
+
+      <p trust-as-html="'MARKET.PAYMENT.MODAL.SOFTWARE_HELP'|translate: formData"></p>
+    </div>
+
+    <div class="list">
+
+      <span class="item item-divider " translate>
+        MARKET.PAYMENT.MODAL.PAYMENT_LINK_HELP
+      </span>
+
+      <ion-item class="item-button-right item-text-wrap"
+           ng-repeat="uri in formData.uris">
+        <p>
+          <a ng-click="openLink($event, uri)" class="positive">{{uri}}</a>
+        </p>
+        <a class="button button-clear button-positive ink"
+           title="{{'COMMON.BTN_COPY'|translate}}"
+           copy-on-click="{{::uri}}">
+          <i class="icon ion-ios-copy-outline"></i>
+        </a>
+      </ion-item>
+
+      <!--<ng-include src="::'templates/common/qrcode.html'"></ng-include>
+      <br/>-->
+
+      <div class="padding hidden-xs text-center"  style="width: 100%;">
+        <button class="button button-positive ink" ng-click="closeModal()" type="button">
+          {{'COMMON.BTN_CLOSE' | translate}}
+        </button>
+      </div>
+    </div>
+
+
+
+
+  </ion-content>
+
+
+</ion-modal-view>

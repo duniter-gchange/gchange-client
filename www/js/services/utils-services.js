@@ -18,7 +18,8 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
 })
 
 .factory('UIUtils', function($ionicLoading, $ionicPopup, $ionicConfig, $ionicHistory, $translate, $q,
-                             ionicMaterialInk, ionicMaterialMotion, $window, $timeout, Fullscreen,
+                             ionicMaterialInk, ionicMaterialMotion, $window, $timeout, Fullscreen, localStorage,
+                             csSettings,
                              // removeIf(no-device)
                              $cordovaToast,
                              // endRemoveIf(no-device)
@@ -47,7 +48,7 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
     }
 
     return $q(function(resolve) {
-      $translate([err, 'ERROR.POPUP_TITLE', 'ERROR.UNKNOWN_ERROR', 'COMMON.BTN_OK'].concat(subtitle ? [subtitle] : []))
+      $translate([err, 'ERROR.POPUP_TITLE', 'ERROR.UNKNOWN_ERROR', 'COMMON.BTN_OK', subtitle || '_NON_NULL_'])
         .then(function (translations) {
           var message = err.message || translations[err];
           return $ionicPopup.show({
@@ -75,7 +76,7 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
     options.okText = options.okText || 'COMMON.BTN_OK';
 
     return $q(function(resolve) {
-      $translate([message, 'INFO.POPUP_TITLE', options.okText].concat(subtitle ? [subtitle] : []))
+      $translate([message, 'INFO.POPUP_TITLE', options.okText, subtitle || '_NON_NULL_'])
         .then(function (translations) {
           $ionicPopup.show({
             template: '<p>' + translations[message] + '</p>',
@@ -101,12 +102,13 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
   }
 
   function askConfirm(message, title, options) {
+    if (!message) return $q.reject("Missing 'message' argument");
     title = title || 'CONFIRM.POPUP_TITLE';
 
     options = options || {};
     options.cssClass = options.cssClass || 'confirm';
-    options.okText = options.okText || 'COMMON.BTN_OK';
     options.cancelText = options.cancelText || 'COMMON.BTN_CANCEL';
+    options.okText = options.okText || 'COMMON.BTN_OK';
 
     return $translate([message, title, options.cancelText, options.okText])
       .then(function (translations) {
@@ -169,13 +171,13 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
     duration = duration || 'short';
     position = position || 'bottom';
 
-    return $translate([message])
-      .then(function(translations){
+    return $translate(message)
+      .then(function(message){
 
         // removeIf(no-device)
         // Use the Cordova Toast plugin
         if (!!window.cordova) {
-          $cordovaToast.show(translations[message], duration, position);
+          $cordovaToast.show(message, duration, position);
           return;
         }
         // endRemoveIf(no-device)
@@ -191,7 +193,7 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
             duration = 5000;
           }
         }
-        return $ionicLoading.show({ template: translations[message], noBackdrop: true, duration: duration });
+        return $ionicLoading.show({ template: message, noBackdrop: true, duration: duration });
         // endRemoveIf(device)
       });
   }
@@ -555,6 +557,65 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
     });
   }
 
+  function showMastodonSharePopover(event, options) {
+    options = options || {};
+    options.templateUrl = 'templates/common/popover_instance_address.html';
+    options.autoselect = '.popover-instance-address input';
+    options.bindings = options.bindings || {};
+    options.bindings.value = options.bindings.value || options.bindings.url ||
+      $state.href($state.current, $state.params, {absolute: true});
+    options.bindings.postUrl = options.bindings.postUrl || options.bindings.value;
+    options.bindings.postMessage = options.bindings.postMessage || '';
+    options.bindings.postAuthor = options.bindings.postAuthor || csSettings.data.share.mastodonAuthor;
+    options.bindings.postHashtags = options.bindings.postHashtags || csSettings.data.share.defaultHastags;
+    options.bindings.titleKey = options.bindings.titleKey || 'COMMON.POPOVER_SHARE.TITLE';
+
+    // Prefill the form with the user's previously-specified Mastodon instance, if applicable
+    localStorage.get('mastodon_instance')
+      .then(function(instance) {
+        // If there is no cached instance/domain, then insert a "https://" with no domain at the start of the prompt.
+        options.bindings.instance = instance || "https://";
+        // Remove auto select, if instance already set
+        if (instance) options.autoselect = undefined;
+
+        return showPopover(event, options);
+      })
+      .then(function(instance) {
+        if (!instance) return; // Skip
+        // Handle URL formats
+        if ( !instance.startsWith("https://") && !instance.startsWith("http://") )
+          instance = "https://" + instance;
+
+        // Get the current page's URL
+        var url   = options.bindings.postUrl;options.bindings.postMessag
+
+        // Get the page title from the og:title meta tag, if it exists.
+        var title = document.querySelectorAll('meta[property="og:title"]')[0].getAttribute("content");
+
+        // Otherwise, use the <title> tag as the title
+        if (!title) title = document.getElementsByTagName("title")[0].innerHTML;
+
+        // Handle slash
+        if (!instance.endsWith("/") ) instance = instance + "/";
+
+        // Cache the instance/domain for future requests
+        localStorage.put('mastodon_instance', instance);
+
+        // Create the Share URL
+        // https://someinstance.tld/share?text=URL%20encoded%20text
+        var mastodon_url = instance + "share?text=" + encodeURIComponent(options.bindings.postMessage
+          + "\n\n" + options.bindings.postUrl
+          + "\n\n" + options.bindings.postHashtags
+          + " " + (options.bindings.postAuthor || ''));
+
+
+        console.debug('[utils] Mastodon share link: ' + mastodon_url);
+
+        // Open a new window at the share location
+        window.open(mastodon_url, 'mastodon-share','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=580,height=370');return false;
+      })
+  }
+
   function showSharePopover(event, options) {
     options = options || {};
     options.templateUrl = options.templateUrl ? options.templateUrl : 'templates/common/popover_share.html';
@@ -565,6 +626,10 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
     options.bindings.postUrl = options.bindings.postUrl || options.bindings.value;
     options.bindings.postMessage = options.bindings.postMessage || '';
     options.bindings.titleKey = options.bindings.titleKey || 'COMMON.POPOVER_SHARE.TITLE';
+    options.bindings.shareOnMastodon = function() {
+      showMastodonSharePopover(event, options);
+    }
+
     return showPopover(event, options);
   }
 

@@ -474,7 +474,7 @@ function WotLookupModalController($scope, $controller, $focus, parameters){
  * @param csWallet
  * @constructor
  */
-function WotIdentityAbstractController($scope, $rootScope, $state, $translate, $ionicHistory,
+function WotIdentityAbstractController($scope, $rootScope, $state, $ionicHistory,
                                        UIUtils, Modals, esHttp, csCurrency, csWot, csWallet) {
   'ngInject';
 

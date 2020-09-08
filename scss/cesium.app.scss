@@ -371,7 +371,7 @@ $screen-menu:                     $screen-sm;
     visibility: hidden !important;
   }
   .visible-nomenu {
-    display: inherit !important;
+    display: unset;
     visibility: visible !important;
   }
 }
@@ -787,17 +787,12 @@ html, body {
     background-size: 64px 64px;
   }
 
-  #home .button {
+  #home .main-container{
     max-width: 350px;
-    margin-top: 20px;
+    .button {
+      margin-top: 20px;
+    }
   }
-  #home .list{
-    max-width: 350px;
-  }
-}
-
-
-@media screen and (min-width: $screen-md) {
 
 }
 
@@ -1811,7 +1806,7 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
 .item-button-right .item-content > .button,
 .item-button-right > .buttons,
 .item-button-right .item-content > .buttons {
-  top: 16px;
+  //top: 16px;
 
 }
 
@@ -2386,7 +2381,7 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
    Drop zone component
 **********/
 
-div[dropzone] {
+div[drop-zone] {
   border: 2px dashed #bbb;
   border-radius: 5px;
   padding: 15px;
@@ -2402,7 +2397,7 @@ div[dropzone] {
   }
 }
 
-div[dropzone]:hover {
+div[drop-zone]:hover {
   background-color: $stable-100-bg;
 }
 
@@ -2551,8 +2546,9 @@ div[dropzone]:hover {
 }
 
 /**********
-   Locales popover (used by cesump API)
+   Locales popover (used by Cesium API)
 **********/
+
 
 .popover-locales {
   height: 284px;
@@ -2682,3 +2678,20 @@ div[dropzone]:hover {
   }
 }
 
+/** -- More social icons -- */
+
+.ion-social-mastodon:after {
+  background-image: url('../img/mastodon.svg');
+  margin: 5px 12px;
+  background-size: 22px;
+  background-repeat: no-repeat;
+  background-position-y: 7px;
+  background-position-x: 7px;
+}
+
+/* -- share popover / Mastodon instance -- */
+
+.popover-instance-address {
+  width: 400px;
+  height: 250px;
+}

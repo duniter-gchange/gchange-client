@@ -38,9 +38,9 @@
       <div class="text-center" ng-show="loading">
         <ion-spinner icon="android"></ion-spinner>
       </div>
-      <ng-include class="no-border no-padding" ng-show="!loading"
-           src="'plugins/market/templates/category/list_categories_lg.html'">
-      </ng-include>
+      <div class="no-border no-padding" ng-show="!loading"
+        ng-include="'plugins/market/templates/category/list_categories_lg.html'">
+      </div>
     </div>
 
     <form ng-submit="doSearch()">
@@ -52,12 +52,12 @@
           <div class="animate-show-hide ng-hide" ng-show="entered">
 
             <!-- selected location -->
-            <div ng-show="!search.loading && search.geoPoint && search.location"
+            <div ng-show="search.location && (search.geoPoint || search.geoShape)"
                  class="button button-small button-text button-stable button-icon-event stable-900-bg"
                  style="margin-right: 10px;">
               &nbsp;<i class="icon ion-location"></i>
               {{search.location.split(',')[0]}}
-              <span ng-if="search.geoDistance">({{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }})</span>
+              <span ng-if="search.geoDistance && search.geoPoint">({{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }})</span>
               <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
             </div>
 
@@ -75,12 +75,14 @@
 
           <i class="icon ion-search placeholder-icon"></i>
           <input type="text"
+                 autocomplete="off"
                  class="visible-xs visible-sm"
                  placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
                  ng-model="search.text"
-                 ng-model-options="{ debounce: 650 }"
+                 ng-model-options="{ debounce: 950 }"
                  ng-change="doSearch()">
           <input type="text"
+                 autocomplete="off"
                  class="hidden-xs hidden-sm"
                  placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
                  id="marketSearchText"
@@ -92,7 +94,7 @@
 
       <!-- location -->
       <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
-                  ng-if="entered && !search.geoPoint && options.location.show"
+                  ng-if="entered && options.location.show && (!search.geoPoint && !search.geoShape)"
                   ng-controller="ESSearchPositionItemCtrl"></ng-include>
 
       <!-- options -->
@@ -143,6 +145,7 @@
            ng-click="toggleAdType('need')">
           {{'MARKET.SEARCH.BTN_NEEDS' | translate}}
         </a>
+
         &nbsp;
         <button class="button button-small button-stable ink"
                 ng-click="doSearch()">

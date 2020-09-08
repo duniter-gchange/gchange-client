@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:gchange="http://gchange.fr" xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
+     xmlns="http://www.w3.org/2000/svg"
+     gchange:geoViewBox="2.5456 51.5050 6.4085 49.4969"
+     preserveAspectRatio="xMidYMid meet"
+     viewBox="0 0 752.16895 611.36615"
+     style="transform: scale(1);">
+  <path d="M 0,0 400,0 400,400 0,400 Z M 30,30 30,300 300,300 300,30 z" title="Antwerp" id="BE-VAN" class=" mapsvg-region" style="fill: rgb(71, 43, 103); stroke: rgb(247, 247, 247); stroke-width: 1.22636px;"></path>
+</svg>

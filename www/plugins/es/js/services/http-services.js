@@ -20,9 +20,9 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
             that = this,
             cachePrefix = 'esHttp-',
             constants = {
-              ES_USER_API: 'ES_USER_API',
-              ES_SUBSCRIPTION_API: 'ES_SUBSCRIPTION_API',
-              ES_USER_API_ENDPOINT: 'ES_USER_API( ([a-z_][a-z0-9-_.]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))',
+              ES_USER_API: 'GCHANGE_API',
+              ES_SUBSCRIPTION_API: 'GCHANGE_SUBSCRIPTION_API',
+              ES_USER_API_ENDPOINT: 'GCHANGE_API( ([a-z_][a-z0-9-_.]*))?( ([0-9.]+))?( ([0-9a-f:]+))?( ([0-9]+))',
               ANY_API_ENDPOINT: '([A-Z_]+)(?:[ ]+([a-z_][a-z0-9-_.ğĞ]*))?(?:[ ]+([0-9.]+))?(?:[ ]+([0-9a-f:]+))?(?:[ ]+([0-9]+))(?:\\/[^\\/]+)?',
               MAX_UPLOAD_BODY_SIZE: csConfig.plugins && csConfig.plugins.es && csConfig.plugins.es.maxUploadBodySize || 2097152 /*=2M*/,
               GCHANGE_API: 'GCHANGE_API',

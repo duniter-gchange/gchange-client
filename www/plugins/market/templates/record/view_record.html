@@ -38,7 +38,7 @@
                 {{::options.location.prefix|translate}}<span ng-bind-html="::formData.city"></span>
               </a>
               <span ng-if="formData.city && formData.category.name">&nbsp;|&nbsp;</span>
-              <a ng-if="formData.category.name" ui-sref="app.market_lookup({category:formData.category.id})">
+              <a ng-if="formData.category.name" ui-sref="app.market_lookup({category: (formData.category.id + ':' + formData.category.name)})">
                 <i class="icon ion-flag"></i>
                 <span ng-bind-html="::formData.category.name"></span>
               </a>
@@ -72,9 +72,9 @@
             <h4>
               <ng-include src="'plugins/es/templates/common/view_likes.html'"></ng-include>
             </h4>
-            <div class="badge"
+            <div class="badge badge-shadow"
                  ng-if="options.type.show"
-                 ng-class="{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}">
+                 ng-class="{'badge-calm': formData.type==='offer'||formData.type==='auction', 'badge-energized': formData.type==='need'||formData.type==='crowdfunding'}">
               <i class="cion-market-{{formData.type}}"></i>
               <span>{{'MARKET.TYPE.'+formData.type|upper|translate}}</span>
             </div>
@@ -142,12 +142,12 @@
           <!-- mobile: price -->
           <div class="item visible-xs no-padding-top no-padding-bottom">
 
-            <div class="badge badge-price"
-                 ng-class="::{'badge-energized': formData.type == 'need', 'badge-calm': formData.type == 'offer'}"
-                 ng-if="formData.price">
-              <i class="icon "
-                 ng-class="::{'cion-market-need': formData.type === 'need', 'ion-pricetag': formData.type === 'offer'}"></i>
-              <span ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative} "></span>
+            <div class="badge badge-price badge-shadow"
+                 ng-if="options.type.show && !loading"
+                 ng-class="::{'badge-calm': formData.type==='offer'||formData.type==='auction', 'badge-energized': formData.type==='need'||formData.type==='crowdfunding'}">
+              <i class="icon cion-market-{{formData.type}}"></i>
+              <span ng-if="::formData.price" ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative} "></span>
+              <span ng-if="::!formData.price">{{'MARKET.TYPE.'+formData.type+'_SHORT'|upper|translate}}</span>
             </div>
             <div class="badge badge-secondary" ng-if="formData.fees">
               <span class="dark">
@@ -182,7 +182,7 @@
             <button class="button button-stable button-small-padding icon ion-compose"
                     ng-if="!canEdit"
                     ng-click="showNewMessageModal()"
-                    title="{{'MARKET.VIEW.BTN_WRITE_'+formData.type |upper|translate}}">
+                    title="{{'MARKET.VIEW.BTN_WRITE'|translate}}">
             </button>
 
             <!-- Like button -->
@@ -232,13 +232,31 @@
             </p>
           </ion-item>
 
+          <!-- desktop price -->
           <ion-item class="item-icon-left item-button-right hidden-xs" ng-if="formData.price||formData.fees">
-            <ng-if ng-if="formData.price">
+            <ng-if >
               <i class="calm icon ion-pricetag"></i>
-              <h1 class="calm"
+              <h1 class="calm" ng-if="formData.price"
                   ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative}"></h1>
+              <h1 class="calm" ng-if="formData.price === 0" translate>MARKET.COMMON.FREE</h1>
+              <h1 class="calm" ng-if="!formData.price && formData.price !== 0 && formData.freePrice" translate>MARKET.COMMON.FREE_PRICE</h1>
             </ng-if>
             <h3>
+              <!-- Tx progress -->
+              <div ng-if="formData.price && formData.tx">
+                <span ng-class="{'balanced': formData.tx.pct &gt;= 100, 'dark': formData.tx.pct > 0 && formData.tx.pct < 100, 'assertive&': formData.tx.pct === 0}">
+                  <i class="ion-android-checkmark-circle" ng-if="::formData.tx.pct>=100"></i>
+                  <b>{{'MARKET.COMMON.CROWDFUNDING_PROGRESS'|translate: formData.tx}}</b>
+                </span>
+                ({{formData.tx.sum | formatAmount: {currency: formData.currency} }})
+                <!-- issuers -->
+                <ng-if ng-if="formData.tx.issuers.length">
+                  <span class="gray"> | </span>
+                  <small><a ng-click="showIssuers($event)" title="{{'MARKET.VIEW.SHOW_CROWDFUNDING_ISSUERS'|translate}}">{{'MARKET.VIEW.CROWDFUNDING_ISSUERS'|translate: formData.tx}}</a></small>
+                </ng-if>
+              </div>
+
+              <!-- Fees -->
               <ng-if ng-if="formData.fees">
                 <span class="dark">
                   <i class="ion-plus" ng-if="::formData.price"></i>
@@ -246,26 +264,31 @@
                 </span>
                  <span class="gray">{{'MARKET.VIEW.RECORD_FEES_PARENTHESIS'|translate}} | </span>
               </ng-if>
-              <span class="gray">
+
+              <!-- stock -->
+              <span class="gray" ng-if="formData.type==='offer' || formData.type==='auction'">
                 <i class="ion-pie-graph"></i>
                 {{'MARKET.VIEW.RECORD_STOCK'|translate}}
                 <ng-if ng-if="formData.stock > 0"><span class="dark">{{::formData.stock}}</span> <i class="ion-checkmark balanced"></i></ng-if>
                 <ng-if ng-if="formData.stock === 0"><i class="ion-close assertive"></i> <span class="assertive bold" translate>MARKET.COMMON.SOLD</span></ng-if>
               </span>
             </h3>
-
-            <!-- TODO G1lien
-            <a class="button button-right ink"
-                ng-if="showPayButton"
-               title="Payer"
-               href="web+june://{{formData.issuer}}?amount={{formData.price}}&comment=REF"
-               target="_blank"
-               translate>MARKET.COMMON.BTN_PAY</a> -->
-
           </ion-item>
           <span class="item hidden-xs" ng-if="!formData.price && !formData.fees && formData.stock === 0">
             <div class="badge badge-secondary badge-assertive"><i class="ion-close"></i> <span class="bold" translate>MARKET.COMMON.SOLD</span></div>
           </span>
+          <!-- Payment details -->
+          <ion-item class="item-button-right" ng-if="paymentData">
+            <p ng-if="paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT_WITH_COMMENT'|translate: paymentData"></p>
+            <p ng-if="!paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT'|translate: paymentData"></p>
+
+            <!-- pay help button -->
+            <a class="button button-clear button-positive ink"
+               title="{{'MARKET.VIEW.BTN_PAYMENT_HELP'|translate}}"
+               ng-click="showPaymentModal($event)">
+              <i class="icon ion-help-circled"></i>
+            </a>
+          </ion-item>
 
           <div class="lazy-load">
             <!-- pictures -->

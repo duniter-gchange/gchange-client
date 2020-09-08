@@ -24,6 +24,8 @@
 }
 
 
+/* -- Home -- */
+
 #home {
 
   ion-content {
@@ -38,8 +40,31 @@
     padding: 0 !important;
   }
 
+  .footer {
+    background-color: rgba(255,255,255,0.8);
+  }
 }
 
+
+@media screen and (min-width: $screen-menu) {
+  #home {
+    ion-content > .scroll > .row:first-child {
+      height: calc(100vh - 43px);
+    }
+  }
+}
+
+// Categories
+.card.card-category h3 {
+  text-transform: uppercase;
+}
+
+// Header button
+.buttons .button.button-flag {
+  top: 5px;
+}
+
+/* -- Menu -- */
 
 @media screen and (max-width: 991px) {
   #menu .bar-header {
@@ -118,6 +143,7 @@
 
 // Feed: use a darker color, than cesium default
 .feed {
+  height: 100%;
   .card {
     background-color: rgba(0, 0, 0, 0.5);
   }
@@ -125,4 +151,13 @@
   .card .header {
     color: $positive-100-bg !important;
   }
+}
+
+.list.half .item {
+  width: calc(100% - 16px);
+}
+
+// Allow badge-energized to be more readle
+.badge.badge-shadow {
+  text-shadow: 1px 1px 3px #444444;
 }

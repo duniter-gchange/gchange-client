@@ -1,26 +1,54 @@
 {
   "MAP": {
     "COMMON": {
-      "SEARCH_DOTS": "Search..."
+      "SEARCH_DOTS": "Search...",
+      "BTN_SHOW_ON_MAP": "SHow on map",
+      "CHOOSE_FILE": "Drop a file (svg, geojson)<br/>or click to select"
     },
-    "NETWORK": {
-      "LOOKUP": {
-        "BTN_MAP": "Peers map",
-        "BTN_MAP_HELP": "Open peers map"
-      },
-      "VIEW": {
-        "TITLE": "Peers map",
-        "LAYER": {
-          "MEMBER": "Member peers",
-          "MIRROR": "Mirror peers",
-          "OFFLINE": "Offline peers"
+    "SHAPE": {
+      "EDIT": {
+        "TITLE": "Country map",
+        "COUNTRY_DOTS": "Country:",
+        "COUNTRY_HELP": "Country code (ISO2)",
+        "CONFIG_FORM_DIVIDER": "Configuration :",
+        "ERROR_DIVIDER": "Detected errors :",
+        "LEFT_LNG": "West",
+        "RIGHT_LNG": "East",
+        "TOP_LAT": "North",
+        "BOTTOM_LAT": "South",
+        "SCALE": "Scale",
+        "TRANSLATE_X": "Translate X",
+        "TRANSLATE_Y": "Translate Y",
+        "AREA_FORM_DIVIDER": "Area edit:",
+        "ID": "Unique identifier",
+        "NAME": "Label",
+        "POSITION_DOTS": "Position:",
+        "ORDER": "Sort order",
+        "BTN_APPLY": "Apply",
+        "BTN_DELETE": "Delete the area",
+        "CUSTOM_PROJECTION": "Manually set projection settings",
+        "BTN_TEST_SEARCH": "Test a search on this area",
+        "STRICT_MODE": "Compatible with OCG (hand right rule)",
+        "REMOVE_HOLE": "Remove holes inside polygons",
+        "APPLY_ROUND": "Round to precision:",
+        "DEGREES_PRECISION": "Precision (decimal degrees)",
+        "INFO": {
+          "SAVED": "The map has been saved"
+        },
+        "ERROR": {
+          "INVALID_SVG": "Bad SVG format.",
+          "INVALID_COUNTRY_CODE": "Country code (need ISO2, in lower case)",
+          "SAVE_FAILED": "Error while saving map",
+          "SELF_INTERSECTION": "Self-intersection in polygon <b>{{id}}</b>",
+          "HOLE_LIES_OUTSIDE": "Hole lies outside shell <b>{{id}}</b>",
+          "HOLE_NOT_WITHIN_POLYGON": "Invalid hole (not within polygon) <b>{{id}}</b>"
         }
       }
     },
     "WOT": {
       "LOOKUP": {
-        "BTN_MAP": "Members map",
-        "BTN_MAP_HELP": "Open members map"
+        "BTN_MAP": "Map",
+        "BTN_MAP_HELP": "Open map"
       },
       "VIEW": {
         "TITLE": "Members map",

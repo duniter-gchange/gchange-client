@@ -1,0 +1,26 @@
+
+<div class="padding">
+  <div class="center padding" ng-if="loading">
+    <ion-spinner icon="android"></ion-spinner>
+  </div>
+
+  <!-- Shape -->
+  <div id="{{::shapeId}}" class="shape-container compacted"></div>
+
+  <!-- Country links  -->
+  <p ng-if="!loading && countries.length &gt; 1" class="padding-top">
+    <ng-repeat ng-repeat="country in countries">
+      <span ng-if="$index">&nbsp;|&nbsp;</span>
+      <a ng-class="{'bold': country === selectedCountry}"
+         ng-click="onCountryChange(country)">
+        {{countriesMap[country] || (country|uppercase) }}
+      </a>
+    </ng-repeat>
+  </p>
+
+  <!-- DEV ONLY
+  <br/>
+  <p>
+    <a href="" id="demolink" target="_blank">View on a map, as GeoJSON</a>
+  </p>-->
+</div>

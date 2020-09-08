@@ -23,7 +23,7 @@ angular.module('cesium.wallet.controllers', ['cesium.services'])
 ;
 
 function WalletController($scope, $q, $ionicPopup, $timeout, $state,
-                          UIUtils, csWallet, $translate, $ionicPopover, Modals, csSettings,
+                          UIUtils, csWallet, $ionicPopover, Modals, csSettings,
                           esHttp) {
   'ngInject';
 
@@ -59,7 +59,7 @@ function WalletController($scope, $q, $ionicPopup, $timeout, $state,
   $scope.$on('$ionicView.enter', $scope.enter);
 
   $scope.load = function() {
-    return csWallet.login()
+    return $scope.loadWallet()
       .then(function(walletData) {
         $scope.formData = walletData;
         $scope.loading=false; // very important, to avoid TX to be display before wallet.currentUd is loaded
@@ -100,7 +100,7 @@ function WalletController($scope, $q, $ionicPopup, $timeout, $state,
   $scope.addListeners = function() {
     $scope.listeners = [
       // Reset the view on logout
-      wallet.api.data.on.logout($scope, $scope.onWalletLogout),
+      csWallet.api.data.on.logout($scope, $scope.onWalletLogout),
 
       // Listen new events (can appears from security wizard also)
       $scope.$watchCollection('formData.events', function(newEvents, oldEvents) {

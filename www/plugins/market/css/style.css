@@ -13,7 +13,6 @@
     box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
 }
 
-
 .market .row-record h2 {
     height: 38px;
     overflow: hidden;
@@ -24,12 +23,16 @@
     -webkit-line-clamp: 2;
 }
 
-
 .card-record .badge-price {
     font-size: 12px;
     position: absolute !important;
     bottom: 10px !important;
     right: 10px;
+    top: inherit !important;
+}
+
+.card-record .badge-price-pct {
+    bottom: 46px !important;
     top: inherit !important;
 }
 
@@ -49,7 +52,9 @@
     padding: 0 20px;
     font-weight: normal !important;
 }
-
+.row-record .badge-secondary {
+    top: 40px !important;
+}
 
 /**
 * Market lookup screen
@@ -173,6 +178,17 @@
     content: "\f27c";
 }
 
+/* crowdfunding */
+.cion-market-crowdfunding:before {
+    font-family: "Ionicons";
+    content: "";
+}
+
+/* auction */
+.cion-market-auction:before {
+    font-family: "Ionicons";
+    content: "";
+}
 /* -- Gallery -- */
 
 .image-list-thumb {

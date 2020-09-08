@@ -1,0 +1,31 @@
+<ion-popover-view class="popover-instance-address" >
+  <ion-content scroll="false" >
+
+    <form>
+
+      <div class="list">
+
+        <div class="item item-text-wrap padding item-no-border" >
+          <span translate>COMMON.POPOVER_SHARE.INSTANCE_ADDRESS_HELP</span>
+        </div>
+
+
+        <div class="item  item-input item-floating-label item-no-border">
+
+          <span class="input-label" ng-bind-html="'SETTINGS.POPUP_PEER.HOST'|translate"></span>
+
+          <input type="text" ng-model="instance">
+        </div>
+      </div>
+
+      <div class="padding text-right">
+        <button class="button button-clear button-dark ink" ng-click="closePopover()" type="button" translate>COMMON.BTN_CANCEL
+        </button>
+
+        <button class="button button-raised button-positive ink"
+                ng-click="closePopover(instance)"
+                translate>COMMON.BTN_SHARE</button>
+      </div>
+    </form>
+  </ion-content>
+</ion-popover-view>

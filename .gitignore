@@ -25,6 +25,7 @@
 /hooks/after_prepare/uglify.js
 
 /www/js/config.js
+/www/js/vendor/d3*.js
 /www/dist
 /www/lib
 

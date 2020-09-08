@@ -122,7 +122,7 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   // Load wallet data (after login)
   $scope.loadWalletData = function(options) {
 
-    console.warn("[app-controller] DEPRECATED  - Please use csWallet.load() instead of $scope.loadWalletData()", new Error());
+    //console.warn("[app-controller] DEPRECATED  - Please use csWallet.load() instead of $scope.loadWalletData()", new Error());
 
     options = options || {};
 
@@ -138,7 +138,6 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   // Login and load wallet
   $scope.loadWallet = function(options) {
 
-    console.warn("[app-controller] DEPRECATED  - Please use csWallet.loadData() instead of $scope.loadWallet()", new Error());
 
     // Make sure the platform is ready
     if (!csPlatform.isStarted()) {
@@ -364,7 +363,7 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   // Link management
   ////////////////////////////////////////
 
-  $scope.openLink = function($event, uri, options) {
+  $rootScope.openLink = function($event, uri, options) {
     $event.stopPropagation();
     $event.preventDefault();
 
@@ -388,6 +387,9 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
 
     return false;
   };
+
+  // Publish to root scope
+  //=$scope.openLink;
 
   /**
    * Parse an external URI (see g1lien), and open the expected state

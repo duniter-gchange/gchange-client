@@ -30,10 +30,12 @@ const gulp = require('gulp'),
   merge = require('merge2'),
   log = require('fancy-log'),
   colors = require('ansi-colors'),
-  argv = require('yargs').argv,
+  {argv} = require('yargs'),
   sriHash = require('gulp-sri-hash'),
   sort = require('gulp-sort'),
-  map = require('map-stream');
+  map = require('map-stream'),
+  simplifyGeoJson = require('simplify-geojson'),
+  {serial} = require('gulp-fun');
 
   // Workaround because @ioni/v1-toolkit use gulp v3.9.2 instead of gulp v4
   let jsonlint;
@@ -49,7 +51,7 @@ const paths = {
   config: ['./app/config.json'],
   templatecache: ['./www/templates/**/*.html'],
   ng_translate: ['./www/i18n/locale-*.json'],
-  ng_annotate: ['./www/js/**/*.js', '!./www/js/vendor/*.js'],
+  ng_annotate: ['./www/js/**/*.js', '!./www/js/vendor/**/*.js'],
   // plugins:
   leafletSass: ['./scss/leaflet.app.scss'],
   converseSass: ['./scss/converse.app.scss'],
@@ -210,6 +212,7 @@ function appNgAnnotate(event) {
 
   log(colors.green('Building JS files...'));
   return gulp.src(paths.ng_annotate)
+    .pipe(debug({...debugBaseOptions, title: "Add deps, using 'ngInject'", showFiles: true}))
     .pipe(ngAnnotate({single_quotes: true}))
     .pipe(gulp.dest('./www/dist/dist_js/app'));
 }
@@ -1232,6 +1235,35 @@ function cdvAsHook(wrapper) {
   }
 }
 
+/* --------------------------------------------------------------------------
+   -- Tools
+   --------------------------------------------------------------------------*/
+
+
+function geoJson(done) {
+  log(colors.green('Simplifying GeoJSON files...'));
+
+  const projectRoot = argv.root || '.';
+  const srcPath = path.join(projectRoot, 'www', 'img', 'maps');
+  const targetPath = path.join(projectRoot, 'www', 'img', 'maps2');
+
+  const tolerance = argv.tolerance || 0.01;
+
+  return gulp.src(srcPath + '/**.geojson')
+    .pipe(debug({...debugBaseOptions, title: 'Simplifying', showFiles: true}))
+    .pipe(serial((file, stream) => {
+      // Create target dir, if need
+      if (!fs.existsSync(targetPath)) {
+        fs.mkdirSync(targetPath);
+      }
+      let geojson = JSON.parse(fs.readFileSync(file.path));
+      geojson = simplifyGeoJson(geojson, tolerance, true);
+      fs.writeFileSync(file.path += '.new', JSON.stringify(geojson));
+    }))
+    .on('end', done);
+
+}
+
 function help() {
   log(colors.green("Usage: gulp {config|webBuild|webExtBuild} OPTIONS"));
   log(colors.green(""));
@@ -1248,9 +1280,12 @@ function help() {
   log(colors.green("  --uglify                    Build using uglify plugin"));
 }
 
+
+
 /* --------------------------------------------------------------------------
    -- Combine task
    --------------------------------------------------------------------------*/
+
 const translate = gulp.series(appNgTranslate, pluginNgTranslate);
 const template = gulp.series(appNgTemplate, pluginNgTemplate);
 const appAndPluginSass = gulp.series(appSass, pluginSass);
@@ -1343,3 +1378,8 @@ exports.cdvBeforeCompile = cdvAsHook(cdvBeforeCompile);
 exports.default = gulp.series(appConfig, build);
 exports.serveBefore = gulp.series(build, appAndPluginWatch);
 exports['ionic:serve:before'] = exports.serveBefore; // Alias need need by @ionic/cli
+
+exports.geoJson = geoJson;
+
+gulp.task('sass', appAndPluginSass);
+gulp.task('ionic:serve:before', gulp.series(build, appAndPluginWatch));

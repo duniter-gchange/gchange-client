@@ -1056,7 +1056,7 @@ angular.module('cesium.crypto.services', ['cesium.utils.services'])
       }
 
       // Type: PubSec
-      if (type == 'PubSec') {
+      if (type === 'PubSec') {
 
         // Read Pub field
         matches = regexp.FILE.PUB.exec(content);
@@ -1117,12 +1117,12 @@ angular.module('cesium.crypto.services', ['cesium.utils.services'])
       options.type = options.type || (data_int8[0] == 1 && 'WIF') || (data_int8[0] == 2 && 'EWIF');
 
       // Type: WIF
-      if (options.type == 'WIF') {
+      if (options.type === 'WIF') {
         return parseWIF_v1(data_base58);
       }
 
       // Type: EWIF
-      if (options.type == 'EWIF') {
+      if (options.type === 'EWIF') {
 
         // If not set, resolve password using the given callback
         if (typeof options.password == "function") {

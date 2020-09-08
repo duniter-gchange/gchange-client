@@ -10,7 +10,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
 
   })
 
-.factory('esProfile', function($rootScope, $q, esHttp, SocialUtils, csWot, csWallet, csPlatform, esSettings) {
+.factory('esProfile', function($rootScope, $q, esHttp, SocialUtils, csWot, csWallet, csPlatform) {
   'ngInject';
 
   var
@@ -27,12 +27,12 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
   };
 
   function getAvatarAndName(pubkey) {
-    return that.raw.getFields({id: pubkey, fields: 'title,avatar._content_type'})
+    return that.raw.getFields({id: pubkey, fields: 'title,avatar._content_type,pubkey'})
       .then(function(res) {
         var profile;
         if (res && res._source) {
           // name
-          profile = {name: res._source.title};
+          profile = {name: res._source.title, pubkey: res._source.pubkey};
           // avatar
           profile.avatar = esHttp.image.fromHit(res, 'avatar');
         }
@@ -128,6 +128,11 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     }
     data.description = hit._source.description || data.description;
     data.city = hit._source.city || data.city;
+
+    // Fecth payment pubkey (need by Gchange)
+    if (hit._source.pubkey) {
+      data.pubkey = hit._source.pubkey;
+    }
 
     if (hit.highlight) {
       if (hit.highlight.title) {
@@ -267,6 +272,8 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       return deferred.promise;
     }
 
+    console.debug("[ES] [profile] Searching on user profiles...");
+
     pubkeyAtributeName = pubkeyAtributeName || 'pubkey';
     text = text ? text.toLowerCase().trim() : text;
     var dataByPubkey;
@@ -276,7 +283,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       highlight: {fields : {title : {}, tags: {}}},
       from: 0,
       size: 100,
-      _source: ["title", "avatar._content_type"]
+      _source: ["title", "avatar._content_type", "pubkey"]
     };
 
     // TODO: uncomment
