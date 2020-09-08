@@ -24,7 +24,7 @@
       "port": "443"
     },
     "share": {
-      mastodonAuthor: "@gchange@framapiaf.org"
+      "mastodonAuthor": "@gchange@framapiaf.org"
     },
     "plugins":{
       "es": {
