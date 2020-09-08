@@ -9,7 +9,6 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
       // Will force to load this service
       PluginServiceProvider.registerEagerLoadingService('mkTx');
     }
-
   })
 
 .factory('mkTx', function($rootScope, $q, csSettings, csPlatform, CryptoUtils, csConfig, esHttp, mkRecord) {
@@ -34,7 +33,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
   function postSearch(currency, request) {
     var fn = raw.postSearchByCurrency[currency];
     if (!fn) {
-      fn = esHttp.post('/'+currency+'/movement/_search')
+      fn = esHttp.post('/'+currency+'/movement/_search');
       raw.postSearchByCurrency[currency] = fn;
     }
     return fn(request);
@@ -71,16 +70,16 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
 
     // Add filter on recipient pubkey
     if (record.pubkey) {
-      request.query.bool['filter'] = [{term : {recipient : record.pubkey}}]
+      request.query.bool.filter = [{term : {recipient : record.pubkey}}];
     }
 
     if (options.withAvg) {
-      request.aggs['avg'] = {
+      request.aggs.avg = {
         avg : { field : "amount" }
       };
     }
     if (options.withIssuers) {
-      request.aggs['issuers'] = {
+      request.aggs.issuers = {
         terms : { field : "issuer" }
       };
 
@@ -108,7 +107,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
         console.debug("[market] [tx] TX stats loaded in {1}ms".format(record.id, Date.now() - now), record.tx);
 
         return record;
-      })
+      });
   }
 
   function onRecordSearch(records, deferred) {

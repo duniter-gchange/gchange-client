@@ -33,15 +33,18 @@ angular.module('cesium.market.home.controllers', ['ngResource',
 /**
  * Footer controller
  */
-function MarketHomeFooterController($scope, $controller, UIUtils, csPlatform, Device) {
+function MarketHomeFooterController($scope, $controller, UIUtils, csPlatform, $state) {
   'ngInject';
 
   $scope.start = function() {
     // Start loading categories, if NOT small screen
     if (!UIUtils.screen.isSmall()) {
-      console.log(UIUtils.screen);
       // Initialize the super class and extend it.
       angular.extend(this, $controller('MkListCategoriesCtrl', {$scope: $scope}));
+
+        $scope.onCategoryClick = function(cat) {
+            return $state.go('app.market_lookup', {category: cat && cat.id, location: ''});
+        };
 
       $scope.load();
     }

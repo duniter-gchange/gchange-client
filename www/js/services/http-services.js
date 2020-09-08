@@ -415,9 +415,9 @@ angular.module('cesium.http.services', ['cesium.cache.services'])
       }
 
       // Check if device is enable, on special tel: or mailto: protocol
-      var validProtocol = (Device.enable && (parts.protocol === 'mailto:' || parts.protocol === 'tel:'))
+      var validProtocol = (Device.enable && (parts.protocol === 'mailto:' || parts.protocol === 'tel:')) ||
         // Allow G1 link
-        || (parts.protocol === 'june:' || 'web+june:' );
+        (parts.protocol === 'june:' || 'web+june:' );
       if (!validProtocol) {
         if (options.onError && typeof options.onError === 'function') {
           options.onError(uri);

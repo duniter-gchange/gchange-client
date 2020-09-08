@@ -55,8 +55,7 @@ function MapHomeController($scope, $rootScope, $controller, $state, esShape) {
       .then(function(id) {
         // Redirect to market search
         return $state.go('app.market_lookup', { shape: id, location: location });
-      })
-
+      });
   };
 
 }

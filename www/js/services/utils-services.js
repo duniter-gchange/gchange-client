@@ -583,11 +583,9 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
       .then(function(instance) {
         if (!instance) return; // Skip
         // Handle URL formats
-        if ( !instance.startsWith("https://") && !instance.startsWith("http://") )
+        if (!instance.startsWith("https://") && !instance.startsWith("http://")) {
           instance = "https://" + instance;
-
-        // Get the current page's URL
-        var url   = options.bindings.postUrl;options.bindings.postMessag
+        }
 
         // Get the page title from the og:title meta tag, if it exists.
         var title = document.querySelectorAll('meta[property="og:title"]')[0].getAttribute("content");
@@ -603,17 +601,17 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
 
         // Create the Share URL
         // https://someinstance.tld/share?text=URL%20encoded%20text
-        var mastodon_url = instance + "share?text=" + encodeURIComponent(options.bindings.postMessage
-          + "\n\n" + options.bindings.postUrl
-          + "\n\n" + options.bindings.postHashtags
-          + " " + (options.bindings.postAuthor || ''));
+        var mastodon_url = instance + "share?text=" + encodeURIComponent(options.bindings.postMessage +
+          "\n\n" + options.bindings.postUrl +
+          "\n\n" + options.bindings.postHashtags +
+          " " + (options.bindings.postAuthor || ''));
 
 
         console.debug('[utils] Mastodon share link: ' + mastodon_url);
 
         // Open a new window at the share location
         window.open(mastodon_url, 'mastodon-share','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=580,height=370');return false;
-      })
+      });
   }
 
   function showSharePopover(event, options) {
@@ -628,7 +626,7 @@ angular.module('cesium.utils.services', ['angular-fullscreen-toggle'])
     options.bindings.titleKey = options.bindings.titleKey || 'COMMON.POPOVER_SHARE.TITLE';
     options.bindings.shareOnMastodon = function() {
       showMastodonSharePopover(event, options);
-    }
+    };
 
     return showPopover(event, options);
   }

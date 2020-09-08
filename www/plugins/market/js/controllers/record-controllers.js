@@ -526,7 +526,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       });
 
     $scope.showPayment = true;
-  }
+  };
 
   $scope.showPaymentModal = function() {
     if (!$scope.showPayment || !$scope.paymentData) return;
@@ -538,7 +538,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     var comment = $scope.paymentData.comment;
     if (!comment) return; // Skip
     return $scope.openLink(event, 'https://demo.cesium.app/#/app/data/search/g1/movement?q=comment:\"'+comment+'\"');
-  }
+  };
 
   /* -- context aware-- */
 
@@ -678,7 +678,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
       // Clean price
       $scope.formData.price = null;
     }
-  }
+  };
 
   /* -- popover -- */
 
@@ -997,7 +997,7 @@ function MkRecordPaymentModalController($scope, parameters, csSettings, mkTx) {
   $scope.loading = true;
   $scope.formData = {
     helpSiteUrl: csSettings.data.userForumUrl
-  }
+  };
 
   $scope.openHelpSite = function(event) {
     return $scope.openLink(event, csSettings.data.userForumUrl || 'https://forum.monnaie-libre.fr');
@@ -1012,10 +1012,8 @@ function MkRecordPaymentModalController($scope, parameters, csSettings, mkTx) {
     return mkTx.uri.compute(parameters)
       .then(function(links) {
         $scope.links = links;
-
         $scope.loading = false;
-    })
-
+    });
 
   };
 

@@ -85,9 +85,9 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
 
     console.debug('[market] [categories] Loading...', options);
 
-    var categoriesPromise = options.withStats
-      ? mkCategory.stats(options)
-      : mkCategory.filtered(options).then(mkCategory.asTree)
+    var categoriesPromise = options.withStats ?
+      mkCategory.stats(options) :
+      mkCategory.filtered(options).then(mkCategory.asTree);
 
     return categoriesPromise
       .then(function(res) {
@@ -96,7 +96,7 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
           res = _.map(res, function(cat) {
             cat.name = cat.name && cat.name.split(' ').join('&nbsp;');
             return cat;
-          })
+          });
         }
         $scope.categories = res;
         $scope.totalCount = $scope.categories.reduce(function(res, cat) {
@@ -115,8 +115,8 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
   $scope.onOptionsChange = function() {
     if ($scope.loading || !$scope.locale) return; // Skip if not loaded
 
-    var changed = ($scope.options.category.withStock === $scope.options.showClosed)
-      || ($scope.options.category.withOld !== $scope.options.showOld);
+    var changed = ($scope.options.category.withStock === $scope.options.showClosed) ||
+      ($scope.options.category.withOld !== $scope.options.showOld);
 
     // Reload data
     if (changed) {
@@ -167,7 +167,7 @@ function MkViewCategoriesController($scope, $controller, $state) {
     $scope.$on('$ionicView.enter',$scope.enter);
 
     $scope.onCategoryClick = function(cat) {
-        return $state.go('app.market_lookup', {category: cat && cat.id});
+        return $state.go('app.market_lookup', {category: cat && cat.id, location: ''});
     };
 }
 
@@ -217,7 +217,7 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
 
     $scope.loading = true;
     return $scope.load();
-  }
+  };
 
   $scope.save = function() {
     if (!$scope.dirty || $scope.saving) return; // Skip
@@ -237,7 +237,7 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
         return UIUtils.onError('MARKET.CATEGORY.EDIT.ERROR.CANNOT_SAVE')(err);
       });
 
-  }
+  };
 
   $scope.getName = function(cat, useItalicIfMissing) {
     if (!cat) throw new Error('Missing category');
@@ -277,7 +277,7 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
         angular.merge(root, res);
         $scope.dirty = true;
       });
-  }
+  };
 
   $scope.addRootCategory = function() {
     return $scope.showEditPopup()
@@ -285,8 +285,8 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
         if (!res) return; // User cancelled
         $scope.categories.push(res);
         $scope.dirty = true;
-      })
-  }
+      });
+  };
 
   $scope.editChildCategory = function(rootCategory, index) {
     var child = rootCategory.children[index];
@@ -296,8 +296,8 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
         // Copy result to source category
         angular.merge(child, res);
         $scope.dirty = true;
-      })
-  }
+      });
+  };
 
   $scope.addChildCategory = function(rootCategory) {
     return $scope.showEditPopup()
@@ -306,13 +306,13 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
         rootCategory.children = rootCategory.children || [];
         rootCategory.children.push(res);
         $scope.dirty = true;
-      })
-  }
+      });
+  };
 
   $scope.removeRootCategory = function(index) {
     $scope.categories.splice(index, 1);
     $scope.dirty = true;
-  }
+  };
 
   $scope.removeChildCategory = function(rootCat, index) {
     var child = rootCat.children[index];
@@ -320,12 +320,12 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
     rootCat.children.splice(index, 1);
     rootCat.count -= child.count || 0;
     $scope.dirty = true;
-  }
+  };
 
   $scope.onChangeLocale = function(locale) {
     console.debug('[market] [category] Changing categories locale to: ' + locale.label);
     $scope.locale = locale.id;
-  }
+  };
 
   /* -- popups -- */
 
@@ -402,5 +402,5 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
     return _.findIndex($scope.categories || [], function(cat) {
       return cat.id === id;
     }) === -1;
-  }
+  };
 }

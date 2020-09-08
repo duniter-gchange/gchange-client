@@ -254,8 +254,8 @@ angular.module('cesium.device.services', ['cesium.utils.services', 'cesium.setti
       };
 
       exports.isMobile = function() {
-        return exports.enable
-      }
+        return exports.enable;
+      };
 
       exports.ready = function() {
         if (started) return $q.when();

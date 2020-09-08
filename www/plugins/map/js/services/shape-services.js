@@ -6,8 +6,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
    * Shape service
    */
   .factory('esShape', function($rootScope, $q, csPlatform, csCache, esHttp, gpColor) {
-    'ngInject'
-
+    'ngInject';
 
     var defaultSearchLimit = 100;
 
@@ -165,7 +164,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           if (!res || !res.hits || !res.hits.total) return [];
 
           return _.pluck(res.hits.hits, '_id');
-        })
+        });
     }
 
     function getAllCountries() {
@@ -196,7 +195,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
               docCount: bucket.doc_count
             });
           }, []);
-        })
+        });
     }
 
     function saveShape(geoJson, options) {
@@ -243,10 +242,10 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
             feature.properties.country = country;
 
             var id = feature.properties.id;
-            var isNew = angular.isUndefined(id)
-              // if id already somewhere, force isNew = true (will compute another id)
-              || !existingIds.includes(id)
-              || !id.toLowerCase().startsWith(country);
+            var isNew = angular.isUndefined(id) ||
+                // if id already somewhere, force isNew = true (will compute another id)
+              !existingIds.includes(id) ||
+              !id.toLowerCase().startsWith(country);
 
             var executeFn;
             if (isNew) {
@@ -318,7 +317,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       if (options.selector && options.append !== true) {
         d3.selectAll(options.selector + ' svg').remove();
       }
-      var selector = options.selector || 'body'
+      var selector = options.selector || 'body';
       var container = d3.select(selector);
       if (options.selector && container.empty()) throw new Error("Cannot found element '{0}'".format(selector));
 
@@ -359,8 +358,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         dy = bottom - top,
         x = (left + right) / 2,
         y = (top + bottom) / 2,
-        scale = .95 / Math.max(dx / width, dy / height),
-        //translate = [width / 2 - scale * x, height /2 - scale * x];
+        scale = 0.95 / Math.max(dx / width, dy / height),
         translate = [(width - scale * (right + left)) / 2, (height - scale * (bottom + top)) / 2];
 
       // Update the projection
@@ -401,9 +399,9 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
 
       options = options || {};
 
-      var selector = options.selector || 'body'
+      var selector = options.selector || 'body';
       var container = d3.select(selector)
-        .classed('shape-container', true);
+          .classed('shape-container', true);
       if (options.compacted) {
         container.classed('compacted', true);
       }
@@ -470,8 +468,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
             }, svgOptions);
           });
         }
-      })
-
+      });
     }
 
     function removeSvg(options) {
@@ -484,9 +481,9 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
     function findSvgGeoViewBox(svgElement) {
       if (!svgElement) return undefined;
 
-      var geoViewBox = svgElement.attr(':' + constants.attributes.geoViewBox)
-        // Retry in lowercase
-        || svgElement.attr(':' + constants.attributes.geoViewBox.toLowerCase());
+      var geoViewBox = svgElement.attr(':' + constants.attributes.geoViewBox) ||
+          // Retry in lowercase
+        svgElement.attr(':' + constants.attributes.geoViewBox.toLowerCase());
 
       // Not found: try on parent node
       if (!geoViewBox) {
@@ -508,9 +505,9 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
     function findSvgViewBox(svgElement) {
       if (!svgElement) return undefined;
 
-      var viewBox = svgElement.attr(constants.attributes.viewBox)
+      var viewBox = svgElement.attr(constants.attributes.viewBox) ||
         // Retry in lowercase
-        || svgElement.attr(constants.attributes.viewBox.toLowerCase());
+        svgElement.attr(constants.attributes.viewBox.toLowerCase());
 
       // Try with width and height attributes
       if (!viewBox) {
@@ -546,9 +543,9 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
     function findSvgGeoScale(svgElement) {
       if (!svgElement) return undefined;
 
-      var scale = svgElement.attr(':' + constants.attributes.geoScale)
+      var scale = svgElement.attr(':' + constants.attributes.geoScale) ||
         // Retry in lowercase
-        || svgElement.attr(':' + constants.attributes.geoScale.toLowerCase());
+        svgElement.attr(':' + constants.attributes.geoScale.toLowerCase());
 
       // Not found: try on parent node
       if (!scale) {
@@ -563,9 +560,9 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
     function findSvgGeoTranslate(svgElement) {
       if (!svgElement) return undefined;
 
-      var translate = svgElement.attr(':' + constants.attributes.geoTranslate)
+      var translate = svgElement.attr(':' + constants.attributes.geoTranslate) ||
         // Retry in lowercase
-        || svgElement.attr(':' + constants.attributes.geoTranslate.toLowerCase());
+        svgElement.attr(':' + constants.attributes.geoTranslate.toLowerCase());
 
       // Not found: try on parent node
       if (!translate) {
@@ -641,7 +638,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
         });
         if (duplicateCount > 0) console.debug('[shape-service] Removed {0} duplicated points'.format(duplicateCount));
         return res;
-      }
+      };
 
       if (tagName === 'polyline') {
         // TODO get data
@@ -680,7 +677,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
                 if (currentLineRing.length) {
                   if (currentLineRing.length > 1) {
                     // Re add the first polygon point
-                    currentLineRing.push(currentLineRing[0])
+                    currentLineRing.push(currentLineRing[0]);
 
                     // Check if valid polygon, for ES geo_shape type
                     if (currentLineRing.length >= 4) {
@@ -837,7 +834,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
 
         // make sure polygon is closed
         if (currentLineRing.length >= 4) {
-          console.warn("[svg] Invalid polygon found (not closed). Will force last point.")
+          console.warn("[svg] Invalid polygon found (not closed). Will force last point.");
           // Add to final result
           lineRings.push(currentLineRing);
         }
@@ -862,7 +859,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           if (mappedCoords.length >= 4) {
             currentPolygon.push(mappedCoords);
           }
-        })
+        });
 
         if (currentPolygon.length) {
           polygons.push(currentPolygon);
@@ -982,7 +979,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           return [
             mapX(coord[0]) * options.scale,
             mapY(coord[1]) * options.scale
-          ]
+          ];
         };
       }
 
@@ -1053,7 +1050,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       var now = Date.now();
       var checkTimeout = function() {
         if ((Date.now() - now) >= timeout) throw 'TIMEOUT';
-      }
+      };
 
       var counter = 0;
       try {
@@ -1168,7 +1165,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
     }
 
     function getShapeById(id, options) {
-      if (!id) throw new Error("Missing 'id' argument")
+      if (!id) throw new Error("Missing 'id' argument");
 
       if (!options || options.cache !== false) {
         caches.shapesById = caches.shapesById || csCache.get(cachePrefix, csCache.constants.LONG);
@@ -1298,10 +1295,10 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           messageParams: {id: id},
           lon: parseFloat(matches[1]),
           lat: parseFloat(matches[2])
-        }
+        };
       }
       // Self intersection
-      var matches = regexp.error.HOLE_LIES_OUTSIDE.exec(err.message);
+      matches = regexp.error.HOLE_LIES_OUTSIDE.exec(err.message);
       if (matches) {
         return {
           type: 'error',
@@ -1309,7 +1306,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           messageParams: {id: id},
           lon: parseFloat(matches[1]),
           lat: parseFloat(matches[2])
-        }
+        };
       }
       matches = regexp.error.HOLE_NOT_WITHIN_POLYGON.exec(err.message);
       if (matches) {
@@ -1317,7 +1314,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           type: 'error',
           message: 'MAP.SHAPE.EDIT.ERROR.HOLE_NOT_WITHIN_POLYGON',
           messageParams: {id: id}
-        }
+        };
       }
       return err;
     }
@@ -1361,6 +1358,6 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
       },
 
       constants: constants
-    }
-  })
+    };
+  });
 

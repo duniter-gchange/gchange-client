@@ -30,7 +30,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
       data: {
         silentLocationChange: true
       }
-    })
+    });
   })
 
  .controller('MkLookupAbstractCtrl', MkLookupAbstractController)
@@ -283,9 +283,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     else if ($scope.search.geoShape && $scope.search.geoShape.geometry) {
       var coordinates = $scope.search.geoShape.geometry.coordinates;
       var type = $scope.search.geoShape.geometry.type;
-      if (location
-        && (type === 'Polygon' || type === 'MultiPolygon')
-        && coordinates && coordinates.length) {
+      if (location &&
+         (type === 'Polygon' || type === 'MultiPolygon') &&
+         coordinates && coordinates.length) {
         // One polygon
         if (coordinates.length === 1) {
           filters.push(
@@ -307,7 +307,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
                       points: points
                     }
                   }});
-              }, []))
+              }, []));
             }, [])
           });
         }
@@ -315,6 +315,10 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         stateParams.shape = $scope.search.geoShape.id;
         stateParams.location = location;
       }
+    }
+    if (!stateParams.location) {
+      stateParams.location = null;
+      $scope.search.location = null; // Reset the form
     }
 
     if ($scope.search.showClosed) {
@@ -485,9 +489,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     else if ($scope.search.geoShape && $scope.search.geoShape.geometry) {
       var coordinates = $scope.search.geoShape.geometry.coordinates;
       var type = $scope.search.geoShape.geometry.type;
-      if (location
-        && (type === 'Polygon' || type === 'MultiPolygon')
-        && coordinates && coordinates.length) {
+      if (location &&
+         (type === 'Polygon' || type === 'MultiPolygon') &&
+         coordinates && coordinates.length) {
         // One polygon
         if (coordinates.length === 1) {
           filters.push(
@@ -509,7 +513,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
                         points: points
                       }
                     }});
-                }, []))
+                }, []));
               }, [])
             });
         }
@@ -777,7 +781,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
           .then(function (cat) {
             $scope.search.category = cat;
           })
-        )
+        );
       }
       // Wait all jobs are finished, before calling init() and finishEnter()
       return (jobs.length ? $q.all(jobs) : $q.when())

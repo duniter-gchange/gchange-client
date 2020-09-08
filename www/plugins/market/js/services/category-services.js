@@ -29,10 +29,10 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
 
       // Replace name by the current locale, when possible
       if (cat.localizedNames) {
-        cat.name = cat.localizedNames[options.locale]
+        cat.name = cat.localizedNames[options.locale] ||
           // Fallback to default locale, or keep existing name
-          || (options.fallbackLocalId && cat.localizedNames[options.fallbackLocalId])
-          || cat.name;
+          (options.fallbackLocalId && cat.localizedNames[options.fallbackLocalId]) ||
+          cat.name;
       }
 
       return cat;
@@ -57,7 +57,7 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
           if (res.hits.total === 0) {
             categories = [];
           } else {
-            var categories = res.hits.hits.reduce(function (result, hit) {
+            categories = res.hits.hits.reduce(function (result, hit) {
               var cat = readFromHit(hit, options);
               return result.concat(cat);
             }, []);
@@ -143,7 +143,7 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
             if (options.withChildren) asCategoriesTree(categories);
 
             return cat;
-          })
+          });
       }
 
       return raw.get(params)

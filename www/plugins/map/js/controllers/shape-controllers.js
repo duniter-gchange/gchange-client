@@ -13,7 +13,7 @@ angular.module('cesium.map.shape.controllers', ['cesium.services', 'cesium.map.s
             controller: 'MapCountryEditCtrl'
           }
         }
-      })
+      });
   })
 
   .controller('MapShapeViewCtrl', MapShapeViewController)
@@ -30,7 +30,7 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
   $scope.shapeId = 'shape-' + $scope.$id;
   $scope.formData = {
     country: null
-  }
+  };
   $scope.countriesMap = {
     fr: 'France',
     be: 'Belgium',
@@ -38,7 +38,7 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
     gb: 'United Kingdom',
     us: 'USA'
   };
-  $scope.countries;
+  $scope.countries = null;
 
   $scope.load = function(options) {
     options = options || {};
@@ -77,7 +77,7 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
       .catch(function(err) {
         console.error("Cannot load shape for country '{0}'".format(country), err);
         $scope.loading = false;
-      })
+      });
   };
 
   $scope.loadAllCountries = function() {
@@ -108,7 +108,7 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
     }
 
     return defaultCountry  || 'fr';
-  }
+  };
 
   $scope.updateView = function(geoJson) {
     if (!geoJson) {
@@ -120,13 +120,13 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
         onclick: $scope.onClick
       });
     }
-  }
+  };
 
   $scope.onCountryChange = function(country) {
     if (!country) return; // Skip
     console.debug('[shape] Select country map:', country);
     return $scope.load({country: country});
-  }
+  };
 
   // Watch locale change, to reload categories
   $scope.onLocaleChange = function(localeId) {
@@ -136,20 +136,17 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
     return $scope.onCountryChange(country);
   };
 
-
   $scope.addListeners = function() {
     if ($scope.listeners) return; // skip
 
     $scope.listeners = [
       csSettings.api.locale.on.changed($scope, $scope.onLocaleChange, this)
-    ]
-  }
+    ];
+  };
 
   $scope.onClick = function(event, element) {
     if (event && event.defaultPrevented) return;
-
     console.warn('[shape] No handler for SVG element click', element);
-
   };
 }
 
@@ -259,8 +256,8 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
         console.error(err);
         UIUtils.alert.error(err && err.message || err);
         $scope.loading = false;
-      })
-  }
+      });
+  };
 
   $scope.resetForms = function(data) {
     $scope.resetForm(data);
@@ -307,7 +304,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
   $scope.markAsDirty = function() {
     if ($scope.loading || $scope.saving) return; // Skip
     $scope.dirty = true;
-  }
+  };
   $scope.$watch('formData.country', $scope.markAsDirty, true);
 
   $scope.setCountryForm = function(form) {
@@ -370,7 +367,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
         translateX: 0,
         translateY: 0,
         svgText: svgText
-      }
+      };
       if (config.geoViewBox) {
         var proj = esShape.svg.projectionData(svg, {
           geoViewBox: config.geoViewBox
@@ -386,11 +383,9 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
       $scope.resetConfigForm(config);
 
       $scope.showConfig = true;
-      $scope.applySvgConfig(svg, angular.merge(config, {
-        customProjection: true // Force to use computed projection
-      }));
+      $scope.applySvgConfig(svg, angular.merge(config,
+          {customProjection: true})); // Force to use computed projection
       svg.remove();
-
     }
     finally {
       UIUtils.loading.hide();
@@ -414,12 +409,12 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     else {
       _($scope.positions).each(function(position) {
         d3.selectAll([selector, '.' + position, 'svg'].join(' ')).remove();
-      })
+      });
 
       // Normalize each features properties
       _(geoJson.features||[]).each(function(feature) {
         feature.properties = $scope.getNormalizeProperties(feature.properties||{}, options);
-      })
+      });
 
       esShape.svg.createMosaic(geoJson, {
         selector: selector,
@@ -445,7 +440,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     console.debug('[map] [shape] Apply config: ', config);
 
     // Converting SVG into geojson, using the config
-    var svg = svg || esShape.svg.createFromText(config.svgText, {
+    svg = svg || esShape.svg.createFromText(config.svgText, {
       selector: '#' + $scope.shapeId,
       class: 'ng-hide'
     });
@@ -577,7 +572,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
             var title = feature.properties && (feature.properties.title || feature.properties.id) || (''+ index);
             UIUtils.loading.show({template: 'Saving... ({1}/{2})<br/><b>{0}</b>'.format(title, index+1, total)});
           }
-        })
+        });
       })
       .then(function() {
         $scope.saving = false;
@@ -656,9 +651,9 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     center.zoom = center.zoom || $scope.map.center.zoom || 10;
 
     // If re apply center again, increase zoom
-    if (center.lat === $scope.map.center.lat
-      && center.lng === $scope.map.center.lng
-      && center.zoom === $scope.map.center.zoom) {
+    if (center.lat === $scope.map.center.lat &&
+       center.lng === $scope.map.center.lng &&
+       center.zoom === $scope.map.center.zoom) {
       center.zoom += 2;
     }
 
