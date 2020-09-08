@@ -35,18 +35,18 @@
         "BTN_TEST_SEARCH": "Tester une recherche sur cette zone",
         "STRICT_MODE": "Compatibilité OCG (hand right rule)",
         "REMOVE_HOLE": "Supprimer les trous intérieurs aux polygones",
-        "APPLY_ROUND": "Arrondir à la précision {{maxPrecision}}",
-        "DEGREES_PRECISION": "Précision (degrés)",
+        "APPLY_ROUND": "Arrondir à la précision :",
+        "DEGREES_PRECISION": "Précision (degrés décimaux)",
         "INFO": {
           "SAVED": "La carte a bien été sauvegardée"
         },
         "ERROR": {
           "INVALID_SVG": "Format SVG incorrect.",
-          "INVALID_COUNTRY_CODE": "Code pays incorrect (need ISO2)",
+          "INVALID_COUNTRY_CODE": "Code pays incorrect (ISO2 attendu, en minuscule)",
           "SAVE_FAILED": "Erreur lors de la sauvegarde de la carte",
-          "SELF_INTERSECTION": "Self-intersection in polygon <b>{{id}}</b>",
-          "HOLE_LIES_OUTSIDE": "Hole lies outside shell <b>{{id}}</b>",
-          "HOLE_NOT_WITHIN_POLYGON": "Invalid hole (not within polygon) in polygon <b>{{id}}</b>"
+          "SELF_INTERSECTION": "Auto-intersection dans le polygone <b>{{id}}</b>",
+          "HOLE_LIES_OUTSIDE": "Le trou se trouve à l'extérieur du polygone <b>{{id}}</b>",
+          "HOLE_NOT_WITHIN_POLYGON": "Trou invalid (pas dans un polygon) <b>{{id}}</b>"
         }
       }
     },
