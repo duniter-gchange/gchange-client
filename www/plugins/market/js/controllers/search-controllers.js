@@ -157,7 +157,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     var text = $scope.search.text.trim();
     var matches = [];
     var filters = [];
-    var stateParams = {};
+    var stateParams = {
+      location: null
+    };
     var tags = text ? esHttp.util.parseTags(text) : undefined;
     if (text.length > 1) {
       stateParams.q = text;
@@ -315,10 +317,6 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         stateParams.shape = $scope.search.geoShape.id;
         stateParams.location = location;
       }
-    }
-    if (!stateParams.location) {
-      stateParams.location = null;
-      $scope.search.location = null; // Reset the form
     }
 
     if ($scope.search.showClosed) {
@@ -708,9 +706,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
         }
 
         // Search on location
-        if (state.stateParams.location) {
-          $scope.search.location = state.stateParams.location;
-        }
+        var location = state.stateParams.location && state.stateParams.location.trim();
 
         // Geo point
         if (state.stateParams.lat && state.stateParams.lon) {
@@ -718,6 +714,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
             lat: parseFloat(state.stateParams.lat),
             lon: parseFloat(state.stateParams.lon)
           };
+          $scope.search.location = location;
         }
         else if (state.stateParams.shape) {
           // Resolve shape
@@ -725,6 +722,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
             .then(function(shape) {
               // Store in scope
               $scope.search.geoShape = shape;
+              $scope.search.location = location;
             }));
         }
         else {
