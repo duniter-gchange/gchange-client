@@ -23,13 +23,13 @@ angular.module('cesium.market.plugin', [
   'cesium.market.category.controllers',
   'cesium.market.wot.controllers',
   'cesium.market.document.controllers',
-  'cesium.market.map.controllers',
 
   // Services
   'cesium.market.services'
 ])
 
 .run(function(csConfig, Modals, mkModals) {
+  'ngInject';
 
   if (csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.enable) {
 
