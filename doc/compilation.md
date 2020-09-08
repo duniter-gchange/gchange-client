@@ -3,7 +3,7 @@
 ## In a post-it
 
 ```bash
-nvm use 10
+nvm use 12
 git clone git@github.com:duniter-gchange/gchange-client.git
 cd gchange-client
 yarn
@@ -30,9 +30,9 @@ To build Cesium, you will have to:
 
     Then reload your terminal, for instance by executing the command `bash`
 
-  - Configure NodeJS to use a version 10:
+  - Configure NodeJS to use a version 12:
     ```bash
-      nvm install 10
+      nvm install 12
     ```
       
   - Installing node.js build tools, as global dependencies:
@@ -64,7 +64,7 @@ To build Cesium, you will have to:
 
    > As a reminder: make sure your command line has been well configured:
    > - You must place yourself in the directory of the application: `cd gchange-client`
-   > - and working with NodeJs **v10**: `nvm use 10` (please check using the command `node --version`)
+   > - and working with NodeJs **v12**: `nvm use 12` (please check using the command `node --version`)
 
 
 ### Prepare configuration file
