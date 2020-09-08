@@ -62,11 +62,6 @@
                     ng-click="cancel()">
               <span class="dark" translate>COMMON.BTN_CANCEL</span>
             </button>
-            <button class="button button-clear button-small ink " type="button"
-                    ng-disabled="!dirty"
-                    ng-click="save()">
-              <span class="dark" translate>COMMON.BTN_SAVE</span>
-            </button>
           </div>
         </div>
       </div>
@@ -109,16 +104,18 @@
 
       <div class="col col-25 no-margin"
            style="border-left: 1px solid lightgrey;"
-           ng-if="elementData.element || showConfig">
+           ng-if="elementData.element || map.geojson.data">
 
         <!-- ******** Config form ******** -->
 
-        <form name="configForm" novalidate="" ng-submit="applySvgConfig()" class="list" ng-if="showConfig">
+        <form name="configForm" novalidate="" ng-submit="applySvgConfig()" class="list">
           <div class="item item-divider"ng-init="setConfigForm(configForm)"  translate>
             MAP.SHAPE.EDIT.CONFIG_FORM_DIVIDER
           </div>
+
           <!-- top lat -->
           <div class="item col-50 col-offset-25 item-input item-floating-label"
+               ng-if="showConfig"
                ng-class="{'item-input-error': configForm.$submitted && configForm.topLat.$invalid}">
             <span class="input-label" translate>MAP.SHAPE.EDIT.TOP_LAT</span>
             <input type="number" name="topLat" class=""
@@ -137,8 +134,7 @@
             </div>
           </div>
 
-
-          <div class="item row no-margin no-padding">
+          <div class="item row no-margin no-padding" ng-if="showConfig">
             <div class="col col-50">
               <!-- left lng -->
               <div class="item-input item-floating-label"
@@ -161,7 +157,7 @@
               </div>
             </div>
 
-            <div class="col col-50">
+            <div class="col col-50" ng-if="showConfig">
               <!-- right lng -->
               <div class="item-input item-floating-label"
                    ng-class="{'item-input-error': configForm.$submitted && configForm.rightLng.$invalid}">
@@ -185,7 +181,7 @@
           </div>
 
           <!-- bottom lat -->
-          <div class="row no-margin no-padding">
+          <div class="row no-margin no-padding" ng-if="showConfig">
             <div class="item col col-offset-25 col-50 item-input item-floating-label"
                  ng-class="{'item-input-error': configForm.$submitted && configForm.bottomLat.$invalid}">
               <span class="input-label" translate>MAP.SHAPE.EDIT.BOTTOM_LAT</span>
@@ -206,14 +202,53 @@
             </div>
           </div>
 
-          <!-- Auto compute project -->
-          <ion-checkbox ng-model="configData.customProjection"
+          <!-- Remove hole -->
+          <ion-checkbox ng-model="configData.removeHole"
+                        class="item ink item-text-wrap">
+            <div class="item-content dark" translate>MAP.SHAPE.EDIT.REMOVE_HOLE</div>
+          </ion-checkbox>
+
+          <!-- Strict mode -->
+          <ion-checkbox ng-model="configData.strictMode"
+                        class="item ink item-text-wrap">
+            <div class="item-content dark" translate>MAP.SHAPE.EDIT.STRICT_MODE</div>
+          </ion-checkbox>
+
+          <!-- Max precision -->
+          <ion-checkbox ng-if="showConfig"
+                        ng-model="configData.applyRound"
+                        class="item ink item-text-wrap">
+            <div class="item-content dark" translate>MAP.SHAPE.EDIT.APPLY_ROUND</div>
+          </ion-checkbox>
+
+          <!-- precision -->
+          <div class="item-input item-floating-label"
+               ng-if="configData.applyRound"
+               ng-class="{'item-input-error': configForm.$submitted && configForm.degreePrecision.$invalid}">
+            <span class="input-label" translate>MAP.SHAPE.EDIT.DEGREES_PRECISION</span>
+            <input type="number" name="degreePrecision"
+                   ng-model="configData.degreePrecision"
+                   placeholder="{{'MAP.SHAPE.EDIT.DEGREES_PRECISION'|translate}}"
+                   min="0"
+                   required>
+          </div>
+          <div class="form-errors"
+               ng-show="configForm.$submitted && configForm.degreePrecision.$invalid"
+               ng-messages="configForm.degreePrecision.$error">
+            <div class="form-error" ng-message="required">
+              <span translate="ERROR.FIELD_REQUIRED"></span>
+            </div>
+          </div>
+
+          <!-- Auto compute projection -->
+          <ion-checkbox ng-if="showConfig"
+                        ng-model="configData.customProjection"
                         class="item ink item-text-wrap">
             <div class="item-content dark" translate>MAP.SHAPE.EDIT.CUSTOM_PROJECTION</div>
           </ion-checkbox>
 
           <!-- translate-->
-          <div class="item row no-margin no-padding" ng-if="configData.customProjection">
+          <div class="item row no-margin no-padding" ng-if="showConfig && configData.customProjection">
             <div class="col col-50">
               <!-- translate X -->
               <div class="item-input item-floating-label"
@@ -274,9 +309,37 @@
           <!-- config form buttons -->
           <div class="padding-top text-right">
             <!-- apply -->
-            <button class="button button-positive button-small button-small-padding ink"
+            <button ng-if="showConfig"
+                    class="button button-positive button-small button-small-padding ink"
                     type="submit"
                     translate>MAP.SHAPE.EDIT.BTN_APPLY</button>
+
+            <button class="button button-assertive button-small button-small-padding ink " type="button"
+                    ng-disabled="!dirty"
+                    ng-click="save()">
+              <span translate>COMMON.BTN_SAVE</span>
+            </button>
+          </div>
+
+          <!-- errors -->
+          <div class="item item-divider padding-top"
+               ng-if="formData.errors"
+               translate>MAP.SHAPE.EDIT.ERROR_DIVIDER
+          </div>
+          <div class="item item-text-wrap"
+               ng-if="formData.errors"
+               ng-repeat="err in formData.errors">
+
+            <div class="assertive">
+              <i class="icon ion-close-circled"></i>
+              <span ng-bind-html="err.message | translate: err.messageParams"></span>
+            </div>
+            <h4>
+              <a ng-if="err.lat && err.lon"
+                ng-click="centerMap({lat: err.lat, lon: err.lon})">
+                {{'MAP.COMMON.BTN_SHOW_ON_MAP'|translate}}
+              </a>
+            </h4>
           </div>
 
         </form>

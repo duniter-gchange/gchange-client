@@ -164,7 +164,8 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
   $scope.entered = false;
   $scope.saving = false;
   $scope.formData = {
-    country: null
+    country: null,
+    errors: null
   };
   $scope.configData = {
     geoViewBox: {
@@ -175,7 +176,12 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     },
     scale: 1,
     translateX: 0,
-    translateY: 0
+    translateY: 0,
+
+    removeHole: true,
+    applyRound: true,
+    degreePrecision: esShape.constants.projection.degreePrecision,
+    strictMode: false
   };
   $scope.showConfig = false;
   $scope.elementData = {
@@ -265,9 +271,8 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
   };
 
   $scope.resetForm = function(data) {
-    angular.merge($scope.formData, {
-      country: (data && data.country) || null
-    });
+    $scope.formData.country = (data && data.country) || null;
+    $scope.formData.errors = (data && data.errors) || null;
   };
 
   $scope.resetConfigForm = function(data) {
@@ -281,7 +286,11 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
       scale: (data && data.scale) || 1,
       translateX: (data && data.translateX) || 0,
       translateY: (data && data.translateY) || 0,
-      svgText: (data && data.svgText) || null
+      svgText: (data && data.svgText) || null,
+      removeHole: true,
+      applyRound: true,
+      degreePrecision: esShape.constants.projection.degreePrecision,
+      strictMode: false
     });
   };
 
@@ -321,14 +330,15 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
       var geoJson;
       // Add SVG file
       if (event.file.type.startsWith('image/svg')) {
-        $scope.updateFromSvgFile(event);
+        console.debug('[map] [shape] Loading SVG file {0}'.format(event.fileData && event.fileData.name));
+        $scope.updateFromSvgFile(event.fileContent);
       }
 
       // Geo json file
       else {
-        $scope.updateFromGeoJsonFile(event);
+        console.debug('[map] [shape] Loading GeoJson file {0}'.format(event.fileData && event.fileData.name));
+        $scope.updateFromGeoJson(event.fileContent);
       }
-
     }
     catch(err) {
       console.error(err);
@@ -341,16 +351,15 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     finally {
       $scope.loading = false;
     }
+  };
 
-  }
+  $scope.updateFromSvgFile = function(svgText) {
 
-  $scope.updateFromSvgFile = function(event) {
-    console.debug('[map] [shape] Loading SVG file {0}'.format(event.fileData && event.fileData.name));
 
     UIUtils.loading.show();
     try {
       // Create a SVG element, to be able to read bounds
-      var svg = esShape.svg.createFromText(event.fileContent, {
+      var svg = esShape.svg.createFromText(svgText, {
         selector: '#' + $scope.shapeId,
         //class: 'ng-hide'
       });
@@ -362,7 +371,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
         scale: 1,
         translateX: 0,
         translateY: 0,
-        svgText: event.fileContent
+        svgText: svgText
       }
       if (config.geoViewBox) {
         var proj = esShape.svg.projectionData(svg, {
@@ -388,10 +397,10 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     finally {
       UIUtils.loading.hide();
     }
-  }
+  };
 
-  $scope.updateFromGeoJsonFile = function(event) {
-    geoJson = event.fileContent && JSON.parse(event.fileContent);
+  $scope.updateFromGeoJson = function(geoJson) {
+    geoJson = typeof geoJson === 'string' ? JSON.parse(geoJson) : geoJson;
     $scope.showConfigForm = false;
     $scope.resetForms();
     $scope.markAsDirty();
@@ -423,7 +432,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     $scope.resetElementForm({country: options && options.country});
     $scope.map.geojson.data = geoJson;
     return $q.when();
-  }
+  };
 
   $scope.applySvgConfig = function(svg, config) {
 
@@ -445,7 +454,10 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
 
     var convertOptions = {
       selector: '#' + $scope.shapeId,
-      geoViewBox: config.geoViewBox
+      geoViewBox: config.geoViewBox,
+      precision: $scope.configData.applyRound && $scope.configData.degreePrecision,
+      strictMode: $scope.configData.strictMode,
+      removeHole: $scope.configData.removeHole
     };
     if (config.customProjection) {
       convertOptions.scale = config.scale || 1;
@@ -455,7 +467,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     var geoJson = esShape.svg.toGeoJson(svg, convertOptions);
 
     $scope.updateView(geoJson);
-  }
+  };
 
   $scope.onPathClick = function(event, element) {
 
@@ -469,7 +481,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     $scope.elementData.element = element;
 
     $scope.$apply();
-  }
+  };
 
   $scope.deleteElement = function() {
     if (!$scope.elementData.element) return;
@@ -490,7 +502,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
 
     return $scope.updateView(geoJson);
 
-  }
+  };
 
   $scope.confirmEditElement = function() {
     if (!$scope.elementData.element) return;
@@ -522,11 +534,11 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
 
     // Update the view, to apply changes
     $scope.updateView(geojson);
-  }
+  };
 
   $scope.cancelEditElement = function() {
     $scope.resetElementForm();
-  }
+  };
 
   $scope.cancel = function() {
     $scope.resetForms();
@@ -534,11 +546,14 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     $scope.showConfig = false;
 
     d3.select('#' + $scope.shapeId + ' *').remove();
-  }
+  };
 
   $scope.save = function() {
     var geoJson = $scope.map.geojson.data;
     if (!geoJson || !$scope.dirty) return; // Nothing to save
+
+    // Reset errors
+    $scope.formData.errors = null;
 
     $scope.countryForm.$submitted=true;
     if($scope.saving || // avoid multiple save
@@ -557,6 +572,9 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
       .then(function() {
         return esShape.save(geoJson, {
           country: country,
+          removeHole: $scope.configData.removeHole,
+          precision: $scope.configData.applyRound && $scope.configData.degreePrecision || null,
+          strictMode: $scope.configData.strictMode,
           updateProgression: function(feature, index, total) {
             var title = feature.properties && (feature.properties.title || feature.properties.id) || (''+ index);
             UIUtils.loading.show({template: 'Saving <b>{0}</b>... ({1}/{2})'.format(title, index+1, total)});
@@ -574,12 +592,19 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
       .then(function() {
         return UIUtils.toast.show("MAP.SHAPE.EDIT.INFO.SAVED");
       })
-      .catch(UIUtils.onError("MAP.SHAPE.EDIT.ERROR.SAVE_FAILED"))
+      .catch(function(err) {
+        UIUtils.onError("MAP.SHAPE.EDIT.ERROR.SAVE_FAILED")(err);
+        if (err && err.errors) {
+          $scope.formData.errors = err && err.errors || null;
+        }
+        else if (err.message) {
+          $scope.formData.errors = [err];
+        }
+      })
       .then(function() {
         $scope.saving = false;
-      })
-      ;
-  }
+      });
+  };
 
   $scope.getNormalizeProperties = function(properties, defaults) {
     return {
@@ -589,14 +614,14 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
       position: properties && properties.position,
       order: properties && properties.order || undefined,
     };
-  }
+  };
 
   $scope.findSvgElementFromPath = function(element) {
     var path = d3.select(element);
 
     console.log(path);
     console.log(path.bounds());
-  }
+  };
 
   $scope.searchOnPath = function() {
     if (!$scope.elementData.element) return;
@@ -613,7 +638,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     $rootScope.geoShapes = $rootScope.geoShapes || {};
     $rootScope.geoShapes[location] = feature.geometry;
     $state.go('app.market_lookup', {location: location});
-  }
+  };
 
   $scope.download = function() {
     if ($scope.loading || $scope.saving || !$scope.map.geojson.data) return;
@@ -623,5 +648,29 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
     var filename = ($scope.formData.country || 'export') + '.geojson';
 
     FileSaver.saveAs(file, filename);
-  }
+  };
+
+  $scope.centerMap = function(center) {
+    console.debug('[map] [shape] Center map to:', center);
+
+    // Rename longitude
+    center.lng = angular.isDefined(center.lon) ? center.lon : center.lng;
+    center.zoom = center.zoom || $scope.map.center.zoom || 10;
+
+    // If re apply center again, increase zoom
+    if (center.lat === $scope.map.center.lat
+      && center.lng === $scope.map.center.lng
+      && center.zoom === $scope.map.center.zoom) {
+      center.zoom += 2;
+    }
+
+    angular.merge($scope.map.center, center);
+  };
+
+  // -- for DEV only --
+  /*$scope.formData.errors = [
+    {message: 'MAP.SHAPE.EDIT.ERROR.SELF_INTERSECTION', messageParams: {id: 'US-MI'}, lat: 5, lon: 5}
+  ];*/
+
+
 }

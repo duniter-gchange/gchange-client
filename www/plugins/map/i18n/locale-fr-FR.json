@@ -2,6 +2,7 @@
   "MAP": {
     "COMMON": {
       "SEARCH_DOTS": "Rechercher...",
+      "BTN_SHOW_ON_MAP": "Voir sur la carte",
       "BTN_LOCALIZE_ME": "Me localiser",
       "BTN_MOVE_DOWN": "Déplacer vers le bas",
       "BTN_MOVE_UP": "Déplacer vers le haut",
@@ -15,6 +16,7 @@
         "COUNTRY_DOTS": "Pays :",
         "COUNTRY_HELP": "Code pays (ISO2)",
         "CONFIG_FORM_DIVIDER": "Configuration :",
+        "ERROR_DIVIDER": "Erreurs dectectées :",
         "LEFT_LNG": "Ouest",
         "RIGHT_LNG": "Est",
         "TOP_LAT": "North",
@@ -29,15 +31,22 @@
         "ORDER": "Ordre de tri",
         "BTN_APPLY": "Appliquer",
         "BTN_DELETE": "Supprimer la zone",
-        "CUSTOM_PROJECTION": "Saisie manuelle de la projection spatial (Degrés -> px SVG)",
+        "CUSTOM_PROJECTION": "Saisie manuelle des paramètres de projection",
         "BTN_TEST_SEARCH": "Tester une recherche sur cette zone",
+        "STRICT_MODE": "Compatibilité OCG (hand right rule)",
+        "REMOVE_HOLE": "Supprimer les trous intérieurs aux polygones",
+        "APPLY_ROUND": "Arrondir à la précision {{maxPrecision}}",
+        "DEGREES_PRECISION": "Précision (degrés)",
         "INFO": {
           "SAVED": "La carte a bien été sauvegardée"
         },
         "ERROR": {
           "INVALID_SVG": "Format SVG incorrect.",
           "INVALID_COUNTRY_CODE": "Code pays incorrect (need ISO2)",
-          "SAVE_FAILED": "Erreur lors de la sauvegarde de la carte"
+          "SAVE_FAILED": "Erreur lors de la sauvegarde de la carte",
+          "SELF_INTERSECTION": "Self-intersection in polygon <b>{{id}}</b>",
+          "HOLE_LIES_OUTSIDE": "Hole lies outside shell <b>{{id}}</b>",
+          "HOLE_NOT_WITHIN_POLYGON": "Invalid hole (not within polygon) in polygon <b>{{id}}</b>"
         }
       }
     },
