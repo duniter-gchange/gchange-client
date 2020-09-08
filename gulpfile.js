@@ -51,7 +51,7 @@ const paths = {
   config: ['./app/config.json'],
   templatecache: ['./www/templates/**/*.html'],
   ng_translate: ['./www/i18n/locale-*.json'],
-  ng_annotate: ['./www/js/**/*.js', '!./www/js/vendor/*.js'],
+  ng_annotate: ['./www/js/**/*.js', '!./www/js/vendor/**/*.js'],
   // plugins:
   leafletSass: ['./scss/leaflet.app.scss'],
   converseSass: ['./scss/converse.app.scss'],
@@ -212,6 +212,7 @@ function appNgAnnotate(event) {
 
   log(colors.green('Building JS files...'));
   return gulp.src(paths.ng_annotate)
+    .pipe(debug({...debugBaseOptions, title: "Add deps, using 'ngInject'", showFiles: true}))
     .pipe(ngAnnotate({single_quotes: true}))
     .pipe(gulp.dest('./www/dist/dist_js/app'));
 }

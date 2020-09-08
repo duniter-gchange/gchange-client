@@ -1,5 +1,3 @@
-var d3Transform;
-
 angular.module('cesium.map.shape.controllers', ['cesium.services', 'cesium.map.shape.services'])
 
   .config(function($stateProvider) {
@@ -577,7 +575,7 @@ function MapCountryEditController($scope, $rootScope, $state, $controller, $time
           strictMode: $scope.configData.strictMode,
           updateProgression: function(feature, index, total) {
             var title = feature.properties && (feature.properties.title || feature.properties.id) || (''+ index);
-            UIUtils.loading.show({template: 'Saving <b>{0}</b>... ({1}/{2})'.format(title, index+1, total)});
+            UIUtils.loading.show({template: 'Saving... ({1}/{2})<br/><b>{0}</b>'.format(title, index+1, total)});
           }
         })
       })
