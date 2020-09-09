@@ -319,7 +319,7 @@
   },
   "LOCATION": {
     "BTN_GEOLOC_ADDRESS": "Actualizar desde la dirección",
-    "USE_GEO_POINT": "Aparecer en el mapa {{'COMMON.APP_NAME'|translate}}",
+    "USE_GEO_POINT": "Comprobar la dirección (recomendado)",
     "LOADING_LOCATION": "Encontrar la dirección…",
     "LOCATION_DIVIDER": "Dirección",
     "ADDRESS": "Calle",

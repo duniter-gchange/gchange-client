@@ -577,7 +577,8 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
         },
         position: {
           showCheckbox: true,
-          required: true
+          required: true,
+          warningMessage: 'MARKET.EDIT.WARNING.NO_GEO_POINT'
         },
         unit: {
           canEdit: true

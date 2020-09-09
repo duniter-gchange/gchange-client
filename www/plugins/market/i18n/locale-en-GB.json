@@ -199,6 +199,9 @@
         "TITLE_HELP": "Campaign title",
         "DESCRIPTION_HELP": "Description: Describe your project here",
         "PRICE_HELP": "Expected amount"
+      },
+      "WARNING": {
+        "NO_GEO_POINT": "Your ad <b>will not be visible</b> in spatial searches."
       }
     },
     "WOT": {

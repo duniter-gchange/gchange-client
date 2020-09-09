@@ -199,6 +199,9 @@
         "TITLE_HELP": "Titre de la campagne",
         "DESCRIPTION_HELP": "Description : Décrivez votre projet ici",
         "PRICE_HELP": "Montant recherché"
+      },
+      "WARNING": {
+        "NO_GEO_POINT": "Votre annonce <b>ne sera pas visible</b> dans les recherches spatiales."
       }
     },
     "WOT": {

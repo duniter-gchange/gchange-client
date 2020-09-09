@@ -60,7 +60,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
             wot: {
               enableMixedSearch: true
             },
-            geoDistance: '20km'
+            geoDistance: '50km'
           }
         }
     },

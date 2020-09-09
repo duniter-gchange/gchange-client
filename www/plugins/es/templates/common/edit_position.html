@@ -60,9 +60,17 @@
             class="item item-border-large done in">
       <div class="item-content">
         <span translate>LOCATION.USE_GEO_POINT</span>
+
+        <!-- warning if no position-->
+        <h4 class="assertive" ng-if="options.position.warningMessage && !formPosition.enable">
+          <i class="icon ion-android-warning"></i>
+          <span ng-bind-html="options.position.warningMessage|translate"></span>
+        </h4>
+
+        <!-- loading -->
         <h4 class="gray" ng-if="formPosition.loading">
           <ion-spinner class="icon ion-spinner-small" icon="android"></ion-spinner>
-          {{'LOCATION.LOADING_LOCATION'|translate}}
+          <span translate>LOCATION.LOADING_LOCATION</span>
         </h4>
       </div>
     </ion-checkbox>
@@ -82,6 +90,5 @@
     </div>
   </div>
 </div>
-
 
 <cs-extension-point name="after-position"></cs-extension-point>

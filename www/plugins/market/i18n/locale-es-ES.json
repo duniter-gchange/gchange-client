@@ -58,6 +58,8 @@
       "LAST_RECORDS": "Anuncios recientes:",
       "SHOW_OLD_RECORD": "Mostrar anuncios viejos",
       "RESULTS": "Resultados :",
+      "BTN_CROWDFUNDING": "Crowdfunding",
+      "BTN_AUCTION": "Auction",
       "BTN_LAST_RECORDS": "Anuncios recientes",
       "BTN_SHOW_CATEGORIES": "Mostrar categorías",
       "BTN_OFFERS": "Ofertas",
@@ -78,7 +80,6 @@
       "BTN_FOLLOW": "Seguir este anuncio",
       "BTN_STOP_FOLLOW": "Dejar de seguir este anuncio",
       "MORE_LIKE_THIS": "Esto le podría interesar :",
-
       "NEW_MESSAGE_TITLE": "Sobre el anuncio \"{{title}}\"...",
       "REOPEN_CONFIRMATION": "¿<b>Desea</b> reabrir este anuncio ?",
       "SOLD_CONFIRMATION": "¿<b>Desea</b> cerrar este anuncio ?",
@@ -93,13 +94,23 @@
       "POPOVER_SHARE_TITLE": "Anuncio {{title}}",
       "REMOVE_CONFIRMATION" : "¿ Desea suprimir este anuncio ?<br/><br/>Esta operación es irreversible."
     },
+    "WALLET": {
+      "DUNITER_PUBKEY": "Llave pública de recepción de pagos",
+      "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|currencySymbol}}",
+      "DUNITER_ACCOUNT_HELP": "La llave pública (de arriba) indica el destino de los pagos que recibirá.",
+      "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Ninguna llave pública ha sido introducida. Deberá enviársela a los eventuales compradores.<br/>La puede obtener en cualquier momento <b>editando su perfil</b>."
+    },
     "TYPE": {
       "TITLE": "Nuevo anuncio",
       "SELECT_TYPE": "Tipo de anuncio :",
       "OFFER": "Oferta",
       "OFFER_SHORT": "Oferta",
+      "CROWDFUNDING": "Recaudación de fondos",
+      "CROWDFUNDING_SHORT": "Recaudación de fondos",
       "NEED": "Demanda",
-      "NEED_SHORT": "Demanda"
+      "NEED_SHORT": "Demanda",
+      "AUCTION": "Subasta",
+      "AUCTION_SHORT": "Subasta"
     },
     "LOCAL_SALE": {
       "LOCATION": "Número de stand",
@@ -108,7 +119,6 @@
     },
     "EDIT": {
       "TITLE": "Edición",
-      "TITLE_NEW": "Nuevo anuncio",
       "RECORD_TITLE": "Título",
       "RECORD_TITLE_HELP": "Título",
       "RECORD_DESCRIPTION": "Descripción",
@@ -117,18 +127,32 @@
       "RECORD_LOCATION_HELP": "Ciudad, País",
       "RECORD_PRICE": "Precio",
       "RECORD_PRICE_HELP": "Precio (opcional)",
+      "FREE_PRICE": "Precio libre?",
       "RECORD_CURRENCY": "Moneda",
       "RECORD_FEES": "Gastos de envío",
       "RECORD_FEES_HELP": "Gastos de envío (opcional)",
       "RECORD_STOCK": "Stock disponible",
-      "RECORD_STOCK_HELP": "Stock disponible"
-    },
-    "WALLET": {
-      "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|currencySymbol}}",
-      "DUNITER_ACCOUNT_HELP": "La llave pública (de arriba) indica el destino de los pagos que recibirá.",
-      "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Ninguna llave pública ha sido introducida. Deberá enviársela a los eventuales compradores.<br/>La puede obtener en cualquier momento <b>editando su perfil</b>.",
-      "DUNITER_PUBKEY": "Llave pública de recepción de pagos"
-
+      "RECORD_STOCK_HELP": "Stock disponible",
+      "AUCTION": {
+        "TITLE_NEW": "Nueva subasta",
+        "START_PRICE_HELP": "Precio inicial (opcional)"
+      },
+      "OFFER": {
+        "TITLE_NEW": "Anuncio nuevo"
+      },
+      "NEED": {
+        "TITLE_NEW": "Nouvelle demande",
+        "MAX_PRICE_HELP": "Precio máximo (opcional)"
+      },
+      "CROWDFUNDING": {
+        "TITLE_NEW": "Nueva campaña de crowdfunding",
+        "TITLE_HELP": "Título de la campaña",
+        "DESCRIPTION_HELP": "\n39/5000\nDescripción: Describe tu proyecto aquí",
+        "PRICE_HELP": "Cantidad esperada"
+      },
+      "WARNING": {
+        "NO_GEO_POINT": "Su anuncio <b> no será visible </b> en búsquedas espaciales."
+      }
     },
     "WOT": {
       "ERROR": {
@@ -191,10 +215,10 @@
       "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado su comentario en el anuncio : <b>{{params[2]}}</b>",
       "LIKE_RECEIVED": "A <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> le ha gustado su anuncio : <b>{{params[2]}}</b>",
       "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> os pide moderación sobre el anuncio : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
-      "NEW_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha comentado su anuncio : <b>{{params[2]}}</b>",
-      "UPDATE_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado su comentario sobre su anuncio : <b>{{params[2]}}</b>",
-      "NEW_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha contestado a su comentario sobre el anuncio : <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid }\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> ha modificado la repuesta a su comentario sobre el anuncio : <b>{{params[2]}}</b>"
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha comentado su anuncio : <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado su comentario sobre su anuncio : <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha contestado a su comentario sobre el anuncio : <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado la repuesta a su comentario sobre el anuncio : <b>{{params[2]}}</b>"
     }
   }
 }

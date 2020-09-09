@@ -1,7 +1,7 @@
 <ion-view left-buttons="leftButtons" id="editMarket">
   <ion-nav-title>
     <span class="visible-xs" ng-if="id" ng-bind-html="formData.title"></span>
-    <span class="visible-xs" ng-if="!loading && !id" translate>MARKET.EDIT.TITLE_NEW</span>
+    <span class="visible-xs" ng-if="!id && formData.type">{{'MARKET.EDIT.' + formData.type + '.TITLE_NEW'|upper|translate}}</span>
   </ion-nav-title>
 
   <ion-nav-buttons side="secondary">

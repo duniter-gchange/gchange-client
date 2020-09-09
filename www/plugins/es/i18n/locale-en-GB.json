@@ -311,7 +311,7 @@
   },
   "LOCATION": {
     "BTN_GEOLOC_ADDRESS": "Find my address on the map",
-    "USE_GEO_POINT": "geo-locate (recommended)?",
+    "USE_GEO_POINT": "Verify address (recommended)?",
     "LOADING_LOCATION": "Searching address...",
     "LOCATION_DIVIDER": "Localisation",
     "ADDRESS": "Address",

@@ -63,7 +63,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     loadingMore: false,
     showClosed: false,
     showOld: false,
-    geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 20,
+    // 50km by default
+    geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 50,
     sortAttribute: null,
     sortDirection: 'desc'
   };
