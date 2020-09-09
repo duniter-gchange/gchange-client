@@ -13,12 +13,12 @@
     </button>
   </ion-nav-buttons>
 
-  <ion-content class="has-header text-center padding-xs bg-image-cover"
+  <ion-content class="has-header no-padding-xxs bg-image-cover"
                style="background-image: url({{bgImage}})">
 
-    <div class="row padding-horizontal no-padding-xxs no-padding-xs responsive-lg">
+    <div class="row padding-horizontal no-padding-xxs responsive-lg">
       <div class="col col-30 no-padding hidden-xs hidden-sm">&nbsp;</div>
-      <div class="col text-center no-padding-xs main-container">
+      <div class="col text-center no-padding-xxs no-padding-xs main-container">
 
       <div class="logo"></div>
       <p class="hidden-xs">&nbsp;</p>
@@ -86,11 +86,15 @@
           <!-- disconnect link -->
           <div class="text-center no-padding hidden-xs hidden-sm " ng-show="login">
             <span class="dark" ng-bind-html="'HOME.NOT_YOUR_ACCOUNT_QUESTION'|translate:$root.walletData"></span>
-            <a class="bold positive" ng-click="logout()" translate>
-              HOME.BTN_CHANGE_ACCOUNT
-            </a>
+            <br/>
+            <b>
+              <a class="assertive" ng-click="logout()" translate>
+                HOME.BTN_CHANGE_ACCOUNT
+              </a>
+            </b>
           </div>
 
+          <!-- login (small screen) -->
           <button type="button"
                   class="button button-block button-stable button-raised ink visible-xs visible-sm"
                   ui-sref="app.view_wallet" ng-if="!login" translate>COMMON.BTN_LOGIN</button>

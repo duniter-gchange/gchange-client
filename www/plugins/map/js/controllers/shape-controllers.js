@@ -46,8 +46,13 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
     // Make sure to load countries
     if (!$scope.countries) {
       return $scope.loadAllCountries()
-        .then(function() {
-          $scope.load(options); // Loop
+        .then(function(countries) {
+          // Stop here, if no countries
+          if (!countries || !countries.length) {
+            $scope.loading = false;
+            return;
+          }
+          return $scope.load(options); // Loop
         });
     }
 
@@ -58,8 +63,8 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
     if (!options || options.silent !== true) {
       $scope.loading = true;
       now = Date.now();
-      console.debug('[shape] Loading shape for country {{0}}...'.format(country));
     }
+    console.debug('[shape] Loading shape for country {{0}}...'.format(country));
 
     return esShape.geoJson.search({country: country})
       .then(function(data) {
@@ -85,6 +90,10 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
       .then(function (countries) {
         // Replace countries
         $scope.countries = _(countries || []).pluck('id');
+        return $scope.countries;
+      })
+      .catch(function(err) {
+        console.error('[shape] Error child loading countries: ' + (err && err.message || err), err);
       });
   };
 
@@ -107,7 +116,9 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
       }) || 'fr'; // Default country
     }
 
-    return defaultCountry  || 'fr';
+    defaultCountry = defaultCountry || 'fr';
+
+    return defaultCountry;
   };
 
   $scope.updateView = function(geoJson) {

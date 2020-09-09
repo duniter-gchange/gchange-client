@@ -23,7 +23,7 @@ angular.module("cesium.config", [])
 	},
 	"feed": {
 		"jsonFeed": {
-			"fr-FR": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-fr.json",
+			"fr-FR": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/draft/feed-fr.json",
 			"en": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-en.json"
 		},
 		"maxContentLength": 1300

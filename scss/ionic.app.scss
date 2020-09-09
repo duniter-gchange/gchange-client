@@ -36,15 +36,27 @@
     @extend .dark;
   }
 
-  .no-padding-xs {
-    padding: 0 !important;
-  }
-
   .footer {
     background-color: rgba(255,255,255,0.8);
   }
 }
-
+@media screen and (max-width: $screen-xxs-max) {
+  .no-padding-xxs {
+    padding: 0 !important;
+  }
+}
+@media screen and (max-width: $screen-xs-max) {
+  .no-padding-xs {
+    padding: 0 !important;
+  }
+}
+@media screen and (max-width: $screen-sm-max) {
+  #home {
+    .row {
+      display: inline-block;
+    }
+  }
+}
 
 @media screen and (min-width: $screen-menu) {
   #home {
@@ -75,7 +87,8 @@
 /* -- Converse JS customization-- */
 
 #conversejs {
-  height: 55vh;
+  /*bottom: -35px;
+  right: 0;*/
 }
 
 // Hide control box
@@ -110,6 +123,9 @@
   .chatbox-btn.close-chatbox-button {
     display: none !important;
   }
+  .chatbox-btn.toggle-bookmark {
+    display: none !important;
+  }
 }
 
 #converse-embedded-chat .chatroom .sendXMPPMessage .chat-toolbar,
@@ -125,7 +141,7 @@
   bottom: 6px;
   height: 35px;
   .chatbox-btn.close-chatbox-button {
-    display: inline-block !important;
+    display: none !important;
   }
   a.restore-chat {
     padding-top: 0.2em;

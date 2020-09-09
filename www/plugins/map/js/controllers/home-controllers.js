@@ -19,14 +19,11 @@ angular.module('cesium.map.home.controllers', ['ngResource', 'cesium.es.services
 
 ;
 
-function MapHomeController($scope, $rootScope, $controller, $state, esShape) {
+function MapHomeController($scope, $rootScope, $controller, $state, csPlatform, UIUtils, esShape) {
   'ngInject';
 
   // Initialize the super class and extend it.
   angular.extend(this, $controller('MapShapeViewCtrl', {$scope: $scope}));
-
-  // Start loading the map
-  $scope.load();
 
   $scope.onClick = function(event, element) {
     if (event && event.defaultPrevented) return;
@@ -57,6 +54,17 @@ function MapHomeController($scope, $rootScope, $controller, $state, esShape) {
         return $state.go('app.market_lookup', { shape: id, location: location });
       });
   };
+
+  $scope.start = function() {
+
+    console.debug('[home] [shape] Starting');
+
+    // Start loading the map, if NOT small device
+    $scope.load();
+  };
+
+  // Run start
+  csPlatform.ready().then($scope.start);
 
 }
 

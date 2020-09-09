@@ -168,12 +168,25 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
     },
 
     restore = function() {
-      return $q.all([
-          localStorage.get(constants.STORAGE_KEY),
-          localStorage.get(constants.OLD_STORAGE_KEY)
-        ])
-        .then(function(res) {
-          var dataStr = res[0] || res[1];
+      return localStorage.get(constants.STORAGE_KEY)
+          .then(function(dataStr) {
+            // If found: continue
+            if (dataStr) return dataStr;
+
+            // If not found, then read the old storage key
+            try {
+              return localStorage.get(constants.OLD_STORAGE_KEY)
+                .catch(function() {
+                  console.debug('No settings stored in ' + constants.OLD_STORAGE_KEY + ' key. Continue');
+                  return; // Continue if not found
+                });
+            }
+            catch(err) {
+              console.debug('No settings stored in ' + constants.OLD_STORAGE_KEY + ' key. Continue');
+              return; // Continue if error
+            }
+          })
+        .then(function(dataStr) {
           if (!dataStr) return;
           return fromJson(dataStr, false)
             .then(function(storedData){

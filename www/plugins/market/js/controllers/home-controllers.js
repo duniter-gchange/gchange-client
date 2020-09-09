@@ -42,9 +42,9 @@ function MarketHomeFooterController($scope, $controller, UIUtils, csPlatform, $s
       // Initialize the super class and extend it.
       angular.extend(this, $controller('MkListCategoriesCtrl', {$scope: $scope}));
 
-        $scope.onCategoryClick = function(cat) {
-            return $state.go('app.market_lookup', {category: cat && cat.id, location: ''});
-        };
+      $scope.onCategoryClick = function(cat) {
+        return $state.go('app.market_lookup', {category: cat && cat.id, location: ''});
+      };
 
       $scope.load();
     }
