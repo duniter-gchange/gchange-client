@@ -17,108 +17,109 @@
                style="background-image: url({{bgImage}})">
 
     <div class="row padding-horizontal no-padding-xxs responsive-lg">
-      <div class="col col-30 no-padding hidden-xs hidden-sm">&nbsp;</div>
+      <div class="col hidden-xs hidden-sm "
+           ng-class="{'col-30 no-padding': !feed, 'col-20 no-padding': feed}">&nbsp;</div>
       <div class="col text-center no-padding-xxs no-padding-xs main-container">
 
-      <div class="logo"></div>
-      <p class="hidden-xs">&nbsp;</p>
+        <div class="logo"></div>
+        <p class="hidden-xs">&nbsp;</p>
 
-      <div class="center padding light-bg" style="max-width: 382px;">
+        <div class="center padding light-bg" style="max-width: 382px;">
 
-        <h4>
-          <span class="hidden-xs" translate>HOME.MESSAGE</span>
+          <h4>
+            <span class="hidden-xs" translate>HOME.MESSAGE</span>
 
-          <span ng-show="!loading" ng-bind-html="'HOME.MESSAGE_CURRENCY'|translate:{currency: $root.currency.name}"></span>
-        </h4>
+            <span ng-show="!loading" ng-bind-html="'HOME.MESSAGE_CURRENCY'|translate:{currency: $root.currency.name}"></span>
+          </h4>
 
-        <br class="hidden-xs"/>
+          <br class="hidden-xs"/>
 
-        <div class="center padding" ng-if="loading">
-          <ion-spinner icon="android" ></ion-spinner>
-        </div>
+          <div class="center padding" ng-if="loading">
+            <ion-spinner icon="android" ></ion-spinner>
+          </div>
 
-        <div class="animate-fade-in animate-show-hide ng-hide" ng-show="!loading && error">
-          <div class="card card-item padding">
-            <p class="item-content item-text-wrap">
-                <span class="dark" trust-as-html="'HOME.CONNECTION_ERROR'|translate:node"></span>
-            </p>
+          <div class="animate-fade-in animate-show-hide ng-hide" ng-show="!loading && error">
+            <div class="card card-item padding">
+              <p class="item-content item-text-wrap">
+                  <span class="dark" trust-as-html="'HOME.CONNECTION_ERROR'|translate:node"></span>
+              </p>
 
-            <!-- Retry -->
+              <!-- Retry -->
+              <button type="button"
+                      class="button button-positive icon icon-left ion-refresh ink"
+                      ng-click="reload()">{{:locale:'COMMON.BTN_REFRESH'|translate}}</button>
+            </div>
+          </div>
+
+          <div class="center animate-fade-in animate-show-hide ng-hide" ng-show="!loading && !error">
+
+
+            <!-- Help tour (NOT ready yet for small device)
             <button type="button"
-                    class="button button-positive icon icon-left ion-refresh ink"
-                    ng-click="reload()">{{:locale:'COMMON.BTN_REFRESH'|translate}}</button>
-          </div>
-        </div>
+                    ng-show="login"
+                    class="button button-block button-stable button-raised icon-left icon ion-easel ink-dark hidden-xs"
+                    ng-click="startHelpTour()" >
+              {{'COMMON.BTN_HELP_TOUR'|translate}}
+            </button>-->
 
-        <div class="center animate-fade-in animate-show-hide ng-hide" ng-show="!loading && !error">
+            <cs-extension-point name="buttons"></cs-extension-point>
 
+            <button type="button"
+                    class="button button-block button-positive button-raised icon ink-dark"
+                    ng-click="showJoinModal()" ng-if="!login" translate>LOGIN.CREATE_FREE_ACCOUNT</button>
 
-          <!-- Help tour (NOT ready yet for small device)
-          <button type="button"
-                  ng-show="login"
-                  class="button button-block button-stable button-raised icon-left icon ion-easel ink-dark hidden-xs"
-                  ng-click="startHelpTour()" >
-            {{'COMMON.BTN_HELP_TOUR'|translate}}
-          </button>-->
+            <button type="button"
+                    class="button button-block button-positive button-raised icon icon-left ion-person ink-dark"
+                    ui-sref="app.view_wallet" ng-show="login" translate>MENU.ACCOUNT</button>
 
-          <cs-extension-point name="buttons"></cs-extension-point>
-
-          <button type="button"
-                  class="button button-block button-positive button-raised icon ink-dark"
-                  ng-click="showJoinModal()" ng-if="!login" translate>LOGIN.CREATE_FREE_ACCOUNT</button>
-
-          <button type="button"
-                  class="button button-block button-positive button-raised icon icon-left ion-person ink-dark"
-                  ui-sref="app.view_wallet" ng-show="login" translate>MENU.ACCOUNT</button>
-
-          <br class="visible-xs visible-sm"/>
-          <!-- login link -->
-          <div class="text-center no-padding" ng-show="!login">
             <br class="visible-xs visible-sm"/>
-            {{'LOGIN.HAVE_ACCOUNT_QUESTION'|translate}}
-            <b>
-              <a class="positive hidden-xs hidden-sm" ng-click="loginAndGo('app.view_wallet')" translate>
-                COMMON.BTN_LOGIN
-              </a>
-            </b>
+            <!-- login link -->
+            <div class="text-center no-padding" ng-show="!login">
+              <br class="visible-xs visible-sm"/>
+              {{'LOGIN.HAVE_ACCOUNT_QUESTION'|translate}}
+              <b>
+                <a class="positive hidden-xs hidden-sm" ng-click="loginAndGo('app.view_wallet')" translate>
+                  COMMON.BTN_LOGIN
+                </a>
+              </b>
+            </div>
+
+            <!-- disconnect link -->
+            <div class="text-center no-padding hidden-xs hidden-sm " ng-show="login">
+              <span class="dark" ng-bind-html="'HOME.NOT_YOUR_ACCOUNT_QUESTION'|translate:$root.walletData"></span>
+              <br/>
+              <b>
+                <a class="assertive" ng-click="logout()" translate>
+                  HOME.BTN_CHANGE_ACCOUNT
+                </a>
+              </b>
+            </div>
+
+            <!-- login (small screen) -->
+            <button type="button"
+                    class="button button-block button-stable button-raised ink visible-xs visible-sm"
+                    ui-sref="app.view_wallet" ng-if="!login" translate>COMMON.BTN_LOGIN</button>
+            <button type="button"
+                    class="button button-block button-assertive button-raised icon icon-left ion-log-out ink-dark visible-xs visible-sm"
+                    ng-click="logout()" ng-if="login" translate>COMMON.BTN_LOGOUT</button>
+
           </div>
 
-          <!-- disconnect link -->
-          <div class="text-center no-padding hidden-xs hidden-sm " ng-show="login">
-            <span class="dark" ng-bind-html="'HOME.NOT_YOUR_ACCOUNT_QUESTION'|translate:$root.walletData"></span>
-            <br/>
-            <b>
-              <a class="assertive" ng-click="logout()" translate>
-                HOME.BTN_CHANGE_ACCOUNT
-              </a>
-            </b>
-          </div>
-
-          <!-- login (small screen) -->
-          <button type="button"
-                  class="button button-block button-stable button-raised ink visible-xs visible-sm"
-                  ui-sref="app.view_wallet" ng-if="!login" translate>COMMON.BTN_LOGIN</button>
-          <button type="button"
-                  class="button button-block button-assertive button-raised icon icon-left ion-log-out ink-dark visible-xs visible-sm"
-                  ng-click="logout()" ng-if="login" translate>COMMON.BTN_LOGOUT</button>
-
-        </div>
-
-        <br/>
-
-        <div class="text-center no-padding visible-xs stable">
           <br/>
-          <!-- version -->
-          {{:locale:'COMMON.APP_VERSION'|translate:{version: config.version} }}
-          |
-          <!-- about -->
-          <a href="#" ng-click="showAboutModal()" translate>HOME.BTN_ABOUT</a>
+
+          <div class="text-center no-padding visible-xs stable">
+            <br/>
+            <!-- version -->
+            {{:locale:'COMMON.APP_VERSION'|translate:{version: config.version} }}
+            |
+            <!-- about -->
+            <a href="#" ng-click="showAboutModal()" translate>HOME.BTN_ABOUT</a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col no-padding" ng-class="{'col-30': !feed, 'col-10': feed}">&nbsp;
-    </div>
+      <div class="col" ng-class="{'col-30 no-padding': !feed, 'col-10 no-padding': feed}">&nbsp;
+      </div>
       <div class="col col-30 no-padding" ng-if="feed">
 
         <!-- feed -->
