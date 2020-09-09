@@ -2634,7 +2634,7 @@ div[drop-zone]:hover {
     color: inherit;
   }
 
-  .feed_header,
+  .feed-header,
   .card .header {
     height: 25px;
     color: grey !important;
@@ -2691,4 +2691,10 @@ div[drop-zone]:hover {
 .popover-instance-address {
   width: 400px;
   height: 250px;
+}
+
+/* -- Missing CSS class -- */
+
+.positive-100, .positive-100 *, .positive-100:active, .positive-100:active *, .positive-100:hover, .positive-100:hover * {
+  color: $positive-100;
 }
