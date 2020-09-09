@@ -23,7 +23,7 @@ angular.module("cesium.config", [])
 	},
 	"feed": {
 		"jsonFeed": {
-			"fr-FR": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/draft/feed-fr.json",
+			"fr-FR": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-fr.json",
 			"en": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-en.json"
 		},
 		"maxContentLength": 1300
@@ -61,7 +61,7 @@ angular.module("cesium.config", [])
 		}
 	},
 	"version": "1.2.0",
-	"build": "2020-09-09T09:08:59.591Z",
+	"build": "2020-09-09T12:04:47.143Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
