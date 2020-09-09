@@ -58,7 +58,7 @@
 @media screen and (min-width: $screen-menu) {
   #home {
     ion-content > .scroll > .row:first-child {
-      height: calc(100vh - 43px);
+      min-height: calc(100vh - 43px);
     }
   }
 }
