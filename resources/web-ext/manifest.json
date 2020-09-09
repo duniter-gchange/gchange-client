@@ -1,7 +1,7 @@
 {
   "name": "gchange-client",
   "short_name": "gchange",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Make exchanges in the libre currency Ğ1!",
   "background": {
     "scripts": ["background.js"]
