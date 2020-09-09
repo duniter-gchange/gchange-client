@@ -1,6 +1,6 @@
 {
   "name": "gchange-client",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "description": "Make exchanges in the libre currency Ğ1!",
   "author": "Gchange team",
   "license": "AGPL-3.0",
@@ -95,8 +95,8 @@
     "uuid": "3.2.1"
   },
   "devDependencies": {
-    "@ionic/cli": "^6.11.8",
-    "@ionic/v1-toolkit": "^3.2.11",
+    "@ionic/cli": "^6.11.0",
+    "@ionic/v1-toolkit": "^3.2.10",
     "@prantlf/gulp-jsonlint": "^2.4.0",
     "ansi-colors": "^4.1.1",
     "cordova": "^10.0.0",
