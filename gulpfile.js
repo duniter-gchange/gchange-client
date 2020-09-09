@@ -280,7 +280,9 @@ function pluginLeafletImages(dest) {
     'www/lib/leaflet-search/images/*.*',
     '!www/lib/leaflet-search/images/back.png',
     '!www/lib/leaflet-search/images/leaflet-search.jpg',
-    'www/lib/leaflet.awesome-markers/dist/images/*.*'])
+    'www/lib/leaflet.awesome-markers/dist/images/*.*'],
+      {read: false, allowEmpty: true}
+    )
     .pipe(gulp.dest(dest));
 }
 
@@ -682,7 +684,7 @@ function webCleanUnusedDirectories() {
 function webZip() {
   const tmpPath = './dist/web/www';
   const version = JSON.parse(fs.readFileSync('./package.json', 'utf8')).version;
-  const txtFilter = filter(["**/*.txt"], {restore: true});
+  const txtFilter = filter(["**/*.txt"], { restore: true });
 
   return gulp.src(tmpPath + '/**/*.*')
 
@@ -855,7 +857,11 @@ function cdvRemoveCode() {
     wwwPath = path.join(projectRoot, 'platforms', platform, 'www');
   }
 
-  const pluginPath = path.join(wwwPath, 'plugins', 'es');
+  const appJsPath = [path.join(wwwPath, 'js', '**', '*.js'),
+      // Exclude vendor libs
+      "!" + path.join(wwwPath, 'js', 'vendor', '**', '*.js')];
+  const pluginPath = path.join(wwwPath, 'plugins', '*');
+  const pluginJsPath = path.join(pluginPath, '**', '*.js');
 
   // Compute options {device-<platform>: true}
   let removeCodeOptions = {};
@@ -902,14 +908,14 @@ function cdvRemoveCode() {
         .pipe(gulp.dest(wwwPath)),
 
       // Remove unused JS code + add ng annotations
-      gulp.src(path.join(wwwPath, 'js', '**', '*.js'))
+      gulp.src(appJsPath)
         .pipe(debug(debugOptions))
         .pipe(removeCode({device: true}))
         .pipe(removeCode(removeCodeOptions))
         .pipe(ngAnnotate({single_quotes: true}))
         .pipe(gulp.dest(wwwPath + '/dist/dist_js/app')),
 
-      gulp.src([pluginPath + '/js/**/*.js'])
+      gulp.src(pluginJsPath)
         .pipe(debug(debugOptions))
         .pipe(removeCode({device: true}))
         .pipe(removeCode(removeCodeOptions))
@@ -919,21 +925,25 @@ function cdvRemoveCode() {
   } else {
     return merge(
       gulp.src(path.join(wwwPath, 'templates', '**', '*.html'))
+        .pipe(debug(debugOptions))
         .pipe(htmlmin(htmlminOptions))
         .pipe(gulp.dest(wwwPath + '/templates')),
 
       gulp.src(path.join(pluginPath, '**', '*.html'))
+        .pipe(debug(debugOptions))
         .pipe(htmlmin(htmlminOptions))
         .pipe(gulp.dest(pluginPath)),
 
       gulp.src(path.join(wwwPath, 'index.html'))
         .pipe(gulp.dest(wwwPath)),
 
-      gulp.src(path.join(wwwPath, 'js', '**', '*.js'))
+      gulp.src(appJsPath)
+        .pipe(debug(debugOptions))
         .pipe(ngAnnotate({single_quotes: true}))
         .pipe(gulp.dest(wwwPath + '/dist/dist_js/app')),
 
-      gulp.src([pluginPath + '/js/**/*.js'])
+      gulp.src(pluginJsPath)
+        .pipe(debug(debugOptions))
         .pipe(gulp.dest(wwwPath + '/dist/dist_js/plugins'))
     );
   }
@@ -1150,6 +1160,7 @@ function cdvCopyBuildFiles() {
   const srcPath = path.join(projectRoot, 'resources', platform, 'build');
   const targetPath = path.join(projectRoot, 'platforms', platform);
   const debugOptions = { ...debugBaseOptions, title: 'Copying',
+    showFiles: argv.debug || false,
     showCount: !argv.debug
   };
 
@@ -1280,12 +1291,9 @@ function help() {
   log(colors.green("  --uglify                    Build using uglify plugin"));
 }
 
-
-
 /* --------------------------------------------------------------------------
    -- Combine task
    --------------------------------------------------------------------------*/
-
 const translate = gulp.series(appNgTranslate, pluginNgTranslate);
 const template = gulp.series(appNgTemplate, pluginNgTemplate);
 const appAndPluginSass = gulp.series(appSass, pluginSass);
@@ -1375,11 +1383,10 @@ const cdvBeforeCompile = gulp.series(
 );
 exports.cdvBeforeCompile = cdvAsHook(cdvBeforeCompile);
 
+// Tools
+exports.geoJson = geoJson;
+
+// Ionic CLI
 exports.default = gulp.series(appConfig, build);
 exports.serveBefore = gulp.series(build, appAndPluginWatch);
 exports['ionic:serve:before'] = exports.serveBefore; // Alias need need by @ionic/cli
-
-exports.geoJson = geoJson;
-
-gulp.task('sass', appAndPluginSass);
-gulp.task('ionic:serve:before', gulp.series(build, appAndPluginWatch));
