@@ -41,7 +41,7 @@
       "REASON_HELP": "I explain the problem...",
       "ASK_DELETE": "Request removal?",
       "CONFIRM": {
-        "SENT": "Request sent. Thnak you!"
+        "SENT": "Request sent. Thank you!"
       }
     }
   },
@@ -88,7 +88,7 @@
       "BTN_STARS_REMOVE": "Remove my note",
       "BTN_REDO_STAR_HELP": "Update your rate for this profile",
       "BTN_FOLLOW": "Follow the activity of this profile",
-      "BTN_STOP_FOLLOW": "Stop following this profil"
+      "BTN_STOP_FOLLOW": "Stop following this profile"
     }
   },
   "COMMENTS": {
