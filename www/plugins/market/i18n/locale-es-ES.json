@@ -208,11 +208,11 @@
       "TYPE": {
         "TITLE": "Nuevo anuncio",
         "SELECT_TYPE": "Tipo de anuncio :",
-        "OFFER": "Oferta",
+        "OFFER": "Oferta, Venta",
         "OFFER_SHORT": "Oferta",
-        "CROWDFUNDING": "Recaudación de fondos",
-        "CROWDFUNDING_SHORT": "Recaudación de fondos",
-        "NEED": "Demanda",
+        "CROWDFUNDING": "Financiamiento participativo",
+        "CROWDFUNDING_SHORT": "Financiamiento participativo",
+        "NEED": "Demanda, Necesidad",
         "NEED_SHORT": "Demanda",
         "AUCTION": "Subasta",
         "AUCTION_SHORT": "Subasta"
