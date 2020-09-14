@@ -1,4 +1,4 @@
-## Privacy Policy
+# Privacy Policy
 
 ## Use of camera (Android devices)
 
