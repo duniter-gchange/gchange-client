@@ -19,7 +19,7 @@
         "ERROR_DIVIDER": "Erreurs dectectées :",
         "LEFT_LNG": "Ouest",
         "RIGHT_LNG": "Est",
-        "TOP_LAT": "North",
+        "TOP_LAT": "Nord",
         "BOTTOM_LAT": "Sud",
         "SCALE": "Echelle",
         "TRANSLATE_X": "Décalage X",
@@ -33,7 +33,7 @@
         "BTN_DELETE": "Supprimer la zone",
         "CUSTOM_PROJECTION": "Saisie manuelle des paramètres de projection",
         "BTN_TEST_SEARCH": "Tester une recherche sur cette zone",
-        "STRICT_MODE": "Compatibilité OCG (hand right rule)",
+        "STRICT_MODE": "Compatibilité OCG (right-hand rule)",
         "REMOVE_HOLE": "Supprimer les trous intérieurs aux polygones",
         "APPLY_ROUND": "Arrondir à la précision :",
         "DEGREES_PRECISION": "Précision (degrés décimaux)",
@@ -41,12 +41,12 @@
           "SAVED": "La carte a bien été sauvegardée"
         },
         "ERROR": {
-          "INVALID_SVG": "Format SVG incorrect.",
+          "INVALID_SVG": "Format SVG incorrect",
           "INVALID_COUNTRY_CODE": "Code pays incorrect (ISO2 attendu, en minuscule)",
           "SAVE_FAILED": "Erreur lors de la sauvegarde de la carte",
           "SELF_INTERSECTION": "Auto-intersection dans le polygone <b>{{id}}</b>",
           "HOLE_LIES_OUTSIDE": "Le trou se trouve à l'extérieur du polygone <b>{{id}}</b>",
-          "HOLE_NOT_WITHIN_POLYGON": "Trou invalid (pas dans un polygon) <b>{{id}}</b>"
+          "HOLE_NOT_WITHIN_POLYGON": "Trou invalide (pas dans un polygone) <b>{{id}}</b>"
         }
       }
     },
