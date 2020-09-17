@@ -76,7 +76,7 @@
           "SAVED": "Catégories enregistrées avec succès"
         },
         "ERROR": {
-          "CANNOT_SAVE": "Erreur lors de la sauvegarde des categories",
+          "CANNOT_SAVE": "Erreur lors de la sauvegarde des catégories",
           "INVALID_ID_PATTERN": "Format 'catNNN' non respecté",
           "ID_ALREADY_USED": "Identifiant déjà utilisé"
         }
