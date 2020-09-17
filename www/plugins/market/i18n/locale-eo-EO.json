@@ -9,7 +9,10 @@
       "BTN_NEW_AD": "Mi metas anoncon",
       "SOLD": "Anonco fermita",
       "LAST_UPDATE": "Lasta ĝisdatigo",
-      "AROUND_ME": "Ĉirkaŭ mi"
+      "AROUND_ME": "Ĉirkaŭ mi",
+      "CROWDFUNDING_PROGRESS": "Financita ĝis {{pct|formatInteger}} %",
+      "FREE": "Senpaga",
+      "FREE_PRICE": "Prezo libera"
     },
     "JOIN": {
       "PROFILE": {
@@ -53,7 +56,31 @@
       }
     },
     "CATEGORY": {
-      "ALL": "Ĉiuj kategorioj"
+      "ALL": "Ĉiuj kategorioj",
+      "UNKNOWN": "Kategorio nekonata",
+      "EDIT": {
+        "TITLE": "Mastrumado de la kategorioj",
+        "ID": "Identigilo",
+        "NAME": "Nomo",
+        "ROOT_CATEGORIES": "Supraj kategorioj",
+        "BTN_ADD": "Aldoni",
+        "BTN_REORDER": "Reordigi",
+        "POPUP": {
+          "TITLE_EDIT": "Modifi la kategorion",
+          "TITLE_NEW": "Nova kategorio"
+        },
+        "CONFIRM": {
+          "CANCEL": "Iuj modifoj ne estis registritaj.<br/><br/><b>Ĉu vi certas</b>, ke vi volas daŭrigi tiun ĉi agon?"
+        },
+        "INFO": {
+          "SAVED": "Kategorioj sukcese registritaj"
+        },
+        "ERROR": {
+          "CANNOT_SAVE": "Eraro dum la konservado de la kategorioj",
+          "INVALID_ID_PATTERN": "Nekonforma al la formato 'catNNN'",
+          "ID_ALREADY_USED": "Identigilo jam uzata"
+        }
+      }
     },
     "SEARCH": {
       "TITLE": "Anoncoj",
@@ -78,6 +105,8 @@
       "BTN_LAST_RECORDS": "Lastaj anoncoj",
       "BTN_SHOW_CATEGORIES": "Trarigardi la kategoriojn",
       "BTN_OFFERS": "Proponoj",
+      "BTN_CROWDFUNDING": "Financadoj",
+      "BTN_AUCTION": "Aŭkcioj",
       "BTN_NEEDS": "Petoj",
       "SHOW_CLOSED_RECORD": "Afiŝi la fermitajn anoncojn?",
       "SHOW_OLD_RECORD": "Afiŝi la malnovajn anoncojn?",
@@ -97,9 +126,10 @@
       "BTN_SOLD_AD": "Fermi la anoncon",
       "BTN_SOLD": "Fermi",
       "BTN_REOPEN": "Reaperigi la anoncon",
-      "BTN_WRITE": "Skribi",
+      "BTN_WRITE": "Skribi mesaĝon",
       "BTN_FOLLOW": "Sekvi tiun ĉi anoncon",
       "BTN_STOP_FOLLOW": "Ne plu sekvi tiun ĉi anoncon",
+      "BTN_PAYMENT_HELP": "Kiel fari pagon?",
       "MENU_TITLE": "Kromeblecoj",
       "RECORD_FEES_PARENTHESIS": "(kostoj)",
       "RECORD_STOCK": "Stoko disponebla:",
@@ -108,7 +138,11 @@
       "SOLD_CONFIRMATION" : "<b>Ĉu vi certas</b>, ke vi volas fermi tiun ĉi anoncon?",
       "REOPEN_CONFIRMATION" : "<b>Ĉu vi certas</b>, ke vi volas reaperigi tiun ĉi anoncon?",
       "NEW_MESSAGE_TITLE": "Pri la anonco \"{{title}}\"...",
-      "MORE_LIKE_THIS": "Tio ĉi povus interesi vin:"
+      "MORE_LIKE_THIS": "Tio ĉi povus interesi vin:",
+      "PAYMENT": "<b>Por fari pagon</b>, sendi monon {{currency|abbreviate}}:<ul><li>- al la publika ŝlosilo <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum||pubkey}}\" title=\"Kopii la ŝlosilon\">{{pubkey}}</a></li></p>",
+      "PAYMENT_WITH_COMMENT": "<b>Por fari pagon</b>, sendi monon {{currency|abbreviate}}:<ul><li>- al la publika ŝlosilo <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum||pubkey}}\" title=\"Kopii la ŝlosilon\">{{pubkey}}</a></li><li> - kun la komento <a class=\"positive\" copy-on-click=\"{{comment}}\" title=\"Kopii la komenton\">{{comment}}</a> por la sekvado.</li></ul></p>",
+      "CROWDFUNDING_ISSUERS": "{{issuers.length}} donacinto{{issuers.length > 1 ? 'j': ''}}",
+      "SHOW_CROWDFUNDING_ISSUERS": "Vidi la donacintojn"
     },
     "WALLET": {
       "DUNITER_PUBKEY": "Publika ŝlosilo por ricevi la pagojn",
@@ -121,8 +155,12 @@
       "SELECT_TYPE": "Tipo de anonco:",
       "OFFER": "Propono, Vendo",
       "OFFER_SHORT": "Propono",
+      "CROWDFUNDING": "Multpersona financado",
+      "CROWDFUNDING_SHORT": "Financado",
       "NEED": "Peto, Serĉo",
-      "NEED_SHORT": "Peto"
+      "NEED_SHORT": "Peto",
+      "AUCTION": "Aŭkcia vendado",
+      "AUCTION_SHORT": "Aŭkcio"
     },
     "LOCAL_SALE": {
       "LOCATION": "Numero de budo",
@@ -131,7 +169,6 @@
     },
     "EDIT": {
       "TITLE": "Redaktado",
-      "TITLE_NEW": "Nova anonco",
       "RECORD_TITLE": "Titolo",
       "RECORD_TITLE_HELP": "Titolo: biciklo, libro...",
       "RECORD_DESCRIPTION": "Priskribo",
@@ -140,11 +177,32 @@
       "RECORD_LOCATION_HELP": "Poŝt-kodo, Urbo",
       "RECORD_PRICE": "Prezo",
       "RECORD_PRICE_HELP": "Prezo (nedeviga)",
+      "FREE_PRICE": "Libera prezo?",
       "RECORD_CURRENCY": "Mono",
       "RECORD_FEES": "Sendo-kostoj",
       "RECORD_FEES_HELP": "Kostoj (nedeviga)",
       "RECORD_STOCK": "Stoko disponebla",
-      "RECORD_STOCK_HELP": "Stoko disponebla"
+      "RECORD_STOCK_HELP": "Stoko disponebla",
+      "AUCTION": {
+        "TITLE_NEW": "Nova aŭkcio",
+        "START_PRICE_HELP": "Komenca prezo (nedeviga)"
+      },
+      "OFFER": {
+        "TITLE_NEW": "Nova anonco"
+      },
+      "NEED": {
+        "TITLE_NEW": "Nova peto",
+        "MAX_PRICE_HELP": "Maksimuma prezo (nedeviga)"
+      },
+      "CROWDFUNDING": {
+        "TITLE_NEW": "Nova financada kampanjo",
+        "TITLE_HELP": "Titolo de la kampanjo",
+        "DESCRIPTION_HELP": "Priskribo: detaligu vian projekton ĉi tie",
+        "PRICE_HELP": "Sumo dezirata"
+      },
+      "WARNING": {
+        "NO_GEO_POINT": "Via anonco <b>ne estos videbla</b> dum la geografiaj serĉadoj."
+      }
     },
     "WOT": {
       "VIEW": {
@@ -156,6 +214,13 @@
       },
       "ERROR": {
         "FAILED_STAR_PROFILE": "Eraro dum la sendo de via noto. Bonvolu reprovi pli poste."
+      }
+    },
+    "PAYMENT": {
+      "MODAL": {
+        "TITLE": "Fari pagon",
+        "SOFTWARE_HELP": "Vi ne scias <b>kiel sendi monon {{currency|abbreviate}}?</b><ul><li>- <a ng-click=\"openHelpSite($event)\">Konsulti la forumon por uzantoj;</a><li>- Instali kongruan programon: <a ng-click=\"openLink($event, 'https://cesium.app/eo/')\">Cesium</a> (Linukso, Vindozo, Makintoŝo), Silkaj (Linukso) aŭ Sakia (Linukso).</li>",
+        "PAYMENT_LINK_HELP": "Ligoj por pago (provaĵo):"
       }
     },
     "ERROR": {
