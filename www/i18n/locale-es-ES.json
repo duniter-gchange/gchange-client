@@ -36,6 +36,7 @@
     "BTN_RETRY": "Empezar de nuevo",
     "BTN_START": "Empezar",
     "BTN_CONTINUE": "Continuar",
+    "BTN_COPY": "Copiar",
     "BTN_CREATE": "Crear",
     "BTN_UNDERSTOOD": "Entendido",
     "BTN_OPTIONS": "Opciones",
@@ -51,6 +52,12 @@
     "LOADING": "Espere por favor…",
     "LOADING_WAIT": "Espere por favor…<br/><small>(Esperando disponibilidad de nodo)</small>",
     "SEARCHING": "Búsqueda en proceso…",
+    "FILE": {
+      "DATE": "Fecha:",
+      "SIZE": "Tamaño:",
+      "TYPE": "Tipo:",
+      "VALIDATING": "Validando..."
+    },
     "FROM": "De",
     "TO": "A",
     "COPY": "Copiar",
@@ -75,6 +82,8 @@
     "SHOW_MORE_COUNT": "(límite actual {{limit}})",
     "POPOVER_SHARE": {
       "TITLE": "Compartir",
+      "INSTANCE_ADDRESS_HELP": "Introduce la dirección de la instancia (ej: https://red.confederac.io/):",
+      "SHARE_ON_MASTODON": "Compartir en Mastodon",
       "SHARE_ON_TWITTER": "Compartir en Twitter",
       "SHARE_ON_FACEBOOK": "Compartir en Facebook",
       "SHARE_ON_DIASPORA": "Compartir en Diaspora*",
@@ -96,9 +105,14 @@
     "ACCOUNT": "Mi cuenta",
     "SETTINGS": "Ajustes",
     "NETWORK": "Red",
-    "TRANSACTIONS": "Mis transacciones"
+    "TRANSACTIONS": "Mis transacciones",
+    "WALLETS": "Mis monederos"
+
   },
   "ABOUT": {
+    "LATEST_RELEASE": "Hay una <b>versión nueva</b> de {{'COMMON.APP_NAME' | translate}} (<b>v{{version}}</b>)",
+    "OFFICIAL_WEB_SITE": "Sitio Web Oficial:",
+    "PLEASE_UPDATE": "Por favor actualice {{'COMMON.APP_NAME' | translate}} (última versión: <b>v{{version}}</b>)",
     "DEV_WARNING": "Advertencia",
     "DEV_WARNING_MESSAGE": "Esta aplicación todavía se encuentra en desarrollo.<br/>¡No dude en reportarnos las anomalías encontradas!",
     "DEV_WARNING_MESSAGE_SHORT": "Esta app todavía está en desarrollo.",
@@ -113,8 +127,8 @@
     "FEED_SOURCE": "Fuente",
     "READ_MORE": "Leer más",
     "SHOW_ALL_FEED": "Ver todo",
-    "TITLE": "Cesium",
-    "MESSAGE": "Le damos la bienvenida a {{'COMMON.APP_NAME'|translate}}",
+    "TITLE": "ğ<b>change</b>",
+    "MESSAGE": "¿ ğ<b>change</b> ?",
     "BTN_CURRENCY": "Explorar la moneda",
     "MESSAGE_CURRENCY": "¡Intercambiar en {{currency|abbreviate}} ahora es… muy sencillo!",
     "BTN_ABOUT": "Acerca de",
@@ -160,9 +174,7 @@
       "HOST_HELP": "Dirección: servidor:puerto",
       "USE_SSL": "Conexión segura",
       "USE_SSL_HELP": "(Cifrado SSL)",
-      "BTN_SHOW_LIST": "Lista de nodos",
-      "BTN_SHOW_LIST_HELP": "",
-      "HELP": "Dirección: servidor:puerto"
+      "BTN_SHOW_LIST": "Lista de nodos"
     }
   },
   "BLOCKCHAIN": {
@@ -243,6 +255,7 @@
       "SIG_STOCK": "Máximo de certificaciones emitibles por miembros",
       "SIG_PERIOD": "Espera mínima entre 2 certificaciones sucesivas emitidas por la misma persona",
       "SIG_WINDOW": "Límite para tener en cuenta una certificación",
+      "SIG_VALIDITY": "Duración de una certificación que ya ha sido aceptada",
       "MS_WINDOW": "Límite para aprobar una solicitud de membresía",
       "STEP_MAX": "Distancia máxima entre una nueva candidatura y cada miembro referente",
       "WOT_RULES_DIVIDER": "Reglas de la red de confianza",
@@ -250,6 +263,8 @@
       "SENTRIES_FORMULA": "Fórmula de las certificaciones necesarias para ser miembro referente",
       "XPERCENT":"Porcentaje mínimo necesario de miembros referentes respentando la regla de distancia máxima",
       "AVG_GEN_TIME": "Tiempo medio entre dos bloques",
+      "MS_VALIDITY": "Duración de una candidatura que ya ha sido aceptada",
+
       "CURRENT": "actual",
       "MATH_CEILING": "TECHO",
       "DISPLAY_ALL_RULES": "¿Ver todas las reglas?",
@@ -281,27 +296,31 @@
       }
     },
     "INFO": {
-      "ONLY_SSL_PEERS": "La visualización de los nodos sin SSL está deteriorada porque Cesium funciona en modo HTTPS."
+      "ONLY_SSL_PEERS": "La visualización de los nodos sin SSL aparece degradada porque Cesium funciona en modo HTTPS."
     }
   },
   "PEER": {
     "PEERS": "Nodos",
     "SIGNED_ON_BLOCK": "Firmado sobre el bloque",
     "MIRROR": "espejo",
+    "MIRROR_PEERS": "Nodos espejo",
     "MIRRORS": "Espejo",
     "PEER_LIST": "Lista de nodos",
     "MEMBERS": "Miembro",
+    "MEMBER_PEERS": "Nodos miembro",
     "ALL_PEERS": "Todos los nodos",
     "DIFFICULTY": "Dificultad",
     "API": "API",
     "CURRENT_BLOCK": "Bloque #",
     "POPOVER_FILTER_TITLE": "Filtro",
     "OFFLINE": "Fuera de línea",
+    "OFFLINE_PEERS": "Nodos fuera de línea",
     "BTN_SHOW_PEER": "Ver nodo",
     "VIEW": {
       "TITLE": "Nodo",
       "OWNER": "Propiedad de",
-      "SHOW_RAW_PEERING": "Ver la ficha del par",
+      "SHOW_RAW_PEERING": "Ver la ficha del nodo",
+      "SHOW_RAW_CURRENT_BLOCK": "Ver el bloque actual (en formato crudo)",
       "LAST_BLOCKS": "Bloques recientes",
       "KNOWN_PEERS": "Nodos conocidos:",
       "GENERAL_DIVIDER": "Información general",
@@ -341,7 +360,9 @@
     "LOOKUP": {
       "TITLE": "Directorio",
       "NEWCOMERS": "Nuevos miembros:",
+      "NEWCOMERS_COUNT": "{{count}} miembros",
       "PENDING": "Inscripciones en espera:",
+      "PENDING_COUNT": "{{count}} inscripciones en espera",
       "REGISTERED": "Se inscribió {{sigDate | formatFromNow}}",
       "MEMBER_FROM": "Miembro desde {{memberDate|medianFromNowShort}}",
       "BTN_NEWCOMERS": "Miembros recientes",
@@ -363,6 +384,9 @@
       "RECEIVED_BY": "Certificaciones recibidas por {{uid}}",
       "ERROR": "Certificaciones recibidas por error",
       "SENTRY_MEMBER": "Miembro referente"
+    },
+    "CONTACTS": {
+      "TITLE": "Contactos"
     },
     "OPERATIONS": {
       "TITLE": "{{uid}} - Transacciones"
@@ -404,8 +428,9 @@
     "BTN_METHODS": "Otros métodos",
     "BTN_METHODS_DOTS": "Otras vías…",
     "METHOD_POPOVER_TITLE": "Métodos",
+    "SCAN_FORM_HELP": "Escanee el código QR de un monedero.",
     "MEMORIZE_AUTH_FILE": "Memorizar las llaves durante la sesión de navegación",
-    "SCRYPT_PARAMETERS": "Ajustes (Scrypt) :",
+    "SCRYPT_PARAMETERS": "Ajustes (Scrypt):",
     "AUTO_LOGOUT": {
       "TITLE": "Información",
       "MESSAGE": "<i class=\"ion-android-time\"></i> Se ha <b>desconectado</b> de forma automática, después de un periodo de inactividad prolongada.",
@@ -654,8 +679,9 @@
     "AUTH_INVALID_SCRYPT": "De usuario o contraseña no válidos.",
     "AUTH_INVALID_FILE": "archivo de llave no válido.",
     "AUTH_FILE_ERROR": "No se pudo abrir el archivo de llave",
-    "IDENTITY_ALREADY_CERTIFY": "Ha <b>ya certificado</b> esta identidad.<br/><br/>Esta certificación todavía es valida (expiration {{expiresIn|formatDurationTo}}).",
-    "IDENTITY_ALREADY_CERTIFY_PENDING": "Ha <b>ya certificado</b> esta identidad.<br/><br/>Esta certificación está en espera de tratamiento (fecha límite de tratamiento {{expiresIn|formatDurationTo}}).",
+    "IDENTITY_ALREADY_CERTIFY": "Ya <b>ha certificado</b> esta identidad.<br/><br/>Esta certificación todavía es valida (expiration {{expiresIn|formatDurationTo}}).",
+    "IDENTITY_ALREADY_CERTIFY_PENDING": "Ya <b>ha certificado</b> esta identidad.<br/><br/>Esta certificación está en espera de tratamiento (fecha límite de tratamiento {{expiresIn|formatDurationTo}}).",
+    "IDENTITY_TX_FAILED": "Error al obtener las transacciones de la identidad",
     "UNABLE_TO_CERTIFY_TITLE": "Certificación imposible",
     "LOAD_NEWCOMERS_FAILED": "No se pudo cargar las nuevas membresías.",
     "LOAD_PENDING_FAILED": "No se pudo cargar las inscripciones pendientes.",
@@ -691,28 +717,20 @@
     "EMPTY_TX_HISTORY": "Ninguna operación a exportar"
   },
   "CONFIRM": {
+    "CERTIFY_RULES": "<b class=\"assertive\">NO CERTIFICAR</b> una cuenta si piensa que :<br/><br/><ul><li>1.) no corresponde a una persona <b>física y viva</b>.<li>2.) su propietario <b>posee otra cuenta</b> ya certificada.<li>3.) su propietario viola (voluntariamente o no) la regla 1 o 2 (por ejemplo certificando cuentas falsas o duplicadas).</ul><br/><b>¿Desea</b> todavía certificar esta identidad?",
+    "CERTIFY_RULES_TITLE_UID": "Certificar {{uid}}",
+    "EXIT_APP": "¿ Cerrar la aplicación ?",
+    "FULLSCREEN": "¿ Mostrar la aplicación en pantalla completa ?",
+    "LOGIN_UNUSED_WALLET": "Las credenciales introducidas corresponden a una cuenta que parece <b>inactiva</b>.<br/></br/><b>¿Quiere sin embargo continuar con esta cuenta?</b>",
+    "LOGIN_UNUSED_WALLET_TITLE": "¿Error de introducción de datos?",
+    "LOGOUT": "¿Desea desconectarse?",
+    "POPUP_SECURITY_WARNING_TITLE": "<i class=\"icon ion-alert-circled\"></i> <b>Advertencia de seguridad</b>",
     "POPUP_TITLE": "<b>Confirmación</b>",
     "POPUP_WARNING_TITLE": "<b>Advertencia</b>",
-    "POPUP_SECURITY_WARNING_TITLE": "<i class=\"icon ion-alert-circled\"></i> <b>Advertencia de seguridad</b>",
-    "CERTIFY_RULES_TITLE_UID": "Certificar {{uid}}", "CERTIFY_RULES": "<b class=\"assertive\">NO CERTIFICAR</b> una cuenta si piensa que :<br/><br/><ul><li>1.) no corresponde a una persona <b>física y viva</b>.<li>2.) su propietario <b>posee otra cuenta</b> ya certificada.<li>3.) su propietario viola (voluntariamente o no) la regla 1 o 2 (por ejemplo certificando cuentas falsas o duplicadas).</ul><br/><b>¿Desea</b> todavía certificar esta identidad?",
-    "FULLSCREEN": "¿ Mostrar la aplicación en pantalla completa ?",
-    "EXIT_APP": "¿ Cerrar la aplicación ?",
-    "TRANSFER": "<b>Resumen de la transferencia</b>:<br/><br/><ul><li> - De: {{from}}</li><li> - A: <b>{{to}}</b></li><li> - Importe: <b>{{amount}} {{unit}}</b></li><li> - Comentario: <i>{{comment}}</i></li></ul><br/><b>Desea realizar esta transferencia?</b>",
-    "MEMBERSHIP_OUT": "Esta operación es <b>irreversible</b>.<br/></br/>¿Desea <b>anular su cuenta miembro</b>?",
-    "MEMBERSHIP_OUT_2": "¡Esta operación es <b>irreversible</b>!<br/><br/>¿Desea <b>anular su candidatura</b> como miembro?",
-    "LOGIN_UNUSED_WALLET_TITLE": "¿Error de introducción de datos?",
-    "LOGIN_UNUSED_WALLET": "Las credenciales introducidas corresponden a una cuenta que parece <b>inactiva</b>.<br/></br/><b>¿Quiere sin embargo continuar con esta cuenta?</b>",
-    "FIX_IDENTITY": "El seudónimo <b>{{uid}}</b> va a ser publicado de nuevo, en reemplazo del antiguo que caducó.<br/></br/><b>¿Desea</b> continuar?",
-    "FIX_MEMBERSHIP": "Su solicitud de adhesión como miembro va a ser enviada de nuevo.<br/></br/><b>¿Desea</b> continuar?",
-    "RENEW_MEMBERSHIP": "Su adhesión como miembro va a estar renovada.<br/></br/><b>¿Desea</b> continuar?",
-    "REVOKE_IDENTITY": "Va a <b>revocar definitivamente esta identidad</b>.<br/><br/>La llave pública y el seudónimo asociados <b>jamás podrán ser utilizados</b> (para una cuenta miembro). <br/><br/><b>¿Desea</b> revocar definitivamente esta cuenta?",
-    "REVOKE_IDENTITY_2": "¡Esta operación es <b>irreversible</b>!<br/><br/>¿Desea <b>revocar definitivamente</b> esta cuenta?",
-    "NOT_NEED_RENEW_MEMBERSHIP": "Su membresía no necesita ser renovada actualmente (caducará en {{membershipExpiresIn|formatDuration}}).<br/></br/><b>¿Confirma</b> querer renovar su membresía?",
     "SAVE_BEFORE_LEAVE": "¿Desea <b>guardar sus cambios</b> antes de abandonar la página?",
     "SAVE_BEFORE_LEAVE_TITLE": "Cambios no registrados",
-    "LOGOUT": "¿Desea desconectarse?",
     "USE_FALLBACK_NODE": "Nodo <b>{{old}}</b> inalcanzable o dirección inválida.<br/><br/>¿Desea utilizar temporalmente el nodo <b>{{new}}</b>?"
-  },
+},
   "DOWNLOAD": {
     "POPUP_TITLE": "<b>Revocación del archivo</b>",
     "POPUP_REVOKE_MESSAGE": "Para proteger su cuenta, descargue el <b>documento de revocación de cuenta</b>. Le permitirá cancelar su cuenta (en caso de robo, cambio de identificador, cuenta creada incorrectamente, etc.).<br/><br/><b>Por favor, almacénelo en un lugar seguro.</b>"
@@ -722,72 +740,12 @@
     "JOIN": {
       "SECTION": "Inscripción",
       "SALT": "El identificador es muy importante. Sirve para mezclar(<span class=\"text-italic\">hash</span>) la contraseña, antes de calcular la <span class=\"text-italic\">llave pública</span> (el número de cuenta) y la <span class=\"text-italic\">llave privada</span> para acceder a esta.<br/><b>Por favor, memorícelo muy bien</b> porque no existe ninguna forma de recuperarlo en caso de pérdida.<br/>No puede ser modificado. Deberá crear una nueva cuenta si lo pierde o se olvida.<br/><br/>Un buen identificador debe ser suficientemente largo (al menos 8 carácteres) y lo más original posible.",
-      "PASSWORD": "La contraseña es muy importante. Junto al identificador, sirve para calcular la llave pública (el número de cuenta), y la llave privada para acceder a ella.<br/><b>Por favor, memorícela muy bien</b> porque no existe ninguna forma de recuperarla en caso de pérdida (excepto si se tuviese un fichero de respaldo o <span class=\"text-italic\">backup</span>.).<br/>No puede ser modificada. Deberá crear una nueva cuenta si la pierde o se olvida.<br/><br/>Una buena contraseña contiene al menos 8 carácteres, con al menos una mayúscula y un dígito.",
-      "PSEUDO": "El seudónimo se utiliza solamente en caso de inscripción como <span class=\"text-italic\">miembro</span>. Siempre está asociado a un monedero (vía su <span class=\"text-italic\">llave pública</span>).<br/>Este se publica en la red para que los demás usuarios puedan identificar, certificar o enviar dinero a la cuenta.<br/>Un seudónimo debe ser único para cada miembro (actuales y antiguos)."
-    },
-    "LOGIN": {
-      "SECTION": "Autenticación",
-      "PUBKEY": "Llave pública",
-      "PUBKEY_DEF": "La llave pública del llavero es generada de las credenciales introducidas (cualquiera que sean), sin estar obligatoriamente vinculadas o contrastadas con ninguna cuenta ya usada. <br/><b>Asegúrese por lo tanto de que la llave pública es la misma con la que se creó originalmente su cuenta</b>. De lo contrario, se autogenerará una cuenta vacía que probablemente nunca ha sido usada, ya que el riesgo de coincidir con las credenciales de otra cuenta ajena es muy pequeño.<br/><a href=\"https://es.wikipedia.org/wiki/Criptograf%C3%ADa_de_curva_el%C3%ADptica\" target=\"_ system\">Conozca más sobre criptografía</a> con llaves públicas.",
-      "METHOD": "Métodos de autenticación",
-      "METHOD_DEF": "Diversas opciones están disponibles para conectar a las cuentas: <br/> - La conexión <b>con aleatoriedad (estándar o avanzada)</b> mezcla su contraseña con su identificador, para limitar los intentos de ataque<br/> - La conexión <b>usando llave pública</b> le permite entrar sin credenciales, las cuales solo se le pedirán cuando alguna operación lo necesite.<br/> - La conexión <b>usando archivo de llaves</b> leerá las llave pública y privada de la cuenta desde un archivo sin necesitar sus credenciales. Varios formatos son posibles."
+      "PASSWORD": "La contraseña es muy importante. Junto al identificador, sirve para calcular la llave pública (el número de cuenta), y la llave privada para acceder a ella.<br/><b>Por favor, memorícela muy bien</b> porque no existe ninguna forma de recuperarla en caso de pérdida (excepto si se tuviese un fichero de respaldo o <span class=\"text-italic\">backup</span>.).<br/>No puede ser modificada. Deberá crear una nueva cuenta si la pierde o se olvida.<br/><br/>Una buena contraseña contiene al menos 8 carácteres, con al menos una mayúscula y un dígito."
     },
     "GLOSSARY": {
       "SECTION": "Glosario",
       "PUBKEY_DEF": "Una llave pública identifica un monedero, que puede estar asociado a un miembro o ser un monedero anónimo. En Cesium se calcula a partir del identificador y la contraseña.",
-      "MEMBER": "Miembro",
-      "MEMBER_DEF": "Cada miembro es una persona humana física y viva, deseosa de participar libremente en la comunidad monetaria. Percibe un dividendo universal, de acuerdo a un periodo e importe definido en las <span class=\"text-italic\">reglas de la moneda</span>",
-      "CURRENCY_RULES": "Reglas de la moneda",
-      "CURRENCY_RULES_DEF": "Las reglas de la moneda se han definido una vez y para siempre. Establecen el funcionamiento de la moneda: el cálculo del dividendo universal, la cantidad de certificaciones necesarias para ser miembro, la cantidad máxima de certificaciones que cada miembro puede emitir, etc. <a href=\"#/app/currency\">Ver las reglas actuales</a>.<br/> Sus parámetros no pueden alterarse gracias a una <span class=\"text-italic\">Cadena de Bloques</span> que soporta, implementa y verifica la buena aplicación de estas reglas.",
-      "BLOCKCHAIN": "Cadena de bloques (<span class=\"text-italic\">Blockchain</span>)",
-      "BLOCKCHAIN_DEF": "La cadena de bloques es un sistema descentralizado, que en el caso de Duniter, sirve para mantener e implementar las <span class=\"text-italic\">reglas de la moneda</span>.<br/><a href=\"http://duniter.org\" target=\"_system\">Más información</a> acerca de Duniter y el funcionamiento de su cadena de bloques.",
       "UNIVERSAL_DIVIDEND_DEF": "El Dividendo Universal (DU) es la cantidad de moneda co-creada por cada miembro, dependiendo del periodo y del cálculo definidos en las <span class=\"text-italic\">reglas de la moneda</span>.<br/>En cada periodo, los miembros reciben en sus cuentas la misma cantidad de moneda.<br/><br/>El DU crece regularmente, para ser justo entre cada miembro (actualmente y en el futuro), y calculado en función de la esperanza de vida media, como se demuestra en la <span class=\"text-italic\">Teoría Relativa de la Moneda</span> (TRM, de Stéphane Laborde).<br/><a href=\"http://trm.creationmonetaire.info\">Más información</a> sobre la TRM y las monedas libres."
-    },
-    "TIP": {
-      "MENU_BTN_CURRENCY": "El menú <b>{{'MENU.CURRENCY'|translate}}</b> permite consultar las <b>reglas de la moneda</b> y su estado.",
-      "CURRENCY_WOT": "El <b>número de miembros</b> muestra el peso de la comunidad y permite <b>seguir su evolución</b>.",
-      "CURRENCY_MASS": "Siga aquí la <b>cantidad total de moneda</b> existente y su <b>distribución media</b> por miembro.<br/><br/>Esto permite juzgar la <b>relevancia de un importe</b>, en relación con lo que <b>poseen los demás</b> en sus cuentas (de media).",
-      "CURRENCY_UNIT_RELATIVE": "La unidad utilizada (&ldquo;<b>{{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub></b>&rdquo;) significa que los importes en {{currency|capitalize}} han sido divididos entre el valor del <b>Dividendo Universal</b> (DU).<br/><br/><small> Esta unidad relativa es <b>pertinente</b>, porque permanece estable, independiente de la cantidad de moneda que aumenta constantemente.</small>",
-      "CURRENCY_CHANGE_UNIT": "Este botón permite <b>cambiar la unidad</b>, para visualizar los importes <b>directamente en {{currency|capitalize}}</b> (en lugar de &ldquo;<b>{{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub></b>&rdquo;).",
-      "CURRENCY_CHANGE_UNIT_TO_RELATIVE": "Este botón permite <b>cambiar la unidad</b>, para visualizar los importes en &ldquo;<b>{{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub></b>&rdquo;, es decir, relativo al Dividendo Universal (el monto co-producido por cada miembro).",
-      "CURRENCY_RULES": "Las <b>reglas</b> de la moneda fijan su funcionamiento <b>exacto y previsible</b>.<br/><br/>Es el propio ADN de la moneda, que hace que su código monetario sea <b>legible y transparente</b>.",
-      "MENU_BTN_NETWORK": "El menú <b>{{'MENU.NETWORK'|translate}}</b> permite consultar el estado de la red.",
-      "NETWORK_BLOCKCHAIN": "Todas las transacciones de la moneda están registradas dentro de un gran libro de contabilidad <b>público e infalsificable</b>, conocido como la <b>cadena de bloques</b> (<em>BlockChain</em> en inglés).",
-      "NETWORK_PEERS": "Los <b>nodos</b> visibles aquí corresponden a los <b>dispositivos de miembros que actualizan y validan</b> la cadena de bloques.<br/><br/>Cuanto más nodos haya conectados, la moneda tendrá una gestión más <b>descentralizada</b> y digna de confianza.",
-      "NETWORK_PEERS_BLOCK_NUMBER": "Este <b>número</b> (en verde) indica el <b>último bloque validado</b> por este nodo (última página escrita en la cadena de bloques).<br/><br/>El color verde indica que este bloque ha sido también validado por <b>la mayoría del resto de nodos</b>.",
-      "NETWORK_PEERS_PARTICIPATE": "<b>Cada miembro</b>, equipado de un dispositivo conectado a Internet, <b>puede contribuir añadiendo un nodo</b>.  Necesita <b>instalar el programa Duniter</b> (libre y gratuito). <a href=\"{{installDocUrl}}\" target=\"_system\">Ver manual de uso &gt;&gt;</a>.",
-      "MENU_BTN_ACCOUNT": "<b>{{'ACCOUNT.TITLE'|translate}}</b> permite acceder a la gestión y al historial de su cuenta.",
-      "MENU_BTN_ACCOUNT_MEMBER": "Consulte aquí el estado de su cuenta y la información sobre sus certificaciones.",
-      "WALLET_CERTIFICATIONS": "Haga clic aquí para consultar el detalle de sus certificaciones (recibidas y emitidas).",
-      "WALLET_RECEIVED_CERTIFICATIONS": "Haga clic aquí para consultar el detalle de sus <b>certificaciones recibidas</b>.",
-      "WALLET_GIVEN_CERTIFICATIONS": "Haga clic aquí para consultar el detalle de sus <b>certificaciones emitidas</b>.",
-      "WALLET_BALANCE": "El <b>saldo</b> de su cuenta se visualiza aquí.",
-      "WALLET_BALANCE_RELATIVE":
-      "{{'HELP.TIP.WALLET_BALANCE'|translate}}<br/><br/>La unidad utilizada (&ldquo;<b>{{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub></b>&rdquo;) significa que el importe en {{currency|capitalize}} fue dividido entre el <b>Dividendo Universal</b> (DU) co-producido por cada miembro.<br/><br/>Actualmente un DU vale {{currentUD|formatInteger}} {{currency|capitalize}}s.",
-      "WALLET_BALANCE_CHANGE_UNIT": "Podrá <b>cambiar la unidad</b> de visualización de los importes en los <b><i class=\"icon ion-android-settings\"></i>&nbsp;{{'MENU.SETTINGS'|translate}}</b>.<br/><br/>Por ejemplo, para visualizar los importes <b>directamente en {{currency|capitalize}}</b>, en lugar de unidad relativa.",
-      "WALLET_PUBKEY": "Esta es la llave pública de su cuenta. Puede comunicarla a un tercero para que pueda identificar su cuenta de forma simple.",
-      "WALLET_SEND": "Realizar un pago en algunos clics",
-      "WALLET_SEND_NO_MONEY": "Realizar un pago en algunos clics.<br/>(Su saldo ya no lo permite)",
-      "WALLET_OPTIONS": "Este botón permite acceder a las <b>acciones de adhesión</b> y de seguridad.<br/><br/>¡No olvide echar un vistazo!",
-      "WALLET_RECEIVED_CERTS": "Se exhibirá aquí la lista de las personas que le han certificado.",
-      "WALLET_CERTIFY": "El botón <b>{{'WOT.BTN_SELECT_AND_CERTIFY'|translate}}</b> permite seleccionar una identidad y certificarla.<br/><br/>Solo quienes son <b>miembros</b> pueden certificar a otras personas.",
-      "WALLET_CERT_STOCK": "Su stock de certificaciones (emitidas) es limitado a <b>{{sigStock}} certificaciones</b>.<br/><br/>Este stock se renueva con el tiempo, a medida que las certificaciones caducan.",
-      "MENU_BTN_TX": "Consulte aquí <b>el histórico de sus transacciones</b> y efectue nuevas operaciones.",
-      "MENU_BTN_TX_MEMBER": "El menú <b>{{'MENU.TRANSACTIONS'|translate}}</b> permite consultar su saldo, el historial de transacciones y realizar nuevos pagos.",
-      "MENU_BTN_WOT": "El menú <b>{{'MENU.WOT'|translate}}</b> permite buscar <b>usuarios</b> de la moneda (miembro o no).",
-      "WOT_SEARCH_TEXT_XS": "Para buscar en el directorio, escriba las <b>primeras letras de un seudónimo</b> (o de una llave pública).<br/><br/>La búsqueda se iniciará automáticamente.",
-      "WOT_SEARCH_TEXT": "Para buscar en el directorio, escriba las <b>primeras letras de un seudónimo</b> (o de una llave pública). <br/><br/>Luego, pulse en la tecla <b>Intro</b> para iniciar la búsqueda.",
-      "WOT_SEARCH_RESULT": "Visualice la ficha detallada <b>haciendo clic</b> sobre una fila.",
-      "WOT_VIEW_CERTIFICATIONS": "La opción <b>{{'ACCOUNT.CERTIFICATION_COUNT'|translate}}</b> muestra qué miembros han validado esta identidad.<br/><br/>Estas certificaciones atestiguan que la cuenta pertenece a <b>una persona humana viva</b> y que no posee <b>ninguna otra cuenta miembro</b>.",
-      "WOT_VIEW_CERTIFICATIONS_COUNT": "Necesita al menos <b>{{sigQty}} certificaciones</b> para ser miembro y recibir el <b>Dividendo Universal</b>.",
-      "WOT_VIEW_CERTIFICATIONS_CLICK": "Un clic aquí permite abrir <b>la lista de todas las certificaciones</b> de la identidad (recibidas y emitidas).",
-      "WOT_VIEW_CERTIFY": "El botón <b>{{'WOT.BTN_CERTIFY'|translate}}</b> permite añadir su certificación a esta identidad.",
-      "CERTIFY_RULES": "<b>Atención:</b> Certifique solamente <b>personas físicas vivas</b>, que no posean ya ninguna otra cuenta miembro.<br/><br/>¡La seguridad de la red de la moneda depende del cuidado de cada persona!",
-      "MENU_BTN_SETTINGS": "En <b>{{'MENU.SETTINGS'|translate}}</b> podrá configurar la aplicación.",
-      "HEADER_BAR_BTN_PROFILE": "Haga clic aquí para acceder a su <b>perfil</b>",
-      "SETTINGS_CHANGE_UNIT": "Podrá <b>cambiar la unidad de visualización</b> de los importes haciendo clic aquí.<br/><br/>- Desactive la opción para mostrar los importes en {{currency|capitalize}}.<br/>- Actívela para importes relativos al {{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub> (las cantidades de los importes se mostrarán <b>divididos</b> entre el Dividendo Universal actual).",
-      "END_LOGIN": "¡La visita guiada ha <b>terminado</b>!<br/><br/>¡Buena suerte en este nuevo mundo de la <b>economía libre</b> !",
-      "END_NOT_LOGIN": "¡La visita guiada ha <b>terminado</b>!<br/><br/>Si quiere utilizar la moneda {{currency|capitalize}}, tiene que hacer un clic en <b>{{'LOGIN.CREATE_ACCOUNT'|translate}}</b> más abajo."
     }
   }
 }

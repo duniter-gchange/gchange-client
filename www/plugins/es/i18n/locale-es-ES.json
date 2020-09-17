@@ -1,5 +1,32 @@
 {
   "COMMON": {
+    "ABUSES_TEXT": "{{total}} {{total > 1 ? 'people' : 'person'}} reported a problem on this page",
+    "BTN_FOLLOW": "Seguir",
+    "BTN_LIKE": "Me gusta",
+    "BTN_REMOVE_REPORTED_ABUSE": "Cancelar mi reporte o problema",
+    "BTN_REPORT_ABUSE_DOTS": "Reportar un problema o abuso...",
+    "BTN_STOP_FOLLOW": "Dejar de seguir",
+    "COMMENT_HELP": "Comentarios",
+    "DISLIKES_TEXT": "A {{total}} {{total > 1 ? 'personas no les' : 'persona no le'}} gusta esta página",
+    "LIKES_TEXT": "A {{total}} {{total > 1 ? 'personas les' : 'persona le'}} gusta esta página",
+    "FOLLOWS_TEXT": "{{total}} {{total > 1 ? 'personas siguen' : 'persona sigue'}} esta página",
+    "VIEWS_TEXT": "{{total}} 'personas vieron' : 'persona vió'}} esta página",
+    "GEO_DISTANCE_OPTION": "{{value}} km",
+    "GEO_DISTANCE_SEARCH": "Buscar por proximidad",
+    "NOTIFICATION": {
+        "HAS_UNREAD": "Tiene {{count}} notificaci{{count>0?'ón':'ones'}} no leída{{count>0?'s':''}}",
+        "TITLE": "Nueva notificación | {{'COMMON.APP_NAME'|translate}}"
+    },
+    "REPORT_ABUSE": {
+      "ASK_DELETE": "¿Solicitar eliminación?",
+      "CONFIRM": {
+          "SENT": "Solicitud enviada. ¡Gracias!"
+      },
+      "REASON_HELP": "Yo explico el problema...",
+      "SUB_TITLE": "Por favor explique brevemente el problema:",
+      "TITLE": "Reportar un problema"
+    },
+
     "CATEGORY": "Categoría",
     "CATEGORIES": "Categorías",
     "CATEGORY_SEARCH_HELP": "Búsqueda",
@@ -35,13 +62,22 @@
       "MEMBER_WITHOUT_PROFILE": "Para obtener sus certificaciones más rapidamente, complete <a ui-sref=\"app.edit_profile\">su perfil usuario</a>. Los miembros concederán más fácilmente su confianza a una identidad verificable."
     },
     "ERROR": {
-      "WS_CONNECTION_FAILED": "Cesium no puede recibir las notificaciones, a causa de un error técnico (conexión al nodo de datos Cesium+).<br/><br/>Si el problema persiste, por favor <b>elige un otro nodo de datos</b> en los ajustes de Cesium+."
+      "WS_CONNECTION_FAILED": "ğchange no puede recibir las notificaciones, a causa de un error técnico (conexión al nodo de datos ğchange).<br/><br/>Si el problema persiste, por favor <b>elija otro nodo de datos</b> en los ajustes."
     }
   },
   "WOT": {
     "BTN_SUGGEST_CERTIFICATIONS_DOTS": "Sugerir identidades a certificar…",
     "BTN_ASK_CERTIFICATIONS_DOTS": "Pedir a miembros que le certifiquen…",
     "BTN_ASK_CERTIFICATION": "Pedir una certificación",
+    "VIEW": {
+      "BTN_FOLLOW": "Seguir la actividad de este perfil",
+      "BTN_REDO_STAR_HELP": "Actualizar su puntuación",
+      "BTN_STAR_HELP": "Puntuar este perfil",
+      "BTN_STARS_REMOVE": "Suprimir mi puntuación",
+      "BTN_STOP_FOLLOW": "Dejar de seguir este perfil",
+      "STAR_HIT_COUNT": "{{total}} puntuaci{{total>1 ? 'ones' : 'ón'}}",
+      "STARS": "Nivel de confianza"
+    },
     "SUGGEST_CERTIFICATIONS_MODAL": {
       "TITLE": "Sugerir certificaciones",
       "HELP": "Selectionar sus sugerencias"
@@ -107,6 +143,8 @@
     "SHOW_MORE_COMMENTS": "Visualizar los comentarios anteriores",
     "COMMENT_HELP": "Su comentario, preguntas, etc.",
     "COMMENT_HELP_REPLY_TO": "Su repuesta…",
+    "MODIFIED_ON": "modificado el {{time|formatDate}}",
+    "MODIFIED_PARENTHESIS": "(modificado entonces)",
     "BTN_SEND": "Mandar",
     "POPOVER_SHARE_TITLE": "Mensaje #{{number}}",
     "REPLY": "Responder",
@@ -258,8 +296,8 @@
       "RECORD_PUBKEY_HELP": "Llave pública para recibir pagos"
     },
     "WALLET": {
-      "PAGE_DIVIDER": "Páginas",
-      "PAGE_DIVIDER_HELP": "Las páginas se refieren a colectivos que aceptan moneda o la promocionan: tiendas, empresas, negocios, asociaciones, instituciones. Se almacenan fuera de la red de la moneda, en <a ui-sref=\"app.es_network\">la red Cesium+</a>."
+      "REGISTRY_DIVIDER": "Páginas",
+      "REGISTRY_HELP": "Las páginas se refieren a colectivos que aceptan moneda o la promocionan: tiendas, empresas, negocios, asociaciones, instituciones. Se almacenan fuera de la red de la moneda, en <a ui-sref=\"app.es_network\">la red Cesium+</a>."
     },
     "ERROR": {
       "LOAD_CATEGORY_FAILED": "Fracaso en la carga de la lista de actividades",
@@ -292,6 +330,7 @@
     "GENERAL_DIVIDER": "Informaciones generales",
     "SOCIAL_NETWORKS_DIVIDER": "Redes sociales, sitios web",
     "TECHNICAL_DIVIDER": "Informaciones técnicas",
+    "STAR": "Nivel de confianza",
     "MODAL_AVATAR": {
       "TITLE": "Foto de perfil",
       "SELECT_FILE_HELP": "Por favor, <b>elija una imagen</b>, haciendo clic sobre el cuadro de abajo:",
@@ -345,13 +384,56 @@
       "ADDRESS_LOCATION_FAILED": "No se puede recuperar la posición de la dirección."
     }
   },
+  "SUBSCRIPTION": {
+    "SUBSCRIPTION_DIVIDER": "Servicios en línea",
+    "SUBSCRIPTION_DIVIDER_HELP": "Los servicios en línea ofrecen servicios adicionales, proporcionados por un tercero.",
+    "BTN_ADD": "Agregar un servicio",
+    "BTN_EDIT": "Administrar mis servicios",
+    "NO_SUBSCRIPTION": "Ningún servicio definido",
+    "SUBSCRIPTION_COUNT": "Servicios / Suscripción",
+    "EDIT": {
+      "TITLE": "Servicios en línea",
+      "HELP_TEXT": "Gestione sus suscripciones y otros servicios en línea aquí",
+      "PROVIDER": "Proveedor:"
+    },
+    "TYPE": {
+      "ENUM": {
+        "EMAIL": "Recibir notificaciones por correo electrónico"
+      }
+    },
+    "CONFIRM": {
+      "DELETE_SUBSCRIPTION": "¿ Deseas <b>eliminar</b> esta suscripción ?"
+    },
+    "ERROR": {
+      "LOAD_SUBSCRIPTIONS_FAILED": "Error al cargar servicios en línea",
+      "ADD_SUBSCRIPTION_FAILED": "Error al agregar suscripción",
+      "UPDATE_SUBSCRIPTION_FAILED": "Error durante la actualización de la suscripción",
+      "DELETE_SUBSCRIPTION_FAILED": "Error al eliminar la suscripción"
+    },
+    "MODAL_EMAIL": {
+      "TITLE" : "Notificación por correo electrónico",
+      "HELP" : "Rellene este formulario para <b>ser notificado por correo electrónico</b> de los eventos de su cuenta. <br/> Su dirección de correo electrónico se cifrará y únicamente será visible para el proveedor de servicios.",
+      "EMAIL_LABEL" : "Su correo electrónico :",
+      "EMAIL_HELP": "maria@dominio.com",
+      "FREQUENCY_LABEL": "Frecuencia de las notificaciones :",
+      "FREQUENCY_DAILY": "Diaria",
+      "FREQUENCY_WEEKLY": "Semanal",
+      "PROVIDER": "Proveedor de servicio:"
+    }
+  },
   "DOCUMENT": {
     "HASH": "Hash: ",
     "LOOKUP": {
       "TITLE": "Búsqueda de documentos",
       "BTN_ACTIONS": "Acciones",
+      "BTN_COMPACT": "Compactar",
+      "DOCUMENT_TITLE": "Título",
+      "DOCUMENT_TYPE": "Tipo",
+      "HAS_REGISTERED": "ha creado o modificado su perfil",
+
       "SEARCH_HELP": "issuer:AAA*, time:1508406169",
       "LAST_DOCUMENTS": "Últimos documentos",
+      "LAST_DOCUMENTS_DOTS": "Últimos documentos :",
       "SHOW_QUERY": "Ver la búsqueda",
       "HIDE_QUERY": "Esconder la búsqueda",
       "HEADER_TIME": "Fecha/Hora",
@@ -359,6 +441,15 @@
       "HEADER_RECIPIENT": "Destinatario",
       "READ": "Leído",
       "BTN_REMOVE": "Sumprimer este documento",
+      "TYPE": {
+        "GROUP_COMMENT": "Comentario en un grupo",
+        "GROUP_RECORD": "Grupo",
+        "MARKET_COMMENT": "Comentario en un anuncio",
+        "MARKET_RECORD": "Anuncio",
+        "PAGE_COMMENT": "Comentario en una página",
+        "PAGE_RECORD": "Página",
+        "USER_PROFILE": "Perfil"
+      },
       "POPOVER_ACTIONS": {
         "TITLE": "Acciones",
         "REMOVE_ALL": "Suprimir estos documentos..."
@@ -372,9 +463,17 @@
       "REMOVE_ALL": "¿ Desea <b>suprimer estos documentos</b> ?"
     },
     "ERROR": {
+      "LOAD_DOCUMENTS_FAILED": "Error al buscar documentos",
       "REMOVE_FAILED": "Error al suprimir el documento",
       "REMOVE_ALL_FAILED": "Error al suprimir los documentos"
     }
+  },
+  "ES_PEER": {
+    "DOCUMENT_COUNT": "Número de documentos",
+    "DOCUMENTS": "Documentos",
+    "EMAIL_SUBSCRIPTION_COUNT": "{{emailSubscription}} suscritas/os a notificaciones por correo",
+    "NAME": "Nombre",
+    "SOFTWARE": "Software"
   },
   "ES_SETTINGS": {
     "PLUGIN_NAME": "Cesium+",
@@ -394,9 +493,7 @@
       "ENABLE_TX_SENT": "Notificar la validación de los <b>pagos emitidos</b>",
       "ENABLE_TX_RECEIVED": "Notificar la validación de los <b>pagos recibidos</b>",
       "ENABLE_CERT_SENT": "Notificar la validación de las <b>certificaciones emitidas</b>",
-      "ENABLE_CERT_RECEIVED": "Notificar la validación de las <b>certificaciones recibidas</b>",
-      "ENABLE_HTML5_NOTIFICATION": "Avisar con cada nueva notificación",
-      "ENABLE_HTML5_NOTIFICATION_HELP": "Abre una pequeña ventana emergente con cada nueva notificación."
+      "ENABLE_CERT_RECEIVED": "Notificar la validación de las <b>certificaciones recibidas</b>"
     },
     "CONFIRM": {
       "ASK_ENABLE_TITLE": "Otras funcionalidades",
@@ -421,6 +518,30 @@
     "TX_SENT_MULTI": "Su <b>pago</b> a <b>{{params[1]}}</b> fue efectuado.",
     "TX_RECEIVED": "Ha <b>recibido un pago</b> de <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
     "TX_RECEIVED_MULTI": "Ha <b>recibido un pago</b> de <b>{{params[1]}}</b>.",
+    "PAGE": {
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha reportardo su anuncio : <b>{{params[2]}}</b>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha reportado un anuncio para moderar : <b>{{params[2]}}</b>",
+      "FOLLOW_CLOSE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha cerrado el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha añadido el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha comentado el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> sigue su anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado el anuncio : <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado su comentario en el anuncio : <b>{{params[2]}}</b>",
+      "LIKE_RECEIVED": "A <span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> le ha gustado su anuncio : <b>{{params[2]}}</b>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> os pide moderación sobre el anuncio : <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha comentado su anuncio : <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado su comentario sobre su anuncio : <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha contestado a su comentario sobre el anuncio : <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado la repuesta a su comentario sobre el anuncio : <b>{{params[2]}}</b>"
+    },
+    "USER": {
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[2]}}</span> ha reportado su perfil",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[2]}}</span> ha reportado un perfil a eliminar: <b>{{params[2]}}</b>",
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[2]}}</span> sigue su actividad",
+      "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[2]}}</span> le gusta su perfil",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[2]}}</span> os pide una moderación sobre el perfil: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "STAR_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[2]}}</span> os ha puntuado ({{params[3]}} <b class=\"ion-star\">)"
+    },
     "CERT_SENT": "Su <b>certificación</b> a <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\" ><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span> fue efectuada.",
     "CERT_RECEIVED": "Ha <b>recibido una certificación</b> de <span ng-class=\"{'gray': !notification.uid, 'positive':notification.uid}\"><i class=\"icon\" ng-class=\"{'ion-person': notification.uid, 'ion-key': !notification.uid}\"></i>&thinsp;{{name||uid||params[1]}}</span>.",
     "REGISTRY": {

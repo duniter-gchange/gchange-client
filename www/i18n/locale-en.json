@@ -80,7 +80,7 @@
       "SHARE_ON_FACEBOOK": "Share on Facebook",
       "SHARE_ON_DIASPORA": "Share on Diaspora*",
       "SHARE_ON_MASTODON": "Share on Mastodon",
-      "INSTANCE_ADDRESS_HELP": "Enter an intancce address (ex: https://framapiaf.org):"
+      "INSTANCE_ADDRESS_HELP": "Enter an intance address (ex: https://framapiaf.org):"
     },
     "FILE": {
       "DATE" : "Date:",
