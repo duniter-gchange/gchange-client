@@ -2,19 +2,51 @@
   "MAP": {
     "COMMON": {
       "SEARCH_DOTS": "Traserĉi...",
-      "BTN_LOCALIZE_ME": "Lokalizi min"
+      "BTN_SHOW_ON_MAP": "Vidi surmape",
+      "BTN_LOCALIZE_ME": "Lokalizi min",
+      "BTN_MOVE_DOWN": "Movi malsupren",
+      "BTN_MOVE_UP": "Movi supren",
+      "BTN_MOVE_LEFT": "Movi maldekstren",
+      "BTN_MOVE_RIGHT": "Movi dekstren",
+      "CHOOSE_FILE": "Ŝovmetu vian dosieron (svg, geojson)<br/>aŭ klaku por elekti ĝin"
     },
-    "NETWORK": {
-      "LOOKUP": {
-        "BTN_MAP": "Mapo",
-        "BTN_MAP_HELP": "Malfermi la mapon pri nodoj"
-      },
-      "VIEW": {
-        "TITLE": "Mapo pri nodoj",
-        "LAYER": {
-          "MEMBER": "Membro-nodoj",
-          "MIRROR": "Spegul-nodoj",
-          "OFFLINE": "Nekonektitaj nodoj"
+    "SHAPE": {
+      "EDIT": {
+        "TITLE": "Landaj mapoj",
+        "COUNTRY_DOTS": "Lando:",
+        "COUNTRY_HELP": "Lando-kodo (ISO2)",
+        "CONFIG_FORM_DIVIDER": "Agordo:",
+        "ERROR_DIVIDER": "Eraroj eltrovitaj:",
+        "LEFT_LNG": "Okcidento",
+        "RIGHT_LNG": "Oriento",
+        "TOP_LAT": "Nordo",
+        "BOTTOM_LAT": "Sudo",
+        "SCALE": "Skalo",
+        "TRANSLATE_X": "X-delokiĝo",
+        "TRANSLATE_Y": "Y-delokiĝo",
+        "AREA_FORM_DIVIDER": "Eldono de la zono:",
+        "ID": "Unika identigilo",
+        "NAME": "Nomo",
+        "POSITION_DOTS": "Pozicio:",
+        "ORDER": "Ordigo-senco",
+        "BTN_APPLY": "Apliki",
+        "BTN_DELETE": "Forigi la zonon",
+        "CUSTOM_PROJECTION": "Mana tajpado de la projekci-parametroj",
+        "BTN_TEST_SEARCH": "Testi serĉadon sur tiu ĉi zono",
+        "STRICT_MODE": "OCG-kongrueco (regulo de dekstra mano)",
+        "REMOVE_HOLE": "Forigi la truojn interne de la poligonoj",
+        "APPLY_ROUND": "Rondigi ĝis la precizeco:",
+        "DEGREES_PRECISION": "Precizeco (decimalaj gradoj)",
+        "INFO": {
+          "SAVED": "La mapo estis bone konservita"
+        },
+        "ERROR": {
+          "INVALID_SVG": "SVG-Formato neĝusta",
+          "INVALID_COUNTRY_CODE": "Lando-kodo neĝusta (ISO2 atendata, minuskle)",
+          "SAVE_FAILED": "Eraro dum la konservado de la mapo",
+          "SELF_INTERSECTION": "Mem-interkruciĝo en la poligono <b>{{id}}</b>",
+          "HOLE_LIES_OUTSIDE": "La truo troviĝas ekter la poligono <b>{{id}}</b>",
+          "HOLE_NOT_WITHIN_POLYGON": "Truo nevalida (ne en poligono) <b>{{id}}</b>"
         }
       }
     },
