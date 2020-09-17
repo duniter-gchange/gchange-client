@@ -13,6 +13,12 @@
     box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
 }
 
+/* Reduce image border-radius */
+.market .card-record .item-image,
+.market .row-record .item-image {
+    border-radius: 5% !important;
+}
+
 .market .row-record h2 {
     height: 38px;
     overflow: hidden;
