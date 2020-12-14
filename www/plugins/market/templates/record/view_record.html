@@ -46,14 +46,14 @@
             <h4>
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
-              <a ui-sref="app.user_identity({pubkey: issuer.issuer})">
-                <span ng-if="issuer.name||issuer.issuer" class="positive">
+              <a ui-sref="app.user_identity({pubkey: issuer.issuer, name: issuer.name})">
+                <span ng-if="issuer.name" class="positive">
                   <i class="icon ion-person"></i>
-                  {{::issuer.name||issuer.issuer}}
+                  {{::issuer.name}}
                 </span>
-                <span ng-if="!issuer.name && !issuer.issuer" class="gray">
+                <span ng-if="!issuer.name" class="gray">
                   <i class="icon ion-key"></i>
-                  {{::formData.issuer|formatPubkey}}
+                  {{::issuer.issuer|formatPubkey}}
                 </span>
               </a>
               <span>
@@ -102,14 +102,14 @@
             <h4>
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
-              <a ui-sref="app.user_identity({pubkey:issuer.issuer})">
+              <a ui-sref="app.user_identity({pubkey: issuer.issuer, name: issuer.name})">
                 <span class="positive" ng-if="issuer.name">
                   <i class="icon ion-person"></i>
                   {{::issuer.name}}
                 </span>
                 <span class="gray" ng-if="!issuer.name">
                   <i class="icon ion-key"></i>
-                  {{::issuer.pubkey|formatPubkey}}
+                  {{::issuer.issuer|formatPubkey}}
                 </span>
               </a>
               <span>
@@ -305,8 +305,8 @@
 
         <!-- issuer card -->
         <a class="item item-avatar card-meta item item-border-large dark-100-bg dark animate-ripple animate-show-hide ng-hide"
-                  ng-show="issuer.stars && !loading"
-                  ui-sref="app.user_identity({pubkey: issuer.pubkey, name: issuer.name})">
+                  ng-show="!loading"
+                  ui-sref="app.user_identity({pubkey: issuer.issuer, name: issuer.name})">
           <div class="  item-text-wrap light">
 
             <i ng-if="!issuer.avatar" class="item-image icon ion-person"></i>
@@ -318,11 +318,11 @@
               </span>
               <span ng-if="!issuer.name" class="gray">
                   <b class="ion-key"></b>
-                  {{::issuer.pubkey|formatPubkey}}
+                  {{::issuer.issuer|formatPubkey}}
               </span>
             </h3>
 
-            <h3 class="align-right"
+            <h3 class="align-right" ng-if="issuer.stars"
               title="{{'WOT.VIEW.STARS' | translate }}">
               <span ng-repeat="value in [1,2,3,4,5]"
                     ng-class="{'energized': issuer.stars.levelAvg > 3, 'assertive': issuer.stars.levelAvg <= 2}">
@@ -331,7 +331,7 @@
                 <b class="ion-android-star-outline" ng-if="value > issuer.stars.levelAvg && value - 0.5 > issuer.stars.levelAvg"></b>
               </span><br/>
             </h3>
-            <h4 class="gray">{{issuer.stars.levelAvg}}/5 ({{'WOT.VIEW.STAR_HIT_COUNT' | translate: issuer.stars }})</h4>
+            <h4 class="gray"  ng-if="issuer.stars">{{issuer.stars.levelAvg}}/5 ({{'WOT.VIEW.STAR_HIT_COUNT' | translate: issuer.stars }})</h4>
           </div>
         </a>
 

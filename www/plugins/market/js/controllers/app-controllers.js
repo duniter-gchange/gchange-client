@@ -35,13 +35,8 @@ angular.module('cesium.market.app.controllers', ['ngResource',
 /**
  * Control menu extension
  */
-function MarketMenuExtendController($scope, esSettings, PluginService) {
+function MarketMenuExtendController($scope, PluginService) {
     'ngInject';
 
     $scope.extensionPoint = PluginService.extensions.points.current.get();
-    $scope.enable = esSettings.isEnable();
-
-    esSettings.api.state.on.changed($scope, function(enable) {
-        $scope.enable = enable;
-    });
 }
