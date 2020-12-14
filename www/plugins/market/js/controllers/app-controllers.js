@@ -17,6 +17,10 @@ angular.module('cesium.market.app.controllers', ['ngResource',
            'menu-user': {
              templateUrl: "plugins/market/templates/menu_extend.html",
              controller: "MarketMenuExtendCtrl"
+           },
+           'menu-discover': {
+             templateUrl: "plugins/market/templates/menu_extend.html",
+             controller: "MarketMenuExtendCtrl"
            }
          }
         });

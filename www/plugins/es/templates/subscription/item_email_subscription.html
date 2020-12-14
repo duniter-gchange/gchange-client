@@ -5,12 +5,12 @@
   </h3>
   <h4 class="gray">
     {{'SUBSCRIPTION.EDIT.PROVIDER'|translate}}
-    <a ui-sref="app.wot_identity({pubkey: subscriptions.recipient, uid: subscriptions.uid})">
-      <span ng-class="{'positive': subscriptions.uid, 'dark': !subscriptions.uid}" ng-if="subscriptions.name||subscriptions.uid">
-        <i class="ion-person" ng-if="subscriptions.uid"></i>
-        {{subscriptions.name||subscriptions.uid}}
+    <a ui-sref="app.user_identity({pubkey: subscriptions.recipient, name: subscriptions.name})">
+      <span ng-class="{'positive': subscriptions.name, 'dark': !subscriptions.name}" ng-if="subscriptions.name">
+        <i class="ion-person" ng-if="subscriptions.name"></i>
+        {{subscriptions.name}}
       </span>
-      <span class="gray" ng-if="!subscriptions.uid">
+      <span class="gray" ng-if="!subscriptions.name">
         <i class="ion-key"></i>
         {{subscriptions.recipient | formatPubkey}}
       </span>

@@ -12,48 +12,111 @@
         </button>-->
     </ion-nav-buttons>
 
-    <ion-content class="has-header ">
+    <ion-content class="has-header padding no-padding-xs stable-100-bg">
 
-        <div class="row responsive-sm">
-            <div class="col col-20 list">
-                <button class="item button button-block button-raised icon icon-left ion-play ink"
-                        title="{{!activeCategory ? 'MARKET.GALLERY.BTN_START' : 'MARKET.GALLERY.BTN_CONTINUE' | translate}}"
-                ng-click="startSlideShow()">
-                    {{!activeCategory ? 'MARKET.GALLERY.BTN_START' : 'MARKET.GALLERY.BTN_CONTINUE' | translate}}
-                </button>
+        <form ng-submit="start()" class="lookupForm">
 
-                <button class="item  button button-block button-raised icon icon-left ion-stop ink"
-                        title="{{'MARKET.GALLERY.BTN_STOP' | translate}}"
-                        ng-disabled="!activeCategory"
-                        ng-click="resetSlideShow()">
-                    {{'MARKET.GALLERY.BTN_STOP' | translate}}
-                </button>
-            </div>
+            <!-- search text -->
+            <div class="item no-padding light-bg">
 
-            <div class="col list">
-                <div class="item item-input item-select no-border">
-                    <div class="input-label">
-                        {{'MARKET.GALLERY.SLIDE_DURATION' | translate}}
-                    </div>
-                    <select ng-model="options.slideDuration"
-                            ng-options="i as (slideDurationLabels[i].labelKey | translate:slideDurationLabels[i].labelParams ) for i in slideDurations track by i">
-                    </select>
-                </div>
-                <div class="item item-toggle dark">
-                    <div class="input-label">
-                        {{'MARKET.SEARCH.SHOW_CLOSED_RECORD' | translate}}
-                    </div>
-                    <label class="toggle toggle-royal">
-                        <input type="checkbox" ng-model="options.showClosed">
-                        <div class="track">
-                            <div class="handle"></div>
+                <div class="item-input light-bg">
+                    <div class="animate-show-hide">
+
+                        <!-- selected location -->
+                        <div ng-show="search.location && (search.geoPoint || search.geoShape)"
+                             class="button button-small button-text button-stable button-icon-event stable-900-bg"
+                             style="margin-right: 10px;">
+                            &nbsp;<i class="icon ion-location"></i>
+                            {{search.location.split(',')[0]}}
+                            <span ng-if="search.geoDistance && search.geoPoint">({{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }})</span>
+                            <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
                         </div>
-                    </label>
+
+                        <!-- selected category -->
+                        <div ng-show="search.category.name"
+                             class="button button-small button-text button-stable button-icon-event stable-900-bg"
+                             style="margin-right: 10px;">
+                            &nbsp;<i class="icon ion-flag"></i>
+                            {{'MARKET.SEARCH.CATEGORY'|translate}}
+                            <span ng-bind-html="search.category.name"></span>
+                            <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
+                        </div>
+
+                    </div>
+
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text"
+                           autocomplete="off"
+                           class="visible-xs visible-sm"
+                           placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+                           ng-model="search.text"
+                           ng-model-options="{ debounce: 950 }">
+                    <input type="text"
+                           autocomplete="off"
+                           class="hidden-xs hidden-sm"
+                           placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+                           id="marketSearchText"
+                           ng-model="search.text">
+                </div>
+
+            </div>
+
+            <!-- location -->
+            <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
+                        ng-if="options.location.show && (!search.geoPoint && !search.geoShape)"
+                        ng-controller="ESSearchPositionItemCtrl"></ng-include>
+
+            <!-- slide duration -->
+            <div class="item item-icon-left item-input item-select stable-bg">
+                <i class="icon ion-ios-timer-outline gray"></i>
+                <!--<b class="icon-secondary ion-close-circled assertive" style="top:7px; left: 34px;"></b>-->
+                <div class="input-label item-icon-left-padding">
+                    {{'MARKET.GALLERY.SLIDE_DURATION' | translate}}
+                </div>
+                <select ng-model="options.slideDuration"
+                        ng-options="i as (slideDurationLabels[i].labelKey | translate:slideDurationLabels[i].labelParams ) for i in slideDurations track by i">
+                </select>
+            </div>
+
+            <!-- options -->
+            <ng-include src="::'plugins/market/templates/search/lookup_options.html'"></ng-include>
+
+            <div class="padding-top padding-xs" style="display: block; height: 60px;">
+                <div class="hidden-xs hidden-sm pull-left" >
+
+                    <a class="button button-text button-small ink "
+                       ng-class="{'button-text-positive': search.advanced, 'button-text-stable': !search.advanced}"
+                       ng-click="search.advanced=!search.advanced">
+                        {{'MARKET.SEARCH.BTN_OPTIONS' | translate}}
+                        <i class="icon" ng-class="{'ion-arrow-down-b': !search.advanced, 'ion-arrow-up-b': search.advanced}"></i>
+                    </a>
+                    &nbsp;
+
+                </div>
+
+                <div class="hidden-xs hidden-sm pull-right" >
+
+                    <button type="submit" class="button button-small button-raised icon icon-left ion-play ink"
+                             ng-disabled="search.loading"
+                             title="{{!categories.length ? 'MARKET.GALLERY.BTN_START' : 'MARKET.GALLERY.BTN_CONTINUE' | translate}}">
+                        {{!categories.length ? 'MARKET.GALLERY.BTN_START' : 'MARKET.GALLERY.BTN_CONTINUE' | translate}}
+                    </button>
+                    &nbsp;
+                    <button type="button" class="button button-small button-raised icon icon-left ion-stop ink"
+                            title="{{'MARKET.GALLERY.BTN_STOP' | translate}}"
+                            ng-if="search.loading || categories.length"
+                            ng-click="stop()">
+                        {{'MARKET.GALLERY.BTN_STOP' | translate}}
+                    </button>
                 </div>
             </div>
+        </form>
+
+        <div class="center" ng-if="search.loading">
+            <ion-spinner icon="android"></ion-spinner>
         </div>
 
-        <div class="list">
+        <div class="list ng-hide" ng-show="!search.loading">
             <ng-repeat ng-repeat="cat in categories | filter:isLoadedCategory track by cat.id" ng-init="catIndex=$index">
                 <div class="item item-divider">
 
@@ -64,10 +127,14 @@
                     <ion-scroll direction="x">
                         <img ng-repeat="picture in cat.pictures track by picture.id" ng-src="{{::picture.src}}"
                              title="{{::picture.title}}{{::picture.price ? (' (' + (picture.price | formatAmount:picture) +')') : '' }}"
-                             ng-click="showPicturesModal(catIndex, $index, true)" class="image-list-thumb"/>
+                             ng-click="openSlideShowModal(catIndex, $index, true)" class="image-list-thumb"/>
                     </ion-scroll>
                 </a>
             </ng-repeat>
         </div>
+
+
+
+
     </ion-content>
 </ion-view>

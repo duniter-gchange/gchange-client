@@ -289,7 +289,7 @@ function ModalEmailSubscriptionsController($scope, Modals, csSettings, esHttp, c
   $scope.recipient = {};
 
   $scope.$on('modal.shown', function() {
-    // Load recipient (uid, name, avatar...)
+    // Load recipient (avatar, name...)
     if ($scope.formData.recipient) {
       $scope.recipient = {pubkey: $scope.formData.recipient};
       return csWot.extendAll([$scope.recipient]);

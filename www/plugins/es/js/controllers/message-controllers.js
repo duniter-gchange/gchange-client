@@ -17,7 +17,7 @@ angular.module('cesium.es.message.controllers', ['cesium.es.services'])
 
       .state('app.user_new_message', {
         cache: false,
-        url: "/user/message/new?pubkey&uid&title&content",
+        url: "/user/message/new?pubkey&name&title&content",
         views: {
           'menuContent': {
             templateUrl: "plugins/es/templates/message/compose.html",
@@ -553,7 +553,7 @@ function ESMessageViewController($scope, $state, $timeout, $translate, $ionicHis
   /* -- Modals -- */
 
   $scope.showReplyModal = function() {
-    var recipientField = ($scope.type == 'inbox') ? 'issuer' : 'recipient';
+    var recipientField = ($scope.type === 'inbox') ? 'issuer' : 'recipient';
     $translate('MESSAGE.REPLY_TITLE_PREFIX')
       .then(function (prefix) {
         var content = $scope.formData.content ? $scope.formData.content.replace(/^/g, ' > ') : null;
@@ -561,7 +561,7 @@ function ESMessageViewController($scope, $state, $timeout, $translate, $ionicHis
         content = content ? content +'\n' : null;
         return esModals.showMessageCompose({
             destPub: $scope.formData[recipientField],
-            destUid: $scope.formData.name||$scope.formData.uid,
+            destUid: $scope.formData.name,
             title: prefix + $scope.formData.title,
             content: content,
             isReply: true

@@ -46,13 +46,13 @@
           <h4>
             <i class="icon ion-clock" ng-if="formData.time"></i>
             <span translate>COMMON.SUBMIT_BY</span>
-            <a ng-class="{'positive': issuer.uid, 'gray': !issuer.uid}"
-               ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.name||issuer.uid})">
-              <ng-if ng-if="issuer.uid">
+            <a ng-class="{'positive': issuer.name, 'gray': !issuer.name}"
+               ui-sref="app.user_identity({pubkey:issuer.pubkey, name: issuer.name})">
+              <ng-if ng-if="issuer.name">
                 <i class="icon ion-person"></i>
-                {{::issuer.name||issuer.uid}}
+                {{::issuer.name}}
               </ng-if>
-              <span ng-if="!issuer.uid">
+              <span ng-if="!issuer.name">
                 <i class="icon ion-key"></i>
                 {{issuer.pubkey|formatPubkey}}
               </span>
@@ -70,11 +70,6 @@
         <div class="item large-button-bar hidden-xs hidden-sm">
           <button class="button button-stable button-small-padding icon ion-android-share-alt"
                   ng-click="showSharePopover($event)">
-          </button>
-          <button class="button button-calm ink-dark"
-                  ng-if="formData.pubkey && !isUserPubkey(formData.pubkey)"
-                  ng-click="showTransferModal({pubkey:formData.pubkey, uid: formData.title})">
-            {{'COMMON.BTN_SEND_MONEY' | translate}}
           </button>
           <button class="button button-stable icon-left ink-dark"
                   ng-if="canEdit"
@@ -151,10 +146,6 @@
     </div>
   </ion-content>
 
-  <button class="button button-fab button-fab-bottom-right button-assertive icon ion-android-send visible-xs visible-sm"
-          ng-if="formData.pubkey && !isUserPubkey(formData.pubkey)"
-          ng-click="showTransferModal({pubkey: formData.pubkey, uid: formData.title})">
-  </button>
 
 
 </ion-view>

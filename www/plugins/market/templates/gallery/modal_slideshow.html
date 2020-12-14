@@ -1,45 +1,40 @@
-<ion-modal-view class="modal modal-pictures" on-swipe-down="closeModal()">
+<ion-modal-view class="modal modal-pictures" on-swipe-down="stopAndCloseModal()" >
 
     <ion-header-bar class="transparent">
         <!-- start/stop buttons -->
         <a class="button button-icon button-small-padding pull-left icon ion-play hidden-xs hidden-sm ink"
            ng-class="{'light': !interval, 'gray': interval}"
            title="{{'MARKET.GALLERY.BTN_START'|translate}}"
-           ng-click="start()">
+           ng-click="startTimer()">
         </a>
         <a class="button button-icon button-small-padding pull-left icon ion-pause hidden-xs hidden-sm ink"
            ng-class="{'light': interval, 'gray': !interval}"
            title="{{'MARKET.GALLERY.BTN_PAUSE'|translate}}"
-           ng-click="stop()">
+           ng-click="stopTimer()">
         </a>
 
-        <h1 class="title balanced" ng-bind-html="activeCategory.name"></h1>
+        <h1 class="title balanced" ng-bind-html="category.name"></h1>
 
-        <a class="button button-icon pbutton-small-padding pull-right  light hidden-xs hidden-sm ink"
-           ng-click="closeModal()">
-            <i class="icon ion-close"></i>
+        <a class="button button-icon pbutton-small-padding pull-right  gray hidden-xs hidden-sm ink"
+           ng-click="stopAndCloseModal()">
+            <i class="icon ion-close gray"></i>
         </a>
     </ion-header-bar>
 
     <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="activeSlide" class="has-header">
-        <ion-slide ng-repeat="record in activeCategory.pictures">
-
-
+        <ion-slide ng-repeat="record in category.pictures">
             <div class="image" ng-style="::{'background-image': record.src ? ('url('+record.src+')') : '' }">
                 <div class="item no-border item-text-wrap dark padding-left">
-                    <h1 class="item-text-wrap" ng-class="{'col-75': record.price && record.type='offer' || record.type='need'}">
-                        {{record.title}}
+                    <h1 class="item-text-wrap" ng-class="::{'col-75': (record.price && record.type === 'offer' || record.type=== 'need') }">
+                        <span ng-bind-html="::record.title"></span>
                     </h1>
-                    <h3 ng-if="::record.city && record.stock'" >
-                        <i class="ion-location"></i> {{options.location.prefix|translate}} {{record.city}}
-                    </h3>
 
                     <div class="badge badge-balanced badge-price"
-                          ng-if="::record.price && record.type='offer'"
+                          ng-if="::record.price && record.type === 'offer'"
                           ng-class="{'sold': !record.stock}">
-                        {{record.price|formatAmount:record }}
+                        <span  ng-bind-html="::record.price|formatAmount:record"></span>
                     </div>
-                    <div class="badge badge-energized badge-price" ng-if="record.type=='need'">
+                    <div class="badge badge-energized badge-price" ng-if="::record.type==='need'">
                         <i class="cion-market-need"></i>
                         <span translate>MARKET.TYPE.NEED_SHORT</span>
                     </div>
@@ -48,11 +43,34 @@
                     </span>
                 </div>
 
-                <div class="card card-description light"
-                     ng-if="::record.src && record.description && true">
-                    <div class="item item-text-wrap">
-                        <i class="ion-quote"></i>
-                        <span ng-bind-html="record.description"></span>
+                <div class="card card-avatar card-description animate-fade-in"
+                     ng-class="{'done in': record.showDescription}"
+                     ng-if="record.description">
+
+                    <div class="item item-avatar done in">
+                        <span class="avatar avatar-member" ng-if="::!record.avatar"></span>
+                        <span class="avatar" ng-if="::record.avatar" style="background-image: url({{::record.avatar.src}})"></span>
+                        <a class="pull-left"
+                           ui-sref="app.user_identity({pubkey:comment.issuer, name: record.name})">
+                            <span class="positive" ng-if="::record.name">
+                              {{::record.name}}
+                            </span>
+                             <span ng-if="::!record.name" class="gray">
+                              <i class="icon ion-key gray"></i>
+                              {{::record.name || (record.issuer|formatPubkey)}}
+                            </span>
+                        </a>&nbsp;
+
+                        <h3 ng-if="::record.city && record.stock" >
+                            <i class="ion-location"></i> {{::options.location.prefix|translate}} {{::record.city}}
+                        </h3>
+                    </div>
+
+                    <div class="card-content">
+                        <div class="item item-text-wrap done in">
+                            <i class="ion-quote"></i>
+                            <span ng-bind-html="::record.description"></span>
+                        </div>
                     </div>
                 </div>
             </div>

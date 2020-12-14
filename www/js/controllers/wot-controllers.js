@@ -4,35 +4,37 @@ angular.module('cesium.wot.controllers', ['cesium.services'])
     'ngInject';
     $stateProvider
 
-      .state('app.wot_lookup', {
-        url: "/wot?q&type&hash",
-        views: {
-          'menuContent': {
-            templateUrl: "templates/wot/lookup.html",
-            controller: 'WotLookupCtrl'
+        // NEW URI (v1.3)
+        .state('app.user_lookup', {
+          url: "/user?q&type&hash",
+          views: {
+            'menuContent': {
+              templateUrl: "templates/wot/lookup.html",
+              controller: 'WotLookupCtrl'
+            }
           }
-        }
-      })
+        })
 
-      .state('app.wot_identity', {
-        url: "/wot/:pubkey/:uid?action",
-        views: {
-          'menuContent': {
-            templateUrl: "templates/wot/view_identity.html",
-            controller: 'WotIdentityViewCtrl'
+        .state('app.user_identity', {
+          url: "/user/:pubkey/:name?action",
+          views: {
+            'menuContent': {
+              templateUrl: "templates/wot/view_identity.html",
+              controller: 'WotIdentityViewCtrl'
+            }
           }
-        }
-      })
+        })
 
-      .state('app.wot_identity_uid', {
-        url: "/lookup/:uid?action",
-        views: {
-          'menuContent': {
-            templateUrl: "templates/wot/view_identity.html",
-            controller: 'WotIdentityViewCtrl'
+        .state('app.user_identity_name', {
+          url: "/lookup/:name?action",
+          views: {
+            'menuContent': {
+              templateUrl: "templates/wot/view_identity.html",
+              controller: 'WotIdentityViewCtrl'
+            }
           }
-        }
-      });
+        });
+    ;
   })
 
   .controller('WotLookupCtrl', WotLookupController)
@@ -140,7 +142,7 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
       disableBack: true,
       historyRoot: true
     });
-    $state.go('app.wot_lookup', stateParams,
+    $state.go('app.user_lookup', stateParams,
       {
         reload: false,
         inherit: true,
@@ -254,9 +256,9 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
     }
     // Open identity view
     else {
-      $state.go('app.wot_identity', {
+      $state.go('app.user_identity', {
         pubkey: identity.pubkey,
-        uid: identity.uid
+        name: identity.name
       });
     }
   };
@@ -322,8 +324,8 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
             if (obj.pubkey) {
               $scope.search.text = obj.pubkey;
             }
-            else if (result.uid) {
-              $scope.search.text = obj.uid;
+            else if (result.name) {
+              $scope.search.text = obj.name;
             }
             else {
               $scope.search.text = result;
@@ -439,7 +441,6 @@ function WotLookupModalController($scope, $controller, $focus, parameters){
   $scope.select = function(identity){
     $scope.closeModal({
       pubkey: identity.pubkey,
-      uid: identity.uid,
       name: identity.name && identity.name.replace(/<\/?em>/ig, '')
     });
   };
@@ -481,21 +482,13 @@ function WotIdentityAbstractController($scope, $rootScope, $state, $ionicHistory
   $scope.formData = {
     hasSelf: true
   };
-  $scope.disableCertifyButton = true;
   $scope.loading = true;
 
-  $scope.load = function(pubkey, withCache, uid) {
-    return csWot.load(pubkey, withCache, uid)
+  $scope.load = function(pubkey, withCache, name) {
+    return csWot.load(pubkey, withCache, name)
       .then(function(identity){
         if (!identity) return UIUtils.onError('ERROR.IDENTITY_NOT_FOUND')().then($scope.showHome);
         $scope.formData = identity;
-        $scope.revoked = identity.requirements && (identity.requirements.revoked || identity.requirements.pendingRevocation);
-        $scope.canCertify = identity.hasSelf && (!csWallet.isLogin() || (!csWallet.isUserPubkey(pubkey))) && !$scope.revoked;
-        $scope.canSelectAndCertify = identity.hasSelf && csWallet.isUserPubkey(pubkey);
-        $scope.alreadyCertified = !$scope.canCertify || !csWallet.isLogin() ? false :
-          (!!_.findWhere(identity.received_cert, { pubkey: csWallet.data.pubkey, valid: true }) ||
-            !!_.findWhere(identity.received_cert_pending, { pubkey: csWallet.data.pubkey, valid: true }));
-        $scope.disableCertifyButton = $scope.alreadyCertified || $scope.revoked;
         $scope.loading = false;
       })
       .catch(function(err) {
@@ -529,7 +522,7 @@ function WotIdentityAbstractController($scope, $rootScope, $state, $ionicHistory
   /* -- open screens -- */
 
   $scope.showSharePopover = function(event) {
-    var title = $scope.formData.name || $scope.formData.uid || $scope.formData.pubkey;
+    var title = $scope.formData.name || $scope.formData.name || $scope.formData.pubkey;
     // Use pod share URL - see issue #69
     var url = esHttp.getUrl('/user/profile/' + $scope.formData.pubkey + '/_share');
 
@@ -592,16 +585,16 @@ function WotIdentityViewController($scope, $rootScope, $controller, $timeout, UI
       state.stateParams.pubkey &&
       state.stateParams.pubkey.trim().length > 0) {
       if ($scope.loading) { // load once
-        return $scope.load(state.stateParams.pubkey.trim(), true /*withCache*/, state.stateParams.uid)
+        return $scope.load(state.stateParams.pubkey.trim(), true /*withCache*/, state.stateParams.name)
           .then(onLoadSuccess);
       }
     }
 
     else if (state.stateParams &&
-      state.stateParams.uid &&
-      state.stateParams.uid.trim().length > 0) {
+      state.stateParams.name &&
+      state.stateParams.name.trim().length > 0) {
       if ($scope.loading) { // load once
-        return $scope.load(null, true /*withCache*/, state.stateParams.uid)
+        return $scope.load(null, true /*withCache*/, state.stateParams.name)
           .then(onLoadSuccess);
       }
     }
@@ -610,7 +603,7 @@ function WotIdentityViewController($scope, $rootScope, $controller, $timeout, UI
     else if (csWallet.isLogin()){
 
       if ($scope.loading) {
-        return $scope.load(csWallet.data.pubkey, true /*withCache*/, csWallet.data.uid)
+        return $scope.load(csWallet.data.pubkey, true /*withCache*/, csWallet.data.name)
           .then(onLoadSuccess);
       }
     }

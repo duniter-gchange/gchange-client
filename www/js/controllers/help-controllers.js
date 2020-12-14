@@ -514,7 +514,7 @@ function HelpTipController($scope, $rootScope, $state, $window, $ionicSideMenuDe
         if ($ionicSideMenuDelegate.isOpen()) {
           $ionicSideMenuDelegate.toggleLeft(false);
         }
-        return $state.go('app.wot_lookup')
+        return $state.go('app.user_lookup')
           .then(function(){
             return $scope.showHelpTip('helptip-wot-search-text', {
               bindings: {
@@ -598,7 +598,7 @@ function HelpTipController($scope, $rootScope, $state, $window, $ionicSideMenuDe
 
       function() {
         // If on identity: click on certifications
-        if ($state.is('app.wot_identity')) {
+        if ($state.is('app.user_identity')) {
           var element = $window.document.getElementById('helptip-wot-view-certifications');
           if (!element) return true;
           $timeout(function() {

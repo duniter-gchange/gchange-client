@@ -20,7 +20,7 @@ angular.module('cesium.es.registry.controllers', ['cesium.es.services', 'cesium.
       })
 
       .state('app.registry_lookup_lg', {
-        url: "/wot/page/lg?q&type&hash&category&location&issuer&reload&lat&lon&d&last",
+        url: "/page/lg?q&type&hash&category&location&issuer&reload&lat&lon&d&last",
         views: {
           'menuContent': {
             templateUrl: "plugins/es/templates/registry/lookup_lg.html",

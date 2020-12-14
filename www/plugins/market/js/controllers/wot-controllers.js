@@ -5,7 +5,7 @@ angular.module('cesium.market.wot.controllers', ['cesium.es.services'])
 
     var enable = csConfig.plugins && csConfig.plugins.es;
     if (enable) {
-      PluginServiceProvider.extendStates(['app.wot_identity', 'app.wot_identity_uid'], {
+      PluginServiceProvider.extendStates(['app.user_identity', 'app.user_identity_name'], {
           points: {
               'general': {
                   templateUrl: "plugins/market/templates/wot/view_identity_extend.html",

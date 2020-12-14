@@ -458,7 +458,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         return esModals.showMessageCompose({
           title: title,
           destPub: $scope.issuer.pubkey,
-          destUid: $scope.issuer.name || $scope.issuer.uid
+          destUid: $scope.issuer.name
         });
       })
       .then(function(send) {

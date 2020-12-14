@@ -142,7 +142,7 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
             return exports.raw.addTreeLinks(data);
           })
 
-          // Fill avatars (and uid)
+          // Fill avatars
           .then(function() {
             if (!options.loadAvatar) return;
             if (options.loadAvatarAllParent) {
@@ -226,7 +226,7 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
                     // fill map by id
                     data.mapById[change._id] = comment;
                     exports.raw.refreshTreeLinks(data)
-                      // fill avatars (and uid)
+                      // fill avatars
                       .then(function() {
                         return csWot.extend(comment, 'issuer');
                       })
@@ -277,7 +277,6 @@ angular.module('cesium.es.comment.services', ['ngResource', 'cesium.services',
           entity = new Comment(null, json);
           entity.addOnRemoveListener(exports.raw.createOnDeleteListener(data));
           // copy additional wallet data
-          entity.uid = csWallet.data.uid;
           entity.name = csWallet.data.name;
           entity.avatar = csWallet.data.avatar;
 

@@ -446,8 +446,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
           var content = text ? escape(text.trim()) : undefined;
           if (content) {
             options = options || {};
-            options.tagState = options.tagState || 'app.wot_lookup';
-            options.uidState = options.uidState || 'app.wot_identity_uid';
+            options.tagState = options.tagState || 'app.user_lookup';
+            options.nameState = options.nameState || 'app.user_identity_name';
             if (options.newLine || !angular.isDefined(options.newLine)) {
               content = content.replace(/\n/g, '<br>\n');
             }
@@ -472,7 +472,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
             // Replace user tags
             var userTags = parseTagsFromText(content, '@');
             _.forEach(userTags, function(tag){
-              var link = '<a ui-sref=\"{0}({uid: \'{1}\'})\">@{2}</a>'.format(options.uidState, tag, tag);
+              var link = '<a ui-sref=\"{0}({name: \'{1}\'})\">@{2}</a>'.format(options.nameState, tag, tag);
               content = content.replace('@'+tag, link);
             });
 

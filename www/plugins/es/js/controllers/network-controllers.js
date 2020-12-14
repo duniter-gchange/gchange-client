@@ -592,7 +592,7 @@ function ESPeerViewController($scope, $q, $window, $state, UIUtils, csWot, esHtt
               return res.concat(peer);
             }, []);
 
-            // Extend (add uid+name+avatar)
+            // Extend (add avatar, name, etc.)
             return csWot.extendAll([$scope.node].concat(peers))
                 .then(function() {
                   // Final sort

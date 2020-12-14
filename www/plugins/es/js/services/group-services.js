@@ -155,7 +155,7 @@ angular.module('cesium.es.group.services', ['cesium.platform', 'cesium.es.http.s
         .then(function(hit) {
           var record = readRecordFromHit(hit, options.html);
 
-          // Load issuer (avatar, name, uid, etc.)
+          // Load issuer (avatar, name, etc.)
           return csWot.extend({pubkey: record.issuer})
             .then(function(issuer) {
               return {

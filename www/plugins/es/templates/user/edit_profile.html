@@ -34,9 +34,8 @@
                   ng-click="showAvatarModal()"></button>
         </i>
         <h3 class="light">
-          <ng-if ng-if="!loading && !formData.title && walletData && walletData.isMember">{{walletData.uid}}</ng-if>
-          <ng-if ng-if="!loading && !formData.title && walletData && !walletData.isMember">{{::walletData.pubkey | formatPubkey}}</ng-if>
           <ng-if ng-if="!loading && formData.title">{{formData.title}}</ng-if>
+          <ng-if ng-if="!loading && !formData.title && walletData">{{::walletData.pubkey | formatPubkey}}</ng-if>
         </h3>
         <h4 class="light">
           <ion-spinner ng-if="loading" icon="android"></ion-spinner>

@@ -5,17 +5,11 @@
   <span ng-bind-html="::identity.name"></span>
 </h2>
 
-<!--<h4 class="gray"-->
-    <!--ng-class="{'pull-right': !smallscreen}"-->
-    <!--ng-if="::identity.sigDate">-->
-  <!--<i class="ion-clock"></i>-->
-  <!--{{::'WOT.LOOKUP.REGISTERED' | translate:identity}}-->
-<!--</h4>-->
 <h4 class="gray"
     ng-class="{'pull-right': !smallscreen}"
-    ng-if="identity.creationTime">
+    ng-if="identity.creationTime||identity.time">
   <i class="ion-clock"></i>
-  {{::'WOT.LOOKUP.MEMBER_FROM' | translate:{time: identity.creationTime} }}
+  {{::'WOT.LOOKUP.REGISTERED' | translate: {time: identity.creationTime||identity.time } }}
 </h4>
 <h4 class="gray">
   <span class="positive" ng-if="::identity.city">

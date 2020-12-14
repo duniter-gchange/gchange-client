@@ -232,7 +232,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       .then(function (record) {
 
         return $q.all([
-          // Load issuer (avatar, name, uid, etc.)
+          // Load issuer (avatar, name, etc.)
           csWot.extend({issuer: record.issuer}, "issuer", true/*skipAddUid*/),
 
           // API extension (e.g. See market TX service)
@@ -264,13 +264,13 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
         });
   }
 
-  function searchPictures(options) {
+  function createRequest(options) {
       options = options || {};
 
       var request = {
           from: options.from||0,
           size: options.size||20,
-          _source: options._source || ["category", "title", "price", "unit", "currency", "city", "pictures", "stock", "unitbase", "description", "type"]
+          _source: options._source || fields.commons
       };
 
       var matches = [];
@@ -278,14 +278,14 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       if (options.category) {
           filters.push({
               nested: {
-                path: "category",
-                query: {
-                  bool: {
-                    filter: {
-                        term: { "category.id": options.category}
-                    }
+                  path: "category",
+                  query: {
+                      bool: {
+                          filter: {
+                              term: { "category.id": options.category}
+                          }
+                      }
                   }
-                }
               }
           });
       }
@@ -303,17 +303,137 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
               }
           });
       }
+
+      var text = (options.text || '').trim();
+      var tags = text.length > 0 ? esHttp.util.parseTags(text) : undefined;
+      if (text.length > 1) {
+
+          // pubkey : use a special 'term', because of 'non indexed' field
+          if (BMA.regexp.PUBKEY.test(text /*case sensitive*/)) {
+              matches = [];
+              filters.push({term : { issuer: text}});
+          }
+          else {
+              var lowerText = text.toLowerCase();
+
+              matches.push({match: {title: {query: lowerText, boost: 2}}});
+              matches.push({prefix: {title: lowerText}});
+
+              if (options.searchInDescription === true) {
+                  var matchFields = ["title^2", "description"];
+                  matches.push({multi_match : { query: lowerText,
+                          fields: matchFields,
+                          type: "phrase_prefix"
+                      }});
+                  matches.push({match: {description: lowerText}});
+              }
+
+              matches.push({
+                  nested: {
+                      path: "category",
+                      query: {
+                          bool: {
+                              filter: {
+                                  match: { "category.name": lowerText}
+                              }
+                          }
+                      }
+                  }
+              });
+          }
+      }
+      if (tags) {
+          filters.push({terms: {tags: tags}});
+      }
       if (options.withStock) {
           filters.push({range: {stock: {gt: 0}}});
       }
+      if (options.withPictures) {
+          filters.push({range: {picturesCount: {gt: 0}}});
+      }
+
       if (!options.withOld) {
-        var minTime = options.minTime ? options.minTime : Date.now() / 1000  - 24 * 365 * 60 * 60; // last year
-        // Round to hour, to be able to use cache
-        minTime = Math.floor(minTime / 60 / 60 ) * 60 * 60;
-        filters.push({range: {time: {gte: minTime}}});
+          var minTime = options.minTime ? options.minTime : Date.now() / 1000  - 24 * 365 * 60 * 60; // last year
+          // Round to hour, to be able to use cache
+          minTime = Math.floor(minTime / 60 / 60 ) * 60 * 60;
+          filters.push({range: {time: {gte: minTime}}});
       }
       if (options.currencies && options.currencies.length) {
-        filters.push({terms: {currency: options.currencies}});
+          filters.push({terms: {currency: options.currencies}});
+      }
+
+      var location = options.location && options.location.trim();
+      var geoDistance = options.geoDistance || '50km';
+      if (options.geoPoint && options.geoPoint.lat && options.geoPoint.lon) {
+
+          // match location OR geo distance
+          if (location && location.length) {
+              var locationCity = location.toLowerCase().split(',')[0];
+              filters.push({
+                  or : [
+                      // No position defined: search on text
+                      {
+                          and: [
+                              {not: {exists: { field : "geoPoint" }}},
+                              {multi_match: {
+                                      query: locationCity,
+                                      fields : [ "city^3", "location" ]
+                                  }}
+                          ]
+                      },
+                      // Has position: use spatial filter
+                      {geo_distance: {
+                              distance: geoDistance,
+                              geoPoint: {
+                                  lat: options.geoPoint.lat,
+                                  lon: options.geoPoint.lon
+                              }
+                          }}
+                  ]
+              });
+          }
+
+          else {
+              filters.push(
+                  {geo_distance: {
+                          distance: geoDistance,
+                          geoPoint: {
+                              lat: options.geoPoint.lat,
+                              lon: options.geoPoint.lon
+                          }
+                      }});
+          }
+      }
+      else if (options.geoShape && options.geoShape.geometry) {
+          var coordinates = options.geoShape.geometry.coordinates;
+          var type = options.geoShape.geometry.type;
+          if (location && (type === 'Polygon' || type === 'MultiPolygon') && coordinates && coordinates.length) {
+              // One polygon
+              if (coordinates.length === 1) {
+                  filters.push(
+                      {
+                          geo_polygon: {
+                              geoPoint: {
+                                  points: coordinates.length === 1 ? coordinates[0] : coordinates
+                              }
+                          }
+                      });
+              }
+              // Multi polygon
+              else {
+                  filters.push({
+                      or: coordinates.reduce(function (res, coords) {
+                          return res.concat(coords.reduce(function(res, points) {
+                              return res.concat({geo_polygon: {
+                                      geoPoint: {
+                                          points: points
+                                      }
+                                  }});
+                          }, []));
+                      }, [])
+                  });
+              }
+          }
       }
 
       // Add query to request
@@ -321,12 +441,28 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
           request.query = {bool: {}};
           if (matches.length) {
               request.query.bool.should =  matches;
+              // Exclude result with score=0
+              request.query.bool.minimum_should_match = 1;
           }
           if (filters.length) {
               request.query.bool.filter =  filters;
           }
       }
 
+      return request;
+  }
+
+  function searchPictures(options) {
+      options = options || {};
+
+      options._source = options._source || ["category", "title", "price", "unit", "currency", "city", "pictures", "stock", "unitbase", "description", "type", "issuer", "creationTime" ];
+      options.searchInDescription = false;
+      options.withPictures = true;
+
+      // Create the request, from options
+      var request = createRequest(options);
+
+      // Run the search
       return search(request)
           .then(function(res) {
               // Filter, to keep only record with pictures
@@ -340,6 +476,10 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
 
                   return res.concat(record);
               }, []);
+          })
+          .then(function(hits){
+              // Fetch user profile (avatar, name, etc.)
+              return csWot.extendAll(hits, 'issuer', true /*skipAddUid*/)
           });
   }
 

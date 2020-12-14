@@ -260,16 +260,19 @@
     min-height: 150px;
 }
 .modal-pictures .card.card-description {
-    background-color: rgba(0,0,0,0.8) !important;
+    background-color: rgba(200,200,200,0.90) !important;
+    border-radius: 4px;
+}
+.modal-pictures .card.card-description .item-avatar {
+    height: 80px !important;
 }
 .modal-pictures .card.card-description .item {
     background: transparent;
 }
 
-
 @media screen and (min-width: 768px) {
     .modal-pictures .image {
-        height: 800px;
+        height: calc(100vh);
     }
 
     .modal-pictures .bar.bar-header {
@@ -290,12 +293,16 @@
 
     .modal-pictures .image {
         background-position: center, center;
+        padding-bottom: 0;
     }
 
     .modal-pictures .badge-price  {
         font-size: 45px !important;
         line-height: 45px;
         padding: 12px !important;
+    }
+    .modal-pictures .badge-balanced * {
+        color: whitesmoke !important;
     }
 
     .modal-pictures .badge.badge-secondary {
@@ -314,11 +321,18 @@
         line-height: 100px;
         height: 110px;
         margin: 0;
+        white-space: normal;
+        max-width: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .modal-pictures .card.card-description {
-        padding: 16px;
         max-width: 50%;
+        padding: 16px 16px 0px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        margin-bottom: 0;
     }
     .modal-pictures .card.card-description .item {
         font-size: 17pt;

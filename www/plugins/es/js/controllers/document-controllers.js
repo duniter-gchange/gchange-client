@@ -355,7 +355,7 @@ function ESLastDocumentsController($scope, $controller, $timeout, $state) {
     event.stopPropagation();
     var anchor;
     if (doc.index === "user" && doc.type === "profile") {
-      $state.go('app.wot_identity', {pubkey: doc.pubkey, uid: doc.name});
+      $state.go('app.user_identity', {pubkey: doc.pubkey, name: doc.name});
     }
     else if (doc.index === "page" && doc.type === "record") {
       $state.go('app.view_page', {title: doc.title, id: doc.id});

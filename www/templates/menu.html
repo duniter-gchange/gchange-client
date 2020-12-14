@@ -11,7 +11,9 @@
           <i class="icon ion-navicon"></i>
         </button>
       </ion-nav-buttons>
+
       <ion-nav-buttons side="right">
+
         <!-- Allow extension here -->
         <cs-extension-point name="nav-buttons-right"></cs-extension-point>
 
@@ -49,7 +51,7 @@
           <i class="avatar avatar-member hero-icon" ng-if="!$root.walletData.avatar" ng-class="{'royal-bg': login, 'stable-bg': !login}" ng-click="!login ? showHome() : loginAndGo('app.view_wallet')" menu-close></i>
           <i class="avatar hero-icon" ng-if="$root.walletData.avatar" style="background-image: url('{{$root.walletData.avatar.src}}')" ng-click="loginAndGo('app.view_wallet')" menu-close></i>
           <h4 ng-if="login">
-            <a class="light" ng-click="loginAndGo('app.view_wallet')" menu-close>
+            <a class="light" ui-sref="app.view_wallet" menu-close>
               {{$root.walletData.name||$root.walletData.uid}}
               <span ng-if="!$root.walletData.name && !$root.walletData.uid"><i class="icon ion-key"></i>&nbsp;{{$root.walletData.pubkey|formatPubkey}}</span>
             </a>
@@ -63,11 +65,6 @@
           </h4>
           <cs-extension-point name="menu-profile-user"></cs-extension-point>
         </div>
-        <!-- logout -->
-        <a ng-if="login" class="button-icon"
-           ng-click="logout({askConfirm: true})" style="position: absolute; top: 5px; left: 5px; z-index: 999;">
-          <i class="icon stable ion-android-exit"></i>
-        </a>
       </div>
 
       <!-- Fullscreen button -->
@@ -81,36 +78,48 @@
       <!-- endRemoveIf(device) -->
     </ion-header-bar>
 
-    <ion-content scroll="false">
-      <ion-list class="list">
+    <ion-content scroll="false" class="scroll-content ionic-scroll" ng-class="{'overflow-scroll': smallscreen, 'scroll-content-false': !smallscreen}">
+      <ion-list class="list" ng-class="{'scroll': smallscreen}">
 
-        <!-- Home -->
-        <ion-item menu-close class="item-icon-left" ui-sref="app.home"
-                  active-link-path-prefix="#/app/home"
-                  active-link="active">
+        <!-- *************** -->
+        <!-- Actions section -->
+        <!-- *************** -->
+
+        <!--<ion-item menu-close
+                  class="item item-actions item-button-right visible-xs visible-sm hidden-readonly"
+                  ng-if="login"
+                  ng-class="::{'item-button-left': $root.device.barcode.enable}">
+          &lt;!&ndash; TODO: add new Ad ? &ndash;&gt;
+        </ion-item>-->
+
+        <!-- ************ -->
+        <!-- Home section -->
+        <!-- ************ -->
+        <ion-item menu-close class="item-icon-left" ui-sref="app.home" active-link="active">
           <i class="icon ion-home"></i>
           {{:locale:'MENU.HOME'|translate}}
         </ion-item>
 
-        <!-- Allow extension here -->
-        <cs-extension-point name="menu-discover"></cs-extension-point>
-
-        <!-- MAIN Section -->
+        <!-- ************ -->
+        <!-- Main section -->
+        <!-- ************ -->
         <div class="item item-divider"></div>
+
 
         <!-- Allow extension here -->
         <cs-extension-point name="menu-main"></cs-extension-point>
 
 
-        <!-- USER Section -->
+        <!-- ************ -->
+        <!-- User Section -->
+        <!-- ************ -->
         <div class="item item-divider"></div>
-
 
         <a menu-close
            class="item item-icon-left"
            active-link="active"
            active-link-path-prefix="#/app/wallet"
-           ng-click="loginAndGo('app.view_wallet')"
+           ui-sref="app.view_wallet"
            ng-class="{'item-menu-disable': !login}">
           <i class="icon ion-person"></i>
           {{:locale:'MENU.ACCOUNT'|translate}}
@@ -119,6 +128,47 @@
 
         <!-- Allow extension here -->
         <cs-extension-point name="menu-user"></cs-extension-point>
+
+        <!-- *************** -->
+        <!-- Actions section -->
+        <!-- *************** -->
+
+        <!--<ion-item class="item hidden-xs hidden-sm hidden-readonly"-->
+        <!-- TODO: add new Ad ? -->
+        <!--</ion-item>-->
+
+        <!-- Spacer (large screen only) -->
+        <div class="item-spacer hidden-readonly"></div>
+
+        <!-- **************** -->
+        <!-- Discover section -->
+        <!-- **************** -->
+
+        <div class="item item-divider visible-xs visible-sm"></div>
+
+
+        <a menu-close class="item item-icon-left"
+           id="helptip-menu-btn-wot"
+           active-link="active"
+           active-link-path-prefix="#/app/user"
+           ui-sref="app.user_lookup">
+          <i class="icon ion-person-stalker"></i>
+          {{:locale:'MENU.WOT'|translate}}
+        </a>
+
+        <!-- Allow extension here -->
+        <cs-extension-point name="menu-discover"></cs-extension-point>
+
+        <div class="item item-divider visible-xs visible-sm"></div>
+
+        <a menu-close
+           class="item item-icon-left visible-xs visible-sm"
+           active-link="active"
+           active-link-path-prefix="#/app/help"
+           ui-sref="app.help">
+          <i class="icon ion-ios-help-outline"></i>
+          {{:locale:'HOME.BTN_HELP'|translate}}
+        </a>
 
         <a menu-close
            class="item item-icon-left visible-xs visible-sm"
@@ -130,6 +180,16 @@
         </a>
         <a id="helptip-menu-btn-settings"></a>
 
+        <!-- logout -->
+        <div class="item item-divider visible-xs visible-sm margin-top"  ng-if="login"></div>
+        <a menu-close
+           ng-if="login"
+           class="item item-icon-left visible-xs visible-sm"
+           ng-click="logout({askConfirm: true})">
+          <i class="icon ion-log-out assertive"></i>
+          <span class="assertive" translate> {{:locale:'COMMON.BTN_LOGOUT'|translate}}</span>
+        </a>
+
       </ion-list>
 
     </ion-content>
@@ -139,9 +199,9 @@
       <a class="pull-left icon-help" menu-toggle="left" title="{{:locale:'HOME.BTN_HELP'|translate}}" ui-sref="app.help"></a>
 
       <a class="title gray" ng-click="showAboutModal()" title="{{:locale:'HOME.BTN_ABOUT'|translate}}">
+
         <!-- version -->
-        <span title="{{:locale:'HOME.BTN_ABOUT'|translate}}"
-              ng-class="{'assertive': $root.newRelease}">
+        <span ng-class="{'assertive': $root.newRelease}">
           <!-- warning icon, if new version available -->
           <i ng-if="$root.newRelease" class="ion-alert-circled assertive"></i>
 
@@ -151,6 +211,8 @@
         <!-- about -->
         <span translate>HOME.BTN_ABOUT</span>
       </a>
+
+
     </ion-footer-bar>
     <!-- endRemoveIf(device) -->
   </ion-side-menu>

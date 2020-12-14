@@ -46,7 +46,7 @@
             <h4>
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
-              <a ui-sref="app.wot_identity({pubkey: issuer.issuer})">
+              <a ui-sref="app.user_identity({pubkey: issuer.issuer})">
                 <span ng-if="issuer.name||issuer.issuer" class="positive">
                   <i class="icon ion-person"></i>
                   {{::issuer.name||issuer.issuer}}
@@ -102,12 +102,12 @@
             <h4>
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
-              <a ui-sref="app.wot_identity({pubkey:issuer.issuer})">
-                <span class="positive" ng-if="issuer.name||issuer.issuer">
+              <a ui-sref="app.user_identity({pubkey:issuer.issuer})">
+                <span class="positive" ng-if="issuer.name">
                   <i class="icon ion-person"></i>
-                  {{::issuer.name||issuer.uid}}
+                  {{::issuer.name}}
                 </span>
-                <span class="gray" ng-if="!issuer.name && !issuer.issuer">
+                <span class="gray" ng-if="!issuer.name">
                   <i class="icon ion-key"></i>
                   {{::issuer.pubkey|formatPubkey}}
                 </span>
@@ -306,17 +306,17 @@
         <!-- issuer card -->
         <a class="item item-avatar card-meta item item-border-large dark-100-bg dark animate-ripple animate-show-hide ng-hide"
                   ng-show="issuer.stars && !loading"
-                  ui-sref="app.wot_identity({pubkey: issuer.issuer, uid: issuer.name})">
+                  ui-sref="app.user_identity({pubkey: issuer.pubkey, name: issuer.name})">
           <div class="  item-text-wrap light">
 
             <i ng-if="!issuer.avatar" class="item-image icon ion-person"></i>
             <i ng-if="issuer.avatar" class="item-image avatar" style="background-image: url({{issuer.avatar.src}})"></i>
 
             <h3>
-              <span ng-if="issuer.name||issuer.issuer" class="positive">
-                {{::issuer.name||issuer.uid}}
+              <span ng-if="issuer.name" class="positive">
+                {{::issuer.name}}
               </span>
-              <span ng-if="!issuer.name&&!issuer.issuer" class="gray">
+              <span ng-if="!issuer.name" class="gray">
                   <b class="ion-key"></b>
                   {{::issuer.pubkey|formatPubkey}}
               </span>

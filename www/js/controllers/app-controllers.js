@@ -369,9 +369,9 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
 
     // Read URL like '@UID' (Used by home page, in feed's author url)
     if (uri && uri.startsWith('@')) {
-      var uid = uri.substr(1);
-      if (BMA.regexp.USER_ID.test(uid)) {
-        $state.go('app.wot_identity_uid', {uid: uid});
+      var name = uri.substr(1);
+      if (BMA.regexp.USER_ID.test(name)) {
+        $state.go('app.user_identity_name', {name: name});
         return false;
       }
     }
@@ -408,31 +408,18 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
       .then(function(res) {
         if (!res) throw {message: 'ERROR.UNKNOWN_URI_FORMAT'}; // Continue
 
-        if (res.pubkey) {
-          $state.go('app.wot_identity',
+        if (res.name) {
+          return $state.go('app.user_identity_name',
             angular.merge({
-              pubkey: res.pubkey,
+              name: res.name,
               action: res.params && res.params.amount ? 'transfer' : undefined
             }, res.params),
-            {reload: true});
-        }
-        else if (res.uid) {
-          return $state.go('app.wot_identity_uid',
-            angular.merge({
-              uid: res.uid,
-              action: res.params && res.params.amount ? 'transfer' : undefined
-            }, res.params),
-            {reload: true});
-        }
-        else if (angular.isDefined(res.block)) {
-          return $state.go('app.view_block',
-            angular.merge(res.block, res.params),
             {reload: true});
         }
         // Default: wot lookup
         else {
           console.warn('[app] TODO implement state redirection from URI result: ', res, uri);
-          return $state.go('app.wot_lookup.tab_search',
+          return $state.go('app.user_lookup',
             {q: uri},
             {reload: true});
         }

@@ -9,7 +9,7 @@
 
     <div class="col">
       <h3>
-        <a ui-sref="app.wot_identity({pubkey: doc.pubkey, uid: doc.name})">
+        <a ui-sref="app.user_identity({pubkey: doc.pubkey, name: doc.name})">
           <span class="positive" ng-if=":rebind:doc.name">
             <i class="ion-person"></i> {{:rebind:doc.name}}
           </span>
@@ -44,7 +44,7 @@
         <!--<i class="ion-trash-a"></i>-->
       <!--</a>-->
       <!--<h3 ng-if=":rebind:doc.recipient">-->
-          <!--<a ui-sref="app.wot_identity({pubkey: doc.recipient.pubkey, uid: doc.recipient.name})">-->
+          <!--<a ui-sref="app.user_identity({pubkey: doc.recipient.pubkey, name: doc.recipient.name})">-->
           <!--<span class="gray">-->
             <!--<i class="ion-key"></i> {{:rebind:doc.recipient.pubkey|formatPubkey}}-->
           <!--</span>-->

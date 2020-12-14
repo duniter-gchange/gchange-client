@@ -213,7 +213,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
                             onTap: function(e) {
                                 $scope.abuseForm.$submitted=true;
                                 if(!$scope.abuseForm.$valid || !$scope.abuseData.comment) {
-                                    //don't allow the user to close unless he enters a uid
+                                    //don't allow the user to close unless he enters a reason
                                     e.preventDefault();
                                 } else {
                                     return $scope.abuseData;

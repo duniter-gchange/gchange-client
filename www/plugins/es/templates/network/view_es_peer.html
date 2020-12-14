@@ -37,12 +37,12 @@
             </span>
             <a class="positive"
                   ng-if="node.name"
-                  ui-sref="app.wot_identity({pubkey: node.pubkey, uid: node.name})">
+                  ui-sref="app.user_identity({pubkey: node.pubkey, uid: node.name})">
               <i class="ion-person"></i> {{node.name}}
             </a>
             <span ng-if="!loading && !node.name">
               <a class="gray"
-                 ui-sref="app.wot_identity({pubkey: node.pubkey})">
+                 ui-sref="app.user_identity({pubkey: node.pubkey})">
                 <i class="ion-key"></i>
                 {{node.pubkey|formatPubkey}}
               </a>

@@ -19,15 +19,18 @@
     <i class="icon ion-social-buffer"></i>
     <span translate>MENU.REGISTRY</span>
   </ion-item>
+</ng-if>
 
-  <!-- view market gallery
-  <ion-item menu-close class="item item-icon-left hidden-xs hidden-sm"
+<div ng-if="::extensionPoint === 'menu-discover'">
+  <!-- view market gallery -->
+  <ion-item menu-close class="item item-icon-left"
+            ng-if="$root.settings.expertMode"
             active-link="active"
             active-link-path-prefix="#/app/gallery/market"
             ui-sref="app.market_gallery">
     <i class="icon ion-images"></i>
     <span translate>MARKET.GALLERY.TITLE</span>
-  </ion-item>-->
+  </ion-item>
 
 </ng-if>
 

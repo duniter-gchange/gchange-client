@@ -15,10 +15,10 @@
         <ng-if ng-if="comment.parent.issuer">
           <a ng-click="toggleExpandedParent(comment, $index)">
             {{'COMMENTS.REPLY_TO_LINK'|translate}}
-            <ng-if ng-if="::comment.parent.name||comment.parent.uid">
-              {{::comment.parent.name||comment.parent.uid}}
+            <ng-if ng-if="::comment.parent.name">
+              {{::comment.parent.name}}
             </ng-if>
-            <ng-if ng-if="::!comment.parent.name && !comment.parent.uid">
+            <ng-if ng-if="::!comment.parent.name">
               <i class="ion-key"></i>
               {{::comment.parent.issuer|formatPubkey}}
             </ng-if>

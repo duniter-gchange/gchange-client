@@ -7,11 +7,11 @@
           style="background-image: url({{::comment.avatar.src}})"></span>
 
     <a class="pull-left"
-       ui-sref="app.wot_identity({pubkey:comment.issuer, uid: comment.uid})">
-      <span class="positive" ng-if="::comment.name||comment.uid">
-        {{::comment.name||comment.uid}}
+       ui-sref="app.user_identity({pubkey:comment.issuer, name: comment.name})">
+      <span class="positive" ng-if="::comment.name">
+        {{::comment.name}}
       </span>
-      <span ng-if="::!comment.name && !comment.uid" class="gray">
+      <span ng-if="::!comment.name" class="gray">
         <i class="icon ion-key gray"></i>
         {{::comment.issuer|formatPubkey}}
       </span>

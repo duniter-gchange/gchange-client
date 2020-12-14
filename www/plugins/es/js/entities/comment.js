@@ -27,7 +27,6 @@ function Comment(id, json) {
     // Optional fields
     that.id = otherComment.id || that.id;
     that.reply_to = otherComment.reply_to || that.reply_to;
-    that.uid = otherComment.uid || that.uid;
     that.name = otherComment.name || that.name;
     that.avatarStyle = otherComment.avatarStyle || that.avatarStyle;
     if (otherComment.parent) {

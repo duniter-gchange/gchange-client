@@ -57,7 +57,9 @@ $screen-menu:                     $screen-sm;
   @-ms-viewport {
     width: 320px;
   }
-
+  .no-padding-xxs {
+    padding: 0 !important;
+  }
   .item .badge {
     right: 16px;
   }
@@ -194,6 +196,9 @@ $screen-menu:                     $screen-sm;
   }
   .button.hidden-sm {
     display: flex;
+  }
+  .button.button-icon.hidden-sm {
+    display: inline-block;
   }
   .pull-right,
   .pull-left {
@@ -372,43 +377,187 @@ $screen-menu:                     $screen-sm;
   }
   .visible-nomenu {
     display: unset;
-    visibility: visible !important;
-  }
+    visibility: visible !important; }
 }
 
 @media screen and (min-width: $screen-menu) {
-  .hidden-nomenu {
-    display: inherit;
-    visibility: visible;
-  }
   .visible-nomenu {
     display: none !important;
     visibility: hidden !important;
   }
 }
 
-// Screen WITH left menu
-@media screen and (min-width: $screen-menu) {
-  .hidden-menu {
-    display: none !important;
-    visibility: hidden !important;
+.menu.menu-left {
+
+  background-color: whitesmoke;
+  .item {
+    opacity: 0.75;
+    color: black;
   }
-  .visible-menu {
-    display: inherit !important;
-    visibility: visible !important;
+
+  .item-button-right > .button,
+  .item-button-right .item-content > .button,
+  .item-button-right > .buttons,
+  .item-button-right .item-content > .buttons {
+    top: 8px !important;
+  }
+
+  .item.active {
+    background-color: $active !important;
+
+    .item-content {
+      background-color: transparent;
+    }
+  }
+
+  .item-menu-disable {
+    color: $dark !important;
+  }
+
+  .item-spacer {
+    flex: 1 1 auto;
+  }
+
+  .item-actions {
+    min-height: 55px !important;
+  }
+
+  .item-closeable:hover {
+    cursor: pointer;
+  }
+
+
+  .item-closeable {
+    .close {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+    }
+  }
+  .item-closeable:hover {
+    .close {
+      @extend .ion-close;
+    }
   }
 }
 
-@media screen and (max-width: $screen-nomenu-max) {
-  .hidden-menu {
-    display: inherit;
-    visibility: visible;
+
+// Menu on small screens
+@media screen and (max-width: $screen-sm-max) {
+  .menu.menu-left {
+
+    // Compact menu item (reduce height, etc.)
+    .item.item-divider {
+      min-height: 2px;
+      height: 2px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .item,
+    .item.item-complex .item-content {
+      height: 40px;
+      min-height: 40px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+
+      .badge {
+        top: 10px;
+        padding: 2px 6px;
+        font-size: 12px;
+      }
+    }
+
+    .item.item-complex {
+      padding-top: 0;
+    }
+
+    .item.item-button-right .button {
+      height: 30px;
+      min-height: 30px;
+      top: 4px;
+    }
+
+    .item-spacer {
+      display: none;
+      visibility: hidden;
+    }
+
+    // Hide footer on small screen
+    ion-content.has-footer {
+      bottom: 0 !important; /*ignore footer*/
+    }
+
+    .bar-header {
+      background-color: $positive-900-bg;
+      color: #fff;
+      height: 150px;
+      padding-right: 0 !important;
+
+      .platform-ios.platform-cordova & {
+        height: calc(constant(safe-area-inset-top) + 150px);
+        height: calc(env(safe-area-inset-top) + 150px);
+      }
+
+      .hero {
+        height: 150px;
+        box-shadow: none; // not need (define in bar-header)
+
+        .content {
+          bottom: 0;
+        }
+      }
+    }
+
+    .has-header {
+      top: 150px;
+
+      .platform-ios.platform-cordova & {
+        top: calc(constant(safe-area-inset-top) + 150px);
+        top: calc(env(safe-area-inset-top) + 150px);
+      }
+    }
+
   }
-  .visible-menu {
-    display: none;
-    visibility: hidden;
+
+}
+
+// Menu for NOT small screens
+@media screen and (min-width: $screen-md) {
+  .menu.menu-left {
+
+    .list {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .item.item-divider {
+      min-height: 5px;
+      height: 5px;
+    }
+
+    .footer a {
+      font-size: 14px ! important;
+      color: grey !important;
+    }
   }
 }
+
+//@media screen and (min-width: $screen-md) {
+//  .menu.menu-left {
+//    background-image: url('../../resources/logo/svg/white/logo.large.empty.transparent.svg');
+//    background-repeat: no-repeat;
+//    background-position: -500px -100px;
+//    background-size: 1024px 1024px;
+//    background-color: whitesmoke;
+//    height: 100%;
+//  }
+//}
+
 
 /**********
    Fix or extend generic CSS
@@ -617,6 +766,35 @@ html, body {
   }
 }
 
+.popover-invitation,
+.popover-network,
+.popover-peer-info {
+  width: 420px;
+}
+
+.popover-wallets {
+  .item-avatar {
+    padding-left: 95px !important;
+    .icon:last-child {
+      display: none;
+    }
+  }
+}
+
+/**********
+   Network
+**********/
+.popover-peer-info,
+.popover-endpoints {
+  .item .badge {
+    right: 16px !important;
+  }
+
+  .item .badge.badge-secondary {
+    top: 35px !important;
+  }
+}
+
 
 /**********
    Unit popover
@@ -676,6 +854,7 @@ html, body {
 .bar.bar-header {
   padding-right: 5px !important;
 
+  .buttons-right .right-buttons,
   .buttons-right span {
     margin-left: 0 !important;
   }
@@ -833,38 +1012,6 @@ html, body {
 
 .avatar-wallet {
   background-image: url('../img/card.png');
-}
-
-/**************
- Item icons
-**************/
-
-.item.item-icon-left > i.avatar:first-child {
-  position: absolute;
-  display: flex;
-  height: 100%;
-  align-items: center;
-  font-size: 16px;
-  left: 16px;
-  top: 8px;
-  max-height: 32px;
-  max-width: 32px;
-}
-
-.item.item-checkbox.item-avatar > i.avatar:first-child,
-.item.item-checkbox.item-avatar > i.item-image:first-child,
-.item.item-checkbox.item-avatar .item-content > i.avatar:first-child,
-.item.item-checkbox.item-avatar .item-content > i.item-image:first-child,
-.item.item-checkbox.item-avatar * > i.avatar:first-child,
-.item.item-checkbox.item-avatar * > i.item-image:first-child,
-.item.item-checkbox.item-avatar * .item-content > i.avatar:first-child,
-.item.item-checkbox.item-avatar * .item-content > i.item-image:first-child {
-  left: 65px;
-}
-
-.item.item-checkbox.item-avatar .item-content,
-.item.item-checkbox .item-content .item-avatar {
-  padding-left: 65px;
 }
 
 /* ----
@@ -1568,6 +1715,10 @@ a.underline:hover,
   }
 }
 
+.item.item-no-border {
+  border-width: 0;
+}
+
 .list .item.item-border {
   border-bottom: solid 1px #ccc !important;
   margin-bottom: 1px;
@@ -1620,7 +1771,6 @@ a.underline:hover,
 .item-input-error {
   border-bottom: 2px solid red !important;
 }
-
 
 // See login screen (pubkey form)
 .item-input.item-button-right {
@@ -1896,143 +2046,6 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   font-style: italic !important;
 }
 
-/**********
-   Screen - Left Menu
-**********/
-
-.menu.menu-left {
-
-  background-color: whitesmoke;
-  .item {
-    opacity: 0.75;
-    color: black;
-  }
-
-  .item-button-right > .button,
-  .item-button-right .item-content > .button,
-  .item-button-right > .buttons,
-  .item-button-right .item-content > .buttons {
-    top: 8px !important;
-  }
-
-  .item.active {
-    background-color: $active !important;
-
-    .item-content {
-      background-color: transparent;
-    }
-  }
-
-  .item-menu-disable {
-    color: $dark !important;
-  }
-}
-
-
-// Menu on small screens
-@media screen and (max-width: $screen-sm-max) {
-  .menu.menu-left {
-
-    // Compact menu item (reduce height, etc.)
-    .item.item-divider {
-      min-height: 2px;
-      height: 2px;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-
-    .item,
-    .item.item-complex .item-content {
-      height: 40px;
-      min-height: 40px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-
-      .badge {
-        top: 10px;
-        padding: 2px 6px;
-        font-size: 12px;
-      }
-    }
-
-    .item.item-complex {
-      padding-top: 0;
-    }
-
-    .item.item-button-right .button {
-      height: 30px;
-      min-height: 30px;
-      top: 4px;
-    }
-
-
-    // Hide footer on small screen
-    ion-content.has-footer {
-      bottom: 0 !important; /*ignore footer*/
-    }
-
-    .bar-header {
-      background-color: $positive-900-bg;
-      color: #fff;
-      height: 150px;
-      padding-right: 0 !important;
-
-      .platform-ios.platform-cordova & {
-        height: calc(constant(safe-area-inset-top) + 150px);
-        height: calc(env(safe-area-inset-top) + 150px);
-      }
-
-      .hero {
-        height: 150px;
-        box-shadow: none; // not need (define in bar-header)
-
-        .content {
-          bottom: 0;
-        }
-      }
-    }
-
-    .has-header {
-      top: 150px;
-
-      .platform-ios.platform-cordova & {
-        top: calc(constant(safe-area-inset-top) + 150px);
-        top: calc(env(safe-area-inset-top) + 150px);
-      }
-    }
-  }
-}
-
-/**********
-   Menu
-**********/
-
-// Menu for NOT small screens
-@media screen and (min-width: $screen-sm) {
-  .menu.menu-left {
-
-    .item.item-divider {
-      min-height: 5px;
-      height: 5px;
-    }
-
-    .footer a {
-      font-size: 14px ! important;
-      color: grey !important;
-    }
-  }
-}
-
-//@media screen and (min-width: $screen-md) {
-//  .menu.menu-left {
-//    background-image: url('../../resources/logo/svg/white/logo.large.empty.transparent.svg');
-//    background-repeat: no-repeat;
-//    background-position: -500px -100px;
-//    background-size: 1024px 1024px;
-//    background-color: whitesmoke;
-//    height: 100%;
-//  }
-//}
 
 /**********
    Screen - identity Certifications
@@ -2084,6 +2097,14 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   left: 12px;
   top: 8px;
   z-index: 99;
+}
+#menu .footer .icon-help:hover {
+  @extend .ion-ios-help;
+  color: $positive !important;
+  font-size: 31px !important;
+  top: 6px;
+  left: 11px;
+  transform: rotate(10deg);
 }
 
 /**********

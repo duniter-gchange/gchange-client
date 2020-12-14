@@ -7,7 +7,7 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
     if (enable) {
       PluginServiceProvider
 
-        .extendStates(['app.wot_identity', 'app.wot_identity_uid'], {
+        .extendStates(['app.user_identity', 'app.user_identity_name'], {
           points: {
             'hero': {
               templateUrl: "plugins/es/templates/wot/view_identity_extend.html",

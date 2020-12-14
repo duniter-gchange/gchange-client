@@ -27,7 +27,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
   };
 
   function getAvatarAndName(pubkey) {
-    return that.raw.getFields({id: pubkey, fields: 'title,avatar._content_type,pubkey'})
+    return that.raw.getFields({id: pubkey, fields: 'title,avatar._content_type,pubkey,creationTime,time'})
       .then(function(res) {
         var profile;
         if (res && res._source) {
@@ -35,6 +35,9 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
           profile = {name: res._source.title, pubkey: res._source.pubkey};
           // avatar
           profile.avatar = esHttp.image.fromHit(res, 'avatar');
+          // creationTime
+          profile.creationTime = res._source.creationTime;
+          profile.time = res._source.time;
         }
         return profile;
       })
@@ -128,6 +131,8 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     }
     data.description = hit._source.description || data.description;
     data.city = hit._source.city || data.city;
+    data.creationTime = hit._source.creationTime || data.creationTime;
+    data.time = hit._source.time || data.time;
 
     // Fecth payment pubkey (need by Gchange)
     if (hit._source.pubkey) {
@@ -220,7 +225,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       highlight: {fields : {title : {}, tags: {}}},
       from: options.from || 0,
       size: options.size || 100,
-      _source: options._source || ["title", "avatar._content_type", "time", "city"]
+      _source: options._source || ["title", "avatar._content_type", "time", "city", "creationTime", "time"]
     };
 
     if (!text) {
@@ -253,7 +258,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
           "group" : 0.01
         };
       }
-      request._source = request._source.concat(["description","creationTime", "membersCount", "type"]);
+      request._source = request._source.concat(["description", "creationTime", "membersCount", "type"]);
     }
 
     var search = options.mixedSearch ? that.raw.mixedSearch : that.raw.search;

@@ -48,7 +48,7 @@
             <h1 class="title hidden-xs hidden-sm" ng-bind-html="formData.title"></h1>
             <h4>
               {{type == 'inbox' ? 'MESSAGE.VIEW.SENDER': 'MESSAGE.VIEW.RECIPIENT'|translate}}
-              <a class="positive" ui-sref="app.wot_identity({pubkey: (type == 'inbox') ? formData.issuer : formData.recipient, uid: formData.name||formData.uid})">
+              <a class="positive" ui-sref="app.user_identity({pubkey: (type == 'inbox') ? formData.issuer : formData.recipient, uid: formData.name||formData.uid})">
                 <span ng-if="formData.name||formData.uid">
                   <i class="ion-person"></i>
                   {{formData.name||formData.uid}}

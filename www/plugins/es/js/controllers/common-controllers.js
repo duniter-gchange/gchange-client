@@ -283,7 +283,7 @@ function ESCommentsController($scope, $filter, $state, $focus, $timeout, $anchor
       stateUrl = $state.href($state.current.name, params, {absolute: true}) + '/' + $filter('formatHash')(comment.id);
     }
     var index = _.findIndex($scope.comments.result, {id: comment.id});
-    var url = stateUrl + '?u=' + (comment.uid||$filter('formatPubkey')(comment.issuer));
+    var url = stateUrl + '?u=' + (comment.name||$filter('formatPubkey')(comment.issuer));
     UIUtils.popover.show(event, {
       templateUrl: 'templates/common/popover_share.html',
       scope: $scope,

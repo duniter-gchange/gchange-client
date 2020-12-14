@@ -220,7 +220,7 @@ angular.module('cesium.es.registry.services', ['ngResource', 'cesium.services', 
         });
       }
 
-      // Load issuer (avatar, name, uid, etc.)
+      // Load issuer (avatar, name, etc.)
       return csWot.extend({pubkey: record.issuer})
         .then(function(issuer) {
           return {

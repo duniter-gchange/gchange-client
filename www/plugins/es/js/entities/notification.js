@@ -91,10 +91,10 @@ function EsNotification(json, markAsReadCallback) {
   // user profile record
   else if (json.reference && json.reference.index === 'user' && json.reference.type === 'profile') {
     that.pubkey = json.params.length > 0 ? json.params[0] : null;
-    that.state = 'app.wot_identity';
+    that.state = 'app.user_identity';
     that.stateParams = {
       pubkey: that.pubkey,
-      uid: json.params && json.params[3],
+      name: json.params && json.params[3],
     };
     if (json.code.startsWith('LIKE_')) {
       that.avatarIcon = 'ion-person';
@@ -113,10 +113,10 @@ function EsNotification(json, markAsReadCallback) {
       that.icon = 'ion-android-warning assertive';
     }
     if (json.code.startsWith('MODERATION_')) {
-      that.state = 'app.wot_identity';
+      that.state = 'app.user_identity';
       that.stateParams = {
         pubkey: json.reference.id,
-        uid: json.params && json.params[3],
+        name: json.params && json.params[3],
       };
       that.avatarIcon = 'ion-alert-circled';
       that.icon = 'ion-alert-circled energized';
@@ -157,26 +157,26 @@ function EsNotification(json, markAsReadCallback) {
 
     if (json.code.startsWith('LIKE_')) {
       that.icon = 'ion-ios-heart positive';
-      that.state = 'app.wot_identity';
+      that.state = 'app.user_identity';
       that.stateParams = {
         pubkey: that.pubkey,
-        uid: json.params && json.params[3],
+        name: json.params && json.params[3],
       };
     }
     else if (json.code.startsWith('FOLLOW_')) {
       that.avatarIcon = 'ion-person';
-      that.state = 'app.wot_identity';
+      that.state = 'app.user_identity';
       that.stateParams = {
         pubkey: that.pubkey,
-        uid: json.params && json.params[3],
+        name: json.params && json.params[3],
       };
     }
     else if (json.code.startsWith('ABUSE_')) {
       that.icon = 'ion-alert-circled energized';
-      that.state = 'app.wot_identity';
+      that.state = 'app.user_identity';
       that.stateParams = {
         pubkey: that.pubkey,
-        uid: json.params && json.params[3],
+        name: json.params && json.params[3],
       };
     }
     else if (json.code.startsWith('MODERATION_')) {

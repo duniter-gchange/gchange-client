@@ -219,7 +219,7 @@ function WalletController($scope, $q, $ionicPopup, $timeout, $state,
   $scope.showSharePopover = function(event) {
     $scope.hideActionsPopover();
 
-    var title = $scope.formData.name || $scope.formData.uid || $scope.formData.pubkey;
+    var title = $scope.formData.name || $scope.formData.pubkey;
 
     // Use pod share URL - see issue #69
     var url = esHttp.getUrl('/user/profile/' + $scope.formData.pubkey + '/_share');

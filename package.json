@@ -95,8 +95,8 @@
     "uuid": "3.2.1"
   },
   "devDependencies": {
-    "@ionic/cli": "^6.11.0",
-    "@ionic/v1-toolkit": "^3.2.10",
+    "@ionic/cli": "^6.12.3",
+    "@ionic/v1-toolkit": "^3.2.15",
     "@prantlf/gulp-jsonlint": "^2.4.0",
     "ansi-colors": "^4.1.1",
     "cordova": "^10.0.0",
