@@ -46,12 +46,12 @@
             <h4>
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
-              <a ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.uid})">
-                <span ng-if="issuer.name||issuer.uid" class="positive">
+              <a ui-sref="app.wot_identity({pubkey: issuer.issuer})">
+                <span ng-if="issuer.name||issuer.issuer" class="positive">
                   <i class="icon ion-person"></i>
-                  {{::issuer.name||issuer.uid}}
+                  {{::issuer.name||issuer.issuer}}
                 </span>
-                <span ng-if="!issuer.name && !issuer.uid" class="gray">
+                <span ng-if="!issuer.name && !issuer.issuer" class="gray">
                   <i class="icon ion-key"></i>
                   {{::formData.issuer|formatPubkey}}
                 </span>
@@ -102,12 +102,12 @@
             <h4>
               <i class="icon ion-clock"></i>
               <span translate>COMMON.SUBMIT_BY</span>
-              <a ui-sref="app.wot_identity({pubkey:issuer.pubkey, uid: issuer.uid})">
-                <span class="positive" ng-if="issuer.name||issuer.uid">
+              <a ui-sref="app.wot_identity({pubkey:issuer.issuer})">
+                <span class="positive" ng-if="issuer.name||issuer.issuer">
                   <i class="icon ion-person"></i>
                   {{::issuer.name||issuer.uid}}
                 </span>
-                <span class="gray" ng-if="!issuer.name && !issuer.uid">
+                <span class="gray" ng-if="!issuer.name && !issuer.issuer">
                   <i class="icon ion-key"></i>
                   {{::issuer.pubkey|formatPubkey}}
                 </span>
@@ -306,17 +306,17 @@
         <!-- issuer card -->
         <a class="item item-avatar card-meta item item-border-large dark-100-bg dark animate-ripple animate-show-hide ng-hide"
                   ng-show="issuer.stars && !loading"
-                  ui-sref="app.wot_identity({pubkey: issuer.pubkey, uid: issuer.name})">
+                  ui-sref="app.wot_identity({pubkey: issuer.issuer, uid: issuer.name})">
           <div class="  item-text-wrap light">
 
             <i ng-if="!issuer.avatar" class="item-image icon ion-person"></i>
             <i ng-if="issuer.avatar" class="item-image avatar" style="background-image: url({{issuer.avatar.src}})"></i>
 
             <h3>
-              <span ng-if="issuer.name||issuer.uid" class="positive">
+              <span ng-if="issuer.name||issuer.issuer" class="positive">
                 {{::issuer.name||issuer.uid}}
               </span>
-              <span ng-if="!issuer.name&&!issuer.uid" class="gray">
+              <span ng-if="!issuer.name&&!issuer.issuer" class="gray">
                   <b class="ion-key"></b>
                   {{::issuer.pubkey|formatPubkey}}
               </span>
