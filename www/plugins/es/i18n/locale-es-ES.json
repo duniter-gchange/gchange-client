@@ -77,7 +77,7 @@
       "BTN_STOP_FOLLOW": "Dejar de seguir este perfil",
       "SENIORITY": "Antigüedad en {{'COMMON.APP_NAME'|translate}}",
       "STAR_HIT_COUNT": "{{total}} puntuaci{{total>1 ? 'ones' : 'ón'}}",
-      "STARS": "Nivel de confianza",
+      "STARS": "Nivel de confianza"
     },
     "SUGGEST_CERTIFICATIONS_MODAL": {
       "TITLE": "Sugerir certificaciones",
