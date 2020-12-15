@@ -16,8 +16,8 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
 
   var
     SETTINGS_SAVE_SPEC = {
-      includes: ['geoDistance'],
-      excludes: ['enable', 'homeMessage', 'defaultTags', 'defaultAdminPubkeys', 'record'],
+      includes: ['geoDistance', 'compactMode'],
+      excludes: ['enable', 'homeMessage', 'defaultTags', 'defaultAdminPubkeys', 'record', 'defaultSearch'],
       cesiumApi: {}
     },
     defaultSettings = angular.merge({
@@ -25,6 +25,7 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
           market: {
             enable: true,
             geoDistance: "100km",
+            compactMode: false,
             cesiumApi: {
               enable: true,
               baseUrl: "https://g1.duniter.fr/api"

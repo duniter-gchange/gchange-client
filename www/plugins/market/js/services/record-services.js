@@ -316,17 +316,14 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
           else {
               var lowerText = text.toLowerCase();
 
+              var matchFields = ["title^2", "description"];
+              matches.push({multi_match : { query: lowerText,
+                      fields: matchFields,
+                      type: "phrase_prefix"
+                  }});
               matches.push({match: {title: {query: lowerText, boost: 2}}});
               matches.push({prefix: {title: lowerText}});
-
-              if (options.searchInDescription === true) {
-                  var matchFields = ["title^2", "description"];
-                  matches.push({multi_match : { query: lowerText,
-                          fields: matchFields,
-                          type: "phrase_prefix"
-                      }});
-                  matches.push({match: {description: lowerText}});
-              }
+              matches.push({match: {description: lowerText}});
 
               matches.push({
                   nested: {
@@ -456,7 +453,6 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       options = options || {};
 
       options._source = options._source || ["category", "title", "price", "unit", "currency", "city", "pictures", "stock", "unitbase", "description", "type", "issuer", "creationTime" ];
-      options.searchInDescription = false;
       options.withPictures = true;
 
       // Create the request, from options

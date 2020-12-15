@@ -73,7 +73,7 @@
   margin: 0;
 }
 .row-record .col .text-wrap {
-  height: 93px;
+  height: calc(100%);
   white-space: normal;
   position: relative;
   word-wrap: break-word !important;

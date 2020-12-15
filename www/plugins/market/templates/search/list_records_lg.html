@@ -18,6 +18,18 @@
     </ng-if>
 
   </div>
+
+  <div class="pull-right ng-hide" ng-show="!search.loading">
+      <br/>
+      <a class="button button-text button-small ink"
+         ng-class="{'button-text-positive': search.compactMode}"
+         ng-click="toggleCompactMode()">
+          <i class="icon ion-navicon"></i>
+          <b class="icon-secondary ion-arrow-down-b" style="top: -8px; left: 5px; font-size: 8px;"></b>
+          <b class="icon-secondary ion-arrow-up-b" style="top: 4px; left: 5px; font-size: 8px;"></b>
+          {{'DOCUMENT.LOOKUP.BTN_COMPACT' | translate}}
+      </a>
+  </div>
 </div>
 
 <div class="center" ng-if="search.loading">
@@ -28,12 +40,23 @@
   COMMON.SEARCH_NO_RESULT
 </div>
 
-<div class="list {{::motion.ionListClass}} light-bg"
-     ng-if="!search.loading && search.results.length">
+<div class="row no-padding">
+    <!-- left margin (when NOT compact mode) -->
+    <div class="col col-15 no-padding hidden-xs hidden-sm" ng-if="!search.compactMode">&nbsp;</div>
 
-  <ng-include ng-repeat="rec in search.results"
-              src="'plugins/market/templates/search/item_record_lg.html'">
-  </ng-include>
+    <div class="col no-padding">
+        <div class="list {{::motion.ionListClass}} flex-row"
+             ng-class="{'flex-row': search.compactMode}"
+             ng-if="!search.loading && search.results.length">
+
+          <ng-include ng-repeat="rec in search.results"
+               src="::'plugins/market/templates/search/item_record.html'">
+          </ng-include>
+        </div>
+    </div>
+
+    <!-- right margin (when NOT compact mode) -->
+    <div class="col col-15 no-padding hidden-xs hidden-sm" ng-if="!search.compactMode">&nbsp;</div>
 </div>
 
 <ion-infinite-scroll

@@ -344,9 +344,10 @@
 
         <!-- More similar ads  -->
         <div class="list list-more-record animate-ripple no-padding"
-             ng-if="!search.loading && search.results.length">
+             ng-if="!search.loading && search.results.length"
+              ng-init="options.description.show=false">
 
-          <div class="item item-divider " ng-if="!search.loading && search.results.length">
+          <div class="item item-divider">
             <span translate>MARKET.VIEW.MORE_LIKE_THIS</span>
           </div>
 

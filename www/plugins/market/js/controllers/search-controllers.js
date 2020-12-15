@@ -1,3 +1,4 @@
+
 angular.module('cesium.market.search.controllers', ['cesium.market.record.services', 'cesium.es.services', 'cesium.map.services', 'cesium.es.common.controllers'])
 
   .config(function($stateProvider) {
@@ -66,7 +67,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     // 50km by default
     geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 50,
     sortAttribute: null,
-    sortDirection: 'desc'
+    sortDirection: 'desc',
+    compactMode: false
   };
 
   // Screen options
@@ -236,8 +238,6 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       return $scope.doGetLastRecords();
     }
 
-
-
     var location = $scope.search.location && $scope.search.location.trim();
     if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
 
@@ -379,9 +379,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     $scope.search.lastRecords = true;
 
     var request = {
-      sort: {
-        "creationTime" : "desc"
-      },
+      sort: { "creationTime" : "desc" },
       from: from
     };
 
@@ -405,6 +403,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         ($scope.search.type === 'need' ? ['need', 'crowdfunding'] : [$scope.search.type]);
       filters.push({terms: {type: types}});
     }
+
     // filter on currencies
     if ($scope.currencies) {
       filters.push({terms: {currency: $scope.currencies}});
@@ -686,10 +685,15 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   angular.extend(this, $controller('MkLookupAbstractCtrl', {$scope: $scope}));
 
 
+
   $scope.enter = function(e, state) {
     if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
       var showAdvanced = false;
       var jobs = [];
+
+      // Restore compact mode, from settings
+      $scope.search.compactMode = csSettings.data.plugins.market.compactMode;
+      $scope.options.description.show = !$scope.search.compactMode;
 
       if (state.stateParams) {
         // Search by text
@@ -727,9 +731,10 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
             }));
         }
         else {
-          var defaultSearch = csSettings.data.plugins.es.market && csSettings.data.plugins.es.market.defaultSearch;
           // Apply defaults from settings
-          if (defaultSearch && defaultSearch.location) {
+          var defaultSearch = csSettings.data.plugins.market && csSettings.data.plugins.market.defaultSearch;
+          if (defaultSearch) {
+            console.info("[market] [search] Restoring last search from settings", defaultSearch);
             angular.merge($scope.search, defaultSearch);
           }
         }
@@ -818,16 +823,17 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   $scope.updateSettings = function() {
     var dirty = false;
 
-    csSettings.data.plugins.es.market = csSettings.data.plugins.es.market || {};
-    csSettings.data.plugins.es.market.defaultSearch = csSettings.data.plugins.es.market.defaultSearch || {};
+    csSettings.data.plugins.market = csSettings.data.plugins.market || {};
+    csSettings.data.plugins.market.defaultSearch = csSettings.data.plugins.market.defaultSearch || {};
 
     // Check if location changed
     var location = $scope.search.location && $scope.search.location.trim();
-    var oldLocation = csSettings.data.plugins.es.market.defaultSearch.location;
+    var oldLocation = csSettings.data.plugins.market.defaultSearch.location;
     if (!oldLocation || (oldLocation !== location)) {
-      csSettings.data.plugins.es.market.defaultSearch = {
+      csSettings.data.plugins.market.defaultSearch = {
         location: location,
-        geoPoint: location && $scope.search.geoPoint ? angular.copy($scope.search.geoPoint) : undefined
+        geoPoint: location && $scope.search.geoPoint ? angular.copy($scope.search.geoPoint) : undefined,
+        geoShape: location && $scope.search.geoShape ? angular.copy($scope.search.geoShape) : undefined
       };
       dirty = true;
     }
@@ -839,11 +845,15 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
       dirty = true;
     }
 
+    var oldCompactMode = csSettings.data.plugins.market.compactMode;
+    if (oldCompactMode === undefined || oldCompactMode != $scope.search.compactMode) {
+      csSettings.data.plugins.market.compactMode = $scope.search.compactMode;
+      dirty = true;
+    }
+
     // execute with a delay, for better UI perf
     if (dirty) {
-      $timeout(function() {
-        csSettings.store();
-      });
+      $timeout(csSettings.store, 100);
     }
   };
 
@@ -946,5 +956,15 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   $scope.toggleShowClosed = function() {
     $scope.hideActionsPopover();
     $scope.search.showClosed = !$scope.search.showClosed;
+  };
+
+
+  $scope.toggleCompactMode = function() {
+    $scope.search.compactMode = !$scope.search.compactMode;
+
+    // Show description only if NOT compact mode
+    $scope.options.description.show = !$scope.search.compactMode;
+
+    $scope.updateSettings();
   };
 }

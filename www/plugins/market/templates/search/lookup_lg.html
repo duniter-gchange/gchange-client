@@ -128,23 +128,34 @@
         <a class="button button-text button-small ink icon ion-clock"
            ng-if="!options.type.show"
            ng-class="{'button-text-positive': search.type=='last'}"
-           ng-click="doGetLastRecord()">
+           ng-click="doGetLastRecords()">
           {{'MARKET.SEARCH.BTN_LAST_RECORDS' | translate}}
         </a>
-        &nbsp;
         <a class="button button-text button-small ink icon cion-market-offer"
            ng-if="options.type.show"
            ng-class="{'button-text-positive': search.type=='offer'}"
            ng-click="toggleAdType('offer')">
           {{'MARKET.SEARCH.BTN_OFFERS' | translate}}
         </a>
-
         <a class="button button-text button-small ink icon cion-market-need"
            ng-if="options.type.show"
            ng-class="{'button-text-positive': search.type=='need'}"
            ng-click="toggleAdType('need')">
           {{'MARKET.SEARCH.BTN_NEEDS' | translate}}
         </a>
+        <a class="button button-text button-small ink icon cion-market-crowdfunding"
+           ng-if="options.type.show"
+           ng-class="{'button-text-positive': search.type=='crowdfunding'}"
+           ng-click="toggleAdType('crowdfunding')">
+          {{'MARKET.SEARCH.BTN_CROWDFUNDING' | translate}}
+        </a>
+
+        <!--<a class="button button-text button-small ink icon ion-heart"
+           ng-if="options.type.show"
+           ng-class="{'button-text-positive': search.type=='star'}"
+           ng-click="toggleAdType('star')">
+          {{'MARKET.SEARCH.BTN_FAVORITES' | translate}}
+        </a>-->
 
         &nbsp;
         <button class="button button-small button-stable ink"
