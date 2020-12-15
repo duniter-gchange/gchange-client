@@ -82,6 +82,7 @@
       "DIVIDER_GROUP": "Groups"
     },
     "VIEW": {
+      "SENIORITY": "Seniority on {{'COMMON.APP_NAME'|translate}}",
       "STARS": "Trust level",
       "STAR_HIT_COUNT": "{{total}} rate{{total>1 ? 's' : ''}}",
       "BTN_STAR_HELP": "Rate this profile",

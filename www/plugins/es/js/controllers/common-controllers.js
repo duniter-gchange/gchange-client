@@ -165,14 +165,17 @@ function ESCommentsController($scope, $filter, $state, $focus, $timeout, $anchor
   $scope.$on('$recordView.load', function(event, id, service) {
     $scope.id = id || $scope.id;
     $scope.service = service.comment || $scope.service;
+    if (!$scope.service) {
+      console.error("[ES] [comment] Missing service in the emitted event '$recordView.load' !");
+      return; // Skip
+    }
     console.debug("[ES] [comment] Will use {" + $scope.service.index + "} service");
     if ($scope.id) {
       $scope.load($scope.id)
         .then(function() {
-          return $timeout(function() {
-            // Scroll to anchor
-            $scope.scrollToAnchor();
-          }, 500);
+          if (!$scope.anchor) return;
+          // Scroll to anchor
+          return $timeout($scope.scrollToAnchor, 500);
         });
     }
   });

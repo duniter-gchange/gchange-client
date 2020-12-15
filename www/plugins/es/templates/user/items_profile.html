@@ -8,7 +8,7 @@
 </div>
 
 <!-- About me -->
-<div class="item item-text-wrap" ng-if="formData.profile.description">
+<div class="item item-text-wrap" ng-if="formData.profile && formData.profile.description">
   <span class="gray" translate>PROFILE.DESCRIPTION</span>
   <h3 trust-as-html="formData.profile.description"></h3>
 </div>

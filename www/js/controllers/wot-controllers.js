@@ -209,7 +209,7 @@ function WotLookupController($scope, $state, $timeout, $focus, $ionicPopover, $i
       type: 'profile',
       from: offset,
       size: size,
-      sort: {time: 'desc'}
+      sort: {creationTime: 'desc'}
     };
 
     return esProfile.search(options)

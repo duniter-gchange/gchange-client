@@ -28,15 +28,15 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
            // Nothing to do: main controller will trigger '$recordView.load' event
         }
         // second call (e.g. if cache)
-        else if ($scope.id) {
-            $scope.loadLikes($scope.id);
+        else if ($scope.likeData.id) {
+            $scope.loadLikes($scope.likeData.id);
         }
     });
 
     $scope.$on('$recordView.load', function(event, id) {
-        $scope.id = id || $scope.id;
-        if ($scope.id) {
-            $scope.loadLikes($scope.id);
+        $scope.likeData.id = id || $scope.likeData.id;
+        if ($scope.likeData.id) {
+            $scope.loadLikes($scope.likeData.id);
         }
     });
 

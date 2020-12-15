@@ -157,7 +157,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         $scope.issuer = data.issuer;
 
         // Load issuer stars
-        $scope.loadIssuerStars($scope.issuer.pubkey);
+        $scope.loadIssuerStars($scope.issuer.issuer);
 
         // Load more ads (if not mobile)
         if (!$scope.smallscreen) {
@@ -410,6 +410,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 
   $scope.showSharePopover = function(event) {
     $scope.hideActionsPopover();
+    if ($scope.loading || !$scope.formData.title) return; // Skip if not loaded
 
     var title = $scope.formData.title;
 

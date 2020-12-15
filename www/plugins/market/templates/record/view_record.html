@@ -70,12 +70,12 @@
             </h4>
             <!-- likes -->
             <h4>
-              <ng-include src="'plugins/es/templates/common/view_likes.html'"></ng-include>
+              <ng-include src="::'plugins/es/templates/common/view_likes.html'"></ng-include>
             </h4>
             <div class="badge badge-shadow"
-                 ng-if="options.type.show"
+                 ng-if="::options.type.show"
                  ng-class="{'badge-calm': formData.type==='offer'||formData.type==='auction', 'badge-energized': formData.type==='need'||formData.type==='crowdfunding'}">
-              <i class="cion-market-{{formData.type}}"></i>
+              <i class="cion-market-{{::formData.type}}"></i>
               <span>{{'MARKET.TYPE.'+formData.type|upper|translate}}</span>
             </div>
           </div>
@@ -277,10 +277,11 @@
           <span class="item hidden-xs" ng-if="!formData.price && !formData.fees && formData.stock === 0">
             <div class="badge badge-secondary badge-assertive"><i class="ion-close"></i> <span class="bold" translate>MARKET.COMMON.SOLD</span></div>
           </span>
+
           <!-- Payment details -->
           <ion-item class="item-button-right" ng-if="paymentData">
-            <p ng-if="paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT_WITH_COMMENT'|translate: paymentData"></p>
-            <p ng-if="!paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT'|translate: paymentData"></p>
+            <p ng-if="::paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT_WITH_COMMENT'|translate: paymentData"></p>
+            <p ng-if="::!paymentData.comment" trust-as-html="'MARKET.VIEW.PAYMENT'|translate: paymentData"></p>
 
             <!-- pay help button -->
             <a class="button button-clear button-positive ink"
@@ -325,13 +326,17 @@
             <h3 class="align-right" ng-if="issuer.stars"
               title="{{'WOT.VIEW.STARS' | translate }}">
               <span ng-repeat="value in [1,2,3,4,5]"
-                    ng-class="{'energized': issuer.stars.levelAvg > 3, 'assertive': issuer.stars.levelAvg <= 2}">
+                    ng-class="{'energized': issuer.stars.levelAvg &gt; 3, 'assertive': issuer.stars.levelAvg &lt;= 2}">
                 <b class="ion-android-star" ng-if="value <= issuer.stars.levelAvg"></b>
                 <b class="ion-android-star-half" ng-if="value > issuer.stars.levelAvg && value - 0.5 <= issuer.stars.levelAvg"></b>
                 <b class="ion-android-star-outline" ng-if="value > issuer.stars.levelAvg && value - 0.5 > issuer.stars.levelAvg"></b>
-              </span><br/>
+              </span>
+              <span class="gray">{{issuer.stars.levelAvg}}/5 ({{'WOT.VIEW.STAR_HIT_COUNT' | translate: issuer.stars }})</span>
             </h3>
-            <h4 class="gray"  ng-if="issuer.stars">{{issuer.stars.levelAvg}}/5 ({{'WOT.VIEW.STAR_HIT_COUNT' | translate: issuer.stars }})</h4>
+            <h4 class="gray" ng-if="issuer.profile.creationTime || issuer.profile.time">
+              <i class="ion-clock"></i>
+              {{::'WOT.LOOKUP.REGISTERED' | translate: {time: issuer.profile.creationTime||issuer.profile.time } }}
+            </h4>
           </div>
         </a>
 

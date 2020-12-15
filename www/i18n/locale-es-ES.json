@@ -331,7 +331,7 @@
     }
   },
   "WOT": {
-    "SEARCH_HELP": "Buscar (seudónimo o llave pública)",
+    "SEARCH_HELP": "Buscar (apellido, primer nombre, hashtag)",
     "SEARCH_INIT_PHASE_WARNING": "Durante la etapa de preinscripción, el tiempo de búsqueda de las candidaturas en espera <b>puede tardar</b>. Por favor espere…",
     "REGISTERED_SINCE": "Se registró en",
     "REGISTERED_SINCE_BLOCK": "Se registró en el bloque #",

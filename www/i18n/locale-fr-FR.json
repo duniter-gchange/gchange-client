@@ -320,7 +320,7 @@
     }
   },
   "WOT": {
-    "SEARCH_HELP": "Recherche (pseudo ou clé publique)",
+    "SEARCH_HELP": "Recherche (nom, prénom, hashtag)",
     "SEARCH_INIT_PHASE_WARNING": "Durant la phase de pré-inscription, la recherche des inscriptions en attente <b>peut être longue</b>. Merci de patienter...",
     "REGISTERED_SINCE": "Inscrit le",
     "REGISTERED_SINCE_BLOCK": "Inscrit au bloc #",

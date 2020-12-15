@@ -131,10 +131,14 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     }
     data.description = hit._source.description || data.description;
     data.city = hit._source.city || data.city;
-    data.creationTime = hit._source.creationTime || data.creationTime;
-    data.time = hit._source.time || data.time;
 
-    // Fecth payment pubkey (need by Gchange)
+    // DO not override existing time, if exists (e.g. in comment record)
+    data.profile = data.profile || {};
+    data.profile.issuer = hit._id;
+    data.profile.creationTime = hit._source.creationTime;
+    data.profile.time = hit._source.time;
+
+    // Fetch payment pubkey (need by Gchange)
     if (hit._source.pubkey) {
       data.pubkey = hit._source.pubkey;
     }
@@ -230,7 +234,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
 
     if (!text) {
       delete request.highlight; // highlight not need
-      request.sort = {time: 'desc'};
+      request.sort = options.sort || {creationTime: 'desc'};
     }
     else {
       request.query = {};
@@ -258,7 +262,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
           "group" : 0.01
         };
       }
-      request._source = request._source.concat(["description", "creationTime", "membersCount", "type"]);
+      request._source = request._source.concat(["description", "membersCount", "type"]);
     }
 
     var search = options.mixedSearch ? that.raw.mixedSearch : that.raw.search;
@@ -288,14 +292,14 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       highlight: {fields : {title : {}, tags: {}}},
       from: 0,
       size: 100,
-      _source: ["title", "avatar._content_type", "pubkey"]
+      _source: ["title", "avatar._content_type", "pubkey", "creationTime"]
     };
 
     // TODO: uncomment
     //var mixedSearch = text && esSettings.wot.isMixedSearchEnable();
     var mixedSearch = false;
     if (mixedSearch) {
-      request._source = request._source.concat(["description", "city", "creationTime", "membersCount", "type"]);
+      request._source = request._source.concat(["description", "city", "membersCount", "type"]);
       console.debug("[ES] [profile] Mixed search: enable");
     }
 

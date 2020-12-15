@@ -54,7 +54,6 @@
     ng-click="smallscreen && showStarPopover($event)">
 
     <i class="icon"
-
        ng-class="{'ion-android-star-outline': likeData.stars.levelAvg <= 2, 'ion-android-star-half': likeData.stars.levelAvg > 2 && likeData.stars.levelAvg <= 3, 'ion-android-star energized': likeData.stars.levelAvg > 3}"></i>
 
     <span translate>WOT.VIEW.STARS</span>
@@ -73,6 +72,20 @@
       <small class="dark">({{likeData.stars.levelAvg}}/5)</small>
     </div>
   </div>
+
+  <!-- Registration date -->
+  <ion-item class="item-icon-left" ng-if="formData.profile.creationTime">
+    <i class="icon ion-person"></i>
+    <b class="ion-clock icon-secondary" style="font-size: 16px; left: 35px; top: -7px;"></b>
+    <span translate>WOT.VIEW.SENIORITY</span>
+    <h5 class="dark">
+      <span translate>WOT.REGISTERED_SINCE</span>
+      {{formData.profile.creationTime | formatDate}}
+    </h5>
+    <span class="badge badge-stable"
+          ng-class="{'badge-assertive'}"
+    >{{formData.profile.creationTime | formatFromNowShort }}</span>
+  </ion-item>
 </ng-if>
 
 <!-- After general section -->
