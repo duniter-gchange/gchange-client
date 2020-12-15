@@ -21,7 +21,20 @@
   </ion-item>
 </ng-if>
 
-<div ng-if="::extensionPoint === 'menu-discover'">
+<ng-if ng-if="::extensionPoint === 'menu-user'">
+  <!-- wallet records -->
+  <a menu-close class="item item-border item-icon-left"
+     active-link="active"
+     active-link-path-prefix="#/app/records/wallet"
+     ng-click="loginAndGo('app.market_wallet_records')"
+     ng-class="{'item-menu-disable': !login}">
+    <i class="icon ion-person" style="font-size: 19px; left: 13px;"></i>
+    <i class="icon-secondary ion-speakerphone" style="font-size: 16px; left: 32px; top: -6px;"></i>
+    <span translate>MENU.MY_RECORDS</span>
+  </a>
+</ng-if>
+
+<ng-if ng-if="::extensionPoint === 'menu-discover'">
   <!-- view market gallery -->
   <ion-item menu-close class="item item-icon-left"
             ng-if="$root.settings.expertMode"
@@ -34,15 +47,3 @@
 
 </ng-if>
 
-<div ng-if="::extensionPoint === 'menu-user'">
-  <!-- wallet records -->
-  <a menu-close class="item item-border item-icon-left"
-     active-link="active"
-     active-link-path-prefix="#/app/records/wallet"
-     ng-click="loginAndGo('app.market_wallet_records')"
-     ng-class="{'item-menu-disable': !login}">
-    <i class="icon ion-person" style="font-size: 19px; left: 13px;"></i>
-    <i class="icon-secondary ion-speakerphone" style="font-size: 16px; left: 32px; top: -6px;"></i>
-    <span translate>MENU.MY_RECORDS</span>
-  </a>
-</div>
