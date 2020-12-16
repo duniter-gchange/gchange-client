@@ -93,7 +93,7 @@ function MkViewGalleryController($scope, $q, $ionicScrollDelegate, $controller, 
     offer: 'MARKET.TYPE.OFFER_SHORT',
     need: 'MARKET.TYPE.NEED_SHORT',
     crowdfunding: 'MARKET.TYPE.CROWDFUNDING_SHORT',
-  }
+  };
   $scope.adTypes = _.keys($scope.adTypeLabels);
 
   // When view enter: load data
@@ -157,9 +157,9 @@ function MkViewGalleryController($scope, $q, $ionicScrollDelegate, $controller, 
       .then(function(res) {
         var category = res && res[0];
         if (category) {
-          const catIndex = _.findIndex($scope.categories, function(cat) {
+          var catIndex = _.findIndex($scope.categories, function(cat) {
             return cat.id === category.id;
-          })
+          });
           return $scope.openSlideShowModal(catIndex, 0);
         }
       })
@@ -173,7 +173,7 @@ function MkViewGalleryController($scope, $q, $ionicScrollDelegate, $controller, 
         $scope.search.loading = false;
       })
         .then(function() {
-          $scope.search.loading = false
+          $scope.search.loading = false;
         });
   };
 
@@ -264,7 +264,7 @@ function MkViewGalleryController($scope, $q, $ionicScrollDelegate, $controller, 
       location: $scope.search.location,
       geoPoint: $scope.search.geoPoint,
       geoShape: $scope.search.geoShape
-    }
+    };
     $scope.search.loading = (request.from === 0);
 
     // Load category's pictures
@@ -389,7 +389,7 @@ function MkGallerySlideModalController($scope, $http, $interval, $ionicSlideBoxD
         record.showDescription = true;
       }, 500);
     }
-  }
+  };
 
   $scope.updateSlideStatus = function(slide) {
     var zoomFactor = $ionicScrollDelegate.$getByHandle('scroll' + slide).getScrollPosition().zoom;
@@ -403,5 +403,5 @@ function MkGallerySlideModalController($scope, $http, $interval, $ionicSlideBoxD
   $scope.stopAndCloseModal = function() {
     $scope.stopTimer();
     $scope.closeModal($scope.activeSlide);
-  }
+  };
 }
