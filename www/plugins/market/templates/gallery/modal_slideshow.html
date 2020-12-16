@@ -30,7 +30,7 @@
                     </h1>
 
                     <div class="badge badge-balanced badge-price"
-                          ng-if="::record.price && record.type === 'offer'"
+                          ng-if="::record.price && (record.type === 'offer' || record.type === 'crowdfunding')"
                           ng-class="{'sold': !record.stock}">
                         <span  ng-bind-html="::record.price|formatAmount:record"></span>
                     </div>

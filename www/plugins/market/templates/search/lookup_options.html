@@ -1,33 +1,37 @@
 
-
-    <!-- Show closed ad ? -->
-    <div ng-if="search.advanced"
-         class="item item-icon-left item-input item-toggle stable-bg" >
-        <i class="icon ion-speakerphone gray"></i>
-        <b class="icon-secondary ion-close-circled assertive" style="top:7px; left: 34px;"></b>
-        <span class="input-label item-icon-left-padding" ng-click="search.showClosed=!search.showClosed">
-            {{'MARKET.SEARCH.SHOW_CLOSED_RECORD' | translate}}
-        </span>
-        <label class="toggle toggle-royal">
-            <input type="checkbox" ng-model="search.showClosed">
-            <div class="track">
-                <div class="handle"></div>
-            </div>
-        </label>
+<div class="row no-padding responsive-lg" ng-if="search.advanced">
+    <div class="col no-padding no-margin">
+        <!-- Show closed ad ? -->
+        <div class="item item-icon-left item-input item-toggle stable-bg" >
+            <i class="icon ion-speakerphone gray"></i>
+            <b class="icon-secondary ion-close-circled assertive" style="top:7px; left: 34px;"></b>
+            <span class="input-label item-icon-left-padding" ng-click="search.showClosed=!search.showClosed">
+                {{'MARKET.SEARCH.SHOW_CLOSED_RECORD' | translate}}
+            </span>
+            <label class="toggle toggle-royal">
+                <input type="checkbox" ng-model="search.showClosed">
+                <div class="track">
+                    <div class="handle"></div>
+                </div>
+            </label>
+        </div>
     </div>
 
-    <!-- Show OLD ad ? -->
-    <div ng-if="search.advanced"
-         class="item item-icon-left item-input item-toggle stable-bg" >
-        <i class="icon ion-clock gray"></i>
-        <b class="icon-secondary ion-close-circled assertive" style="top:7px; left: 34px;"></b>
-        <span class="input-label item-icon-left-padding" ng-click="search.showOld=!search.showOld">
-            {{'MARKET.SEARCH.SHOW_OLD_RECORD' | translate}}
-        </span>
-        <label class="toggle toggle-royal">
-            <input type="checkbox" ng-model="search.showOld">
-            <div class="track">
-                <div class="handle"></div>
-            </div>
-        </label>
+    <div class="col no-padding no-margin">
+        <!-- Show OLD ad ? -->
+        <div class="item item-icon-left item-input item-toggle stable-bg" >
+            <i class="icon ion-clock gray"></i>
+            <b class="icon-secondary ion-close-circled assertive" style="top:7px; left: 34px;"></b>
+            <span class="input-label item-icon-left-padding" ng-click="search.showOld=!search.showOld">
+                {{'MARKET.SEARCH.SHOW_OLD_RECORD' | translate}}
+            </span>
+            <label class="toggle toggle-royal">
+                <input type="checkbox" ng-model="search.showOld">
+                <div class="track">
+                    <div class="handle"></div>
+                </div>
+            </label>
+        </div>
     </div>
+
+</div>

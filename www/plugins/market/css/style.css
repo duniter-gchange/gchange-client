@@ -16,6 +16,17 @@
 * Market search
 */
 
+.market .lookupForm form .item {
+    height: 48px;
+}
+.item-input .selected-values {
+    position: relative !important;;
+    top: -1px !important;
+    left: -9px !important;;
+}
+.item-input > .selected-values .button {
+    top: unset !important;
+}
 .market .lookupForm .result-container {
     position: relative;
     display: inline-block;
@@ -96,7 +107,7 @@
 .market .item-record {
     margin-bottom: .8rem;
 }
-.market .lookupForm .list > * {
+.market .lookupForm .list:not(.dropdown-list) > * {
     min-width: calc(min(450px, 100vh));
     max-width: 650px;
 }

@@ -306,6 +306,12 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
               }
           });
       }
+      if (options.type) {
+          var types = options.type === 'offer' ?
+              ['offer', 'auction'] :
+              (options.type === 'need' ? ['need', 'crowdfunding'] : [options.type]);
+          filters.push({terms: {type: types}});
+      }
 
       var text = (options.text || '').trim();
       var tags = text.length > 0 ? esHttp.util.parseTags(text) : undefined;
@@ -465,7 +471,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       return search(request)
           .then(function(res) {
               // Filter, to keep only record with pictures
-              return (res.hits || []).reduce(function(res, record) {
+              var hits = (res.hits || []).reduce(function (res, record) {
                   if (!record.pictures || !record.pictures.length) return res;
 
                   // Replace thumbnail with the first picture (full quality)
@@ -475,11 +481,17 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
 
                   return res.concat(record);
               }, []);
-          })
-          .then(function(hits){
+
               // Fetch user profile (avatar, name, etc.)
               return csWot.extendAll(hits, 'issuer', true /*skipAddUid*/)
-          });
+                  .then(function() {
+                      return {
+                          hits: hits,
+                          total: res.total
+                      }
+                  });
+          })
+
   }
 
   function searchMoreLikeThis(id, options) {

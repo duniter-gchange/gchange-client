@@ -17,8 +17,8 @@
 
       <form ng-submit="doSearch()">
 
-        <a ng-if="!search.category && options.category.show"
-           class="item item-icon-right ink"
+        <a class="item item-icon-right ink ng-hide"
+           ng-show="entered && !search.category && options.category.show"
            ui-sref="app.market_categories">
           <span class="gray"> <i class="gray ion-android-funnel"></i> {{'MARKET.SEARCH.BTN_SHOW_CATEGORIES'|translate}}</span>
           <i class="gray icon ion-ios-arrow-right"></i>

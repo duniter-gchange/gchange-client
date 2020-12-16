@@ -23,7 +23,9 @@ angular.module('cesium.market.gallery.controllers', ['cesium.market.record.servi
 
 ;
 
-function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $controller, $location, $ionicModal, ModalUtils, $interval, mkRecord) {
+function MkViewGalleryController($scope, $q, $ionicScrollDelegate, $controller, $location, $ionicModal, $interval,
+                                 csConfig, csSettings, ModalUtils, mkRecord) {
+  'ngInject';
 
   // Initialize the super class and extend it.
   angular.extend(this, $controller('ESLookupPositionCtrl', {$scope: $scope}));
@@ -32,6 +34,7 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $co
   $scope.categories = [];
   $scope.activeCategoryIndex = undefined;
   $scope.activePictureIndex = undefined;
+
 
   $scope.options = $scope.options || angular.merge({
     location: {
@@ -44,12 +47,22 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $co
     slideDuration: 10000, // 10 sec
   }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
-  $scope.search = {
+  $scope.search = $scope.search || angular.merge({
     loading: false,
     text: null,
+    location: null,
+    geoPoint: null,
+    geoShape: null,
     showClosed: false,
-    showOld: false
-  };
+    showOld: false,
+    geoDistance: csSettings.data.plugins.market && csSettings.data.plugins.market,
+    from: 0,
+    hasMore: true
+  }, $scope.search);
+
+  // Force default
+  $scope.search.size = 10;
+  $scope.search.type = 'all';
 
   $scope.slideDurationLabels = {
     3000: {
@@ -75,14 +88,31 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $co
   };
   $scope.slideDurations = _.keys($scope.slideDurationLabels);
 
+  $scope.adTypeLabels = {
+    all: 'MARKET.GALLERY.ALL_AD_TYPES',
+    offer: 'MARKET.TYPE.OFFER_SHORT',
+    need: 'MARKET.TYPE.NEED_SHORT',
+    crowdfunding: 'MARKET.TYPE.CROWDFUNDING_SHORT',
+  }
+  $scope.adTypes = _.keys($scope.adTypeLabels);
+
   // When view enter: load data
   $scope.enter = function(e, state) {
 
-    if (!$scope.entered) {
-      $scope.entered = true;
+    // Apply defaults from settings
+    var defaultSearch = csSettings.data.plugins.market && csSettings.data.plugins.market.defaultSearch;
+    if (defaultSearch && !defaultSearch.geoShape/*not supported yet*/) {
+      console.info("[market] [gallery] Restoring last search from settings", defaultSearch);
+      angular.merge($scope.search, defaultSearch);
+    }
 
-      if (state && state.stateParams && state.stateParams.q)
-      $scope.search.text = state.stateParams.q.trim();
+    if (!$scope.entered) {
+
+      if (state && state.stateParams && state.stateParams.q) {
+        $scope.search.text = state.stateParams.q.trim();
+      }
+
+      $scope.entered = true;
     }
 
   };
@@ -110,6 +140,7 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $co
       //location: null
       q: options.text
     };
+
     // Update location href
     $location.search(stateParams).replace();
 
@@ -121,9 +152,10 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $co
         });
 
         // Find a the first category with pictures
-        return $scope.nextCategory();
+        return $scope.fetchNextPictures();
       })
-      .then(function(category) {
+      .then(function(res) {
+        var category = res && res[0];
         if (category) {
           const catIndex = _.findIndex($scope.categories, function(cat) {
             return cat.id === category.id;
@@ -153,6 +185,12 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $co
     $scope.search.loading = false;
   };
 
+  $scope.removeLocation = function() {
+    $scope.search.location = null;
+    $scope.search.geoPoint = null;
+    $scope.search.geoShape = null;
+  };
+
   $scope.openSlideShowModal = function(catIndex, picIndex, pause) {
     $scope.activeCategoryIndex = catIndex || 0;
     $scope.activePictureIndex = picIndex || 0;
@@ -161,22 +199,22 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $co
     console.info("Opening slide show on category " + category.id + " on picture " + $scope.activePictureIndex);
 
     var closedByUser = true;
-    var onLastSlide = function() {
-      return $scope.nextCategory()
-          .then(function(category) {
-            if (category) {
-              closedByUser = false; // Remember that modal has been closed dynamically
-              $scope.openSlideShowModal($scope.activeCategoryIndex, 0, false);
-            }
-          });
-    }
-
     return ModalUtils.show('plugins/market/templates/gallery/modal_slideshow.html', 'MkGallerySlideModalCtrl', {
       category: category,
       activeSlide: picIndex,
       slideDuration: $scope.options.slideDuration,
       started: pause !== true,
-      lastSlideCallback: onLastSlide
+      lastSlideCallback: function() {
+        return $scope.fetchNextPictures()
+            .then(function(res) {
+              var nextCategory = res && res[0];
+              var nextPicIndex = res && res[1] || 0;
+              if (nextCategory) {
+                closedByUser = false; // Remember that modal has been closed dynamically
+                $scope.openSlideShowModal($scope.activeCategoryIndex, nextPicIndex, false);
+              }
+            });
+      }
     }).then(function(picIndex) {
       if (closedByUser && picIndex !== undefined) {
         console.info("User closed, on picture index: " + picIndex);
@@ -187,45 +225,80 @@ function MkViewGalleryController($scope, csConfig, $q, $ionicScrollDelegate, $co
 
   /* -- Load category's pictures -- */
 
-  $scope.nextCategory = function() {
+  $scope.fetchNextPictures = function(forceNextCategory) {
     if (!$scope.categories || !$scope.categories.length) return $q.when(); // Skip - no categories
 
-    if ($scope.activeCategoryIndex >= $scope.categories.length) {
-      return $q.resolve(undefined);
+    $scope.search.size = $scope.search.size || 0;
+
+    if ($scope.activeCategoryIndex >= $scope.categories.length -1) {
+      $scope.activeCategoryIndex = undefined; // Loop
     }
+
+    // First category
     if ($scope.activeCategoryIndex === undefined) {
       $scope.activeCategoryIndex = 0;
+      $scope.search.from = 0;
+    }
+    // Next category
+    else if (forceNextCategory || $scope.search.hasMore === false) {
+      $scope.activeCategoryIndex++;
+      $scope.search.from = 0;
     }
     else {
-      $scope.activeCategoryIndex++;
+      $scope.search.from += $scope.search.size;
     }
 
     // Get the category
     var category = $scope.categories[$scope.activeCategoryIndex];
+    var now = Date.now();
     console.info("Loading pictures for category : " + category.id + "...");
 
-    // Load category's pictures
-    return mkRecord.record.pictures({
+    var request = {
       categories:  _.pluck(category.children, 'id'),
       text: $scope.search.text,
+      type: $scope.search.type === 'all' ? undefined : $scope.search.type,
       withStock: !$scope.search.showClosed,
       withOld: !$scope.search.showOld,
-      size: 1000
-    })
-      .then(function(pictures) {
-        category.pictures = pictures || [];
+      from: $scope.search.from,
+      size: $scope.search.size,
+      location: $scope.search.location,
+      geoPoint: $scope.search.geoPoint,
+      geoShape: $scope.search.geoShape
+    }
+    $scope.search.loading = (request.from === 0);
+
+    // Load category's pictures
+    return mkRecord.record.pictures(request)
+      .then(function(res) {
+
+        var hits = res && res.hits || [];
 
         // user has cancelled (e.g. using stop() )
         if (!$scope.categories) return;
 
-        // No pictures found: loop
-        if (!category.pictures.length) {
+        // No pictures found: loop to next category
+        if (!hits.length) {
           console.info('No pictures found in category ' + category.id + '. Skipping');
-          return $scope.nextCategory();
+          category.pictures = [];
+          $scope.search.total = (request.from > 0) ? $scope.search.total : (res.total || 0);
+          $scope.search.hasMore = false;
+          return $scope.fetchNextPictures(true);
         }
 
-        // Return the active
-        return category;
+        // Replace results, or concat if offset
+        if (!request.from) {
+          category.pictures = hits;
+          $scope.search.total = res.total;
+        }
+        else {
+          category.pictures = category.pictures.concat(hits);
+        }
+        $scope.search.hasMore = category.pictures.length < $scope.search.total;
+
+        console.info('[market] [category] ' + category.pictures.length + '/'+ $scope.search.total +' pictures fetched in ' + (Date.now() - now) + 'ms');
+
+        // Return the active category, and the new index
+        return [category, request.from];
       });
   };
 
@@ -264,7 +337,6 @@ function MkGallerySlideModalController($scope, $http, $interval, $ionicSlideBoxD
 
     console.debug('[market] [gallery] Start slideshow (' + $scope.options.slideDuration + 'ms)');
     $scope.interval = $interval(function() {
-      console.debug('[market] [gallery] Go to next picture (current= ' + $scope.activeSlide + ')');
       $scope.nextSlide();
     }, $scope.options.slideDuration);
 
@@ -294,6 +366,7 @@ function MkGallerySlideModalController($scope, $http, $interval, $ionicSlideBoxD
         // Wait the callback to be ended, before close
         return $scope.lastSlideCallback()
           .then(function() {
+            // Close (with a delay to wait new modal to be open)
             return $timeout($scope.closeModal, 500);
           });
       }
@@ -304,6 +377,7 @@ function MkGallerySlideModalController($scope, $http, $interval, $ionicSlideBoxD
     }
     else {
       $scope.activeSlide++;
+      console.debug('[market] [gallery] Slide index=' + $scope.activeSlide);
       $scope.showDescription();
     }
   };

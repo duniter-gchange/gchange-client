@@ -1,8 +1,24 @@
   <!-- search text -->
   <div class="item no-padding">
-    <div class="item-input item-button-right light-bg">
-      <i class="icon ion-ios-location placeholder-icon"></i>
+    <div class="item-input  light-bg item-button-right">
+      <div class="animate-show-hide selected-values ng-hide" ng-show="entered">
+
+        <!-- selected location -->
+        <div ng-show="search.location && (search.geoPoint || search.geoShape)"
+             class="button button-small button-text button-stable button-icon-event stable-900-bg"
+             style="margin-right: 10px;">
+          &nbsp;<i class="icon ion-location"></i>
+          {{search.location.split(',')[0]}}
+          <!--<span ng-if="search.geoDistance && search.geoPoint">({{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }})</span>-->
+          <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
+        </div>
+
+      </div>
+
+      <i class="icon ion-ios-location placeholder-icon"
+         ng-if="!search.geoPoint && !search.geoShape"></i>
       <input type="text"
+             ng-if="!search.geoPoint && !search.geoShape"
              id="searchLocationInput"
              autocomplete="off"
              placeholder="{{(options.location.help||'LOCATION.SEARCH_HELP')|translate}}"

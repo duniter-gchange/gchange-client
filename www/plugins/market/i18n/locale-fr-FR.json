@@ -88,6 +88,7 @@
       "SEARCH_HELP": "Recherche (vélo, rollers...)",
       "BY": "par",
       "BTN_ADD": "Nouveau",
+      "BTN_CATEGORIES": "Catégories",
       "BTN_OPTIONS": "Recherche avancée",
       "BTN_AROUND_ME": "Autour de moi",
       "GEO_DISTANCE": "Distance maximale autour de la ville :",
@@ -120,6 +121,8 @@
       "BTN_PAUSE": "Pause",
       "BTN_STOP": "Arrêter",
       "SLIDE_DURATION": "Durée d'affichage :",
+      "AD_TYPE": "Type d'annonce :",
+      "ALL_AD_TYPES": "Tous les types",
       "SLIDE_DURATION_OPTION": "{{value}} secondes"
     },
     "VIEW": {

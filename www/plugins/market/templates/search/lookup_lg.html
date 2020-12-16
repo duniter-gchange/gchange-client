@@ -6,7 +6,7 @@
   <ion-content class="lookupForm padding no-padding-xs stable-100-bg"
                bind-notifier="{ rebind:$root.settings.useRelative }">
 
-    <div class="padding-top hidden-xs hidden-sm" style="display: block; height: 60px;">
+    <div class="hidden-xs hidden-sm" style="display: block; height: 45px;">
 
       <!-- show categories button -->
       <div class="pull-left" >
@@ -29,80 +29,74 @@
       </div>
     </div>
 
+
+
+    <form ng-submit="doSearch()">
+
+      <div class="row no-padding responsive-lg">
+        <!-- search text -->
+        <div class="col no-padding no-margin">
+          <div class="item no-padding">
+
+            <div class="item-input light-bg">
+              <div class="animate-show-hide selected-values ng-hide" ng-show="entered">
+                <!-- selected category -->
+                <div ng-show="search.category.name"
+                     class="button button-small button-text button-stable button-icon-event stable-900-bg"
+                     style="margin-right: 10px;">
+                  &nbsp;<i class="icon ion-flag"></i>
+                  {{'MARKET.SEARCH.CATEGORY'|translate}}
+                  <span ng-bind-html="search.category.name"></span>
+                  <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
+                </div>
+
+              </div>
+
+              <i class="icon ion-search placeholder-icon"></i>
+              <input type="text"
+                     autocomplete="off"
+                     class="visible-xs visible-sm"
+                     placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+                     ng-model="search.text"
+                     ng-model-options="{ debounce: 950 }"
+                     ng-change="doSearch()">
+              <input type="text"
+                     autocomplete="off"
+                     class="hidden-xs hidden-sm"
+                     placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+                     id="marketSearchText"
+                     ng-model="search.text"
+                     on-return="doSearch()">
+            </div>
+          </div>
+        </div>
+
+        <!-- location -->
+        <div class="col col-33 no-padding no-margin">
+          <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
+                      ng-controller="ESSearchPositionItemCtrl"></ng-include>
+        </div>
+
+      </div>
+
+      <!-- options -->
+      <ng-include src="::'plugins/market/templates/search/lookup_options.html'"></ng-include>
+    </form>
+
     <!-- categories drop down -->
     <div class="list dropdown-list"
          ng-mouseleave="search.showCategories=false;"
-         ng-show="search.showCategories" scroll="true"
+         ng-show="search.showCategories"
+         scroll="true"
          ng-controller="MkListCategoriesCtrl"
          ng-init="load()">
       <div class="text-center" ng-show="loading">
         <ion-spinner icon="android"></ion-spinner>
       </div>
       <div class="no-border no-padding" ng-show="!loading"
-        ng-include="'plugins/market/templates/category/list_categories_lg.html'">
+           ng-include="'plugins/market/templates/category/list_categories_lg.html'">
       </div>
     </div>
-
-    <form class="row responsive-md" ng-submit="doSearch()">
-
-      <!-- search text -->
-      <div class="col no-padding">
-        <div class="item no-padding light-bg">
-
-        <div class="item-input light-bg">
-          <div class="animate-show-hide ng-hide" ng-show="entered">
-
-            <!-- selected location -->
-            <div ng-show="search.location && (search.geoPoint || search.geoShape)"
-                 class="button button-small button-text button-stable button-icon-event stable-900-bg"
-                 style="margin-right: 10px;">
-              &nbsp;<i class="icon ion-location"></i>
-              {{search.location.split(',')[0]}}
-              <span ng-if="search.geoDistance && search.geoPoint">({{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }})</span>
-              <i class="icon ion-close" ng-click="removeLocation()">&nbsp;&nbsp;</i>
-            </div>
-
-            <!-- selected category -->
-            <div ng-show="search.category.name"
-                 class="button button-small button-text button-stable button-icon-event stable-900-bg"
-                 style="margin-right: 10px;">
-              &nbsp;<i class="icon ion-flag"></i>
-              {{'MARKET.SEARCH.CATEGORY'|translate}}
-              <span ng-bind-html="search.category.name"></span>
-              <i class="icon ion-close" ng-click="removeCategory()">&nbsp;&nbsp;</i>
-            </div>
-
-          </div>
-
-          <i class="icon ion-search placeholder-icon"></i>
-          <input type="text"
-                 autocomplete="off"
-                 class="visible-xs visible-sm"
-                 placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
-                 ng-model="search.text"
-                 ng-model-options="{ debounce: 950 }"
-                 ng-change="doSearch()">
-          <input type="text"
-                 autocomplete="off"
-                 class="hidden-xs hidden-sm"
-                 placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
-                 id="marketSearchText"
-                 ng-model="search.text"
-                 on-return="doSearch()">
-        </div>
-
-      </div>
-
-      <!-- location -->
-      <div class="col no-padding">
-        <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
-                  ng-if="entered && options.location.show && (!search.geoPoint && !search.geoShape)"
-                  ng-controller="ESSearchPositionItemCtrl"></ng-include>
-      </div>
-
-      <!-- options -->
-      <ng-include src="::'plugins/market/templates/search/lookup_options.html'"></ng-include>
-    </form>
 
     <div ng-if="!search.loading && !search.category && options.category.show"
          class="padding-right visible-xs visible-sm" style="display: block; height: 35px;">
