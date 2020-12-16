@@ -102,7 +102,7 @@ function MarketHomeButtonsController($scope, $rootScope, $state, $controller, $f
                     $scope.doGetLastRecords();
                 });
         }
-    }
+    };
     $scope.$on('$ionicParentView.enter', $scope.enter);
 
     // Override inherited doRequest()
@@ -116,8 +116,8 @@ function MarketHomeButtonsController($scope, $rootScope, $state, $controller, $f
             .then(function() {
                 // Update total
                 $scope.$broadcast('$$rebind::total');
-            })
-    }
+            });
+    };
 
     $scope.openSearch = function(locationName) {
         var stateParams = {};
@@ -190,7 +190,7 @@ function MarketHomeButtonsController($scope, $rootScope, $state, $controller, $f
 
     $scope.updateLocationHref = function(stateParams) {
         // Do not change location href
-    }
+    };
 
     // Override default join and help modal (in the parent scope)
     $scope.$parent.showJoinModal = mkModals.showJoin;
