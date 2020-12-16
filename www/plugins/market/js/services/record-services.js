@@ -488,9 +488,9 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
                       return {
                           hits: hits,
                           total: res.total
-                      }
+                      };
                   });
-          })
+          });
 
   }
 
