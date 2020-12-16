@@ -34,7 +34,6 @@ angular.module('cesium.wot.controllers', ['cesium.services'])
             }
           }
         });
-    ;
   })
 
   .controller('WotLookupCtrl', WotLookupController)
