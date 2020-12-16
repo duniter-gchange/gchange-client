@@ -1,9 +1,10 @@
   <!-- search text -->
-  <div class="item no-padding ">
+  <div class="item no-padding">
     <div class="item-input item-button-right light-bg">
-      <i class="icon ion-location placeholder-icon"></i>
+      <i class="icon ion-ios-location placeholder-icon"></i>
       <input type="text"
-             autocomplete="postal-code"
+             id="searchLocationInput"
+             autocomplete="off"
              placeholder="{{(options.location.help||'LOCATION.SEARCH_HELP')|translate}}"
              ng-model-options="{ debounce: 350 }"
              ng-model="search.location"
@@ -13,7 +14,7 @@
 
       <a class="button button-clear button-small button-stable gray ink no-padding"
          tabindex="-1"
-          ng-click="showDistancePopover($event)">
+         ng-click="showDistancePopover($event)">
          <span>{{'COMMON.GEO_DISTANCE_OPTION' | translate: {value: search.geoDistance} }}</span>
         &nbsp;<b class="ion-arrow-down-b" style="font-size: 12pt;"></b>
       </a>

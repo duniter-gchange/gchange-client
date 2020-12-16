@@ -3,19 +3,25 @@
 * Market Home
 */
 
-#home .item-input-search {
-    border-bottom: none;
-}
 
-#home .light-bg {
+#home .main-content {
     background-color: rgba(255,255,255,0.7);
     z-index: 10;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
 }
-
+#home .main-content .item-input {
+    border-bottom: none;
+}
 /**
 * Market search
 */
+
+.market .lookupForm .result-container {
+    position: relative;
+    display: inline-block;
+    margin-right: -16px;
+}
+
 .market .row-record {
     border: 0 !important;
 }
@@ -133,6 +139,8 @@
 }
 .market.view-record .list-more-record .item-record h2 {
     font-size: 1em;
+    font-weight: normal;
+    text-transform: lowercase;
 }
 .market.view-record .list-more-record .item-record h3 {
     font-size: 0.9em;

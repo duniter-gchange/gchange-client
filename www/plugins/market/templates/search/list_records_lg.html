@@ -19,9 +19,8 @@
 
   </div>
 
-  <div class="pull-right ng-hide" ng-show="!search.loading">
-      <br/>
-      <a class="button button-text button-small ink"
+  <div class="pull-right ng-hide padding-top" ng-show="!search.loading && search.total">
+      <a class="button button-text button-small hidden-xs hidden-sm ink"
          ng-class="{'button-text-positive': search.compactMode}"
          ng-click="toggleCompactMode()">
           <i class="icon ion-navicon"></i>
@@ -40,11 +39,12 @@
   COMMON.SEARCH_NO_RESULT
 </div>
 
-<div class="row no-padding">
+<div class="row no-padding" ng-class="{'ng-hide': !search.total}">
     <!-- left margin (when NOT compact mode) -->
     <div class="col col-15 no-padding hidden-xs hidden-sm" ng-if="!search.compactMode">&nbsp;</div>
 
     <div class="col no-padding">
+
         <div class="list {{::motion.ionListClass}} flex-row"
              ng-class="{'flex-row': search.compactMode}"
              ng-if="!search.loading && search.results.length">
@@ -60,8 +60,8 @@
 </div>
 
 <ion-infinite-scroll
-  ng-if="!search.loading && search.hasMore"
-  spinner="android"
-  on-infinite="showMore()"
-  distance="10%">
+        ng-if="!search.loading && search.hasMore"
+        spinner="android"
+        on-infinite="showMore()"
+        distance="10%">
 </ion-infinite-scroll>

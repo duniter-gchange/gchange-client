@@ -60,7 +60,7 @@ function MarketWalletRecordsController($scope, $controller, UIUtils) {
 
             })
             .catch(function(err){
-                if (err == 'CANCELLED') {
+                if (err === 'CANCELLED') {
                     return $scope.showHome();
                 }
                 console.error(err);

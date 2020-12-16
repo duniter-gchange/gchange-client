@@ -46,14 +46,16 @@ function MkIdentityRecordsController($scope, $controller, UIUtils) {
     $scope.smallscreen = UIUtils.screen.isSmall();
 
     $scope.enter = function(e, state) {
-        $scope.pubkey = state && state.stateParams && state.stateParams.pubkey;
-        if (!$scope.pubkey) return $scope.showHome();
+        if (!$scope.entered) {
+            $scope.pubkey = state && state.stateParams && state.stateParams.pubkey;
+            if (!$scope.pubkey) return $scope.showHome();
 
-        $scope.search.text = $scope.pubkey;
-        $scope.search.lastRecords=false;
+            $scope.search.text = $scope.pubkey;
+            $scope.search.lastRecords = false;
 
-        $scope.doSearch();
-        $scope.entered = true;
+            $scope.doSearch();
+            $scope.entered = true;
+        }
     };
     $scope.$on('$ionicView.enter', $scope.enter);
 

@@ -43,10 +43,11 @@
       </div>
     </div>
 
-    <form ng-submit="doSearch()">
+    <form class="row responsive-md" ng-submit="doSearch()">
 
       <!-- search text -->
-      <div class="item no-padding light-bg">
+      <div class="col no-padding">
+        <div class="item no-padding light-bg">
 
         <div class="item-input light-bg">
           <div class="animate-show-hide ng-hide" ng-show="entered">
@@ -93,9 +94,11 @@
       </div>
 
       <!-- location -->
-      <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
+      <div class="col no-padding">
+        <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
                   ng-if="entered && options.location.show && (!search.geoPoint && !search.geoShape)"
                   ng-controller="ESSearchPositionItemCtrl"></ng-include>
+      </div>
 
       <!-- options -->
       <ng-include src="::'plugins/market/templates/search/lookup_options.html'"></ng-include>
@@ -158,7 +161,8 @@
         </a>-->
 
         &nbsp;
-        <button class="button button-small button-stable ink"
+        <button type="button"
+                class="button button-small button-stable ink"
                 ng-click="doSearch()">
           {{'COMMON.BTN_SEARCH' | translate}}
         </button>

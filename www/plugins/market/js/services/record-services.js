@@ -10,6 +10,9 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
           "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
           "geoPoint", "pubkey", "freePrice"]
     },
+    CONSTANTS = {
+      DEFAULT_SEARCH_SIZE: 20
+    },
     raw = {
       postSearch: esHttp.post('/market/record/_search'),
       searchText: esHttp.get('/market/record/_search?q=:search'),
@@ -112,7 +115,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
   function search(request, options) {
     request = request || {};
     request.from = request.from || 0;
-    request.size = request.size || 20;
+    request.size = isNaN(request.size) ? CONSTANTS.DEFAULT_SEARCH_SIZE : request.size;
     request._source = request._source || fields.commons;
     request.highlight = request.highlight || {
       fields : {

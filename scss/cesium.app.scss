@@ -926,11 +926,12 @@ html, body {
 #home .center {
   float: none;
   text-align: center;
-  display: inline-block;
+  display: block;
 }
 
-#home .center .button {
+#home .center .button.button-block {
   display: inline-block;
+  width: 100%;
 }
 
 @media screen and (max-width: $screen-xs-max) {
@@ -947,10 +948,6 @@ html, body {
     background-image: url('../img/logo_64px.png');
     background-size: 64px 64px;
   }
-  #home .button {
-    max-width: 350px;
-    margin-top: 20px;
-  }
   #home .row{
     display: block;
   }
@@ -963,11 +960,8 @@ html, body {
     background-size: 64px 64px;
   }
 
-  #home .main-container{
-    max-width: 350px;
-    .button {
-      margin-top: 20px;
-    }
+  #home .main-column {
+    max-width: 450px;
   }
 
 }
@@ -1777,6 +1771,9 @@ a.underline:hover,
   input,
   textarea {
     margin-right: 100px;
+  }
+  input[type="text"] {
+    padding-right: 0;
   }
 
   .button,

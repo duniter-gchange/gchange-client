@@ -19,7 +19,7 @@ angular.module('cesium.map.home.controllers', ['ngResource', 'cesium.es.services
 
 ;
 
-function MapHomeController($scope, $rootScope, $controller, $state, csPlatform, UIUtils, esShape) {
+function MapHomeController($scope, $rootScope, $controller, $state, csPlatform, UIUtils, esShape, csSettings) {
   'ngInject';
 
   // Initialize the super class and extend it.
@@ -50,9 +50,22 @@ function MapHomeController($scope, $rootScope, $controller, $state, csPlatform, 
     // Store shape into root scope, to be able to read it again later (see MarketSearchController)
     return esShape.cache.put(feature)
       .then(function(id) {
+
         // Redirect to market search
-        return $state.go('app.market_lookup', { shape: id, location: location });
-      });
+        return $state.go('app.market_lookup', {
+          shape: id,
+          location: location });
+      })
+        // Add location shape to settings
+        .then(function() {
+          csSettings.data.plugins.market = csSettings.data.plugins.market || {};
+          csSettings.data.plugins.defaultSearch = angular.merge(csSettings.data.plugins.defaultSearch || {}, {
+            location: location,
+            geoShape: feature,
+            geoPoint: undefined,
+            geoDistance: undefined
+          });
+        });
   };
 
   $scope.start = function() {

@@ -61,6 +61,8 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
       filter: undefined,
       withCache: false,
       withStats: true,
+      withOld: false,
+      withStock: true,
       nbsp: true
     },
     showClosed: false,
@@ -115,8 +117,8 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
   $scope.onOptionsChange = function() {
     if ($scope.loading || !$scope.locale) return; // Skip if not loaded
 
-    var changed = ($scope.options.category.withStock === $scope.options.showClosed) ||
-      ($scope.options.category.withOld !== $scope.options.showOld);
+    var changed = (($scope.options.category.withStock || false) === $scope.options.showClosed) ||
+      (($scope.options.category.withOld || false) !== $scope.options.showOld);
 
     // Reload data
     if (changed) {

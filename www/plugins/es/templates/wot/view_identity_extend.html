@@ -82,9 +82,7 @@
       <span translate>WOT.REGISTERED_SINCE</span>
       {{formData.profile.creationTime | formatDate}}
     </h5>
-    <span class="badge badge-stable"
-          ng-class="{'badge-assertive'}"
-    >{{formData.profile.creationTime | formatFromNowShort }}</span>
+    <span class="badge badge-stable">{{formData.profile.creationTime | formatFromNowShort }}</span>
   </ion-item>
 </ng-if>
 

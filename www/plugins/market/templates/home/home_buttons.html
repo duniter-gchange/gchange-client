@@ -1,55 +1,49 @@
 
-<ng-if ng-if="enable" >
+<h2 ng-if="::$root.config.plugins.market.homeMessage" ng-bind-html="::$root.config.plugins.market.homeMessage"></h2>
 
-  <h2 ng-if="$root.config.plugins.market.homeMessage" ng-bind-html="$root.config.plugins.market.homeMessage"></h2>
 
-  <div class="row no-padding center" ng-controller="ESSearchPositionItemCtrl">
+<div class="item item-divider text-left no-padding-left">
+  <span translate>MARKET.HOME.LOCATION_LABEL</span>
+</div>
 
-    <div class="item item-divider text-left no-padding-left">
-      <span translate>MARKET.HOME.LOCATION_LABEL</span>
+
+<form class="row list no-padding center " ng-submit="openSearch()">
+
+  <!-- search text -->
+  <div class="item no-padding ">
+    <div class="item-input  light-bg">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input type="text"
+             id="marketSearchText"
+             autocomplete="off"
+             placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+             ng-model="search.text"
+             ng-model-options="{ debounce: 950 }"
+             ng-change="doSearch()"
+             ng-return="openSearch()">
     </div>
-
-    <!-- location -->
-    <div class="item no-padding item-icon-right" style="background-color: white;">
-      <div class="item-input item-input-search">
-        <input type="text"
-               class="visible-xs visible-sm"
-               placeholder="{{(options.location.help||'MARKET.HOME.LOCATION_HELP')|translate}}"
-               ng-model="search.location"
-               ng-keydown="onKeydown($event)"
-               ng-change="onLocationChanged()"
-               ng-blur="hideDropdown()"
-               ng-model-options="{ debounce: 650 }">
-        <input type="text"
-               id="searchLocationInput"
-               class="hidden-xs hidden-sm"
-               placeholder="{{(options.location.help||'MARKET.HOME.LOCATION_HELP')|translate}}"
-               ng-model="search.location"
-               ng-keydown="onKeydown($event)"
-               ng-change="onLocationChanged()"
-               ng-blur="hideDropdown()"
-               ng-model-options="{ debounce: 350 }"
-               on-return="doSearch()">
-      </div>
-
-      <a class="icon ion-search ink-dark" ng-click="doSearch()"
-        title="{{'MARKET.HOME.BTN_SHOW_MARKET_OFFER'|translate}}"></a>
-    </div>
-
-    <!-- dropdown -->
-    <ng-include src="'plugins/es/templates/common/dropdown_locations.html'"></ng-include>
-
   </div>
 
-  <br class="hidden-xs hidden-sm"/>
-  <br class="hidden-xs hidden-sm"/>
-  <br/>
+  <!-- location -->
+  <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
+              ng-if="entered && options.location.show"
+              ng-controller="ESSearchPositionItemCtrl"></ng-include>
 
-  <button type="button"
-          class="button button-block button-balanced button-raised icon icon-left ion-compose ink-dark"
-          ng-click="showNewRecordModal()" translate>MARKET.HOME.BTN_NEW_AD</button>
+  <button type="submit"
+          class="button button-block button-raised button-positive ink"
+          ng-disabled="!entered">
+    {{'COMMON.BTN_SEARCH' | translate}}
+    <span ng-if=":total:!search.loading && search.total !== undefined">({{:total:('MARKET.SEARCH.RESULT_COUNT'|translate:{count: search.total}) }})</span>
+  </button>
+</form>
+
+<br class="hidden-xs hidden-sm"/>
+<br class="hidden-xs hidden-sm"/>
+<br/>
+
+<button type="button"
+        class="button button-block button-balanced button-raised icon icon-left ion-compose ink-dark"
+        ng-click="showNewRecordModal()" translate>MARKET.HOME.BTN_NEW_AD</button>
 
 
-  <br class="hidden-xs"/>
-
-</ng-if>
+<br class="hidden-xs"/>

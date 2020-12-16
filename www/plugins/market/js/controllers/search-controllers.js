@@ -4,10 +4,13 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
   .config(function($stateProvider) {
     'ngInject';
 
+    var queryParams = ['q', 'category', 'shape', 'location', 'reload', 'type', 'hash', 'closed', 'lat', 'lon', 'last', 'old', 'dist']
+        .join('&');
+
     $stateProvider
 
     .state('app.market_lookup', {
-      url: "/market?q&category&shape&location&reload&type&hash&closed&lat&lon&last&old",
+      url: "/market?" + queryParams,
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup.html",
@@ -21,7 +24,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
     })
 
     .state('app.market_lookup_lg', {
-      url: "/market/lg?q&category&shape&location&reload&type&hash&closed&lat&lon&last&old",
+      url: "/market/lg?" + queryParams,
       views: {
         'menuContent': {
           templateUrl: "plugins/market/templates/search/lookup_lg.html",
@@ -68,7 +71,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 50,
     sortAttribute: null,
     sortDirection: 'desc',
-    compactMode: false
+    compactMode: csSettings.data.plugins.market && csSettings.data.plugins.market.compactMode
   };
 
   // Screen options
@@ -77,10 +80,12 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         show: true
       },
       category: {
-        show: true
+        show: true,
+        withOld: false,
+        withStock: true
       },
       description: {
-        show: true
+        show: !$scope.search.compactMode
       },
       location: {
         show: true,
@@ -108,7 +113,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         // Resolve distance unit
         $translate('LOCATION.DISTANCE_UNIT')
           .then(function(unit) {
-            $scope.geoUnit = unit;
+            $scope.geoUnit = unit !== 'LOCATION.DISTANCE_UNIT' ? unit : 'km';
           })
        ])
       .then(function() {
@@ -360,7 +365,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
     // Update location href
     if (!from) {
-      $location.search(stateParams).replace();
+      $scope.updateLocationHref(stateParams);
     }
 
     var request = {query: query, from: from};
@@ -372,6 +377,11 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
     return $scope.doRequest(request);
   };
+
+  $scope.updateLocationHref = function(stateParams) {
+    console.debug("[market] [search] Update location href");
+    $location.search(stateParams).replace();
+  }
 
   $scope.doGetLastRecords = function(from) {
 
@@ -576,8 +586,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
   $scope.doRequest = function(request, options) {
     request = request || {};
     request.from = request.from || 0;
-    request.size = request.size || defaultSearchLimit;
-    if (request.size < defaultSearchLimit) request.size = defaultSearchLimit;
+    request.size = isNaN(request.size) ? defaultSearchLimit : request.size;
+    //if (request.size < defaultSearchLimit) request.size = defaultSearchLimit;
     $scope.search.loading = (request.from === 0);
 
     return  mkRecord.record.search(request, options)
@@ -585,7 +595,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
       if (!res || !res.hits || !res.hits.length) {
         $scope.search.results = (request.from > 0) ? $scope.search.results : [];
-        $scope.search.total = (request.from > 0) ? $scope.search.total : 0;
+        $scope.search.total = (request.from > 0) ? $scope.search.total : (res.total || 0);
         $scope.search.hasMore = false;
         return;
       }
@@ -616,7 +626,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       $scope.search.loading = false;
 
       // motion
-      if ($scope.search.total > 0) $scope.motion.show();
+      if ($scope.search.results.length > 0 && $scope.motion) {
+        $scope.motion.show();
+      }
     })
     .catch(function(err) {
       $scope.search.loading = false;
@@ -674,6 +686,12 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
   };
 
+  $scope.toggleCompactMode = function() {
+    $scope.search.compactMode = !$scope.search.compactMode;
+
+    // Show description only if NOT compact mode
+    $scope.options.description.show = !$scope.search.compactMode;
+  };
 }
 
 
@@ -683,8 +701,6 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
 
   // Initialize the super class and extend it.
   angular.extend(this, $controller('MkLookupAbstractCtrl', {$scope: $scope}));
-
-
 
   $scope.enter = function(e, state) {
     if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
@@ -739,6 +755,10 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
           }
         }
 
+        // Geo distance
+        if (state.stateParams.dist) {
+          $scope.search.geoDistance = parseInt(state.stateParams.dist);
+        }
         // Search on hash tag
         if (state.stateParams.hash) {
           if ($scope.search.text) {
@@ -820,7 +840,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   };
 
   // Store some search options as settings defaults
-  $scope.updateSettings = function() {
+  $scope.updateSettings = function(immediate) {
     var dirty = false;
 
     csSettings.data.plugins.market = csSettings.data.plugins.market || {};
@@ -830,11 +850,11 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
     var location = $scope.search.location && $scope.search.location.trim();
     var oldLocation = csSettings.data.plugins.market.defaultSearch.location;
     if (!oldLocation || (oldLocation !== location)) {
-      csSettings.data.plugins.market.defaultSearch = {
+      csSettings.data.plugins.market.defaultSearch = angular.merge(csSettings.data.plugins.market.defaultSearch, {
         location: location,
         geoPoint: location && $scope.search.geoPoint ? angular.copy($scope.search.geoPoint) : undefined,
         geoShape: location && $scope.search.geoShape ? angular.copy($scope.search.geoShape) : undefined
-      };
+      });
       dirty = true;
     }
 
@@ -853,15 +873,19 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
 
     // execute with a delay, for better UI perf
     if (dirty) {
-      $timeout(csSettings.store, 100);
+      console.debug("[market] [search] Storing search location to local settings...")
+      if (immediate) {
+        return csSettings.store();
+      }
+      else return $timeout(csSettings.store, 100);
     }
   };
 
   // Store some search options as settings defaults
   $scope.leave = function() {
-    $scope.updateSettings();
+    return $scope.updateSettings(true/*immediate*/);
   };
-  $scope.$on('$ionicView.leave', function() {
+  $scope.$on('$ionicView.beforeLeave', function() {
     // WARN: do not set by reference
     // because it can be overrided by sub controller
     return $scope.leave();

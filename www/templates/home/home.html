@@ -2,7 +2,8 @@
   <!-- no title -->
   <ion-nav-title></ion-nav-title>
 
-  <ion-nav-buttons side="secondary" >
+  <ion-nav-buttons side="secondary">
+
     <!-- locales  -->
     <button class="button button-flag button-clear hidden-xs hidden-sm gray " ng-if="!login"
             ng-click="showLocalesPopover($event)" style="align-content: center">
@@ -16,15 +17,15 @@
   <ion-content class="has-header no-padding-xxs bg-image-cover"
                style="background-image: url({{bgImage}})">
 
-    <div class="row padding-horizontal no-padding-xxs responsive-lg">
-      <div class="col hidden-xs hidden-sm "
-           ng-class="{'col-30 no-padding': !feed, 'col-20 no-padding': feed}">&nbsp;</div>
-      <div class="col text-center no-padding-xxs no-padding-xs main-container">
+    <div class="row  no-padding-xxs responsive-lg">
+      <div class="col col-md-10 hidden-xs hidden-sm"
+           ng-class="{'col-30 no-padding': !feed, 'col-15 no-padding': feed}">&nbsp;</div>
+      <div class="col text-center main-column">
 
         <div class="logo"></div>
         <p class="hidden-xs">&nbsp;</p>
 
-        <div class="center padding light-bg" style="max-width: 382px;">
+        <div class="main-content center padding light-bg">
 
           <h4>
             <span class="hidden-xs" translate>HOME.MESSAGE</span>
@@ -107,7 +108,7 @@
 
           <br/>
 
-          <div class="text-center no-padding visible-xs stable">
+          <div class="text-center no-padding visible-xs dark">
             <br/>
             <!-- version -->
             {{:locale:'COMMON.APP_VERSION'|translate:{version: config.version} }}
@@ -118,7 +119,7 @@
         </div>
       </div>
 
-      <div class="col" ng-class="{'col-30 no-padding': !feed, 'col-10 no-padding': feed}">&nbsp;
+      <div class="col col-lg-10 hidden-xs hidden-sm" ng-class="{'col-30 no-padding': !feed, 'col-15 no-padding': feed}">&nbsp;
       </div>
       <div class="col col-30 no-padding" ng-if="feed">
 
