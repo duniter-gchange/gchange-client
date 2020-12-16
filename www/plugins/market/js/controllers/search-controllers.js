@@ -381,7 +381,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
   $scope.updateLocationHref = function(stateParams) {
     console.debug("[market] [search] Update location href");
     $location.search(stateParams).replace();
-  }
+  };
 
   $scope.doGetLastRecords = function(from) {
 
@@ -873,7 +873,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
 
     // execute with a delay, for better UI perf
     if (dirty) {
-      console.debug("[market] [search] Storing search location to local settings...")
+      console.debug("[market] [search] Storing search location to local settings...");
       if (immediate) {
         return csSettings.store();
       }
