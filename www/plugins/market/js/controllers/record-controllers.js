@@ -141,7 +141,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   $scope.refresh = function () {
     if ($scope.loading || !$scope.formData.id) return; // Skip
     $scope.load($scope.formData.id);
-  }
+  };
 
   $scope.load = function (id) {
     id = id || $scope.formData.id;

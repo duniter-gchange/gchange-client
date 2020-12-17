@@ -368,12 +368,12 @@ angular.module('cesium.filters', ['cesium.config', 'cesium.platform', 'pascalpre
     };
   })
 
+  /**
+   * Remove tag (like HTML tag)
+   */
   .filter('noHtml', function() {
     return function(html) {
-      return html && html
-          .trim()
-          .replace(/<[^>]+>/g,'') // Remove tag (like HTML tag):
-          || '' ;
+      return html ? html.trim().replace(/<[^>]+>/g,'') : '';
     };
   })
 
