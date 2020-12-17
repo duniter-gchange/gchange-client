@@ -346,13 +346,9 @@ form.lookupForm,
     overflow: hidden !important;
     white-space: normal;
 
-    em {
-      font-style: italic;
-      color: #1a237e;
-    }
   }
   &:hover h2 {
-    color: #1a237e;
+    color: $positive !important;
   }
   .badge-secondary {
     top: 40px !important;

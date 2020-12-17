@@ -7,7 +7,7 @@
       <i ng-if="::!item.avatar" class="item-image icon cion-page-{{item.type}}"></i>
 
       <!-- title -->
-      <h2 ng-bind-html="::item.title|truncText: 150"></h2>
+      <h2 title="{{item.title|noHtml}}" ng-bind-html="::item.title" ></h2>
 
       <!-- category -->
       <h3 class="gray text-nowrap hidden-xxs">
