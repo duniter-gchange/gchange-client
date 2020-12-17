@@ -121,6 +121,9 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
           // Set Ink
           UIUtils.ink({selector: '.item'});
           //$scope.showHelpTip();
+
+          // Hide if loading (e.g. when close a ad)
+          UIUtils.loading.hide();
         }, 200);
       });
   };
@@ -911,13 +914,14 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   };
   $scope.$watch('search.location', $scope.onLocationChanged, true);
 
-  $scope.onToggleShowClosedAdChanged = function(value) {
+  $scope.onToggleOptionsChanged = function(value) {
     if ($scope.search.loading || !$scope.entered) return;
 
     // Refresh results
     $scope.doRefresh();
   };
-  $scope.$watch('search.showClosed', $scope.onToggleShowClosedAdChanged, true);
+  $scope.$watch('search.showClosed', $scope.onToggleOptionsChanged, true);
+  $scope.$watch('search.showOld', $scope.onToggleOptionsChanged, true);
 
   $scope.onGeoDistanceChanged = function() {
     if ($scope.search.loading || !$scope.entered) return;
@@ -979,9 +983,17 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
 
   $scope.toggleShowClosed = function() {
     $scope.hideActionsPopover();
-    $scope.search.showClosed = !$scope.search.showClosed;
+    $timeout(function() {
+      $scope.search.showClosed = !$scope.search.showClosed;
+    }, 500);
   };
 
+  $scope.toggleShowOld = function() {
+    $scope.hideActionsPopover();
+    $timeout(function() {
+      $scope.search.showOld = !$scope.search.showOld;
+    }, 500);
+  };
 
   $scope.toggleCompactMode = function() {
     $scope.search.compactMode = !$scope.search.compactMode;

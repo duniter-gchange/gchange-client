@@ -8,10 +8,18 @@
       <h2 ng-bind-html="rec.title" ></h2>
 
       <!-- category -->
-      <h3 class="gray">
+      <h3 class="gray hidden-xxs">
         <span ng-if="::rec.category" ng-bind-html="::rec.category.name"></span>
       </h3>
-      <br/>
+      <!--TODO -->
+      <!--<i class="icon ink"
+         title="{{'MARKET..'|translate}}"
+         ng-click="toggleLike($event)"
+         ng-class="{'ion-ios-heart-outline': !likeData.likes.wasHit, 'ion-ios-heart calm': likeData.likes.wasHit}">
+      </i>-->
+      <br class="hidden-xxs hidden-xs hidden-sm"/>
+
+      <!-- location -->
       <h4>
         <span class="positive" ng-if="rec.city">
         <i class="icon ion-location"></i>
@@ -22,14 +30,17 @@
         </span>
         <span ng-if="::rec.stock>1" class="gray"><i class="icon ion-pie-graph"></i> <span class="">{{::rec.stock}} <i class="ion-checkmark balanced"></i></span></span>
       </h4>
+
+      <!-- creation date -->
       <h4 class="gray" ng-if="rec.creationTime">
         <i class="icon ion-clock" ></i>
         {{::rec.creationTime | formatFromNow}}
-        {{::'MARKET.SEARCH.BY'|translate}}
-        <span class="dark">{{::rec.name || (rec.pubkey|formatPubkey)}}</span>
+        <span class="hidden-xxs">{{::'MARKET.SEARCH.BY'|translate}}</span>
+        <span class="hidden-xxs dark">{{::rec.name || (rec.pubkey|formatPubkey)}}</span>
       </h4>
+
       <span  ng-if="::rec.picturesCount > 1"
-             class="badge badge-balanced badge-picture-count">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i></span>
+             class="badge badge-balanced badge-picture-count hidden-xxs">{{::rec.picturesCount}}&nbsp;<i class="icon ion-camera"></i></span>
 
       <!-- Tx progress -->
       <div ng-if="::rec.price && rec.tx" class="badge badge-secondary"
@@ -41,13 +52,7 @@
     </div>
 
     <div class="col" ng-if="options.description.show">
-      <!-- TODO add a like button
-      <div class="pull-right">
-        <div class="button button-icon button-clear button-stable button-small"
-                ng-click="toggleLike($event)">
-          <i class="icon ion-heart"  ng-class="{'gray': !likeData.likes.wasHit, 'calm': likeData.likes.wasHit}"></i>
-        </div>
-      </div>-->
+
 
       <h4 class="gray text-wrap text-italic" ng-if="::!!rec.description">
         <i class="icon ion-quote" ></i>
@@ -56,7 +61,7 @@
 
     </div>
 
-    <div ng-if="::rec.stock===0" class="badge badge-closed badge-assertive"  translate>MARKET.COMMON.SOLD</div>
+    <div ng-if="::rec.stock===0" class="badge badge-closed badge-shadow badge-assertive"  translate>MARKET.COMMON.SOLD</div>
 
     <!-- price -->
     <div class="badge badge-price badge-shadow"

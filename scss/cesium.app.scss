@@ -57,6 +57,10 @@ $screen-menu:                     $screen-sm;
   @-ms-viewport {
     width: 320px;
   }
+  .hidden-xxs {
+    display: none !important;
+    visibility: hidden !important;
+  }
   .no-padding-xxs {
     padding: 0 !important;
   }
@@ -2002,12 +2006,12 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   display: inline-block;
 }
 
-
 @media screen and (max-width: $screen-xxs-max) {
-  .card > .item.item-thumbnail-left,
+  // NOt need for gchange
+  /*.card > .item.item-thumbnail-left,
   .item-thumbnail-left,
   .item-thumbnail-left .item-content {
-    padding-left: 84px !important;
+    //padding-left: 84px !important;
   }
 
   .item-thumbnail-left > img:first-child,
@@ -2016,7 +2020,7 @@ $ionicon-var-badge-editable: $ionicon-var-edit + "\00a0";
   .item-thumbnail-left .item-content img.item-image {
     max-width: 70px;
     max-height: 70px;
-  }
+  }*/
 
   .item h2 {
     font-size: 13px !important;

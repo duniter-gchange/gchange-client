@@ -85,9 +85,6 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     category: {
       show: true
     },
-    description: {
-      show: true
-    },
     location: {
       show: true,
       prefix : undefined

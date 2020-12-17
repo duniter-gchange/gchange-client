@@ -12,12 +12,24 @@
         {{'MARKET.SEARCH.BTN_LAST_RECORDS' | translate}}
       </a>
 
+      <div class="item item-divider">
+        Options
+      </div>
+
       <!-- show closed Ads ? -->
-      <a class="item item-icon-left ink"
-         ng-click="toggleShowClosed();">
-        <i class="icon ion-android-checkbox-outline-blank" ng-show="!search.showClosed"></i>
-        <i class="icon ion-android-checkbox-outline" ng-show="search.showClosed"></i>
+      <a class="item ink"
+         ng-click="toggleShowClosed()">
+        <i class="ion-android-checkbox-outline-blank" ng-show="!search.showClosed"></i>
+        <i class="ion-android-checkbox-outline" ng-show="search.showClosed"></i>
         <span translate>MARKET.SEARCH.SHOW_CLOSED_RECORD</span>
+      </a>
+
+      <!-- show old Ads ? -->
+      <a class="item  ink"
+         ng-click="toggleShowOld()">
+        <i class="ion-android-checkbox-outline-blank" ng-show="!search.showOld"></i>
+        <i class="ion-android-checkbox-outline" ng-show="search.showOld"></i>
+        <span translate>MARKET.SEARCH.SHOW_OLD_RECORD</span>
       </a>
     </div>
   </ion-content>

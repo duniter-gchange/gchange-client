@@ -16,65 +16,6 @@
 * Market search
 */
 
-.market .lookupForm form .item {
-    height: 48px;
-}
-.item-input .selected-values {
-    position: relative !important;;
-    top: -1px !important;
-    left: -9px !important;;
-}
-.item-input > .selected-values .button {
-    top: unset !important;
-}
-.market .lookupForm .result-container {
-    position: relative;
-    display: inline-block;
-    margin-right: -16px;
-}
-
-.market .row-record {
-    border: 0 !important;
-}
-.market .item-record {
-    --image-size: calc(min(200px, 50vw));
-    background-color: white;
-    width: 100%;
-    border: 0 !important;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
-    height: unset !important;
-    min-height: unset !important;
-    max-height: var(--image-size);
-}
-.market .row-record {
-    height: unset !important;
-    min-height: unset !important;
-}
-.market .item-record .badge-picture-count {
-    position: absolute !important;
-    left: calc(var(--image-size) - 25px) !important;
-    bottom: 10px !important;
-    right: unset !important;
-    top: unset !important;
-}
-.market .item-record h2 {
-    height: auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    display: -webkit-inline-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    font-weight: bold;
-    font-size: 1.4em;
-}
-.market .item-record h2 em {
-    font-style: italic;
-    color: #1a237e;
-}
-.market .item-record:hover h2 {
-    color: #1a237e;
-}
 .market .item-record .badge-closed {
     position: absolute !important;
     right: 16px !important;
@@ -87,93 +28,17 @@
     left: unset !important;
     top: unset !important;
 }
-.market .item-record .badge-stock {
-    position: absolute !important;
-    bottom: 0 !important;
-    right: inherit !important;
-    top: inherit !important;
-    font-size: 12px;
-    padding: 0 20px;
-    font-weight: normal !important;
-}
-.market .item-record .badge-secondary {
-    top: 40px !important;
-}
-.market .item-record .button-like {
-    position: absolute !important;
-    right: 16px;
-    top: 16px;
-}
-.market .item-record {
-    margin-bottom: .8rem;
-}
-.market .lookupForm .list:not(.dropdown-list) > * {
-    min-width: calc(min(450px, 100vh));
-    max-width: 650px;
-}
-.market .list.flex-row {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: space-around;
-    background: transparent;
-    margin-right: -.8rem;
-}
-.market .list.flex-row > * {
-    flex: 1 1 ;
-    width: calc(50% - 32px);
-    margin-right: .8rem;
-}
-.market .item-record .item-image {
-    left: 0;
-    top: 0;
-    border-radius: 3px !important;
-    max-width: var(--image-size);
-    max-height: var(--image-size);
-    padding: 0;
-}
-.market .item-record .item-image.icon {
-    font-size: 150px !important;
-    line-height: 200px;
-}
-/*  Evite le redimensionnement pour les petits écrans */
-.market .item-record .item-thumbnail-left,
-.market .item-record .item-thumbnail-left .item-content {
-    padding-left: calc(var(--image-size) + 10px) !important;
-    min-height: calc(var(--image-size) - 5px) !important;
-}
-
-/* -- More like list results -- */
-
-.market.view-record .list-more-record .item-record {
-    --image-size: 110px;
-}
-.market.view-record .list-more-record .item-record h2 {
-    font-size: 1em;
-    font-weight: normal;
-    text-transform: lowercase;
-}
-.market.view-record .list-more-record .item-record h3 {
-    font-size: 0.9em;
-}
-.market.view-record .list-more-record .item-record br {
-    visibility: hidden;
-    display: none;
-}
-.market.view-record .list-more-record .item-record h4 {
-    font-size: 0.8em;
-}
-.market.view-record .list-more-record .item-record .badge {
+.market .list-more-record .item-record .badge {
     font-size: 10px;
+    padding: 2px 6px;
 }
-.market.view-record .list-more-record .item-record .badge-price {
-    font-size: 0.8em;
-    padding: 2px 4px;
+.market .list-more-record .item-record .badge-price {
     bottom: 8px !important;
     right: 8px !important;;
 }
-.market.view-record .list-more-record .item .badge-picture-count {
-    bottom: 5px !important;
+.market .list-more-record .item-record .badge-picture-count {
+    bottom: 8px !important;
+    left: calc(min(120px, 50vw) - 12px) !important;
 }
 
 /**
