@@ -24,12 +24,10 @@
         <button class="button button-small button-positive button-clear ink padding-right"
                 ng-click="showNewRecordModal()">
           <i class="icon ion-plus"></i>
-          {{'MARKET.COMMON.BTN_NEW_AD' | translate}}
+          <span translate>MARKET.COMMON.BTN_NEW_AD</span>
         </button>
       </div>
     </div>
-
-
 
     <form ng-submit="doSearch()">
 
@@ -72,9 +70,9 @@
         </div>
 
         <!-- location -->
-        <div class="col col-33 no-padding no-margin">
-          <ng-include src="::'plugins/es/templates/common/item_location_search.html'"
-                      ng-controller="ESSearchPositionItemCtrl"></ng-include>
+        <div class="col col-33 no-padding no-margin"
+             ng-include src="::'plugins/es/templates/common/item_location_search.html'"
+             ng-controller="ESSearchPositionItemCtrl">
         </div>
 
       </div>
@@ -103,7 +101,7 @@
       <a class="button button-text button-small button-text-positive pull-right ink"
          ui-sref="app.market_categories">
         <i class="icon ion-android-funnel"></i>
-        {{'MARKET.SEARCH.BTN_SHOW_CATEGORIES' | translate}}
+        <span translate>MARKET.SEARCH.BTN_SHOW_CATEGORIES</span>
       </a>
     </div>
 
@@ -113,8 +111,8 @@
         <a class="button button-text button-small ink "
            ng-class="{'button-text-positive': search.advanced, 'button-text-stable': !search.advanced}"
            ng-click="search.advanced=!search.advanced">
-            {{'MARKET.SEARCH.BTN_OPTIONS' | translate}}
-            <i class="icon" ng-class="{'ion-arrow-down-b': !search.advanced, 'ion-arrow-up-b': search.advanced}"></i>
+          <span translate>MARKET.SEARCH.BTN_OPTIONS</span>
+          <i class="icon" ng-class="{'ion-arrow-down-b': !search.advanced, 'ion-arrow-up-b': search.advanced}"></i>
         </a>
         &nbsp;
 
@@ -126,25 +124,25 @@
            ng-if="!options.type.show"
            ng-class="{'button-text-positive': search.type=='last'}"
            ng-click="doGetLastRecords()">
-          {{'MARKET.SEARCH.BTN_LAST_RECORDS' | translate}}
+          <span translate>MARKET.SEARCH.BTN_LAST_RECORDS</span>
         </a>
         <a class="button button-text button-small ink icon cion-market-offer"
            ng-if="options.type.show"
            ng-class="{'button-text-positive': search.type=='offer'}"
            ng-click="toggleAdType('offer')">
-          {{'MARKET.SEARCH.BTN_OFFERS' | translate}}
+          <span translate>MARKET.SEARCH.BTN_OFFERS</span>
         </a>
         <a class="button button-text button-small ink icon cion-market-need"
            ng-if="options.type.show"
            ng-class="{'button-text-positive': search.type=='need'}"
            ng-click="toggleAdType('need')">
-          {{'MARKET.SEARCH.BTN_NEEDS' | translate}}
+          <span translate>MARKET.SEARCH.BTN_NEEDS</span>
         </a>
         <a class="button button-text button-small ink icon cion-market-crowdfunding"
            ng-if="options.type.show"
            ng-class="{'button-text-positive': search.type=='crowdfunding'}"
            ng-click="toggleAdType('crowdfunding')">
-          {{'MARKET.SEARCH.BTN_CROWDFUNDING' | translate}}
+          <span translate>MARKET.SEARCH.BTN_CROWDFUNDING</span>
         </a>
 
         <!--<a class="button button-text button-small ink icon ion-heart"
@@ -153,18 +151,17 @@
            ng-click="toggleAdType('star')">
           {{'MARKET.SEARCH.BTN_FAVORITES' | translate}}
         </a>-->
-
         &nbsp;
         <button type="button"
                 class="button button-small button-stable ink"
                 ng-click="doSearch()">
-          {{'COMMON.BTN_SEARCH' | translate}}
+          <span translate>COMMON.BTN_SEARCH</span>
         </button>
       </div>
     </div>
 
     <!-- list of records -->
-    <ng-include src="'plugins/market/templates/search/list_records_lg.html'" ></ng-include>
+    <ng-include src="::'plugins/market/templates/search/list_records_lg.html'" ></ng-include>
 
   </ion-content>
 

@@ -138,7 +138,13 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     $scope.$broadcast('$recordView.beforeLeave', args);
   });
 
+  $scope.refresh = function () {
+    if ($scope.loading || !$scope.formData.id) return; // Skip
+    $scope.load($scope.formData.id);
+  }
+
   $scope.load = function (id) {
+    id = id || $scope.formData.id;
     $scope.loading = true;
     $scope.formData = {};
     var promise = mkRecord.record.load(id, {
@@ -160,15 +166,15 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
         if (!$scope.smallscreen) {
           $scope.loadMoreLikeThis(data);
         }
+        $scope.loading = false;
 
         $scope.updateView();
-        UIUtils.loading.hide();
-        $scope.loading = false;
+        UIUtils.loading.hide(10);
       })
       .catch(function (err) {
         if (!$scope.secondTry) {
           $scope.secondTry = true;
-          $q(function () {
+          $timeout(function () {
             $scope.load(id); // loop once
           }, 100);
         }
@@ -502,7 +508,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 
     var pubkey = $scope.issuer.pubkey;
     if (!pubkey) {
-      console.error('[market] [record] No record.pubkey found in the record!');
+      console.warn('[market] [record] No pubkey found in the issuer profile');
       $scope.showPayment = false;
       $scope.paymentData = null;
       return;

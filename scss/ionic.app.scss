@@ -178,42 +178,36 @@
 /**********
   Item record (Market Ad, Page, etc)
 **********/
-
-.lookupForm {
-  form {
-    .item {
-      height: 48px;
-    }
-
-    .item-input .selected-values {
-      position: relative !important;
-      top: -1px !important;
-      left: -9px !important;
-    }
-    .item-input > .selected-values .button {
-      top: unset !important;
-    }
-  }
-  .list:not(.dropdown-list) > * {
-    min-width: calc(min(450px, 100vh));
-    max-width: 650px;
+form.lookupForm,
+.lookupForm form {
+  .item {
+    height: 48px;
   }
 
-  .list.flex-row {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: space-around;
-    background: transparent;
-    margin-right: -.8rem;
-    & > * {
-      flex: 1 1 ;
-      width: calc(50% - 32px);
-      margin-right: .8rem;
-    }
+  .item-input .selected-values {
+    position: relative !important;
+    top: -1px !important;
+    left: -9px !important;
+  }
+  .item-input > .selected-values .button {
+    top: unset !important;
   }
 }
 
+.list.flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+  background: transparent;
+  margin-right: -.8rem;
+
+  & > * {
+    flex: 1 1 ;
+    width: calc(50% - 32px);
+    margin-right: .8rem;
+  }
+}
 
 .row-record {
   border: 0 !important;
@@ -293,6 +287,11 @@
   .item-thumbnail-left .item-content .item-image {
     max-width: 106px;
     max-height: 106px;
+
+    &.icon {
+      font-size: 65px !important;
+      line-height: 100px !important;
+    }
   }
 }
 
@@ -307,7 +306,7 @@
 
     &.icon {
       font-size: calc(min(200px, 50vw) - 25px) !important;
-      line-height: calc(min(200px, 50vw));
+      line-height: calc(min(200px, 50vw)) !important;
     }
   }
 
@@ -319,6 +318,10 @@
   }
 }
 
+.list.flex-row > * {
+  min-width: calc(min(400px, 100vh));
+  max-width: calc(min(650px, 100vh));
+}
 .item-record {
   background-color: white;
   width: 100%;
@@ -333,14 +336,15 @@
 
   h2 {
     height: auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
     display: inline-block;
     display: -webkit-inline-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     font-weight: bold;
     font-size: 1.4em;
+
+    overflow: hidden !important;
+    white-space: normal;
 
     em {
       font-style: italic;
@@ -359,7 +363,7 @@
 /* -- More like list results -- */
 
 
-.list-more-record {
+.list-record-small {
   .hidden-xs {
     visibility: hidden;
     display: none;
@@ -380,7 +384,7 @@
 
     &.icon {
       font-size: calc(min(120px, 50vw) - 12px) !important;
-      line-height: calc(min(120px, 50vw));
+      line-height: calc(min(120px, 50vw)) !important;
     }
   }
 

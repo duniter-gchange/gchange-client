@@ -28,15 +28,15 @@
     left: unset !important;
     top: unset !important;
 }
-.market .list-more-record .item-record .badge {
+.market .list-record-small .item-record .badge {
     font-size: 10px;
     padding: 2px 6px;
 }
-.market .list-more-record .item-record .badge-price {
+.market .list-record-small .item-record .badge-price {
     bottom: 8px !important;
     right: 8px !important;;
 }
-.market .list-more-record .item-record .badge-picture-count {
+.market .list-record-small .item-record .badge-picture-count {
     bottom: 8px !important;
     left: calc(min(120px, 50vw) - 12px) !important;
 }

@@ -12,7 +12,11 @@
     </button>
   </ion-nav-buttons>
 
-  <ion-content class="grid ">
+  <ion-content scroll="true" class="refresher-top-bg">
+
+    <ion-refresher pulling-text="{{'COMMON.BTN_REFRESH' | translate}}"
+                   on-refresh="refresh()">
+    </ion-refresher>
 
     <div class="row no-padding">
       <div class="col col-15 hidden-xs hidden-sm hidden-md ">&nbsp;</div>
@@ -340,10 +344,8 @@
           </div>
         </a>
 
-
-
         <!-- More similar ads  -->
-        <div class="list list-more-record animate-ripple no-padding"
+        <div class="list list-record list-record-small list-more-record animate-ripple no-padding"
              ng-if="!search.loading && search.results.length"
               ng-init="options.description.show=false">
 
@@ -351,9 +353,9 @@
             <span translate>MARKET.VIEW.MORE_LIKE_THIS</span>
           </div>
 
-          <ng-include ng-repeat="rec in search.results"
-                      src="'plugins/market/templates/search/item_record.html'">
-          </ng-include>
+          <div ng-repeat="item in search.results"
+               ng-include="'plugins/market/templates/search/item_record.html'">
+          </div>
         </div>
       </div>
 

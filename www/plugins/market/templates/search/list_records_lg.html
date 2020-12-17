@@ -45,13 +45,14 @@
 
     <div class="col no-padding">
 
-        <div class="list {{::motion.ionListClass}} flex-row"
+        <div class="list list-record {{::motion.ionListClass}}"
              ng-class="{'flex-row': search.compactMode}"
              ng-if="!search.loading && search.results.length">
 
-          <ng-include ng-repeat="rec in search.results"
-               src="::'plugins/market/templates/search/item_record.html'">
-          </ng-include>
+            <div class="no-padding"
+                 ng-repeat="item in search.results"
+                 ng-include="::'plugins/market/templates/search/item_record.html'">
+            </div>
         </div>
     </div>
 

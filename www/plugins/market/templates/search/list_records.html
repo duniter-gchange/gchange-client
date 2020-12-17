@@ -28,12 +28,15 @@
   COMMON.SEARCH_NO_RESULT
 </div>
 
-<div class="list {{::motion.ionListClass}} no-padding" ng-if="!search.loading && search.results.length"
-    ng-init="options.description.show=false">
+<div class="list list-record {{::motion.ionListClass}} no-padding"
+     ng-if="!search.loading && search.results.length"
+     ng-init="options.description.show=false">
 
-  <ng-include ng-repeat="rec in search.results"
-              src="::'plugins/market/templates/search/item_record.html'">
-  </ng-include>
+    <div class="no-padding"
+         ng-repeat="item in search.results"
+         ng-include="'plugins/market/templates/search/item_record.html'">
+    </div>
+
 </div>
 
 <ion-infinite-scroll

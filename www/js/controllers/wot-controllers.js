@@ -489,11 +489,23 @@ function WotIdentityAbstractController($scope, $rootScope, $state, $ionicHistory
         if (!identity) return UIUtils.onError('ERROR.IDENTITY_NOT_FOUND')().then($scope.showHome);
         $scope.formData = identity;
         $scope.loading = false;
+        $scope.updateView();
+
+        UIUtils.loading.hide(10); // loading could have be open (e.g. new account)
       })
       .catch(function(err) {
         $scope.loading = false;
         UIUtils.onError('ERROR.LOAD_IDENTITY_FAILED')(err);
       });
+  };
+
+  $scope.refresh = function() {
+    if ($scope.loading || !$scope.formData.pubkey) return; // Skip
+    return $scope.load($scope.formData.pubkey, false);
+  };
+
+  $scope.updateView = function() {
+    $scope.$broadcast('$$rebind::rebind'); // force rebind
   };
 
   $scope.removeActionParamInLocationHref = function(state) {
@@ -565,10 +577,9 @@ function WotIdentityViewController($scope, $rootScope, $controller, $timeout, UI
     stars: {}
   };
 
-  $scope.$on('$ionicView.enter', function(e, state) {
+  $scope.enter = function(e, state) {
 
     var onLoadSuccess = function() {
-      $scope.doMotion();
       if (state.stateParams && state.stateParams.action) {
         $timeout(function() {
           $scope.doAction(state.stateParams.action.trim());
@@ -611,14 +622,14 @@ function WotIdentityViewController($scope, $rootScope, $controller, $timeout, UI
     else {
       $scope.showHome();
     }
+  };
+  $scope.$on('$ionicView.enter', $scope.enter);
 
-  });
-
-  $scope.doMotion = function() {
+  $scope.updateView = function() {
+    console.debug('[identity] Updating view');
     $scope.motion.show({selector: '.view-identity .list .item'});
 
     $scope.$broadcast('$csExtension.motion');
+    $scope.$broadcast('$$rebind::rebind'); // force rebind
   };
-
-
 }

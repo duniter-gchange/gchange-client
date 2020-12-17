@@ -2,22 +2,25 @@
   <ion-nav-title>
   </ion-nav-title>
 
-  <ion-content scroll="true">
+  <ion-content scroll="true" class="refresher-top-bg">
+
+    <ion-refresher pulling-text="{{'COMMON.BTN_REFRESH' | translate}}"
+                   on-refresh="refresh()">
+    </ion-refresher>
 
     <div class="hero dark-bg" ng-class="{'positive-900-bg': !loading && formData.isMember}">
       <div class="content" ng-if="!loading">
         <i class="avatar"
-           ng-if="::!formData.avatar"
+           ng-if=":rebind:!formData.avatar"
            ng-class="{'avatar-wallet': !formData.isMember, 'avatar-member': formData.isMember}"></i>
         <i class="avatar"
-           ng-if="::formData.avatar"
+           ng-if=":rebind:formData.avatar"
            style="background-image: url({{::formData.avatar.src}})"></i>
-        <ng-if ng-if="::formData.name" title="{{::formData.name}}">
-          <h3 class="light">{{::formData.name|truncText: 30}}</h3>
+        <ng-if ng-if=":rebind:formData.name" title="{{:rebind:formData.name}}">
+          <h3 class="light">{{:rebind:formData.name|truncText: 30}}</h3>
         </ng-if>
-        <ng-if ng-if="::!formData.name">
-          <h3 class="light" ng-if="::formData.uid">{{::formData.uid}}</h3>
-          <h3 class="light" ng-if="::!formData.uid"><i class="ion-key"></i> {{::formData.pubkey | formatPubkey}}</h3>
+        <ng-if ng-if=":rebind:!formData.name">
+          <h3 class="light"><i class="ion-key"></i> {{::formData.pubkey | formatPubkey}}</h3>
         </ng-if>
         <!--<h4 class="assertive">
           <ng-if ng-if="::(formData.name || formData.uid) && !formData.isMember && !revoked" translate>WOT.NOT_MEMBER_PARENTHESIS</ng-if>

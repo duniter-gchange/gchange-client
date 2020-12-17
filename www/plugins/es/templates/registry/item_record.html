@@ -1,0 +1,54 @@
+<a class="item item-record  ink no-padding"
+   ui-sref="app.view_page({id: item.id, title: item.urlTitle})">
+
+  <div class="row row-record">
+    <div class="col item-text-wrap item-thumbnail-left">
+      <i ng-if="::item.avatar" class="item-image" style="background-image: url({{::item.avatar.src}})"></i>
+      <i ng-if="::!item.avatar" class="item-image icon cion-page-{{item.type}}"></i>
+
+      <!-- title -->
+      <h2 ng-bind-html="::item.title|truncText: 150"></h2>
+
+      <!-- category -->
+      <h3 class="gray text-nowrap hidden-xxs">
+        <ng-if ng-if="::item.category">{{::item.category.name}}</ng-if>
+        <ng-if ng-if="::!item.category">{{::'REGISTRY.TYPE.ENUM.'+item.type|uppercase|translate}}</ng-if>
+      </h3>
+
+      <br class="hidden-xxs hidden-xs hidden-sm"/>
+
+      <h4>
+        <span class="positive" ng-if="::item.city">
+          <b class="ion-location"></b>
+          <span ng-bind-html="::item.city"></span>
+        </span>
+        <span class="gray" ng-if="::item.distance">
+          ({{::item.distance|formatDecimal}} {{::geoUnit}})
+        </span>
+      </h4>
+
+      <!-- creation date -->
+      <h4>
+        <span class="gray" ng-if="::item.creationTime">
+          <i class="icon ion-clock"></i>
+          {{::item.creationTime | formatFromNow}}
+        </span>
+        <span ng-if="::item.tags" class="dark">
+         <ng-repeat ng-repeat="tag in ::item.tags">
+           #<ng-bind-html ng-bind-html="::tag"></ng-bind-html>
+         </ng-repeat>
+        </span>
+      </h4>
+      <span  ng-if="::item.picturesCount > 1"
+             class="badge badge-balanced badge-picture-count hidden-xxs">{{::item.picturesCount}}&nbsp;<i class="icon ion-camera"></i></span>
+    </div>
+
+    <div class="col" ng-if="options.description.show">
+      <h4 class="gray text-wrap text-italic" ng-if="::!!item.description">
+        <i class="icon ion-quote" ></i>
+        <span ng-bind-html="::item.description | truncText:500"></span>
+      </h4>
+    </div>
+  </div>
+
+</a>

@@ -123,7 +123,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
           //$scope.showHelpTip();
 
           // Hide if loading (e.g. when close a ad)
-          UIUtils.loading.hide();
+          UIUtils.loading.hide(10);
         }, 200);
       });
   };

@@ -1,33 +1,16 @@
+<div class="list {{::motion.ionListClass}}"
+     ng-if="!search.loading && search.results.length"
+     ng-init="options.description.show=false">
 
-<ion-list class="{{::motion.ionListClass}}"
-          ng-if="!search.loading && search.results && search.results.length > 0">
-
-  <div ng-repeat="item in search.results"
-       class="item item-avatar item-icon-right item-border-large ink"
-       ui-sref="app.view_page({id: item.id, title: item.urlTitle})">
-
-    <i ng-if="::!item.avatar" class="item-image icon cion-page-{{::item.type}}"></i>
-    <i ng-if="::item.avatar" class="item-image avatar" style="background-image: url({{::item.avatar.src}})"></i>
-
-    <h2 ng-bind-html="::item.title"></h2>
-    <h4>
-      <span class="dark" ng-if="::item.city">
-        <b class="ion-location"></b>
-        <span ng-bind-html="::item.city"></span>
-      </span>
-      <span class="gray" ng-if="::item.distance">
-        ({{::item.distance|formatDecimal}} {{::geoUnit}})
-      </span>
-    </h4>
-    <h4 class="gray" ng-if="::item.time && search.lastRecords">
-      <i class="ion-clock" ></i>
-      {{::item.time | formatFromNow}}
-    </h4>
-    <h4 class="gray" ng-if="!search.lastRecords">
-      <i class="cion-page-{{::item.type}}"></i>
-      <span ng-if="item.category">{{::item.category.name}}</span>
-      <span ng-if="!item.category">{{::'REGISTRY.TYPE.ENUM.'+item.type|uppercase|translate}}</span>
-    </h4>
-    <i class="icon ion-ios-arrow-right "></i>
+  <div class="no-padding"
+       ng-repeat="item in search.results"
+       ng-include="::'plugins/es/templates/registry/item_record.html'">
   </div>
-</ion-list>
+</div>
+
+<ion-infinite-scroll
+        ng-if="!search.loading && search.hasMore"
+        spinner="android"
+        on-infinite="showMore()"
+        distance="10%">
+</ion-infinite-scroll>

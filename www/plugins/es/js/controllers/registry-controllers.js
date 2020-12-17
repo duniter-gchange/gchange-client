@@ -127,7 +127,10 @@ function ESRegistryLookupController($scope, $focus, $timeout, $filter, $controll
     location: null,
     advanced: null,
     issuer: null,
-    geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 20
+    geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 20,
+    sortAttribute: null,
+    sortDirection: 'desc',
+    compactMode: csSettings.data.plugins.market && csSettings.data.plugins.market.compactMode
   };
   $scope.searchTextId = 'registrySearchText';
   $scope.enableFilter = true;
@@ -137,6 +140,9 @@ function ESRegistryLookupController($scope, $focus, $timeout, $filter, $controll
     location: {
       show: true,
       help: 'REGISTRY.SEARCH.LOCATION_HELP'
+    },
+    description: {
+      show: !$scope.search.compactMode
     }
   });
 
@@ -253,6 +259,48 @@ function ESRegistryLookupController($scope, $focus, $timeout, $filter, $controll
     // because it can be overrided by sub controller
     return $scope.enter(e, state);
   });
+
+  // Store some search options as settings defaults
+  $scope.updateSettings = function(immediate) {
+    var dirty = false;
+
+    csSettings.data.plugins.market = csSettings.data.plugins.market || {};
+    csSettings.data.plugins.market.defaultSearch = csSettings.data.plugins.market.defaultSearch || {};
+
+    // Check if location changed
+    var location = $scope.search.location && $scope.search.location.trim();
+    var oldLocation = csSettings.data.plugins.market.defaultSearch.location;
+    if (!oldLocation || (oldLocation !== location)) {
+      csSettings.data.plugins.market.defaultSearch = angular.merge(csSettings.data.plugins.market.defaultSearch, {
+        location: location,
+        geoPoint: location && $scope.search.geoPoint ? angular.copy($scope.search.geoPoint) : undefined,
+        geoShape: location && $scope.search.geoShape ? angular.copy($scope.search.geoShape) : undefined
+      });
+      dirty = true;
+    }
+
+    // Check if distance changed
+    var odlDistance = csSettings.data.plugins.es.geoDistance;
+    if (!odlDistance || odlDistance !== $scope.search.geoDistance) {
+      csSettings.data.plugins.es.geoDistance = $scope.search.geoDistance;
+      dirty = true;
+    }
+
+    var oldCompactMode = csSettings.data.plugins.market.compactMode;
+    if (oldCompactMode === undefined || oldCompactMode != $scope.search.compactMode) {
+      csSettings.data.plugins.market.compactMode = $scope.search.compactMode;
+      dirty = true;
+    }
+
+    // execute with a delay, for better UI perf
+    if (dirty) {
+      console.debug("[market] [search] Storing search location to local settings...");
+      if (immediate) {
+        return csSettings.store();
+      }
+      else return $timeout(csSettings.store, 100);
+    }
+  };
 
   // Store some search options as settings defaults
   $scope.leave = function() {
@@ -609,6 +657,15 @@ function ESRegistryLookupController($scope, $focus, $timeout, $filter, $controll
   $scope.toggleAdvanced = function() {
     $scope.search.advanced = !$scope.search.advanced;
     $timeout($scope.hidePopovers, 200);
+  };
+
+  $scope.toggleCompactMode = function() {
+    $scope.search.compactMode = !$scope.search.compactMode;
+
+    // Show description only if NOT compact mode
+    $scope.options.description.show = !$scope.search.compactMode;
+
+    $scope.updateSettings();
   };
 
   /* -- modals -- */

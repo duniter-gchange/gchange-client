@@ -17,13 +17,3 @@
     <span class="input-label item-icon-left-padding" translate>REGISTRY.CATEGORY</span>
     <i class="gray icon ion-ios-arrow-right"></i>
   </div>
-
-  <div class="item item-icon-left item-input item-select stable-bg" ng-if="search.advanced && options.location.show">
-    <i class="icon ion-arrow-resize gray"></i>
-    <span class="input-label item-icon-left-padding " translate>LOCATION.DISTANCE</span>
-    <label>
-      <select ng-model="search.geoDistance" class="col-border-left"
-              ng-options="i as (geoDistanceLabels[i].labelKey | translate:geoDistanceLabels[i].labelParams ) for i in geoDistances track by i">
-      </select>
-    </label>
-  </div>
