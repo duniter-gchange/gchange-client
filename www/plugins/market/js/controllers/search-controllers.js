@@ -165,14 +165,14 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         });
     }
 
-    var text = $scope.search.text.trim();
+    var text = $scope.search.text && $scope.search.text.trim();
     var matches = [];
     var filters = [];
     var stateParams = {
       location: null
     };
     var tags = text ? esHttp.util.parseTags(text) : undefined;
-    if (text.length > 1) {
+    if (text && text.length > 1) {
       stateParams.q = text;
 
       // pubkey : use a special 'term', because of 'non indexed' field
@@ -938,6 +938,11 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
     $scope.search.category = cat;
     $scope.options.category.show = true;
     $scope.search.showCategories=false; // hide categories
+    $scope.doSearch();
+  };
+
+  $scope.removeText = function() {
+    $scope.search.text = null;
     $scope.doSearch();
   };
 

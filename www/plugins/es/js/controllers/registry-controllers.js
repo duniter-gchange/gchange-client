@@ -595,6 +595,12 @@ function ESRegistryLookupController($scope, $focus, $timeout, $filter, $controll
       });
   };
 
+  $scope.removeText = function() {
+    $scope.search.text = null;
+    $scope.doSearch();
+    $scope.updateLocationHref();
+  };
+
   $scope.removeType = function() {
     $scope.search.type = null;
     $scope.doSearch();

@@ -41,6 +41,13 @@
                  id="registrySearchText"
                  ng-model="search.text"
                  on-return="doSearchText()">
+
+          <button type="button" class="button button-icon button-small pull-left button-small-padding  ink"
+                  ng-if="search.text"
+                  tabindex="-1"
+                  ng-click="removeText()">
+            <i class="gray ion-close "></i>
+          </button>
         </div>
       </div>
 
