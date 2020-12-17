@@ -222,6 +222,10 @@
 .modal-pictures .card.card-description .item {
     background: transparent;
 }
+.modal-pictures .website {
+    font-size: 23px;
+    line-height: 32px;
+}
 
 @media screen and (min-width: 768px) {
 

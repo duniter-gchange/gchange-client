@@ -13,12 +13,18 @@
            ng-click="stopTimer()">
         </a>
 
-        <h1 class="title balanced" ng-bind-html="category.name"></h1>
+        <h1 class="title">
+            <span class="balanced" ng-bind-html="category.name"></span>
+        </h1>
 
-        <a class="button button-icon pbutton-small-padding pull-right  gray hidden-xs hidden-sm ink"
-           ng-click="stopAndCloseModal()">
-            <i class="icon ion-close gray"></i>
-        </a>
+        <div class="buttons buttons-right header-item">
+            <span class="website gray">
+                www.<span translate>COMMON.APP_NAME</span>.fr</span>
+            <a class="button button-icon icon-right button-small-padding gray hidden-xs hidden-sm ink"
+               ng-click="stopAndCloseModal()">
+                <i class="icon ion-close gray"></i>
+            </a>
+        </div>
     </ion-header-bar>
 
     <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="activeSlide" class="has-header">
