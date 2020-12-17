@@ -1,0 +1,39 @@
+{
+  "version": "https://jsonfeed.org/version/1",
+  "user_comment": "Feed that use the jsonFeed format (see jsonFeed.org for details).",
+  "title": "Actualités",
+  "description": "Actualités de ğ<b>change</b>",
+  "home_page_url": "https://forum.monnaie-libre.fr/tag/gchange",
+  "feed_url": "https://raw.githubusercontent.com/duniter-gchange/gchange-client/master/doc/feed/feed-fr.json",
+  "author": {
+    "name": "Benoit Lavenier",
+    "url": "https://www.gchange.fr/#/app/wot/8PTThXiUSwwuPoqQWw3tuAn4MpvzQzpKhs6LMuiozS7Z/",
+    "avatar": "https://data.gchange.fr/user/profile/8PTThXiUSwwuPoqQWw3tuAn4MpvzQzpKhs6LMuiozS7Z/_image/avatar.png"
+  },
+  "items": [
+    {
+      "title": "C'est (presque) Noël",
+      "author": {
+        "name": "Benoit Lavenier",
+        "url": "https://www.gchange.fr/#/app/wot/8PTThXiUSwwuPoqQWw3tuAn4MpvzQzpKhs6LMuiozS7Z/",
+        "avatar": "https://data.gchange.fr/user/profile/8PTThXiUSwwuPoqQWw3tuAn4MpvzQzpKhs6LMuiozS7Z/_image/avatar.png"
+      },
+      "date_published": "2020-12-17T21:00:00+01:00",
+      "id": "https://forum.monnaie-libre.fr/t/gchange-v1-2-quelques-nouveautes-pour-la-rentree/12809",
+      "url": "https://forum.monnaie-libre.fr/t/gchange-v1-2-quelques-nouveautes-pour-la-rentree/12809",
+      "content_html": ""
+    },
+    {
+      "title": "Quelques nouveautés pour la rentrée",
+      "author": {
+        "name": "Benoit Lavenier",
+        "url": "https://www.gchange.fr/#/app/wot/8PTThXiUSwwuPoqQWw3tuAn4MpvzQzpKhs6LMuiozS7Z/",
+        "avatar": "https://data.gchange.fr/user/profile/8PTThXiUSwwuPoqQWw3tuAn4MpvzQzpKhs6LMuiozS7Z/_image/avatar.png"
+      },
+      "date_published": "2020-09-09T14:12:00+01:00",
+      "id": "https://forum.monnaie-libre.fr/t/gchange-v1-2-quelques-nouveautes-pour-la-rentree/12809",
+      "url": "https://forum.monnaie-libre.fr/t/gchange-v1-2-quelques-nouveautes-pour-la-rentree/12809",
+      "content_html": "<p><em>Chose promise, chose due</em> ! Ğchange a reçues <strong>quelques petites améliorations</strong> ! (...)</p><h2>Arrivée du financement participatif !</h2>\n<p>Vous avez un projet, mais vous manquez de Ğ1 pour le faire aboutir ?\nVous avez réalisé une superbe invention, ou une contribution (sonore, gustative, logicielle, n’importe) mais vous hésitez à la partager en license libre ?</p>\n<p>Ça tombe bien, car vous pouvez maintenant <strong>faire des campagnes de financement participatif</strong> (crowdfunding). (...)</p>\n<p>Pour le moment seules les campagnes <strong>de dons</strong> sont opérationnelles.</p>\n<h2>Nouvelles catégories ?</h2>\n<p>De nouvelles catégories ont été ajoutées : «&nbsp;alimentation&nbsp;», «&nbsp;soins&nbsp;», etc.</p>\n<blockquote>\n<p><small>[zébullon53] - Et pourquoi pas une catégorie «&nbsp;Masques&nbsp;», hein ?<br/>[admin] - Bah oui, c’est vrai ca ! Et pourquoi pas «&nbsp;Vaccins&nbsp;», aussi, tant qu’on y est !!? Pfffff<br/>[zébullon53] - Ben non ca c’est Bill (alias «&nbsp;Bill Brother&nbsp;», hi hi) qui veut s’en charger.<br/>(...)</small></p>\n</blockquote>\n<p>Par ailleurs (désolé c’est un peu technique) ces catégories pourront maintenant être actualisées par les propriétaires de nœuds Ğchange. Ainsi, il est possible de créer vos propres rubriques, sans attendre que les développeurs se bougent (On tous connaît leur lenteur légendaire à nous écouter, hein !?).</p>\n<p>Ah, au fait : la liste de ces catégories est visible dès la page d’accueil. (si si ! Mais il faut juste descendre un peu dans la page pour la trouver).</p>\n<h2>Pays, mon beau pays…</h2>\n<p>Une petite <strong>carte du pays</strong> est maintenant visible, également en bas de la page d’accueil. L’idée est de gagner du peu pour accéder aux dernières annonces du coin. Bon, j’ai pris les grandes régions, alors c’est un peu grand… on verra dans quelques temps pour passer au département.</p>\n<p>Nos amis belges, espagnols, et autres utilisateurs de la Ğ1 pourront aussi avoir la leur, de carte <img src=\"https://forum.monnaie-libre.fr/images/emoji/twitter/slight_smile.png?v=9\" title=\":slight_smile:\" class=\"emoji\" alt=\":slight_smile:\"> . S’il en manque une, il est maintenant plus simple d’en ajouter une. Demandez le nous !</p>\n<h2>Payer le vendeur ? Facile !</h2>\n<p>Enfin, pour payer un vendeur, il vous suffira maintenant de cliquer sur un lien, capable d’ouvrir Cesium directement avec le bon montant et le bon destinataire.</p>\n<p><strong>Attention:</strong> cette fonctionnalité est encore en test. De plus, <strong>elle nécessite une version de Cesium 1.7.0</strong> (ou +).</p>\n<h2>Sécurité d’ vot’ compte, m’sieurs dames ! Par ici, la bonne sécurité ! Demandez !</h2>\n<p>Et si vous utilisiez Ğchange de manière plus sécurisé ?\nComment ? Grâce au nouveau module pour Firefox et Chrome.</p>\n<blockquote>\n<p>Lien d’installation :</p>\n<ul>\n<li>\n<a href=\"https://addons.mozilla.org/fr/firefox/addon/gchange/\">Module firefox</a> (en cours de validation par Mozilla)</li>\n<li>Extension Chrome (lien à venir)</li>\n</ul>\n</blockquote>\n<p>Comme le savez (ou pas) Ğchange est décentralisé. C’est à dire qu’il ne repose pas sur un seul ordinateur, mais sur un réseau pair-à-pair, capable de répliquer les annonces afin de ne pas dépendre d’une seule plateforme. Le but est garantir la bonne liberté de ses usagers, contre les dérives classiques (monopole, publicité, arrêt du service, etc.).</p>\n<p>Dans cette optique, vous l’avez compris, <strong>le mieux serait de ne plus dépendre du site web</strong> <a href=\"http://gchange.fr\">gchange.fr</a>. Vous seriez ainsi d’avantage autonome, et tout le réseau sécurisé plus résilient.</p>\n<p>Trop compliqué ? Parlez en à votre groupe local de monnaie libre : il y a toujours un geek qui s’y cache. Il saura vous y aider, contre un petit café ou juste un sourire (sans masque !).</p>\n<h2>En route vers la v2 !</h2>\n<blockquote>\n<p><em>Et maintenant, que vais-je fairrrr - re ?</em>  …dit la chanson.</p>\n</blockquote>\n<p>Pour la suite, nous avons encore plein d’idées à réaliser. Certaines sont déjà en cours. Globalement, nous manquons surtout de temps pour les réaliser, à cause d’un manque d’autonomie budgétaire évident.</p>\n<p>Un moyen simple de nous y aider est de publier des annonces intéressantes, 100% en Ğ1. Ainsi, nous pourront petit à petit nous dégager d’avantage de temps, et vivre de vos dons en Ğ1.</p>\n<p>Les contributeurs informaticiens sont également (et toujours) les bienvenus !</p>\n<h2>Allez zou</h2>\n<p>Amis libres monnayeurs, ciao !</p>\n<p>Prenez soin de vous, et plus encore des plus fragiles. Il y en aura de plus en plus, j’en ai peur… A nous d’être des petites oasis vivantes, pour leur redonner espérance et courage. <img src=\"https://forum.monnaie-libre.fr/images/emoji/twitter/heart_eyes.png?v=9\" title=\":heart_eyes:\" class=\"emoji\" alt=\":heart_eyes:\"></p>"
+    }
+  ]
+}
