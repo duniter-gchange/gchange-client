@@ -112,7 +112,16 @@
       "BTN_NEEDS": "Demandes",
       "SHOW_CLOSED_RECORD": "Afficher les annonces closes ?",
       "SHOW_OLD_RECORD": "Afficher les anciennes annonces ?",
-      "RECORD_STOCK": "Stock :"
+      "RECORD_STOCK": "Stock :",
+      "SORT": {
+        "PREFIX": "Tri: ",
+        "DATE": "Date",
+        "PRICE": "Prix",
+        "DATE_ASC": "Plus anciennes",
+        "DATE_DESC": "Plus récentes",
+        "PRICE_ASC": "Prix croissants",
+        "PRICE_DESC": "Prix décroissants"
+      }
     },
     "GALLERY": {
       "TITLE": "Diaporama",

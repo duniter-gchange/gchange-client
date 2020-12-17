@@ -378,6 +378,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       request.sort[$scope.search.sortAttribute] = $scope.search.sortDirection === "asc" ? "asc" : "desc";
     }
 
+    console.debug("[market] [search] Loading Ads from request: ", request);
+
     return $scope.doRequest(request);
   };
 
@@ -705,6 +707,10 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   // Initialize the super class and extend it.
   angular.extend(this, $controller('MkLookupAbstractCtrl', {$scope: $scope}));
 
+  // Override defaults
+  $scope.search.sortAttribute = 'creationTime';
+  $scope.search.sortDirection = 'desc';
+
   $scope.enter = function(e, state) {
     if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
       var showAdvanced = false;
@@ -962,9 +968,15 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
 
   /* -- modals & popover -- */
 
-  $scope.showActionsPopover = function (event) {
+  $scope.showActionsPopover = function (event, url) {
+    url = url || 'plugins/market/templates/search/lookup_actions_popover.html';
+    if ($scope.actionsPopoverUrl && $scope.actionsPopoverUrl !== url){
+      $scope.actionsPopover.hide();
+      $scope.actionsPopover = null;
+    }
+    $scope.actionsPopoverUrl = url;
     if (!$scope.actionsPopover) {
-      $ionicPopover.fromTemplateUrl('plugins/market/templates/search/lookup_actions_popover.html', {
+      $ionicPopover.fromTemplateUrl(url, {
         scope: $scope
       }).then(function (popover) {
         $scope.actionsPopover = popover;
@@ -983,6 +995,20 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   $scope.hideActionsPopover = function () {
     if ($scope.actionsPopover) {
       $scope.actionsPopover.hide();
+    }
+  };
+
+  $scope.showSortPopover = function (event) {
+    $scope.showActionsPopover(event, 'plugins/market/templates/search/lookup_sort_popover.html');
+  };
+
+  $scope.toggleSort = function (sort, direction){
+    $scope.hideActionsPopover();
+    direction = direction === 'desc' ? 'desc' : 'asc';
+    if (this.search.sortAttribute !== sort || this.search.sortDirection !== direction) {
+      this.search.sortAttribute = sort;
+      this.search.sortDirection = direction;
+      $scope.doSearch();
     }
   };
 

@@ -21,13 +21,29 @@
 
   <div class="pull-right ng-hide padding-top" ng-show="!search.loading && search.total">
       <a class="button button-text button-small hidden-xs hidden-sm ink"
+         ng-if="!search.lastRecords"
+         ng-click="showSortPopover($event)"
+         style="padding-left: 16px;">
+          <i class="icon-secondary ion-arrow-up-b " style="top: -5px; left: 5px;  font-size: 10px;"
+             ng-class="{'positive': search.sortDirection === 'asc'}"></i>
+          <b class="icon-secondary ion-arrow-down-b" style="top: 0; left: 5px; font-size: 10px;"
+             ng-class="{'positive': search.sortDirection !== 'asc'}"></b>
+          <div ng-class="{'positive': search.sortAttribute==='price'}">
+            <span translate>MARKET.SEARCH.SORT.PREFIX</span>
+            <span ng-if="search.sortAttribute !== 'price'" translate>MARKET.SEARCH.SORT.DATE</span>
+            <span ng-if="search.sortAttribute === 'price'" translate>MARKET.SEARCH.SORT.PRICE</span>
+          </div>
+      </a>
+      &nbsp;
+      <a class="button button-text button-small hidden-xs hidden-sm ink"
          ng-class="{'button-text-positive': search.compactMode}"
          ng-click="toggleCompactMode()">
           <i class="icon ion-navicon"></i>
           <b class="icon-secondary ion-arrow-down-b" style="top: -8px; left: 5px; font-size: 8px;"></b>
-          <b class="icon-secondary ion-arrow-up-b" style="top: 4px; left: 5px; font-size: 8px;"></b>
+          <b class="icon-secondary ion-arrow-up-b" style="top: 3px; left: 5px; font-size: 8px;"></b>
           {{'DOCUMENT.LOOKUP.BTN_COMPACT' | translate}}
       </a>
+
   </div>
 </div>
 

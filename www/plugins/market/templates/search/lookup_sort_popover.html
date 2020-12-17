@@ -1,0 +1,30 @@
+<ion-popover-view class="fit" style="height: 210px; width: 200px;">
+  <ion-content scroll="false">
+    <div class="list">
+
+      <!-- creation date -->
+      <a class="item ink" ng-click="toggleSort('creationTime', 'desc')"
+         ng-class="{'positive': search.sortAttribute==='creationTime' && search.sortDirection==='desc'}">
+        <span translate>MARKET.SEARCH.SORT.PREFIX</span>
+        <span translate>MARKET.SEARCH.SORT.DATE_DESC</span>
+      </a>
+      <a class="item ink" ng-click="toggleSort('creationTime', 'asc')"
+        ng-class="{'positive': search.sortAttribute==='creationTime' && search.sortDirection==='asc'}">
+        <span translate>MARKET.SEARCH.SORT.PREFIX</span>
+        <span translate>MARKET.SEARCH.SORT.DATE_ASC</span>
+      </a>
+
+      <!-- price -->
+      <a class="item ink" ng-click="toggleSort('price', 'asc')"
+         ng-class="{'positive': search.sortAttribute==='price' && search.sortDirection==='asc'}">
+        <span translate>MARKET.SEARCH.SORT.PREFIX</span>
+        <span translate>MARKET.SEARCH.SORT.PRICE_ASC</span>
+      </a>
+      <a class="item ink" ng-click="toggleSort('price', 'desc')"
+         ng-class="{'positive': search.sortAttribute==='price' && search.sortDirection==='desc'}">
+        <span translate>MARKET.SEARCH.SORT.PREFIX</span>
+        <span translate>MARKET.SEARCH.SORT.PRICE_DESC</span>
+      </a>
+    </div>
+  </ion-content>
+</ion-popover-view>
