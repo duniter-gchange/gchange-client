@@ -1,0 +1,10 @@
+<!-- notifications -->
+<ng-if ng-if=":state:extensionPoint=== 'header-buttons'" class="visible-xs visible-sm">
+    <button class="button button-clear icon ion-android-notifications"
+            ng-if="login && $root.walletData.notifications.unreadCount"
+            active-link="gray"
+            active-link-path-prefix="#/app/notifications"
+            ui-sref="app.view_notifications">
+              <span class="badge badge-button badge-positive">{{$root.walletData.notifications.unreadCount}}</span>
+    </button>
+</ng-if>

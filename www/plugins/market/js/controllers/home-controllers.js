@@ -57,14 +57,13 @@ function MarketHomeFooterController($scope, $controller, UIUtils, csPlatform, $s
 /**
  * Control home extension
  */
-function MarketHomeButtonsController($scope, $rootScope, $state, $controller, $focus, $timeout, $translate,
-                                    PluginService, ModalUtils, UIUtils, csConfig, csSettings, mkModals) {
+function MarketHomeButtonsController($scope, $rootScope, $state, $controller, $focus, $timeout, $translate, $q,
+                                     ModalUtils, UIUtils, csConfig, csSettings, mkModals) {
     'ngInject';
 
     // Initialize the super class and extend it.
     angular.extend(this, $controller('MkLookupCtrl', {$scope: $scope}));
-
-    $scope.extensionPoint = PluginService.extensions.points.current.get();
+    $scope.smallscreen = angular.isDefined($scope.smallscreen) ? $scope.smallscreen : UIUtils.screen.isSmall();
 
     // Screen options
     $scope.options = $scope.options || angular.merge({
@@ -108,6 +107,9 @@ function MarketHomeButtonsController($scope, $rootScope, $state, $controller, $f
     // Override inherited doRequest()
     var inheritedDoRequest = $scope.doRequest;
     $scope.doRequest = function(request, options) {
+        // Skip search on small screen
+        if ($scope.smallscreen) return $q.when();
+
         request = request || {};
 
         // Override size with size=0, to get only the total

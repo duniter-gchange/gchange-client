@@ -4,6 +4,8 @@
 
   <ion-nav-buttons side="secondary">
 
+    <cs-extension-point name="header-buttons"></cs-extension-point>
+
     <!-- locales  -->
     <button class="button button-flag button-clear hidden-xs hidden-sm gray " ng-if="!login"
             ng-click="showLocalesPopover($event)" style="align-content: center">

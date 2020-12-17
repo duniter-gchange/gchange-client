@@ -1,11 +1,9 @@
 
 <h2 ng-if="::$root.config.plugins.market.homeMessage" ng-bind-html="::$root.config.plugins.market.homeMessage"></h2>
 
-
 <div class="item item-divider text-left no-padding-left">
   <span translate>MARKET.HOME.LOCATION_LABEL</span>
 </div>
-
 
 <form class="row list no-padding center lookupForm" ng-submit="openSearch()">
 
@@ -33,7 +31,9 @@
           class="button button-block button-raised button-positive ink"
           ng-disabled="!entered">
     {{'COMMON.BTN_SEARCH' | translate}}
-    <span ng-if=":total:!search.loading && search.total !== undefined">({{:total:('MARKET.SEARCH.RESULT_COUNT'|translate:{count: search.total}) }})</span>
+    <span ng-if=":total:!search.loading && search.total !== undefined">
+      ({{:total:('MARKET.SEARCH.RESULT_COUNT'|translate:{count: search.total}) }})
+    </span>
   </button>
 </form>
 

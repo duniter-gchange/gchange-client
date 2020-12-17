@@ -1,39 +1,40 @@
 angular.module('cesium.es.app.controllers', ['ngResource', 'cesium.es.services'])
 
   // Configure menu items
-  .config(function(PluginServiceProvider, csConfig) {
+  .config(function(PluginServiceProvider) {
     'ngInject';
 
-    var enable = csConfig.plugins && csConfig.plugins.es;
-    if (enable) {
-      // Menu extension points
-      PluginServiceProvider.extendState('app', {
-         points: {
-           'nav-buttons-right': {
-             templateUrl: "plugins/es/templates/menu_extend.html",
-             controller: "ESMenuExtendCtrl"
-           },
-           'menu-discover': {
-             templateUrl: "plugins/es/templates/menu_extend.html",
-             controller: "ESMenuExtendCtrl"
-           },
-           'menu-user': {
-             templateUrl: "plugins/es/templates/menu_extend.html",
-             controller: "ESMenuExtendCtrl"
-           }
+    // Menu extension points
+    PluginServiceProvider.extendState('app', {
+       points: {
+         'nav-buttons-right': {
+           templateUrl: "plugins/es/templates/menu_extend.html",
+           controller: "ESMenuExtendCtrl"
+         },
+         'menu-discover': {
+           templateUrl: "plugins/es/templates/menu_extend.html",
+           controller: "ESMenuExtendCtrl"
+         },
+         'menu-user': {
+           templateUrl: "plugins/es/templates/menu_extend.html",
+           controller: "ESMenuExtendCtrl"
+         },
+         'profile-popover-user': {
+           templateUrl: "plugins/es/templates/common/popover_profile_extend.html",
+           controller: "ESProfilePopoverExtendCtrl"
          }
-        });
-
-      // Profile popover extension points
-      PluginServiceProvider.extendState('app', {
-        points: {
-          'profile-popover-user': {
-            templateUrl: "plugins/es/templates/common/popover_profile_extend.html",
-            controller: "ESProfilePopoverExtendCtrl"
-          }
-        }
+       }
       });
-    }
+
+    // Notification on home page
+    PluginServiceProvider.extendState('app.home', {
+      points: {
+        'header-buttons': {
+          templateUrl: "plugins/es/templates/home/home_extend.html",
+          controller: "ESExtensionCtrl"
+        }
+      }
+    });
   })
 
  .controller('ESExtensionCtrl', ESExtensionController)
@@ -52,11 +53,8 @@ angular.module('cesium.es.app.controllers', ['ngResource', 'cesium.es.services']
 function ESExtensionController($scope, esSettings, PluginService) {
   'ngInject';
   $scope.extensionPoint = PluginService.extensions.points.current.get();
-  $scope.enable = esSettings.isEnable();
-  esSettings.api.state.on.changed($scope, function(enable) {
-    $scope.enable = enable;
-    $scope.$broadcast('$$rebind::state');
-  });
+
+  $scope.enable = true; // Always enable, on gchange
 }
 
 /**
@@ -65,10 +63,7 @@ function ESExtensionController($scope, esSettings, PluginService) {
 function ESJoinController($scope, esSettings, PluginService) {
   'ngInject';
   $scope.extensionPoint = PluginService.extensions.points.current.get();
-  $scope.enable = esSettings.isEnable();
-  esSettings.api.state.on.changed($scope, function(enable) {
-    $scope.enable = enable;
-  });
+  $scope.enable = true; // Always enable, on gchange
 }
 
 /**

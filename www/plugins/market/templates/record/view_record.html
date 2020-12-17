@@ -241,7 +241,7 @@
             <ng-if >
               <i class="calm icon ion-pricetag"></i>
               <h1 class="calm" ng-if="formData.price"
-                  ng-bind-html="::formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative}"></h1>
+                  ng-bind-html="formData.price | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative}"></h1>
               <h1 class="calm" ng-if="formData.price === 0" translate>MARKET.COMMON.FREE</h1>
               <h1 class="calm" ng-if="!formData.price && formData.price !== 0 && formData.freePrice" translate>MARKET.COMMON.FREE_PRICE</h1>
             </ng-if>
@@ -252,7 +252,9 @@
                   <i class="ion-android-checkmark-circle" ng-if="::formData.tx.pct>=100"></i>
                   <b>{{'MARKET.COMMON.CROWDFUNDING_PROGRESS'|translate: formData.tx}}</b>
                 </span>
-                ({{formData.tx.sum | formatAmount: {currency: formData.currency} }})
+                <ng-if ng-if="formData.tx.sum">
+                  (<span ng-bind-html="formData.tx.sum | formatAmount: {currency: formData.currency, useRelative: $root.settings.useRelative}"></span>)
+                </ng-if>
                 <!-- issuers -->
                 <ng-if ng-if="formData.tx.issuers.length">
                   <span class="gray"> | </span>
