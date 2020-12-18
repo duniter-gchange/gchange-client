@@ -193,7 +193,6 @@ function HomeController($scope, $state, $timeout, $ionicHistory, $http, $transla
     UIUtils.popover.show(event, {
       templateUrl: 'templates/common/popover_locales.html',
       scope: $scope,
-      autoremove: true,
       afterShow: function(popover) {
         $scope.localesPopover = popover;
       }

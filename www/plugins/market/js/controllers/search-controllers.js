@@ -93,14 +93,19 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       },
       fees: {
         show: true
+      },
+      filter: {
+        lastRecords: true
       }
     }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
   $scope.$watch('search.showClosed', function() {
     $scope.options.showClosed = $scope.search.showClosed;
+    if (!$scope.search.loading && $scope.entered) $scope.doRefresh(); // Refresh results
   }, true);
   $scope.$watch('search.showOld', function() {
     $scope.options.showOld = $scope.search.showOld;
+    if (!$scope.search.loading && $scope.entered) $scope.doRefresh(); // Refresh results
   }, true);
 
   $scope.init = function() {
@@ -138,11 +143,15 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     $scope.doSearch();
   };
 
-  $scope.doSearch = function(from) {
+  $scope.doSearch = function(from, options) {
+    from = from || 0;
+    options = options || {withCache: true};
     $scope.search.loading = !from;
     if (!$scope.search.advanced) {
       $scope.search.advanced = false;
     }
+    $scope.search.sortAttribute = $scope.search.sortAttribute || 'creationTime';
+    $scope.search.sortDirection = $scope.search.sortDirection || ($scope.search.sortAttribute === 'creationTime' ? 'desc' : 'asc');
 
     // When a location has been set, but NOT position found: resolve position
     if ($scope.search.location && !$scope.search.geoPoint && !$scope.search.geoShape) {
@@ -155,7 +164,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
           //console.debug('[market] search by location results:', res);
           $scope.search.geoPoint = res;
           $scope.search.location = res.name && res.name.split(',')[0] || $scope.search.location;
-          return $scope.doSearch(from); // Loop
+          return $scope.doSearch(from, options); // Loop
         });
     }
 
@@ -246,7 +255,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
 
     if (!matches.length && !filters.length) {
-      return $scope.doGetLastRecords();
+      return $scope.doGetLastRecords(from, options);
     }
 
     $scope.search.lastRecords = false;
@@ -385,7 +394,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
     console.debug("[market] [search] Loading Ads from request: ", request);
 
-    return $scope.doRequest(request);
+    return $scope.doRequest(request, options);
   };
 
   $scope.updateLocationHref = function(stateParams) {
@@ -393,7 +402,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     $location.search(stateParams).replace();
   };
 
-  $scope.doGetLastRecords = function(from) {
+  $scope.doGetLastRecords = function(from, options) {
+    options = options || {withCache: true};
 
     $scope.hideActionsPopover();
     $scope.search.lastRecords = true;
@@ -548,8 +558,6 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
 
     // Sort
-    $scope.search.sortAttribute = $scope.search.sortAttribute || 'creationDate';
-    $scope.search.sortDirection = $scope.search.sortDirection === 'desc' || $scope.search.sortAttribute === 'creationDate' ? 'desc' : 'asc';
     request.sort = {};
     request.sort[$scope.search.sortAttribute] = $scope.search.sortDirection;
 
@@ -566,14 +574,18 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       }).replace();
     }
 
-    return $scope.doRequest(request, {withCache: true});
+    return $scope.doRequest(request, options);
   };
 
-  $scope.doRefresh = function() {
+  $scope.doRefresh = function(options) {
     var searchFunction = ($scope.search.lastRecords) ?
         $scope.doGetLastRecords :
         $scope.doSearch;
-    return searchFunction();
+    return searchFunction(0/*from*/, options);
+  };
+
+  $scope.refresh = function() {
+    return $scope.doRefresh({withCache: false});
   };
 
   $scope.showMore = function() {
@@ -699,6 +711,46 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         title: item.title
       });
     }
+  };
+
+  $scope.showActionsPopover = function (event, url) {
+    return UIUtils.popover.show(event, {
+      templateUrl: url = url || 'plugins/market/templates/search/lookup_actions_popover.html',
+      scope: $scope,
+      afterShow: function(popover) {
+        $scope.actionsPopover = popover;
+      }
+    });
+  };
+
+  $scope.hideActionsPopover = function () {
+    if ($scope.actionsPopover) {
+      $scope.actionsPopover.hide();
+    }
+  };
+
+  $scope.showSortPopover = function (event) {
+    $scope.showActionsPopover(event, 'plugins/market/templates/search/lookup_sort_popover.html');
+  };
+
+  $scope.toggleSort = function (sort, direction){
+    $scope.hideActionsPopover();
+    direction = direction === 'desc' ? 'desc' : 'asc';
+    if (this.search.sortAttribute !== sort || this.search.sortDirection !== direction) {
+      this.search.sortAttribute = sort;
+      this.search.sortDirection = direction;
+      $scope.doSearch();
+    }
+  };
+
+  $scope.toggleShowClosed = function() {
+    $scope.hideActionsPopover();
+    $scope.search.showClosed = !$scope.search.showClosed;
+  };
+
+  $scope.toggleShowOld = function() {
+    $scope.hideActionsPopover();
+    $scope.search.showOld = !$scope.search.showOld;
   };
 
   $scope.toggleCompactMode = function() {
@@ -931,22 +983,9 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   };
   $scope.$watch('search.location', $scope.onLocationChanged, true);
 
-  $scope.onToggleOptionsChanged = function(value) {
-    if ($scope.search.loading || !$scope.entered) return;
-
-    // Refresh results
-    $scope.doRefresh();
-  };
-  $scope.$watch('search.showClosed', $scope.onToggleOptionsChanged, true);
-  $scope.$watch('search.showOld', $scope.onToggleOptionsChanged, true);
-
   $scope.onGeoDistanceChanged = function() {
-    if ($scope.search.loading || !$scope.entered) return;
-
-    if ($scope.search.location) {
-      // Refresh results
-      $scope.doRefresh();
-    }
+    if ($scope.search.loading || !$scope.entered || $scope.search.location) return;
+    $scope.doRefresh(); // Refresh results
   };
   $scope.$watch('search.geoDistance', $scope.onGeoDistanceChanged, true);
 
@@ -979,7 +1018,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
 
   /* -- modals & popover -- */
 
-  $scope.showActionsPopover = function (event, url) {
+  $scope.showActionPopover = function (event, url) {
     url = url || 'plugins/market/templates/search/lookup_actions_popover.html';
     if ($scope.actionsPopoverUrl && $scope.actionsPopoverUrl !== url){
       $scope.actionsPopover.hide();
@@ -1021,16 +1060,6 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
       this.search.sortDirection = direction;
       $scope.doSearch();
     }
-  };
-
-  $scope.toggleShowClosed = function() {
-    $scope.hideActionsPopover();
-    $scope.search.showClosed = !$scope.search.showClosed;
-  };
-
-  $scope.toggleShowOld = function() {
-    $scope.hideActionsPopover();
-    $scope.search.showOld = !$scope.search.showOld;
   };
 
   $scope.toggleCompactMode = function() {

@@ -274,7 +274,6 @@ function SettingsController($scope, $q, $window, $ionicHistory, $ionicPopup, $ti
     UIUtils.popover.show(event, {
       templateUrl: 'templates/settings/popover_actions.html',
       scope: $scope,
-      autoremove: true,
       afterShow: function(popover) {
         $scope.actionsPopover = popover;
       }

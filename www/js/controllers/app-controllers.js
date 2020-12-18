@@ -334,7 +334,6 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
     return UIUtils.popover.show(event, {
       templateUrl :'templates/common/popover_profile.html',
       scope: $scope,
-      autoremove: true,
       afterShow: function(popover) {
         $scope.profilePopover = popover;
         $timeout(function() {
@@ -354,7 +353,6 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   $scope.showPeerInfoPopover = function(event) {
     return UIUtils.popover.show(event, {
       templateUrl: 'templates/network/popover_peer_info.html',
-      autoremove: true,
       scope: $scope.$new(true)
     });
   };

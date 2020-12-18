@@ -6,7 +6,7 @@
 
   <ion-nav-buttons side="secondary">
     <button class="button button-icon button-clear icon ion-loop visible-xs visible-sm"
-            ng-click="doRefresh()">
+            ng-click="refresh()">
     </button>
     <button class="button button-icon button-clear visible-xs visible-sm"
             ng-click="showActionsPopover($event)">
@@ -33,6 +33,14 @@
                  ng-model="search.text"
                  ng-model-options="{ debounce: 650 }"
                  ng-change="doSearch()">
+
+          <!-- FIXME
+          <button type="button" class="button button-icon button-small pull-right button-small-padding ink"
+                  ng-if="search.text"
+                  tabindex="-1"
+                  ng-click="removeText()">
+            <i class="gray ion-close "></i>
+          </button> -->
         </label>
 
         <!-- location -->

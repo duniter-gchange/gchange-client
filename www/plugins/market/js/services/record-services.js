@@ -525,7 +525,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
 
     var now = Date.now();
     var expectedSize = options.size || CONSTANTS.MORE_LIKE_THIS_SIZE;
-    var fetchSize = Math.max(100, expectedSize * 10);
+    var fetchSize = expectedSize * 20;
     data.moreLikeThis.current = id; // Remember, to stop parallel jobs
     var request = {
       from: options.from||0,

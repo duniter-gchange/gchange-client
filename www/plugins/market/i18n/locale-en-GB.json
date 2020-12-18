@@ -30,7 +30,8 @@
       "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Warning:</b> The identifier and the password can not be changed.<br/><br/>You should <b>always remember it!</b><br/><br/><b>Are you sure</b> you want to continue with these credentials?"
     },
     "PROFILE": {
-      "DEFAULT_TITLE": "User {{pubkey|formatPubkey}}"
+      "DEFAULT_TITLE": "User {{pubkey|formatPubkey}}",
+      "IDENTITY_RECORDS_TITLE": "User ads"
     },
     "LOGIN": {
       "HELP": "Please fill your account credentials:",
@@ -88,6 +89,7 @@
       "SEARCH_HELP": "Search (car, sweat...)",
       "BY": "by",
       "BTN_ADD": "New",
+      "BTN_CATEGORIES": "Categories",
       "BTN_OPTIONS": "Advanced search",
       "BTN_AROUND_ME": "Around me",
       "GEO_DISTANCE": "Maximum distance around the city",
@@ -111,7 +113,16 @@
       "BTN_NEEDS": "Needs",
       "SHOW_CLOSED_RECORD": "Display closed ads?",
       "SHOW_OLD_RECORD": "Display old ads?",
-      "RECORD_STOCK": "Stock:"
+      "RECORD_STOCK": "Stock:",
+      "SORT": {
+        "PREFIX": "Sort: ",
+        "DATE": "Date",
+        "PRICE": "Price",
+        "DATE_ASC": "Older",
+        "DATE_DESC": "Most recent",
+        "PRICE_ASC": "Increasing prices",
+        "PRICE_DESC": "Descending prices"
+      }
     },
     "GALLERY": {
       "TITLE": "Slideshow",
@@ -120,6 +131,8 @@
       "BTN_PAUSE": "Pause",
       "BTN_STOP": "Stop",
       "SLIDE_DURATION": "Display time:",
+      "AD_TYPE": "Ad type:",
+      "ALL_AD_TYPES": "All",
       "SLIDE_DURATION_OPTION": "{{value}} seconds"
     },
     "VIEW": {

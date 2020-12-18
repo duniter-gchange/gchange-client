@@ -1,30 +1,40 @@
 <ion-view left-buttons="leftButtons"
           class="market">
   <ion-nav-title>
-    <span class="visible-xs visible-sm" translate>MENU.MY_RECORDS</span>
+    <span class="visible-xs visible-sm">{{'MARKET.PROFILE.IDENTITY_RECORDS_TITLE'|translate}}</span>
   </ion-nav-title>
 
   <ion-nav-buttons side="secondary">
     <cs-extension-point name="nav-buttons"></cs-extension-point>
 
-    <button class="button button-icon button-clear icon ion-loop visible-xs visible-sm" ng-click="doUpdate()">
+    <button class="button button-icon button-clear visible-xs visible-sm"
+            ng-click="showActionsPopover($event)">
+      <i class="icon ion-android-funnel"></i>
     </button>
   </ion-nav-buttons>
 
-  <ion-content scroll="true" bind-notifier="{ rebind:settings.useRelative, locale:settings.locale.id}">
+  <ion-content scroll="true"
+               bind-notifier="{ rebind:settings.useRelative, locale:settings.locale.id}">
+
+    <ion-refresher pulling-text="{{'COMMON.BTN_REFRESH' | translate}}"
+                   on-refresh="refresh()">
+    </ion-refresher>
 
     <!-- Buttons bar-->
     <div class="hidden-xs hidden-sm padding text-center">
 
       <button class="button button-stable button-small-padding icon ion-loop ink"
-              ng-click="doSearch()"
+              ng-click="refresh()"
               title="{{'COMMON.BTN_REFRESH' | translate}}">
       </button>
-
+      <button class="button button-stable button-small-padding icon ion-android-more-vertical ink"
+              ng-click="showActionsPopover($event)"
+              title="{{'COMMON.BTN_OPTIONS' | translate}}">
+      </button>
     </div>
 
     <!-- list of records -->
-    <div class="lookupForm" ng-class="::{'padding-horizontal': !smallscreen}">
+    <div class="lookupForm padding no-padding-xs no-padding-sm">
       <ng-include src="::smallscreen ? 'plugins/market/templates/search/list_records.html' : 'plugins/market/templates/search/list_records_lg.html'"></ng-include>
     </div>
   </ion-content>

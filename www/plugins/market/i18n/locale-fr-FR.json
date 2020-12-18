@@ -30,7 +30,8 @@
       "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Avertissement :</b> l'identifiant et le mot de passe ne pourront plus être modifiés.<br/><br/><b>Assurez-vous de toujours vous en rappeler !</b><br/><br/><b>Etes-vous sûr</b> de vouloir continuer avec ces identifiants ?"
     },
     "PROFILE": {
-      "DEFAULT_TITLE": "Utilisateur {{pubkey|formatPubkey}}"
+      "DEFAULT_TITLE": "Utilisateur {{pubkey|formatPubkey}}",
+      "IDENTITY_RECORDS_TITLE": "Annonces utilisateur"
     },
     "LOGIN": {
       "HELP": "Veuillez saisir vos identifiants de connexion :",
@@ -131,7 +132,7 @@
       "BTN_STOP": "Arrêter",
       "SLIDE_DURATION": "Durée d'affichage :",
       "AD_TYPE": "Type d'annonce :",
-      "ALL_AD_TYPES": "Tous les types",
+      "ALL_AD_TYPES": "Tous",
       "SLIDE_DURATION_OPTION": "{{value}} secondes"
     },
     "VIEW": {

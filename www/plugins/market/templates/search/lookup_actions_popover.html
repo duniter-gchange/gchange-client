@@ -1,4 +1,4 @@
-<ion-popover-view class="fit has-header visible-sm visible-xs">
+<ion-popover-view class="fit has-header ">
   <ion-header-bar>
     <h1 class="title"  translate>COMMON.POPOVER_FILTER_TITLE</h1>
   </ion-header-bar>
@@ -6,11 +6,13 @@
     <div class="list item-text-wrap">
 
       <!-- last record -->
-      <a class="item item-icon-left ink"
+      <button type="button" class="item item-icon-left ink visible-sm visible-xs"
+         ng-class="{'button-text-positive': search.lastRecords}"
+         ng-if="options.filter.lastRecords"
          ng-click="doGetLastRecords()">
         <i class="icon ion-clock"></i>
         {{'MARKET.SEARCH.BTN_LAST_RECORDS' | translate}}
-      </a>
+      </button>
 
       <!-- show closed Ads ? -->
       <a class="item item-icon-left ink"

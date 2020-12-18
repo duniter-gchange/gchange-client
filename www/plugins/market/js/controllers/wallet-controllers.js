@@ -37,35 +37,48 @@ angular.module('cesium.market.wallet.controllers', ['cesium.es.services'])
 
 function MarketWalletRecordsController($scope, $controller, UIUtils) {
 
-    // Initialize the super class and extend it.
-    angular.extend(this, $controller('MkLookupAbstractCtrl', {$scope: $scope}));
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('MkLookupAbstractCtrl', {$scope: $scope}));
 
-    $scope.search.showClosed = true;
-    $scope.smallscreen = UIUtils.screen.isSmall();
+  // Override defaults
+  $scope.search.showClosed = false;
+  $scope.search.showOld = false;
+  $scope.options.filter.lastRecords = false; // Cannot click on actions popover
 
-    $scope.enter = function(e, state) {
-        $scope.loadWallet()
-            .then(function(walletData) {
-                $scope.search.text = walletData.pubkey;
-                $scope.search.lastRecords=false;
-                $scope.search.sortAttribute="creationTime";
-                $scope.search.sortDirection="desc";
+  $scope.smallscreen = UIUtils.screen.isSmall();
 
-                if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
-                    $scope.doSearch()
-                        .then(function() {
-                            $scope.showFab('fab-wallet-add-market-record');
-                        });
-                }
+  $scope.enter = function(e, state) {
+    if (!$scope.entered) {
+    return $scope.loadWallet()
+      .then(function(walletData) {
+          $scope.search.text = walletData.pubkey;
+          $scope.search.lastRecords=false;
+          $scope.search.sortAttribute="creationTime";
+          $scope.search.sortDirection="desc";
 
-            })
-            .catch(function(err){
-                if (err === 'CANCELLED') {
-                    return $scope.showHome();
-                }
-                console.error(err);
-            });
-        $scope.entered = true;
-    };
-    $scope.$on('$ionicView.enter', $scope.enter);
+          if (!$scope.entered || !$scope.search.results || $scope.search.results.length === 0) {
+            return $scope.init()
+              .then($scope.doSearch)
+              .then(function() {
+                $scope.entered = true;
+                $scope.showFab('fab-wallet-add-market-record');
+              });
+          }
+
+      })
+      .catch(function(err){
+        if (err === 'CANCELLED') {
+            return $scope.showHome();
+        }
+        console.error(err);
+        $scope.entered = false;
+      });
+    }
+    else {
+      if (!$scope.search.results || $scope.search.results.length === 0) {
+        return $scope.doSearch();
+      }
+    }
+  };
+  $scope.$on('$ionicView.enter', $scope.enter);
 }
