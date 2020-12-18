@@ -24,18 +24,7 @@ $cesiumicons-font-path: "../fonts" !default;
 // --------------------------------------------------
 // Responsive: Utility classes
 // --------------------------------------------------
-$screen-xxs-max:                  400px;
-$screen-xs:                       401px;
-$screen-xs-max:                   767px;
-$screen-sm:                       768px;
-$screen-sm-max:                   991px;
-$screen-md:                       992px;
-$screen-md-max:                   1199px;
-$screen-lg:                       1200px;
 
-// Resolution for left menu show/hide
-$screen-nomenu-max:               $screen-xs-max;
-$screen-menu:                     $screen-sm;
 
 // IE10 on Windows Phone 8
 // IE10 on WP8 doesn't report CSS pixels, but actual device pixels. In

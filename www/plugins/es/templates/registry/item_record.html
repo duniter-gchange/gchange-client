@@ -51,10 +51,10 @@
     </div>
 
     <div class="col" ng-if="options.description.show">
-      <h4 class="gray text-wrap text-italic" ng-if="::!!item.description">
+      <p class="gray text-italic" ng-if="::!!item.description">
         <i class="icon ion-quote" ></i>
         <span ng-bind-html="::item.description | truncText:500"></span>
-      </h4>
+      </p>
     </div>
   </div>
 

@@ -14,10 +14,10 @@
     </button>
   </ion-nav-buttons>
 
-  <ion-content class="lookupForm "
+  <ion-content class="lookupForm stable-100-bg "
                bind-notifier="{ rebind: $root.settings.useRelative }">
 
-      <form ng-submit="doSearch()">
+      <form ng-submit="doSearch()" class="light-bg">
 
         <a class="item item-icon-right ink ng-hide"
            ng-show="entered && !search.category && options.category.show"
@@ -47,7 +47,6 @@
 
     <!-- list of records -->
     <ng-include src="::'plugins/market/templates/search/list_records.html'"></ng-include>
-
   </ion-content>
 
   <button id="fab-add-market-record"

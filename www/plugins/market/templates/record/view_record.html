@@ -248,7 +248,7 @@
             <h3>
               <!-- Tx progress -->
               <div ng-if="formData.price && formData.tx">
-                <span ng-class="{'balanced': formData.tx.pct &gt;= 100, 'dark': formData.tx.pct > 0 && formData.tx.pct < 100, 'assertive&': formData.tx.pct === 0}">
+                <span ng-class="{'balanced': formData.tx.pct &gt;= 100, 'positive': formData.tx.pct > 0 && formData.tx.pct < 100, 'calm': formData.tx.pct === 0}">
                   <i class="ion-android-checkmark-circle" ng-if="::formData.tx.pct>=100"></i>
                   <b>{{'MARKET.COMMON.CROWDFUNDING_PROGRESS'|translate: formData.tx}}</b>
                 </span>

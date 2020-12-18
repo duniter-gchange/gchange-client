@@ -18,8 +18,8 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       searchText: esHttp.get('/market/record/_search?q=:search'),
       get: esHttp.get('/market/record/:id'),
       getCommons: esHttp.get('/market/record/:id?_source=' + fields.commons.join(',')),
-      add: esHttp.record.post('/market/record'),
-      update: esHttp.record.post('/market/record/:id/_update'),
+      add: esHttp.record.post('/market/record', {tagFields: ['title', 'description'], creationTime: true}),
+      update: esHttp.record.post('/market/record/:id/_update', {tagFields: ['title', 'description'], creationTime: true}),
       remove: esHttp.record.remove('market', 'record')
     },
     api = new Api(this, "mkRecord"),
@@ -67,6 +67,11 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       if (hit.highlight.title) {
         record.title = hit.highlight.title[0];
       }
+      if (hit.highlight.tags) {
+        record.tags = hit.highlight.tags.reduce(function(res, tag){
+            return res.concat(tag.replace('<em>', '').replace('</em>', ''));
+        },[]);
+      }
       if (hit.highlight.description) {
           record.description = hit.highlight.description[0];
       }
@@ -87,10 +92,12 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     }
 
     else if (options.html) {
+        console.log('TODO: parsing HTML', record.description)
         // description
         record.description = esHttp.util.parseAsHtml(record.description, {
             tagState: 'app.market_lookup'
         });
+        console.log('TODO: result : ', record.description);
     }
 
     // thumbnail

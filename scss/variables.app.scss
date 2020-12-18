@@ -38,3 +38,20 @@ $balanced-active: #80e09b !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
+
+// --------------------------------------------------
+// Screen size
+// --------------------------------------------------
+
+$screen-xxs-max:                  400px;
+$screen-xs:                       401px;
+$screen-xs-max:                   767px;
+$screen-sm:                       768px;
+$screen-sm-max:                   991px;
+$screen-md:                       992px;
+$screen-md-max:                   1199px;
+$screen-lg:                       1200px;
+
+// Resolution for left menu show/hide
+$screen-nomenu-max:               $screen-xs-max;
+$screen-menu:                     $screen-sm;

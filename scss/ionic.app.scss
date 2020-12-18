@@ -75,7 +75,7 @@
 
 /* -- Menu -- */
 
-@media screen and (max-width: 991px) {
+@media screen and (max-width: $screen-sm-max) {
   #menu .bar-header {
     background-color: $dark-balanced !important;
   }
@@ -198,12 +198,12 @@ form.lookupForm,
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-evenly;
   background: transparent;
-  margin-right: -.8rem;
+  margin-right: -16px; // padding-right of the last item
 
   & > * {
-    flex: 1 1 ;
+    flex:  1 1 ;
     width: calc(50% - 32px);
     margin-right: .8rem;
   }
@@ -220,11 +220,12 @@ form.lookupForm,
     padding-top: 5px;
     padding-bottom: 0;
 
-    .text-wrap {
-      height: calc(100%);
+    p {
+      position: absolute !important;
+      padding: 5px;
+      top: 0;
+      bottom: 0;
       white-space: normal;
-      position: relative;
-      word-wrap: break-word !important;
       overflow: hidden !important;
       text-overflow: ellipsis;
       -o-text-overflow: ellipsis;
@@ -233,9 +234,10 @@ form.lookupForm,
       -ms-hyphens: auto;
       -o-hyphens: auto;
       hyphens: auto;
+      font-size: 0.9em;
     }
 
-    .text-wrap:after {
+    p:after {
       content: '';
       position: absolute;
       bottom: 0;
@@ -267,36 +269,34 @@ form.lookupForm,
   padding: 0;
 }
 // Very (very very) small screens
-@media screen and (max-width: $screen-sm-max) {
-  .item-thumbnail-left,
-  .item-thumbnail-left .item-content {
-    padding-left: calc(min(150px, 40vw) + 10px) !important;
-    min-height: calc(min(150px, 40vw) - 5px) !important;
+.item-thumbnail-left,
+.item-thumbnail-left .item-content {
+  padding-left: calc(min(150px, 40vw) + 10px) !important;
+  min-height: calc(min(150px, 40vw) - 5px) !important;
+}
+
+.item-thumbnail-left > i:first-child,
+.item-thumbnail-left i.item-image,
+.item-thumbnail-left .item-content > i:first-child,
+.item-thumbnail-left .item-content i.item-image {
+  max-width: calc(min(150px, 40vw));
+  max-height: calc(min(150px, 40vw));
+
+  &.icon {
+    font-size: calc(min(150px, 40vw) - 25px) !important;
+    line-height: calc(min(150px, 40vw) - 6px) !important;
   }
+}
 
-  .item-thumbnail-left > i:first-child,
-  .item-thumbnail-left i.item-image,
-  .item-thumbnail-left .item-content > i:first-child,
-  .item-thumbnail-left .item-content i.item-image {
-    max-width: calc(min(150px, 40vw));
-    max-height: calc(min(150px, 40vw));
-
-    &.icon {
-      font-size: calc(min(150px, 40vw) - 25px) !important;
-      line-height: calc(min(150px, 40vw) - 6px) !important;
-    }
+.item-thumbnail-left {
+  h1, h2 {
+    font-size: 1em !important;
   }
-
-  .item-thumbnail-left {
-    h1, h2 {
-      font-size: 1em !important;
-    }
-    h3 {
-      font-size: 0.9em;
-    }
-    h4, h5 {
-      font-size: 0.8em;
-    }
+  h3 {
+    font-size: 0.9em;
+  }
+  h4, h5 {
+    font-size: 0.8em;
   }
 }
 // All other screen size: use relative size for thumbnail (max 200px)
@@ -319,10 +319,16 @@ form.lookupForm,
       line-height: calc(min(200px, 50vw)) !important;
     }
   }
+
+  .item-thumbnail-left {
+    p {
+      font-size: 0.8em;
+    }
+  }
 }
 
 .list.flex-row > * {
-  min-width: calc(min(400px, 100vh));
+  min-width: calc(min(350px, 100vh));
   max-width: calc(min(650px, 100vh));
 }
 .item-record {
@@ -355,6 +361,7 @@ form.lookupForm,
   }
   .badge-secondary {
     top: 40px !important;
+    right: 16px !important;
   }
 }
 
@@ -399,4 +406,24 @@ form.lookupForm,
       font-size: 0.7em;
     }
   }
+}
+
+
+.item-record .badge-picture-count {
+  position: absolute !important;
+  left: calc(min(200px, 50vw) - 25px) !important;
+  bottom: 10px !important;
+  right: unset !important;
+  top: unset !important;
+}
+
+@media screen and (max-width: $screen-sm-max) {
+  .item-record .badge-picture-count {
+    bottom: 8px !important;
+    left: calc(min(150px, 40vw) - 15px) !important;
+  }
+}
+.list-record-small .item-record .badge-picture-count {
+  bottom: 8px !important;
+  left: calc(min(120px, 40vw) - 15px) !important;
 }

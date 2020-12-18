@@ -6,7 +6,7 @@ angular.module('cesium.es.message.controllers', ['cesium.es.services'])
     $stateProvider
 
       .state('app.user_message', {
-        url: "/user/message?type",
+        url: "/message?type",
         views: {
           'menuContent': {
             templateUrl: "plugins/es/templates/message/list.html",
@@ -17,7 +17,7 @@ angular.module('cesium.es.message.controllers', ['cesium.es.services'])
 
       .state('app.user_new_message', {
         cache: false,
-        url: "/user/message/new?pubkey&name&title&content",
+        url: "/message/new?pubkey&name&title&content",
         views: {
           'menuContent': {
             templateUrl: "plugins/es/templates/message/compose.html",
@@ -28,7 +28,7 @@ angular.module('cesium.es.message.controllers', ['cesium.es.services'])
 
       .state('app.user_view_message', {
         cache: false,
-        url: "/user/message/view/:type/:id",
+        url: "/message/view/:type/:id",
         views: {
           'menuContent': {
             templateUrl: "plugins/es/templates/message/view_message.html",
