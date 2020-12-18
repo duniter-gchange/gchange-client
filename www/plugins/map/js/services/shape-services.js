@@ -1167,8 +1167,7 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
     function getShapeById(id, options) {
       if (!id) throw new Error("Missing 'id' argument");
 
-      if (!options || options.cache !== false) {
-        caches.shapesById = caches.shapesById || csCache.get(cachePrefix, csCache.constants.LONG);
+      if ((!options || options.cache !== false) && caches.shapesById) {
         var shape = caches.shapesById.get(id);
         if (shape) return $q.when(shape);
       }
@@ -1178,9 +1177,13 @@ angular.module('cesium.map.shape.services', ['cesium.services', 'cesium.map.util
           var feature = readFromHit(hit);
 
           // Add to cache
-          caches.shapesById.put(id, feature);
+          putShapeInCache(id, feature);
 
           return feature;
+        })
+        .catch(function(err) {
+          console.error("Unable to load shape by id", err);
+          throw err;
         });
     }
 

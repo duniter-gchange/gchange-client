@@ -1,17 +1,27 @@
 angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'cesium.es.services',
   'cesium.market.settings.services', 'cesium.market.category.services'])
 
-.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, esGeo, csWot, csCurrency, mkSettings, mkCategory, Api) {
+.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, esGeo, csWot, csCurrency, mkSettings, mkCategory, csCache, Api) {
   'ngInject';
 
   var
+    cachePrefix = 'mkRecord',
+    caches = {
+      likeMoreThis: null // Lazy init
+    },
     fields = {
       commons: ["category", "title", "description", "issuer", "time", "creationTime", "location", "address", "city", "price",
           "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
-          "geoPoint", "pubkey", "freePrice"]
+          "geoPoint", "pubkey", "freePrice"],
+      // Same as commons, but without description
+      moreLikeThis: ["category", "title", "issuer", "time", "creationTime", "location", "address", "city", "price",
+            "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
+            "geoPoint", "pubkey", "freePrice"]
     },
     CONSTANTS = {
-      DEFAULT_SEARCH_SIZE: 20
+      DEFAULT_SEARCH_SIZE: 20,
+      MORE_LIKE_THIS_SIZE: 6,
+      MORE_LIKE_THIS_TIMEOUT: 10000 // 5s
     },
     raw = {
       postSearch: esHttp.post('/market/record/_search'),
@@ -20,7 +30,13 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       getCommons: esHttp.get('/market/record/:id?_source=' + fields.commons.join(',')),
       add: esHttp.record.post('/market/record', {tagFields: ['title', 'description'], creationTime: true}),
       update: esHttp.record.post('/market/record/:id/_update', {tagFields: ['title', 'description'], creationTime: true}),
-      remove: esHttp.record.remove('market', 'record')
+      remove: esHttp.record.remove('market', 'record'),
+
+    },
+    data = {
+      moreLikeThis: {
+        current: undefined
+      }
     },
     api = new Api(this, "mkRecord"),
     filters = {
@@ -92,12 +108,10 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     }
 
     else if (options.html) {
-        console.log('TODO: parsing HTML', record.description)
         // description
         record.description = esHttp.util.parseAsHtml(record.description, {
             tagState: 'app.market_lookup'
         });
-        console.log('TODO: result : ', record.description);
     }
 
     // thumbnail
@@ -504,11 +518,19 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
   function searchMoreLikeThis(id, options) {
     options = options || {};
 
-    var size = options.size||6;
+    if (options.cache !== false && caches.likeMoreThis) {
+      var cachedRes = caches.likeMoreThis.get(id);
+      if (cachedRes) return $q.when(cachedRes);
+    }
+
+    var now = Date.now();
+    var expectedSize = options.size || CONSTANTS.MORE_LIKE_THIS_SIZE;
+    var fetchSize = Math.max(100, expectedSize * 10);
+    data.moreLikeThis.current = id; // Remember, to stop parallel jobs
     var request = {
       from: options.from||0,
-      size: size * 2,
-      _source: options._source || fields.commons,
+      size: fetchSize,
+      _source: options._source || fields.moreLikeThis,
       query: {
         more_like_this : {
           fields : ["title", "category.name", "type", "city"],
@@ -541,8 +563,9 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     var minTime = (Date.now() / 1000) - 60 * 60 * 24 * 365; // last year
     var oldHits = [];
 
-    var processHits = function(categories, currentUD, size, res) {
-      if (!res || !res.hits || !res.hits.total) {
+    var filterAndFetchHits = function(res, size) {
+      size = size !== undefined ? size : CONSTANTS.MORE_LIKE_THIS_SIZE;
+      if (!size || !res || !res.hits || !res.hits.total) {
         return {
           total: 0,
           hits: []
@@ -552,29 +575,31 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       var hits = res.hits.hits.reduce(function(res, hit, index) {
         if (index >= size) return res; // Skip (already has enought ad)
 
-        var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, html: true});
-        record.id = hit._id;
-
         // Exclude if closed
-        if (record.stock === 0) return res;
+        if (hit._source.stock === 0) return res;
 
         // Exclude if too old
-        if ((record.time || record.creationTime) < minTime) {
-          oldHits.push(record);
+        var time = hit._source.time || hit._source.creationTime;
+        if (time < minTime) {
+          oldHits.push(hit); // Keep it for later used
           return res;
         }
 
-        return res.concat(record);
+        return res.concat(hit);
       }, []);
 
-      if (hits.length < size) {
-        var missingSize = size - hits.length;
+      var missingSize = size - hits.length;
+      var fetchMore = missingSize > 0 &&
+        (Date.now() - now < CONSTANTS.MORE_LIKE_THIS_TIMEOUT) && // Timeout reach
+        (data.moreLikeThis.current === id) // A new le more this has been call: stop
+      ;
+      if (fetchMore) {
+        console.debug("[market] [record] Missing 'more like this' Ads (missing {0}. Fetching more...".format(missingSize));
+        request.from += fetchSize;
         if (request.from < res.hits.total) {
-          request.from += size;
-          request.size = missingSize;
           return raw.postSearch(request)
             .then(function (more) {
-              return processHits(categories, currentUD, missingSize, more);
+              return filterAndFetchHits(more, missingSize);
             })
             .then(function (more) {
               return {
@@ -610,20 +635,27 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
 
       // Search request
       raw.postSearch(request)
-
+        .then(filterAndFetchHits)
     ])
-      .then(function(res) {
-        var categories = res[0];
-        var currentUD = res[1];
-        res = res[2];
-        return processHits(categories, currentUD, size, res);
-      })
-      .then(function(res) {
-        return csWot.extendAll(res.hits, 'issuer', true /*skipAddUid*/)
-          .then(function(_) {
-            return res;
-          });
+    .then(function(res) {
+      var categories = res[0];
+      var currentUD = res[1];
+      res = res[2];
+      res.hits = _.map(res.hits, function(hit) {
+        var record = readRecordFromHit(hit, categories, currentUD, {convertPrice: true, html: true});
+        record.id = hit._id;
+        return record;
       });
+      return csWot.extendAll(res.hits, 'issuer', true /*skipAddUid*/)
+        .then(function(_) {
+          // Add to cache
+          caches.likeMoreThis = caches.likeMoreThis || csCache.get(cachePrefix, csCache.constants.MEDIUM);
+          caches.likeMoreThis.put(id, res);
+
+          console.debug("[market] [record] {0} 'More like this' fetched, in {1}ms".format(res.hits.length, Date.now()-now));
+          return res;
+      });
+    });
   }
 
   // Register extension points

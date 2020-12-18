@@ -436,14 +436,16 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         }
 
 
-        function escape(text) {
+        function escapeHtmlTags(text) {
           if (!text) return text;
           return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
         function parseAsHtml(text, options) {
 
-          var content = text ? escape(text.trim()) : undefined;
+          // Escape HTML tags
+          var content = text ? escapeHtmlTags(text.trim()) : undefined;
+
           if (content) {
             options = options || {};
             options.tagState = options.tagState || 'app.user_lookup';
@@ -915,6 +917,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
           util: {
             parseTags: parseTagsFromText,
             parseAsHtml: parseAsHtml,
+            escapeHtmlTags: escapeHtmlTags,
             findObjectInTree: findObjectInTree
           },
           cache: csHttp.cache,
