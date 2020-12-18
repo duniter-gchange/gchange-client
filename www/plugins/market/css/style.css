@@ -28,6 +28,20 @@
     left: unset !important;
     top: unset !important;
 }
+.market .item-record .badge-picture-count {
+    position: absolute !important;
+    left: calc(min(200px, 50vw) - 25px) !important;
+    bottom: 10px !important;
+    right: unset !important;
+    top: unset !important;
+}
+
+@media screen and (max-width: 991px/*$screen-sm-max*/) {
+    .market .item-record .badge-picture-count {
+        bottom: 8px !important;
+        left: calc(min(150px, 40vw) - 15px) !important;
+    }
+}
 .market .list-record-small .item-record .badge {
     font-size: 10px;
     padding: 2px 6px;
@@ -38,7 +52,7 @@
 }
 .market .list-record-small .item-record .badge-picture-count {
     bottom: 8px !important;
-    left: calc(min(120px, 50vw) - 12px) !important;
+    left: calc(min(150px, 40vw) - 15px) !important;
 }
 
 /**

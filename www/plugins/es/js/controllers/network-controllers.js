@@ -183,7 +183,7 @@ function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $w
   $scope.refresh = function() {
     // Network
     $scope.search.loading = true;
-    esNetwork.loadPeers();
+    return esNetwork.loadPeers();
   };
 
   $scope.sort = function() {

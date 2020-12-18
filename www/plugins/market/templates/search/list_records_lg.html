@@ -19,20 +19,18 @@
 
   </div>
 
-  <div class="pull-right ng-hide padding-top" ng-show="!search.loading && search.total">
-      <a class="button button-text button-small hidden-xs hidden-sm ink"
-         ng-if="!search.lastRecords"
+  <div class="pull-right padding-top ng-hide" ng-show="!search.loading && search.total">
+      <a class="button button-text button-small ink"
          ng-click="showSortPopover($event)"
+         ng-class="{'button-text-positive': search.sortDirection === 'asc' || search.sortAttribute === 'price'}"
          style="padding-left: 16px;">
-          <i class="icon-secondary ion-arrow-up-b " style="top: -5px; left: 5px;  font-size: 10px;"
-             ng-class="{'positive': search.sortDirection === 'asc'}"></i>
-          <b class="icon-secondary ion-arrow-down-b" style="top: 0; left: 5px; font-size: 10px;"
-             ng-class="{'positive': search.sortDirection !== 'asc'}"></b>
-          <div ng-class="{'positive': search.sortAttribute==='price'}">
-            <span translate>MARKET.SEARCH.SORT.PREFIX</span>
-            <span ng-if="search.sortAttribute !== 'price'" translate>MARKET.SEARCH.SORT.DATE</span>
-            <span ng-if="search.sortAttribute === 'price'" translate>MARKET.SEARCH.SORT.PRICE</span>
-          </div>
+          <i class="icon-secondary ion-arrow-up-b" style="top: -5px; left: 5px;  font-size: 10px;"
+             ng-class="{'positive': search.sortDirection === 'asc', 'medium': search.sortDirection !== 'asc'}"></i>
+          <b class="icon-secondary ion-arrow-down-b" style="top: 1px; left: 5px; font-size: 10px;"
+             ng-class="{'positive': search.sortDirection === 'desc', 'medium': search.sortDirection !== 'desc'}"></b>
+        <span class="hidden-xxs" translate>MARKET.SEARCH.SORT.PREFIX</span>
+        <span ng-if="search.sortAttribute !== 'price'" translate>MARKET.SEARCH.SORT.DATE</span>
+        <span ng-if="search.sortAttribute === 'price'" translate>MARKET.SEARCH.SORT.PRICE</span>
       </a>
       &nbsp;
       <a class="button button-text button-small hidden-xs hidden-sm ink"

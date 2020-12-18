@@ -355,7 +355,7 @@ $screen-menu:                     $screen-sm;
 }
 
 @media screen and (min-width: $screen-md) {
-  html, body, .scroll, .disable-user-behavior {
+  html, body, .scroll {
     -webkit-user-select: auto !important;
     -moz-user-select: auto !important;
     -ms-user-select: auto !important;
@@ -367,6 +367,9 @@ $screen-menu:                     $screen-sm;
     -ms-touch-action: auto !important;
     -ms-content-zooming: none !important;
   }
+}
+.item-input, .button {
+  @extend .disable-user-behavior;
 }
 
 /* ============
@@ -977,8 +980,14 @@ html, body {
     color: grey !important;
   }
 }
+.medium {
+  color: $medium;
 
-.gray, .positive {
+  b {
+    color: $medium;
+  }
+}
+.gray, .medium, .positive {
   a {
     color: inherit;
   }

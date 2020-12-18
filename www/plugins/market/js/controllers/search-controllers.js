@@ -135,17 +135,11 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     else {
       $scope.search.type = type;
     }
-    if ($scope.search.lastRecords) {
-      $scope.doGetLastRecords();
-    }
-    else {
-      $scope.doSearch();
-    }
+    $scope.doSearch();
   };
 
   $scope.doSearch = function(from) {
     $scope.search.loading = !from;
-    $scope.search.lastRecords = false;
     if (!$scope.search.advanced) {
       $scope.search.advanced = false;
     }
@@ -238,13 +232,24 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       stateParams.category = $scope.search.category.id;
     }
 
-    if (tags) {
+    if (tags && tags.length) {
       filters.push({terms: {tags: tags}});
+
+      // Add to state params
+      stateParams.hash = tags.join(' ');
+      _.forEach(tags, function(tag) {
+        stateParams.q = stateParams.q.replace('#' + tag, '');
+      });
+      if (stateParams.q.trim().length === 0) {
+        stateParams.q = undefined;
+      }
     }
 
     if (!matches.length && !filters.length) {
       return $scope.doGetLastRecords();
     }
+
+    $scope.search.lastRecords = false;
 
     var location = $scope.search.location && $scope.search.location.trim();
     if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
@@ -394,7 +399,6 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     $scope.search.lastRecords = true;
 
     var request = {
-      sort: { "creationTime" : "desc" },
       from: from
     };
 
@@ -542,6 +546,12 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       request.query = request.query || {bool: {}};
       request.query.bool.filter =  filters;
     }
+
+    // Sort
+    $scope.search.sortAttribute = $scope.search.sortAttribute || 'creationDate';
+    $scope.search.sortDirection = $scope.search.sortDirection === 'desc' || $scope.search.sortAttribute === 'creationDate' ? 'desc' : 'asc';
+    request.sort = {};
+    request.sort[$scope.search.sortAttribute] = $scope.search.sortDirection;
 
     // Update location href
     if (!from) {
@@ -770,6 +780,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
         }
         // Search on hash tag
         if (state.stateParams.hash) {
+          $scope.search.lastRecords = false;
           if ($scope.search.text) {
             $scope.search.text = '#' + state.stateParams.hash + ' ' + $scope.search.text;
           }
@@ -1014,16 +1025,12 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
 
   $scope.toggleShowClosed = function() {
     $scope.hideActionsPopover();
-    $timeout(function() {
-      $scope.search.showClosed = !$scope.search.showClosed;
-    }, 500);
+    $scope.search.showClosed = !$scope.search.showClosed;
   };
 
   $scope.toggleShowOld = function() {
     $scope.hideActionsPopover();
-    $timeout(function() {
-      $scope.search.showOld = !$scope.search.showOld;
-    }, 500);
+    $scope.search.showOld = !$scope.search.showOld;
   };
 
   $scope.toggleCompactMode = function() {

@@ -255,13 +255,6 @@ form.lookupForm,
     padding: 0;
     margin: 0;
   }
-  .badge-picture-count {
-    position: absolute !important;
-    left: calc(min(200px, 50vw) - 25px) !important;
-    bottom: 10px !important;
-    right: unset !important;
-    top: unset !important;
-  }
 
 }
 .item-thumbnail-left > img:first-child,
@@ -273,30 +266,47 @@ form.lookupForm,
   left: 0;
   padding: 0;
 }
-@media screen and (max-width: $screen-xxs-max) {
-  .card > .item.item-thumbnail-left,
+// Very (very very) small screens
+@media screen and (max-width: $screen-sm-max) {
   .item-thumbnail-left,
   .item-thumbnail-left .item-content {
-    padding-left: 113px !important;
-    min-height: 100px !important;
+    padding-left: calc(min(150px, 40vw) + 10px) !important;
+    min-height: calc(min(150px, 40vw) - 5px) !important;
   }
 
-  .item-thumbnail-left > img:first-child,
-  .item-thumbnail-left .item-image,
-  .item-thumbnail-left .item-content > img:first-child,
-  .item-thumbnail-left .item-content .item-image {
-    max-width: 106px;
-    max-height: 106px;
+  .item-thumbnail-left > i:first-child,
+  .item-thumbnail-left i.item-image,
+  .item-thumbnail-left .item-content > i:first-child,
+  .item-thumbnail-left .item-content i.item-image {
+    max-width: calc(min(150px, 40vw));
+    max-height: calc(min(150px, 40vw));
 
     &.icon {
-      font-size: 65px !important;
-      line-height: 100px !important;
+      font-size: calc(min(150px, 40vw) - 25px) !important;
+      line-height: calc(min(150px, 40vw) - 6px) !important;
+    }
+  }
+
+  .item-thumbnail-left {
+    h1, h2 {
+      font-size: 1em !important;
+    }
+    h3 {
+      font-size: 0.9em;
+    }
+    h4, h5 {
+      font-size: 0.8em;
     }
   }
 }
+// All other screen size: use relative size for thumbnail (max 200px)
+@media screen and (min-width: $screen-md) {
+  .item-thumbnail-left,
+  .item-thumbnail-left .item-content {
+    padding-left: calc(min(200px, 50vw) + 10px) !important;
+    min-height: calc(min(200px, 50vw) - 5px) !important;
+  }
 
-
-@media screen and (min-width: $screen-xs) {
   .item-thumbnail-left > i:first-child,
   .item-thumbnail-left i.item-image,
   .item-thumbnail-left .item-content > i:first-child,
@@ -308,13 +318,6 @@ form.lookupForm,
       font-size: calc(min(200px, 50vw) - 25px) !important;
       line-height: calc(min(200px, 50vw)) !important;
     }
-  }
-
-  /*  Evite le redimensionnement pour les petits écrans */
-  .item-thumbnail-left,
-  .item-thumbnail-left .item-content {
-    padding-left: calc(min(200px, 50vw) + 10px) !important;
-    min-height: calc(min(200px, 50vw) - 5px) !important;
   }
 }
 
@@ -392,7 +395,7 @@ form.lookupForm,
     h3 {
       font-size: 0.8em;
     }
-    h4 {
+    h4, h5 {
       font-size: 0.7em;
     }
   }

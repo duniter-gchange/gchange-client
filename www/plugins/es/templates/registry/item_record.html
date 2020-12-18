@@ -10,10 +10,17 @@
       <h2 title="{{item.title|noHtml}}" ng-bind-html="::item.title" ></h2>
 
       <!-- category -->
-      <h3 class="gray text-nowrap hidden-xxs">
-        <ng-if ng-if="::item.category">{{::item.category.name}}</ng-if>
+      <h4 class="gray text-nowrap">
+        <ng-if ng-if="::item.category">
+          <span class="visible-xs">
+            {{::item.category.name|noHtml|truncText:60}}
+          </span>
+          <span class="hidden-xs">
+            {{::item.category.name}}
+          </span>
+        </ng-if>
         <ng-if ng-if="::!item.category">{{::'REGISTRY.TYPE.ENUM.'+item.type|uppercase|translate}}</ng-if>
-      </h3>
+      </h4>
 
       <br class="hidden-xxs hidden-xs hidden-sm"/>
 
