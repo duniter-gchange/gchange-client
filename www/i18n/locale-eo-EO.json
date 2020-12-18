@@ -320,7 +320,7 @@
     }
   },
   "WOT": {
-    "SEARCH_HELP": "Traserĉado (pseŭdo aŭ publika ŝlosilo)",
+    "SEARCH_HELP": "Traserĉado (familia nomo, persona nomo, markvorto)",
     "SEARCH_INIT_PHASE_WARNING": "Dum la periodo de antaŭ-aliĝo, la traserĉado de la atendantaj aliĝoj <b>povas esti longa</b>. Bonvolu pacienci...",
     "REGISTERED_SINCE": "Enskribita la",
     "REGISTERED_SINCE_BLOCK": "Enskribita en la bloko #",
