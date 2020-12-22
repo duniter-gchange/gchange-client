@@ -42,12 +42,12 @@ angular.module('cesium.es.wot.controllers', ['cesium.es.services'])
 ;
 
 function ESWotIdentityViewController($scope, $controller, $ionicPopover, UIUtils, csWallet,
-                                     esHttp, esProfile, esModals) {
+                                     esHttp, esProfile, esLike, esModals) {
   'ngInject';
 
   $scope.options = $scope.options || {};
   $scope.options.like = $scope.options.like || {
-    kinds: esHttp.constants.like.KINDS,
+    kinds: esLike.constants.KINDS,
     index: 'user',
     type: 'profile',
     service: esProfile.like

@@ -1,5 +1,5 @@
 angular.module('cesium.market.wallet.services', ['cesium.es.services'])
-.config(function(PluginServiceProvider, csConfig) {
+.config(function(PluginServiceProvider) {
     'ngInject';
 
     // Will force to load this service
@@ -9,15 +9,12 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
 
 .factory('mkWallet', function($rootScope, $q, $timeout, esHttp, $state, $sce, $sanitize, $translate,
                               UIUtils, csSettings, csWallet, csWot, BMA, Device, csPlatform,
-                              SocialUtils, CryptoUtils,  esWallet, esProfile, esSubscription, esLike) {
+                              SocialUtils, CryptoUtils,  esWallet, esProfile, esSubscription, mkRecord) {
   'ngInject';
   var
     defaultProfile,
     defaultSubscription,
     that = this,
-    raw = {
-      like: esLike('market', 'record')
-    },
     listeners;
 
   function onWalletReset(data) {
@@ -170,11 +167,14 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
     var now = Date.now();
     console.debug('[market] [user] Loading favorites...');
 
-    raw.like.load({issuer: data.pubkey, kinds: ['LIKE', 'FOLLOW']})
+    mkRecord.record.like.load({
+      issuer: data.pubkey,
+      kinds: ['LIKE', 'FOLLOW'],
+      size: 0
+    })
       .then(function(res) {
         data.favorites = data.favorites || {};
         data.favorites.count = res && res.total || 0;
-        data.favorites.ids = _.pluck(res && res.hits || [], 'id');
       })
       .then(function() {
         console.info('[market] [wallet] Loaded favorites ({0}) in {1}ms'.format(data.favorites.count, Date.now() - now));

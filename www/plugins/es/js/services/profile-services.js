@@ -10,7 +10,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
 
   })
 
-.factory('esProfile', function($rootScope, $q, esHttp, SocialUtils, csWot, csWallet, csPlatform) {
+.factory('esProfile', function($rootScope, $q, esHttp, SocialUtils, csWot, csWallet, csPlatform, esLike) {
   'ngInject';
 
   var
@@ -22,8 +22,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     get: esHttp.get('/user/profile/:id?&_source_exclude=avatar._content'),
     getAll: esHttp.get('/user/profile/:id'),
     search: esHttp.post('/user/profile/_search'),
-    mixedSearch: esHttp.post('/user,page/profile,record/_search'),
-    countLikes: esHttp.like.count('user', 'profile')
+    mixedSearch: esHttp.post('/user,page/profile,record/_search')
   };
 
   function getAvatarAndName(pubkey) {
@@ -462,12 +461,7 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     remove: esHttp.record.remove("user","profile"),
     avatar: esHttp.get('/user/profile/:id?_source=avatar'),
     fillAvatars: fillAvatars,
-    like: {
-      toggle: esHttp.like.toggle('user', 'profile'),
-      add: esHttp.like.add('user', 'profile'),
-      remove: esHttp.like.remove('user', 'profile'),
-      count: that.raw.countLikes
-    }
+    like: esLike.instance('user', 'profile')
   };
 })
 ;

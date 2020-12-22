@@ -7,18 +7,20 @@ angular.module('cesium.es.like.services', ['ngResource', 'ngApi', 'cesium.servic
                                 CryptoUtils, UIUtils, csWallet, esHttp) {
       'ngInject';
 
+      var
+        constants = {
+          KINDS: ['VIEW', 'LIKE', 'DISLIKE', 'FOLLOW', 'ABUSE', 'STAR']
+        };
+
       function EsLike(index, type) {
         var
           raw = {
             postSearch: esHttp.post('/like/record/_search'),
             getSearch: esHttp.get('/like/record/_search?_source=false&q=:q'),
-
-            add: esHttp.post('/{0}/{1}/:id/_like'.format(index, type)),
-            remove: esHttp.record.remove('like', 'record'),
-
+            add: esHttp.record.post('/{0}/{1}/:id/_like'.format(index, type)),
+            remove: esHttp.record.remove('like', 'record')
           }
         ;
-
 
         function addLike(id, options) {
           options = options || {};
@@ -163,8 +165,9 @@ angular.module('cesium.es.like.services', ['ngResource', 'ngApi', 'cesium.servic
                 filter: filters
               }
             },
+            from: options.from || 0,
             size: options.size || 20,
-            _source: ['id', 'kind', 'time', 'level', 'issuer']
+            _source: options._source || ['id', 'kind', 'time', 'level', 'issuer']
           };
 
           if (options.kinds) {
@@ -189,14 +192,7 @@ angular.module('cesium.es.like.services', ['ngResource', 'ngApi', 'cesium.servic
 
               return {
                 total: res.hits.total || 0,
-                hits: res.hits.hits.reduce(function(res, item) {
-                  return res.concat({
-                    id: item.id,
-                    time: item._source.time,
-                    kind: item._source.kind,
-                    level: item._source.level
-                  });
-                }, [])
+                hits: _.pluck(res.hits.hits || [], '_source')
               };
             });
         }
@@ -210,6 +206,9 @@ angular.module('cesium.es.like.services', ['ngResource', 'ngApi', 'cesium.servic
         };
       }
 
-      return EsLike;
+      return {
+        constants: constants,
+        instance: EsLike
+      };
     })
 ;

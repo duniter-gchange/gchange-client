@@ -1,7 +1,8 @@
 {
   "MENU": {
     "MARKET": "Annonces",
-    "MY_RECORDS": "Mes annonces"
+    "MY_RECORDS": "Mes annonces",
+    "FAVORITES": "Favoris"
   },
   "MARKET": {
     "COMMON": {

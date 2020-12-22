@@ -3,11 +3,14 @@ angular.module('cesium.market.gallery.controllers', ['cesium.market.record.servi
   .config(function($stateProvider) {
     'ngInject';
 
+    var queryParams = ['q', 'category', 'shape', 'location', 'reload', 'type', 'hash', 'closed', 'lat', 'lon', 'last', 'old', 'dist']
+      .join('&');
+
     $stateProvider
 
       .state('app.market_gallery', {
         cache: true,
-        url: "/gallery/market?q",
+        url: "/gallery/market?" + queryParams,
         views: {
           'menuContent': {
             templateUrl: "plugins/market/templates/gallery/view_gallery.html",

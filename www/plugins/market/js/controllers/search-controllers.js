@@ -9,32 +9,32 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
 
     $stateProvider
 
-    .state('app.market_lookup', {
-      url: "/market?" + queryParams,
-      views: {
-        'menuContent': {
-          templateUrl: "plugins/market/templates/search/lookup.html",
-          controller: 'MkLookupCtrl'
+      .state('app.market_lookup', {
+        url: "/market?" + queryParams,
+        views: {
+          'menuContent': {
+            templateUrl: "plugins/market/templates/search/lookup.html",
+            controller: 'MkLookupCtrl'
+          }
+        },
+        data: {
+          large: 'app.market_lookup_lg',
+          silentLocationChange: true
         }
-      },
-      data: {
-        large: 'app.market_lookup_lg',
-        silentLocationChange: true
-      }
-    })
+      })
 
-    .state('app.market_lookup_lg', {
-      url: "/market/lg?" + queryParams,
-      views: {
-        'menuContent': {
-          templateUrl: "plugins/market/templates/search/lookup_lg.html",
-          controller: 'MkLookupCtrl'
+      .state('app.market_lookup_lg', {
+        url: "/market/lg?" + queryParams,
+        views: {
+          'menuContent': {
+            templateUrl: "plugins/market/templates/search/lookup_lg.html",
+            controller: 'MkLookupCtrl'
+          }
+        },
+        data: {
+          silentLocationChange: true
         }
-      },
-      data: {
-        silentLocationChange: true
-      }
-    });
+      });
   })
 
  .controller('MkLookupAbstractCtrl', MkLookupAbstractController)

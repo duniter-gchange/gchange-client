@@ -55,7 +55,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
       query: {
         bool: {
           must: {
-            prefix: {
+            match: {
               comment: options.prefix
             }
           }

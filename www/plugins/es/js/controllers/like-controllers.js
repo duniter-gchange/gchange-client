@@ -3,7 +3,8 @@ angular.module('cesium.es.like.controllers', ['ngResource', 'cesium.es.services'
   .controller('ESLikesCtrl', ESLikesController)
 ;
 
-function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtils, csWallet, esHttp) {
+function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtils,
+                           csWallet, esHttp, esLike) {
     'ngInject';
 
     $scope.entered = false;
@@ -15,7 +16,7 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
     $scope.staring = false;
     $scope.options = $scope.options || {};
     $scope.options.like = $scope.options.like || {
-        kinds: esHttp.constants.like.KINDS,
+        kinds: esLike.constants.KINDS,
         index: undefined,
         type: undefined,
         id: undefined
@@ -49,16 +50,11 @@ function ESLikesController($scope, $q, $timeout, $translate, $ionicPopup, UIUtil
         if (!$scope.options.like.index || !$scope.options.like.type) {
           throw Error("Missing 'options.like.index' or 'options.like.type' in scope. Cannot load likes counter");
         }
-        $scope.options.like.service = {
-          count: esHttp.like.count($scope.options.like.index, $scope.options.like.type),
-          add: esHttp.like.add($scope.options.like.index, $scope.options.like.type),
-          remove: esHttp.like.remove($scope.options.like.index, $scope.options.like.type),
-          toggle: esHttp.like.toggle($scope.options.like.index, $scope.options.like.type)
-        };
+        $scope.options.like.service = esLike.instance($scope.options.like.index, $scope.options.like.type);
       }
       if (!$scope.options.like.kinds) {
         // Get scope's kinds (e.g. defined in the parent scope)
-        $scope.options.like.kinds = _.filter(esHttp.constants.like.KINDS, function (kind) {
+        $scope.options.like.kinds = _.filter(esLike.constants.KINDS, function (kind) {
             var key = kind.toLowerCase() + 's';
             return angular.isDefined($scope.likeData[key]);
         });

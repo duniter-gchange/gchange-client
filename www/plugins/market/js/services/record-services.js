@@ -1,7 +1,7 @@
 angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'cesium.es.services',
   'cesium.market.settings.services', 'cesium.market.category.services'])
 
-.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esComment, esGeo, csWot, csCurrency, mkSettings, mkCategory, csCache, Api) {
+.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esProfile, esComment, esGeo, csWot, csCurrency, esLike, mkSettings, mkCategory, csCache, Api) {
   'ngInject';
 
   var
@@ -213,6 +213,10 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
               hits: hits
             };
           });
+      })
+      .catch(function(err){
+        console.error(err);
+        throw new Error('MARKET.ERROR.LOOKUP_RECORDS_FAILED');
       });
   }
 
@@ -292,178 +296,184 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
   }
 
   function createSearchRequest(options) {
-      options = options || {};
+    options = options || {};
 
-      var request = {
-          from: options.from||0,
-          size: options.size||20,
-          _source: options._source || fields.commons
-      };
+    var request = {
+        from: options.from||0,
+        size: options.size||20,
+        _source: options._source || fields.commons
+    };
 
-      var matches = [];
-      var filters = [];
-      if (options.category && options.category.id) {
-        var childrenIds = options.category.children && _.pluck(options.category.children, 'id');
-        if (childrenIds && childrenIds.length) {
-          filters.push({
-            nested: {
-              path: "category",
-              query: {
-                bool: {
-                  filter: {
-                    terms: {"category.id": childrenIds}
-                  }
+    var matches = [];
+    var filters = [];
+
+    if (options.ids) {
+      filters.push({terms: {_id: options.ids}});
+    }
+
+    if (options.category && options.category.id) {
+      var childrenIds = options.category.children && _.pluck(options.category.children, 'id');
+      if (childrenIds && childrenIds.length) {
+        filters.push({
+          nested: {
+            path: "category",
+            query: {
+              bool: {
+                filter: {
+                  terms: {"category.id": childrenIds}
                 }
               }
             }
-          });
+          }
+        });
+      }
+      else {
+        filters.push({
+          nested: {
+            path: "category",
+            query: {
+              bool: {
+                filter: {
+                  term: {"category.id": options.category.id}
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+    else if (typeof options.category === 'number') {
+        filters.push({
+            nested: {
+                path: "category",
+                query: {
+                    bool: {
+                        filter: {
+                            term: { "category.id": options.category}
+                        }
+                    }
+                }
+            }
+        });
+    }
+    if (options.categories && options.categories.length) {
+        filters.push({
+            nested: {
+                path: "category",
+                query: {
+                    bool: {
+                        filter: {
+                            terms: { "category.id": options.categories}
+                        }
+                    }
+                }
+            }
+        });
+    }
+    if (options.type) {
+        var types = options.type === 'offer' ?
+            ['offer', 'auction'] :
+            (options.type === 'need' ? ['need', 'crowdfunding'] : [options.type]);
+        filters.push({terms: {type: types}});
+    }
+
+
+    var text = (options.text || '').trim();
+    var tags = text.length > 0 ? esHttp.util.parseTags(text) : undefined;
+    if (text.length > 1) {
+
+        // pubkey : use a special 'term', because of 'non indexed' field
+        if (BMA.regexp.PUBKEY.test(text /*case sensitive*/)) {
+            matches = [];
+            filters.push({term : { issuer: text}});
         }
         else {
-          filters.push({
-            nested: {
-              path: "category",
-              query: {
-                bool: {
-                  filter: {
-                    term: {"category.id": options.category.id}
-                  }
+            var lowerText = text.toLowerCase();
+
+            var matchFields = ["title^2", "description"];
+            matches.push({multi_match : { query: lowerText,
+                    fields: matchFields,
+                    type: "phrase_prefix"
+                }});
+            matches.push({match: {title: {query: lowerText, boost: 2}}});
+            matches.push({prefix: {title: lowerText}});
+            matches.push({match: {description: lowerText}});
+
+            matches.push({
+                nested: {
+                    path: "category",
+                    query: {
+                        bool: {
+                            filter: {
+                                match: { "category.name": lowerText}
+                            }
+                        }
+                    }
                 }
-              }
-            }
-          });
+            });
         }
-      }
-      else if (typeof options.category === 'number') {
-          filters.push({
-              nested: {
-                  path: "category",
-                  query: {
-                      bool: {
-                          filter: {
-                              term: { "category.id": options.category}
-                          }
-                      }
-                  }
-              }
-          });
-      }
-      if (options.categories && options.categories.length) {
-          filters.push({
-              nested: {
-                  path: "category",
-                  query: {
-                      bool: {
-                          filter: {
-                              terms: { "category.id": options.categories}
-                          }
-                      }
-                  }
-              }
-          });
-      }
-      if (options.type) {
-          var types = options.type === 'offer' ?
-              ['offer', 'auction'] :
-              (options.type === 'need' ? ['need', 'crowdfunding'] : [options.type]);
-          filters.push({terms: {type: types}});
-      }
+    }
+    if (tags) {
+        filters.push({terms: {tags: tags}});
+    }
+    if (options.withStock !== false && options.showClosed !== true) {
+        filters.push({range: {stock: {gt: 0}}});
+    }
+    if (options.withPictures) {
+        filters.push({range: {picturesCount: {gt: 0}}});
+    }
 
-      var text = (options.text || '').trim();
-      var tags = text.length > 0 ? esHttp.util.parseTags(text) : undefined;
-      if (text.length > 1) {
+    if (options.withOld !== true && options.showOld !== true) {
+        var minTime = options.minTime ? options.minTime : mkSettings.getMinAdTime();
+        // Round to hour, to be able to use cache
+        minTime = Math.floor(minTime / 60 / 60 ) * 60 * 60;
+        filters.push({range: {time: {gte: minTime}}});
+    }
+    if (options.currencies && options.currencies.length) {
+        filters.push({terms: {currency: options.currencies}});
+    }
 
-          // pubkey : use a special 'term', because of 'non indexed' field
-          if (BMA.regexp.PUBKEY.test(text /*case sensitive*/)) {
-              matches = [];
-              filters.push({term : { issuer: text}});
-          }
-          else {
-              var lowerText = text.toLowerCase();
+    var location = options.location && options.location.trim();
+    var geoDistance = options.geoDistance || '50km';
+    if (options.geoPoint && options.geoPoint.lat && options.geoPoint.lon) {
 
-              var matchFields = ["title^2", "description"];
-              matches.push({multi_match : { query: lowerText,
-                      fields: matchFields,
-                      type: "phrase_prefix"
-                  }});
-              matches.push({match: {title: {query: lowerText, boost: 2}}});
-              matches.push({prefix: {title: lowerText}});
-              matches.push({match: {description: lowerText}});
+        // match location OR geo distance
+        if (location && location.length) {
+            var locationCity = location.toLowerCase().split(',')[0];
+            filters.push({
+                or : [
+                    // No position defined: search on text
+                    {
+                        and: [
+                            {not: {exists: { field : "geoPoint" }}},
+                            {multi_match: {
+                                    query: locationCity,
+                                    fields : [ "city^3", "location" ]
+                                }}
+                        ]
+                    },
+                    // Has position: use spatial filter
+                    {geo_distance: {
+                            distance: geoDistance,
+                            geoPoint: {
+                                lat: options.geoPoint.lat,
+                                lon: options.geoPoint.lon
+                            }
+                        }}
+                ]
+            });
+        }
 
-              matches.push({
-                  nested: {
-                      path: "category",
-                      query: {
-                          bool: {
-                              filter: {
-                                  match: { "category.name": lowerText}
-                              }
-                          }
-                      }
-                  }
-              });
-          }
-      }
-      if (tags) {
-          filters.push({terms: {tags: tags}});
-      }
-      if (options.withStock !== false && options.showClosed !== true) {
-          filters.push({range: {stock: {gt: 0}}});
-      }
-      if (options.withPictures) {
-          filters.push({range: {picturesCount: {gt: 0}}});
-      }
-
-      if (options.withOld !== true && options.showOld !== true) {
-          var minTime = options.minTime ? options.minTime : mkSettings.getMinAdTime();
-          // Round to hour, to be able to use cache
-          minTime = Math.floor(minTime / 60 / 60 ) * 60 * 60;
-          filters.push({range: {time: {gte: minTime}}});
-      }
-      if (options.currencies && options.currencies.length) {
-          filters.push({terms: {currency: options.currencies}});
-      }
-
-      var location = options.location && options.location.trim();
-      var geoDistance = options.geoDistance || '50km';
-      if (options.geoPoint && options.geoPoint.lat && options.geoPoint.lon) {
-
-          // match location OR geo distance
-          if (location && location.length) {
-              var locationCity = location.toLowerCase().split(',')[0];
-              filters.push({
-                  or : [
-                      // No position defined: search on text
-                      {
-                          and: [
-                              {not: {exists: { field : "geoPoint" }}},
-                              {multi_match: {
-                                      query: locationCity,
-                                      fields : [ "city^3", "location" ]
-                                  }}
-                          ]
-                      },
-                      // Has position: use spatial filter
-                      {geo_distance: {
-                              distance: geoDistance,
-                              geoPoint: {
-                                  lat: options.geoPoint.lat,
-                                  lon: options.geoPoint.lon
-                              }
-                          }}
-                  ]
-              });
-          }
-
-          else {
-              filters.push(
-                  {geo_distance: {
-                          distance: geoDistance,
-                          geoPoint: {
-                              lat: options.geoPoint.lat,
-                              lon: options.geoPoint.lon
-                          }
-                      }});
-          }
+        else {
+            filters.push(
+                {geo_distance: {
+                        distance: geoDistance,
+                        geoPoint: {
+                            lat: options.geoPoint.lat,
+                            lon: options.geoPoint.lon
+                        }
+                    }});
+        }
       }
       else if (options.geoShape && options.geoShape.geometry) {
           var coordinates = options.geoShape.geometry.coordinates;
@@ -543,7 +553,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
               }, []);
 
               // Fetch user profile (avatar, name, etc.)
-              return csWot.extendAll(hits, 'issuer', true /*skipAddUid*/)
+              return esProfile.fillAvatars(hits, 'issuer')
                   .then(function() {
                       return {
                           hits: hits,
@@ -721,12 +731,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
         all: esHttp.get('/market/record/:id?_source=pictures')
       },
       comment: esComment.instance('market'),
-      like: {
-        add: esHttp.like.add('market', 'record'),
-        remove: esHttp.like.remove('market', 'record'),
-        toggle: esHttp.like.toggle('market', 'record'),
-        count: esHttp.like.count('market', 'record')
-      }
+      like: esLike.instance('market', 'record')
     },
     // api extension
     api: api
