@@ -36,7 +36,9 @@
       },
       "market": {
         "enable": true,
-        "geoDistance": "50km",
+        "defaultSearch":{
+          "geoDistance": "50"
+        },
         "cesiumApi": {
           "enable": true,
           "baseUrl": "https://demo.cesium.app/api"
@@ -84,7 +86,9 @@
       },
       "market": {
         "enable": true,
-        "geoDistance": "100km",
+        "defaultSearch":{
+          "geoDistance": "50"
+        },
         "cesiumApi": {
           "enable": true,
           "baseUrl": "https://g1.duniter.fr/api"
@@ -126,7 +130,10 @@
         "defaultCountry": "France"
       },
       "market": {
-        "enable": true
+        "enable": true,
+        "defaultSearch": {
+          "geoDistance": "50"
+        }
       },
       "converse": {
         "enable": false

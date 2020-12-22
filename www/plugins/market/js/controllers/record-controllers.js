@@ -618,7 +618,7 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
     $scope.form = form;
   };
 
-  $scope.$on('$ionicView.enter', function(e, state) {
+  $scope.enter = function(e, state) {
 
     return $q.all([
       mkSettings.currencies(),
@@ -630,10 +630,9 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
     .then(function(res) {
       $scope.currencies = res[0];
       var walletData = res[1];
-      console.log(walletData);
 
       if (state.stateParams && state.stateParams.id) { // Load by id
-        $scope.load(state.stateParams.id);
+        return $scope.load(state.stateParams.id);
       }
       else {
         // New record
@@ -659,11 +658,13 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
             }
           }
         }
-
-        $scope.loading = false;
-        UIUtils.loading.hide();
-        $scope.motion.show();
       }
+    })
+    .then(function() {
+
+      $scope.loading = false;
+      UIUtils.loading.hide();
+      $scope.motion.show();
 
       // Focus on title
       if ($scope.options.focus && !UIUtils.screen.isSmall()) {
@@ -675,8 +676,12 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
         $scope.motion.hide();
         $scope.showHome();
       }
+      else {
+        console.error(err);
+      }
     });
-  });
+  };
+  $scope.$on('$ionicView.enter', $scope.enter);
 
   $scope.onFreePriceChanged = function() {
     if ($scope.formData.freePrice) {

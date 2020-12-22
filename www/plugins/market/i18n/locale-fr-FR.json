@@ -93,7 +93,7 @@
       "BTN_OPTIONS": "Recherche avancée",
       "BTN_AROUND_ME": "Autour de moi",
       "GEO_DISTANCE": "Distance maximale autour de la ville :",
-      "GEO_DISTANCE_OPTION": "{{value}} km",
+      "GEO_DISTANCE_OPTION": "{{value}} {{'LOCATION.DISTANCE_UNIT'|translate}}",
       "SHOW_MORE": "Afficher plus",
       "SHOW_MORE_COUNT": "(limite actuelle à {{limit}})",
       "LOCATION": "Ville",

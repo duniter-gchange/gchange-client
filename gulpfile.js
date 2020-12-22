@@ -358,7 +358,6 @@ function pluginSass() {
       .pipe(cleanCss({
         keepSpecialComments: 0
       }))
-      .pipe(sourcemaps.write())
       .pipe(rename({extname: '.min.css'}))
       .pipe(gulp.dest('./www/css/'))
   );

@@ -177,7 +177,7 @@
       },
       "SEARCH": {
         "GEO_DISTANCE": "Distancia máxima desde la localidad :",
-        "GEO_DISTANCE_OPTION": "{{value}} km",
+        "GEO_DISTANCE_OPTION": "{{value}} {{'LOCATION.DISTANCE_UNIT'|translate}}",
         "LAST_RECORD_COUNT": "{{count}} anuncio{{count>0?'s':''}} reciente{{count>0?'s':''}}",
         "LAST_RECORD_COUNT_LOCATION": "{{count}} anuncio{{count>0?'s':''}} recente{{count>0?'s':''}}, cerca de {{location}}",
         "RESULT_COUNT": "{{count}} resultado{{count>0?'s':''}}",

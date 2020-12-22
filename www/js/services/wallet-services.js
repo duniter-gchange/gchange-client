@@ -285,6 +285,9 @@ angular.module('cesium.wallet.services', ['ngApi', 'ngFileSaver', 'cesium.bma.se
       })
       .then(function(){
         return data;
+      })
+      .catch(function(err) {
+        console.error("Failed to execute refreshData() jobs:", err);
       });
     },
 

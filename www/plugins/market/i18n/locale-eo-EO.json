@@ -93,7 +93,7 @@
       "BTN_OPTIONS": "Detala serĉado",
       "BTN_AROUND_ME": "Ĉirkaŭ mi",
       "GEO_DISTANCE": "Maksimuma distanco ĉirkaŭ la urbo:",
-      "GEO_DISTANCE_OPTION": "{{value}} km",
+      "GEO_DISTANCE_OPTION": "{{value}} {{'LOCATION.DISTANCE_UNIT'|translate}}",
       "SHOW_MORE": "Afiŝi pli",
       "SHOW_MORE_COUNT": "(nuna limo je {{limit}})",
       "LOCATION": "Urbo",

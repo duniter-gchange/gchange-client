@@ -1,4 +1,5 @@
 
+
 angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
 
   // Translation i18n
@@ -332,7 +333,7 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
 
     // removeIf(device)
     // -- Automatic redirection to HTTPS
-    if ((csConfig.httpsMode === true || csConfig.httpsMode == 'true' ||csConfig.httpsMode === 'force') &&
+    if ((csConfig.httpsMode === true || csConfig.httpsMode === 'true' ||csConfig.httpsMode === 'force') &&
       $window.location.protocol !== 'https:') {
       $rootScope.$on('$stateChangeStart', function (event, next, nextParams, fromState) {
         var path = 'https' + $rootScope.rootPath.substr(4) + $state.href(next, nextParams);

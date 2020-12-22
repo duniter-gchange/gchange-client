@@ -15,7 +15,7 @@
            ng-class="{'button-text-positive': search.showCategories, 'button-text-dark': !search.showCategories}"
            ng-click="search.showCategories=!search.showCategories;">
           <span translate>MARKET.SEARCH.BTN_SHOW_CATEGORIES</span>
-          <i class="icon ion-arrow-down-b"></i>
+          <i class="icon " ng-class="{'ion-arrow-down-b': !search.showCategories, 'ion-arrow-up-b': search.showCategories}"></i>
         </a>
       </div>
 
@@ -26,6 +26,21 @@
           <i class="icon ion-plus"></i>
           <span translate>MARKET.COMMON.BTN_NEW_AD</span>
         </button>
+      </div>
+    </div>
+
+    <!-- categories drop down -->
+    <div class="list dropdown-list"
+         ng-mouseleave="search.showCategories=false;"
+         ng-show="search.showCategories"
+         scroll="true"
+         ng-controller="MkListCategoriesCtrl"
+         ng-init="load()">
+      <div class="text-center" ng-show="loading">
+        <ion-spinner icon="android"></ion-spinner>
+      </div>
+      <div class="no-border no-padding" ng-show="!loading"
+           ng-include="'plugins/market/templates/category/list_categories_lg.html'">
       </div>
     </div>
 
@@ -88,20 +103,7 @@
       <ng-include src="::'plugins/market/templates/search/lookup_options.html'"></ng-include>
     </form>
 
-    <!-- categories drop down -->
-    <div class="list dropdown-list"
-         ng-mouseleave="search.showCategories=false;"
-         ng-show="search.showCategories"
-         scroll="true"
-         ng-controller="MkListCategoriesCtrl"
-         ng-init="load()">
-      <div class="text-center" ng-show="loading">
-        <ion-spinner icon="android"></ion-spinner>
-      </div>
-      <div class="no-border no-padding" ng-show="!loading"
-           ng-include="'plugins/market/templates/category/list_categories_lg.html'">
-      </div>
-    </div>
+
 
     <div ng-if="!search.loading && !search.category && options.category.show"
          class="padding-right visible-xs visible-sm" style="display: block; height: 35px;">

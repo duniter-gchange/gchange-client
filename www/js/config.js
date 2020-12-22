@@ -15,9 +15,6 @@ angular.module("cesium.config", [])
 	"cacheTimeMs": 300000,
 	"useLocalStorage": true,
 	"rememberMe": true,
-	"useRelative": false,
-	"decimalCount": 2,
-	"shareBaseUrl": "https://gchange.fr",
 	"helptip": {
 		"enable": false
 	},
@@ -29,39 +26,29 @@ angular.module("cesium.config", [])
 		"maxContentLength": 1300
 	},
 	"node": {
-		"host": "data.gchange.fr",
-		"port": "443"
-	},
-	"share": {
-		"mastodonAuthor": "@gchange@framapiaf.org"
+		"host": "localhost",
+		"port": "9200"
 	},
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "data.gchange.fr",
-			"port": "443",
-			"maxUploadBodySize": 5242880,
+			"host": "localhost",
+			"port": "9200",
+			"wsPort": "9400",
 			"defaultCountry": "France"
 		},
 		"market": {
 			"enable": true,
-			"geoDistance": "50km",
-			"cesiumApi": {
-				"enable": true,
-				"baseUrl": "https://demo.cesium.app/api"
+			"defaultSearch": {
+				"geoDistance": "50"
 			}
 		},
 		"converse": {
-			"enable": true,
-			"jid": "anonymous.duniter.org",
-			"bosh_service_url": "https://chat.duniter.org/http-bind/",
-			"auto_join_rooms": [
-				"gchange@muc.duniter.org"
-			]
+			"enable": false
 		}
 	},
 	"version": "1.2.5",
-	"build": "2020-12-18T18:09:10.040Z",
+	"build": "2020-12-22T14:38:27.789Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 

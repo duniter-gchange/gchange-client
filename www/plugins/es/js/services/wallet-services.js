@@ -84,7 +84,8 @@ angular.module('cesium.es.wallet.services', ['ngResource', 'cesium.platform', 'c
           console.debug('[ES] [wallet] Loaded full user profile in '+ (Date.now()-now) +'ms');
         }
         deferred.resolve();
-      });
+      })
+      .catch(deferred.reject);
 
     return deferred.promise;
   }

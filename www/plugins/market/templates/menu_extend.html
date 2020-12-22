@@ -21,6 +21,21 @@
   </ion-item>
 </ng-if>
 
+<!-- Toolbar section -->
+<div ng-if="::extensionPoint === 'nav-buttons-right'" class="hidden-xs hidden-sm">
+
+  <!-- favorites TODO
+  <button class="button button-clear icon ion-heart"
+          ng-if="login"
+          active-link="gray"
+          active-link-path-prefix="#/app/favorites"
+          ng-click="showNotificationsPopover($event)">
+          <span
+                  ng-if="walletData.favorites.count"
+                  class="badge badge-button badge-positive">{{walletData.favorites.count}}</span>
+  </button>-->
+</div>
+
 <ng-if ng-if="::extensionPoint === 'menu-user'">
   <!-- wallet records -->
   <a menu-close class="item item-border item-icon-left"

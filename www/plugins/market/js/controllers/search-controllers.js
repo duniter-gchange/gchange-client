@@ -99,12 +99,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       }
     }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
-  $scope.$watch('search.showClosed', function() {
-    $scope.options.showClosed = $scope.search.showClosed;
-    if (!$scope.search.loading && $scope.entered) $scope.doRefresh(); // Refresh results
-  }, true);
-  $scope.$watch('search.showOld', function() {
-    $scope.options.showOld = $scope.search.showOld;
+  $scope.$watch('search.showOld+search.showClosed', function() {
     if (!$scope.search.loading && $scope.entered) $scope.doRefresh(); // Refresh results
   }, true);
 
@@ -169,230 +164,38 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
 
     var text = $scope.search.text && $scope.search.text.trim();
-    var matches = [];
-    var filters = [];
-    var stateParams = {
-      location: null
-    };
-    var tags = text ? esHttp.util.parseTags(text) : undefined;
-    if (text && text.length > 1) {
-      stateParams.q = text;
-
-      // pubkey : use a special 'term', because of 'non indexed' field
-      if (BMA.regexp.PUBKEY.test(text /*case sensitive*/)) {
-        matches = [];
-        filters.push({term : { issuer: text}});
-      }
-      else {
-        var lowerText = text.toLowerCase();
-        var matchFields = ["title^2", "description"];
-        matches.push({multi_match : { query: lowerText,
-          fields: matchFields,
-          type: "phrase_prefix"
-        }});
-        matches.push({match: {title: {query: lowerText, boost: 2}}});
-        matches.push({prefix: {title: lowerText}});
-        matches.push({match: {description: lowerText}});
-        matches.push({
-           nested: {
-             path: "category",
-             query: {
-               bool: {
-                 filter: {
-                   match: { "category.name": lowerText}
-                 }
-               }
-             }
-           }
-         });
-      }
-    }
-
-    if ($scope.search.category && $scope.search.category.id) {
-      var childrenIds = $scope.search.category.children && _.pluck($scope.search.category.children, 'id');
-      if (childrenIds && childrenIds.length) {
-        filters.push({
-          nested: {
-            path: "category",
-            query: {
-              bool: {
-                filter: {
-                  terms: {"category.id": childrenIds}
-                }
-              }
-            }
-          }
-        });
-      }
-      else {
-        filters.push({
-          nested: {
-            path: "category",
-            query: {
-              bool: {
-                filter: {
-                  term: {"category.id": $scope.search.category.id}
-                }
-              }
-            }
-          }
-        });
-      }
-      stateParams.category = $scope.search.category.id;
-    }
-
-    if (tags && tags.length) {
-      filters.push({terms: {tags: tags}});
-
-      // Add to state params
-      stateParams.hash = tags.join(' ');
-      _.forEach(tags, function(tag) {
-        stateParams.q = stateParams.q.replace('#' + tag, '');
-      });
-      if (stateParams.q.trim().length === 0) {
-        stateParams.q = undefined;
-      }
-    }
-
-    if (!matches.length && !filters.length) {
-      return $scope.doGetLastRecords(from, options);
-    }
-
-    $scope.search.lastRecords = false;
-
-    var location = $scope.search.location && $scope.search.location.trim();
-    if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
-
-      // match location OR geo distance
-      if (location && location.length) {
-        var locationCity = location.toLowerCase().split(',')[0];
-        filters.push({
-          or : [
-            // No position defined: search on text
-            {
-              and: [
-                {not: {exists: { field : "geoPoint" }}},
-                {multi_match: {
-                  query: locationCity,
-                  fields : [ "city^3", "location" ]
-                }}
-              ]
-            },
-            // Has position: use spatial filter
-            {geo_distance: {
-              distance: $scope.search.geoDistance + $scope.geoUnit,
-              geoPoint: {
-                lat: $scope.search.geoPoint.lat,
-                lon: $scope.search.geoPoint.lon
-              }
-            }}
-          ]
-        });
-        stateParams.location = location;
-      }
-
-      else {
-        filters.push(
-          {geo_distance: {
-            distance: $scope.search.geoDistance + $scope.geoUnit,
-            geoPoint: {
-              lat: $scope.search.geoPoint.lat,
-              lon: $scope.search.geoPoint.lon
-            }
-          }});
-      }
-      stateParams.lat=$scope.search.geoPoint.lat;
-      stateParams.lon=$scope.search.geoPoint.lon;
-      stateParams.location = location;
-    }
-    else if ($scope.search.geoShape && $scope.search.geoShape.geometry) {
-      var coordinates = $scope.search.geoShape.geometry.coordinates;
-      var type = $scope.search.geoShape.geometry.type;
-      if (location &&
-         (type === 'Polygon' || type === 'MultiPolygon') &&
-         coordinates && coordinates.length) {
-        // One polygon
-        if (coordinates.length === 1) {
-          filters.push(
-            {
-              geo_polygon: {
-                geoPoint: {
-                  points: coordinates.length === 1 ? coordinates[0] : coordinates
-                }
-              }
-            });
-        }
-        // Multi polygon
-        else {
-          filters.push({
-            or: coordinates.reduce(function (res, coords) {
-              return res.concat(coords.reduce(function(res, points) {
-                return res.concat({geo_polygon: {
-                    geoPoint: {
-                      points: points
-                    }
-                  }});
-              }, []));
-            }, [])
-          });
-        }
-
-        stateParams.shape = $scope.search.geoShape.id;
-        stateParams.location = location;
-      }
-    }
-
-    if ($scope.search.showClosed) {
-      stateParams.closed = true;
-    }
-    else {
-      filters.push({range: {stock: {gt: 0}}});
-    }
-
-    if ($scope.search.showOld) {
-      stateParams.old = true;
-    }
-    else {
-      var minTime = (Date.now() / 1000) - 60 * 60 * 24 * 365;
-      filters.push({range: {time: {gt: minTime}}});
-    }
-
-    if ($scope.search.type) {
-      var types = $scope.search.type === 'offer' ?
-        ['offer', 'auction'] :
-        ($scope.search.type === 'need' ? ['need', 'crowdfunding'] : [$scope.search.type]);
-      filters.push({terms: {type: types}});
-      stateParams.type = $scope.search.type;
-    }
-
-    // filter on currency
-    if ($scope.currencies) {
-      filters.push({terms: {currency: $scope.currencies}});
-    }
-
-    var query = {bool: {}};
-    if (matches.length > 0) {
-      query.bool.should = matches;
-      // Exclude result with score=0
-      query.bool.minimum_should_match = 1;
-    }
-    if (filters.length > 0) {
-      query.bool.filter = filters;
-    }
+    $scope.search.lastRecords = !text || text.length === 0;
 
     // Update location href
     if (!from) {
-      $scope.updateLocationHref(stateParams);
+      var tags = text ? esHttp.util.parseTags(text) : undefined;
+      var hash = tags && tags.join(' ');
+      _.forEach(tags||[], function(tag) {
+        text = text.replace('#' + tag, '').trim();
+      });
+
+      $scope.updateLocationHref({
+        q: text || undefined,
+        hash: hash,
+        last: $scope.search.lastRecords ? true : undefined,
+        category: $scope.search.category && $scope.search.category.id || undefined,
+        type: $scope.search.type,
+        // Location
+        location: $scope.search.location && $scope.search.location.trim() || undefined,
+        lat: $scope.search.geoPoint && $scope.search.geoPoint.lat,
+        lon: $scope.search.geoPoint && $scope.search.geoPoint.lon,
+        dist: $scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoDistance || undefined,
+        shape: $scope.search.geoShape && ($scope.search.geoShape.id || $scope.search.geoShape.properties && $scope.search.geoShape.properties.id),
+        // Advanced options
+        old: $scope.search.showOld ? true : undefined,
+        closed: $scope.search.showClosed ? true : undefined
+      });
     }
 
-    var request = {query: query, from: from};
 
-    if ($scope.search.sortAttribute) {
-      request.sort = request.sort || {};
-      request.sort[$scope.search.sortAttribute] = $scope.search.sortDirection === "asc" ? "asc" : "desc";
-    }
-
-    console.debug("[market] [search] Loading Ads from request: ", request);
+    var request = mkRecord.record.createSearchRequest(angular.merge({}, $scope.search, {
+      geoDistance: $scope.search.geoDistance + $scope.geoUnit
+    }))
 
     return $scope.doRequest(request, options);
   };
@@ -402,186 +205,17 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     $location.search(stateParams).replace();
   };
 
-  $scope.doGetLastRecords = function(from, options) {
-    options = options || {withCache: true};
-
+  $scope.doGetLastRecords = function() {
     $scope.hideActionsPopover();
-    $scope.search.lastRecords = true;
 
-    var request = {
-      from: from
-    };
+    // Clean text
+    $scope.text=undefined;
 
-    var filters = [];
-    var matches = [];
-
-    // Filter on NOT closed
-    if (!$scope.search.showClosed) {
-      filters.push({range: {stock: {gt: 0}}});
-    }
-
-    // Filter on NOT too old
-    if (!$scope.search.showOld) {
-      var minTime = (Date.now() / 1000) - 60 * 60 * 24 * 365;
-      filters.push({range: {time: {gt: minTime}}});
-    }
-    // filter on type
-    if ($scope.search.type) {
-      var types = $scope.search.type === 'offer' ?
-        ['offer', 'auction'] :
-        ($scope.search.type === 'need' ? ['need', 'crowdfunding'] : [$scope.search.type]);
-      filters.push({terms: {type: types}});
-    }
-
-    // filter on currencies
-    if ($scope.currencies) {
-      filters.push({terms: {currency: $scope.currencies}});
-    }
-    // Category
-    if ($scope.search.category && $scope.search.category.id) {
-      var childrenIds = $scope.search.category.children && _.pluck($scope.search.category.children, 'id');
-      if (childrenIds && childrenIds.length) {
-        filters.push({
-          nested: {
-            path: "category",
-            query: {
-              bool: {
-                filter: {
-                  terms: {"category.id": childrenIds}
-                }
-              }
-            }
-          }
-        });
-      }
-
-      else {
-        filters.push({
-          nested: {
-            path: "category",
-            query: {
-              bool: {
-                filter: {
-                  term: { "category.id": $scope.search.category.id}
-                }
-              }
-            }
-          }
-        });
-      }
-    }
-
-    var location = $scope.search.location && $scope.search.location.trim().toLowerCase();
-    if ($scope.search.geoPoint && $scope.search.geoPoint.lat && $scope.search.geoPoint.lon) {
-
-      // match location OR geo distance
-      if (location && location.length) {
-        var locationCity = location.split(',')[0];
-        filters.push({
-          or : [
-            // No position defined
-            {
-              and: [
-                {not: {exists: { field : "geoPoint" }}},
-                {multi_match: {
-                  query: locationCity,
-                  fields : [ "city^3", "location" ]
-                }}
-              ]
-            },
-            // Has position
-            {geo_distance: {
-              distance: $scope.search.geoDistance + $scope.geoUnit,
-              geoPoint: {
-                lat: $scope.search.geoPoint.lat,
-                lon: $scope.search.geoPoint.lon
-              }
-            }}
-          ]
-        });
-      }
-
-      // match geo distance
-      else {
-        filters.push(
-            {geo_distance: {
-              distance: $scope.search.geoDistance + $scope.geoUnit,
-              geoPoint: {
-                lat: $scope.search.geoPoint.lat,
-                lon: $scope.search.geoPoint.lon
-              }
-            }});
-      }
-    }
-    else if ($scope.search.geoShape && $scope.search.geoShape.geometry) {
-      var coordinates = $scope.search.geoShape.geometry.coordinates;
-      var type = $scope.search.geoShape.geometry.type;
-      if (location &&
-         (type === 'Polygon' || type === 'MultiPolygon') &&
-         coordinates && coordinates.length) {
-        // One polygon
-        if (coordinates.length === 1) {
-          filters.push(
-            {
-              geo_polygon: {
-                geoPoint: {
-                  points: coordinates.length === 1 ? coordinates[0] : coordinates
-                }
-              }
-            });
-        }
-        // Multi polygon
-        else {
-            filters.push({
-              or: coordinates.reduce(function (res, coords) {
-                return res.concat(coords.reduce(function(res, points) {
-                  return res.concat({geo_polygon: {
-                      geoPoint: {
-                        points: points
-                      }
-                    }});
-                }, []));
-              }, [])
-            });
-        }
-      }
-    }
-
-    if (matches.length) {
-      request.query = {bool: {}};
-      request.query.bool.should =  matches;
-      request.query.bool.minimum_should_match = 1;
-    }
-    if (filters.length) {
-      request.query = request.query || {bool: {}};
-      request.query.bool.filter =  filters;
-    }
-
-    // Sort
-    request.sort = {};
-    request.sort[$scope.search.sortAttribute] = $scope.search.sortDirection;
-
-    // Update location href
-    if (!from) {
-      $location.search({
-        last: true,
-        type: $scope.search.type,
-        category: $scope.search.category && $scope.search.category.id,
-        shape: $scope.search.geoShape && ($scope.search.geoShape.id || $scope.search.geoShape.properties && $scope.search.geoShape.properties.id),
-        location: $scope.search.location,
-        lat: $scope.search.geoPoint && $scope.search.geoPoint.lat,
-        lon: $scope.search.geoPoint && $scope.search.geoPoint.lon
-      }).replace();
-    }
-
-    return $scope.doRequest(request, options);
+    return $scope.doSearch();
   };
 
   $scope.doRefresh = function(options) {
-    var searchFunction = ($scope.search.lastRecords) ?
-        $scope.doGetLastRecords :
-        $scope.doSearch;
-    return searchFunction(0/*from*/, options);
+    return $scope.doSearch(0/*from*/, options);
   };
 
   $scope.refresh = function() {
@@ -593,11 +227,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
     $scope.search.loadingMore = true;
 
-    var searchFunction = ($scope.search.lastRecords) ?
-      $scope.doGetLastRecords :
-      $scope.doSearch;
-
-    return searchFunction(from)
+    return $scope.doSearch(from)
       .then(function() {
         $scope.search.loadingMore = false;
         $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -891,18 +521,10 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
 
   $scope.finishEnter = function(isAdvanced) {
     $scope.search.advanced = isAdvanced ? true : $scope.search.advanced; // keep null if first call
-    if (!$scope.search.lastRecords) {
-      $scope.doSearch()
-          .then(function() {
-            $scope.showFab('fab-add-market-record');
-          });
-    }
-    else { // By default : get last records
-      $scope.doGetLastRecords()
-          .then(function() {
-            $scope.showFab('fab-add-market-record');
-          });
-    }
+    $scope.doSearch()
+        .then(function() {
+          $scope.showFab('fab-add-market-record');
+        });
     // removeIf(device)
     // Focus on search text (only if NOT device, to avoid keyboard opening)
     $focus('marketSearchText');
@@ -918,21 +540,18 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
     csSettings.data.plugins.market = csSettings.data.plugins.market || {};
     csSettings.data.plugins.market.defaultSearch = csSettings.data.plugins.market.defaultSearch || {};
 
-    // Check if location changed
+    // Check if location, or distance changed
     var location = $scope.search.location && $scope.search.location.trim();
     var oldLocation = csSettings.data.plugins.market.defaultSearch.location;
-    if (!oldLocation || (oldLocation !== location)) {
+    var odlDistance = csSettings.data.plugins.market.defaultSearch.geoDistance;
+    if (!oldLocation || (oldLocation !== location) || !odlDistance || (odlDistance !== $scope.search.geoDistance)) {
       csSettings.data.plugins.market.defaultSearch = angular.merge(csSettings.data.plugins.market.defaultSearch, {
         location: location,
         geoPoint: location && $scope.search.geoPoint ? angular.copy($scope.search.geoPoint) : undefined,
-        geoShape: location && $scope.search.geoShape ? angular.copy($scope.search.geoShape) : undefined
+        geoShape: location && $scope.search.geoShape ? angular.copy($scope.search.geoShape) : undefined,
+        geoDistance: location && $scope.search.geoPoint ? $scope.search.geoDistance : undefined
       });
-      dirty = true;
-    }
-
-    // Check if distance changed
-    var odlDistance = csSettings.data.plugins.es.geoDistance;
-    if (!odlDistance || odlDistance !== $scope.search.geoDistance) {
+      // Copy geoDistance to ES (for page registry)
       csSettings.data.plugins.es.geoDistance = $scope.search.geoDistance;
       dirty = true;
     }
@@ -984,7 +603,7 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   $scope.$watch('search.location', $scope.onLocationChanged, true);
 
   $scope.onGeoDistanceChanged = function() {
-    if ($scope.search.loading || !$scope.entered || $scope.search.location) return;
+    if ($scope.search.loading || !$scope.entered || !$scope.search.location) return;
     $scope.doRefresh(); // Refresh results
   };
   $scope.$watch('search.geoDistance', $scope.onGeoDistanceChanged, true);

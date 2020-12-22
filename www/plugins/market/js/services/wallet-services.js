@@ -2,27 +2,29 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
 .config(function(PluginServiceProvider, csConfig) {
     'ngInject';
 
-    var enable = csConfig.plugins && csConfig.plugins.market;
-    if (enable) {
-      // Will force to load this service
-      PluginServiceProvider.registerEagerLoadingService('mkWallet');
-    }
+    // Will force to load this service
+    PluginServiceProvider.registerEagerLoadingService('mkWallet');
 
   })
 
 .factory('mkWallet', function($rootScope, $q, $timeout, esHttp, $state, $sce, $sanitize, $translate,
-                              UIUtils, csSettings, csWallet, csWot, BMA, Device,
-                              SocialUtils, CryptoUtils,  esWallet, esProfile, esSubscription) {
+                              UIUtils, csSettings, csWallet, csWot, BMA, Device, csPlatform,
+                              SocialUtils, CryptoUtils,  esWallet, esProfile, esSubscription, esLike) {
   'ngInject';
   var
     defaultProfile,
     defaultSubscription,
     that = this,
+    raw = {
+      like: esLike('market', 'record')
+    },
     listeners;
 
   function onWalletReset(data) {
     data.profile = undefined;
     data.name = undefined;
+    data.favorites = data.favorites || {};
+    data.favorites.count = null;
     defaultProfile = undefined;
     defaultSubscription = undefined;
   }
@@ -74,9 +76,7 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
         console.info('[market] [wallet] Checked user profile in {0}ms'.format(Date.now() - now));
         deferred.resolve(data);
       })
-      .catch(function(err) {
-        deferred.reject(err);
-      });
+      .catch(deferred.reject);
 
     return deferred.promise;
   }
@@ -167,10 +167,20 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
   function onWalletFinishLoad(data, deferred) {
     deferred = deferred || $q.defer();
 
-    // TODO: Load record count
-    //console.debug('[market] [user] Loading user record count...');
-    // var now = new Date().getTime();
-    deferred.resolve();
+    var now = Date.now();
+    console.debug('[market] [user] Loading favorites...');
+
+    raw.like.load({issuer: data.pubkey, kinds: ['LIKE', 'FOLLOW']})
+      .then(function(res) {
+        data.favorites = data.favorites || {};
+        data.favorites.count = res && res.total || 0;
+        data.favorites.ids = _.pluck(res && res.hits || [], 'id');
+      })
+      .then(function() {
+        console.info('[market] [wallet] Loaded favorites ({0}) in {1}ms'.format(data.favorites.count, Date.now() - now));
+        deferred.resolve(data);
+      })
+      .catch(deferred.reject);
 
     return deferred.promise;
   }
@@ -195,23 +205,25 @@ angular.module('cesium.market.wallet.services', ['cesium.es.services'])
   function refreshState() {
     var enable = esHttp.alive;
     if (!enable && listeners && listeners.length > 0) {
-      console.debug("[ES] [user] Disable");
+      console.debug("[market] [user] Disable");
       removeListeners();
       if (csWallet.isLogin()) {
         return onWalletReset(csWallet.data);
       }
     }
     else if (enable && (!listeners || listeners.length === 0)) {
-      console.debug("[ES] [user] Enable");
+      console.debug("[market] [user] Enable");
       addListeners();
       if (csWallet.isLogin()) {
-        return onWalletLoginCheck(csWallet.data);
+        onWalletReset(csWallet.data);
+        return onWalletLoginCheck(csWallet.data)
+          .then(onWalletFinishLoad);
       }
     }
   }
 
   // Default actions
-  Device.ready().then(function() {
+  csPlatform.ready().then(function() {
     esHttp.api.node.on.start($rootScope, refreshState, this);
     esHttp.api.node.on.stop($rootScope, refreshState, this);
     return refreshState();

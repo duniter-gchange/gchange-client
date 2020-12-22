@@ -32,14 +32,16 @@ angular.module('cesium.market.home.controllers', ['ngResource',
 function MarketHomeFooterController($scope, $controller, UIUtils, csPlatform, $state) {
   'ngInject';
 
+  $scope.smallscreen = UIUtils.screen.isSmall();
+
   $scope.start = function() {
     // Start loading categories, if NOT small screen
-    if (!UIUtils.screen.isSmall()) {
+    if (!$scope.smallscreen) {
       // Initialize the super class and extend it.
       angular.extend(this, $controller('MkListCategoriesCtrl', {$scope: $scope}));
 
       $scope.onCategoryClick = function(cat) {
-        return $state.go('app.market_lookup', {category: cat && cat.id, location: ''});
+        return $state.go('app.market_lookup', {category: cat && cat.id, location: undefined});
       };
 
       $scope.load();
@@ -48,6 +50,7 @@ function MarketHomeFooterController($scope, $controller, UIUtils, csPlatform, $s
       $scope.loading = false;
     }
   };
+  //$scope.$on('$ionicParentView.enter', $scope.enter);
 
   // Run start
   csPlatform.ready().then($scope.start);

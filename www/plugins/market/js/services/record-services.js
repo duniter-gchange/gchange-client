@@ -134,6 +134,9 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
 
 
   function search(request, options) {
+
+    console.debug("[market] [record] Loading Ads from request: ", request);
+
     request = request || {};
     request.from = request.from || 0;
     request.size = isNaN(request.size) ? CONSTANTS.DEFAULT_SEARCH_SIZE : request.size;
@@ -288,7 +291,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
         });
   }
 
-  function createRequest(options) {
+  function createSearchRequest(options) {
       options = options || {};
 
       var request = {
@@ -299,7 +302,38 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
 
       var matches = [];
       var filters = [];
-      if (options.category) {
+      if (options.category && options.category.id) {
+        var childrenIds = options.category.children && _.pluck(options.category.children, 'id');
+        if (childrenIds && childrenIds.length) {
+          filters.push({
+            nested: {
+              path: "category",
+              query: {
+                bool: {
+                  filter: {
+                    terms: {"category.id": childrenIds}
+                  }
+                }
+              }
+            }
+          });
+        }
+        else {
+          filters.push({
+            nested: {
+              path: "category",
+              query: {
+                bool: {
+                  filter: {
+                    term: {"category.id": options.category.id}
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+      else if (typeof options.category === 'number') {
           filters.push({
               nested: {
                   path: "category",
@@ -372,15 +406,15 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       if (tags) {
           filters.push({terms: {tags: tags}});
       }
-      if (options.withStock) {
+      if (options.withStock !== false && options.showClosed !== true) {
           filters.push({range: {stock: {gt: 0}}});
       }
       if (options.withPictures) {
           filters.push({range: {picturesCount: {gt: 0}}});
       }
 
-      if (!options.withOld) {
-          var minTime = options.minTime ? options.minTime : Date.now() / 1000  - 24 * 365 * 60 * 60; // last year
+      if (options.withOld !== true && options.showOld !== true) {
+          var minTime = options.minTime ? options.minTime : mkSettings.getMinAdTime();
           // Round to hour, to be able to use cache
           minTime = Math.floor(minTime / 60 / 60 ) * 60 * 60;
           filters.push({range: {time: {gte: minTime}}});
@@ -476,6 +510,11 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
           }
       }
 
+      if (options.sortAttribute) {
+        request.sort = request.sort || {};
+        request.sort[options.sortAttribute] = options.sortDirection === "asc" ? "asc" : "desc";
+      }
+
       return request;
   }
 
@@ -486,7 +525,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       options.withPictures = true;
 
       // Create the request, from options
-      var request = createRequest(options);
+      var request = createSearchRequest(options);
 
       // Run the search
       return search(request)
@@ -526,7 +565,10 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     var now = Date.now();
     var expectedSize = options.size || CONSTANTS.MORE_LIKE_THIS_SIZE;
     var fetchSize = expectedSize * 20;
+    var minTime = mkSettings.getMinAdTime();
+    var oldHits = [];
     data.moreLikeThis.current = id; // Remember, to stop parallel jobs
+
     var request = {
       from: options.from||0,
       size: fetchSize,
@@ -560,8 +602,6 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       });
     }
 
-    var minTime = (Date.now() / 1000) - 60 * 60 * 24 * 365; // last year
-    var oldHits = [];
 
     var filterAndFetchHits = function(res, size) {
       size = size !== undefined ? size : CONSTANTS.MORE_LIKE_THIS_SIZE;
@@ -573,7 +613,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       }
 
       var hits = res.hits.hits.reduce(function(res, hit, index) {
-        if (index >= size) return res; // Skip (already has enought ad)
+        if (index >= size) return res; // Skip (already has enough ad)
 
         // Exclude if closed
         if (hit._source.stock === 0) return res;
@@ -591,7 +631,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
       var missingSize = size - hits.length;
       var fetchMore = missingSize > 0 &&
         (Date.now() - now < CONSTANTS.MORE_LIKE_THIS_TIMEOUT) && // Timeout reach
-        (data.moreLikeThis.current === id) // A new le more this has been call: stop
+        (data.moreLikeThis.current === id) // Do not fetch if current id changed
       ;
       if (fetchMore) {
         console.debug("[market] [record] Missing 'more like this' Ads (missing {0}. Fetching more...".format(missingSize));
@@ -665,6 +705,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
   return {
     category: mkCategory,
     record: {
+      createSearchRequest: createSearchRequest,
       search: search,
       load: loadData,
       setStock: setStockToRecord,

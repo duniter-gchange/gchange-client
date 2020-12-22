@@ -345,7 +345,7 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
     // Hide popover if need
     $scope.hideActionsPopover();
 
-    return $scope.existing && wallet.auth({minData: true})
+    return $scope.existing && $scope.loadWallet({minData: true})
         .then(function(walletData) {
 
           UIUtils.loading.hide();
@@ -357,11 +357,9 @@ function ESViewEditProfileController($scope, $rootScope, $q, $timeout, $state, $
                 // removeIf(no-device)
                 UIUtils.loading.show();
                 // endRemoveIf(no-device)
-                return esProfile.remove(walletData.pubkey, {wallet: wallet})
+                return esProfile.remove(walletData.pubkey)
                   .then(function () {
-                    if (wallet.isDefault()) {
-                      walletData.name=null; // keep local name, on children wallets
-                    }
+                    walletData.name=null; // keep local name, on children wallets
                     walletData.profile = null;
                     walletData.avatar = null;
                     console.debug('[ES] [profile] Successfully deleted');

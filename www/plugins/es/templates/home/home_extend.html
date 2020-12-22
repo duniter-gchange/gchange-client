@@ -1,9 +1,17 @@
 <!-- notifications -->
 <ng-if ng-if=":state:extensionPoint=== 'header-buttons'" class="visible-xs visible-sm">
+    <!-- messages -->
+    <button class="button button-clear icon ion-email"
+            ng-if="login && $root.walletData.messages.unreadCount"
+            ui-sref="app.user_message">
+    <span
+            ng-if="$root.walletData.messages.unreadCount"
+            class="badge badge-button badge-positive">{{$root.walletData.messages.unreadCount}}</span>
+    </button>
+
+    <!-- notifications -->
     <button class="button button-clear icon ion-android-notifications"
             ng-if="login && $root.walletData.notifications.unreadCount"
-            active-link="gray"
-            active-link-path-prefix="#/app/notifications"
             ui-sref="app.view_notifications">
               <span class="badge badge-button badge-positive">{{$root.walletData.notifications.unreadCount}}</span>
     </button>

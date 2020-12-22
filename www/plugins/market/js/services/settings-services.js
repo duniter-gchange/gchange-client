@@ -10,26 +10,27 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
 
   })
 
-.factory('mkSettings', function($rootScope, $q, $timeout, $ionicHistory, Api, esHttp,
+.factory('mkSettings', function($rootScope, $q, $timeout, $ionicHistory, Api, csHttp, esHttp,
                             csConfig, csSettings, esSettings, csCurrency) {
   'ngInject';
 
   var
     SETTINGS_SAVE_SPEC = {
-      includes: ['geoDistance', 'compactMode'],
+      includes: ['geoDistance', 'compactMode', 'maxAdAge'],
       excludes: ['enable', 'homeMessage', 'defaultTags', 'defaultAdminPubkeys', 'record', 'defaultSearch'],
+      defaultSearch: {},
       cesiumApi: {}
     },
     defaultSettings = angular.merge({
         plugins: {
           market: {
             enable: true,
-            geoDistance: "100km",
             compactMode: false,
             cesiumApi: {
               enable: true,
               baseUrl: "https://g1.duniter.fr/api"
-            }
+            },
+            maxAdAge: 60 * 60 * 24 * 365 // Max age of a Ad (in seconds) (=1 year)
           },
           converse: {
             jid : "anonymous.duniter.org",
@@ -73,6 +74,23 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
     return $q.when(that.raw.currencies);
   };
 
+  /**
+   * Max age of a Ad (in seconds)
+   * @returns {number|*}
+   */
+  that.getMaxAdAge = function() {
+    return csSettings.data.plugins.market && csSettings.data.plugins.market.maxAdAge
+      || defaultSettings.plugins.market.maxAdAge;
+  }
+
+  /**
+   * Max age of a Ad (in seconds)
+   * @returns {number|*}
+   */
+  that.getMinAdTime = function() {
+    return (Date.now() / 1000) - that.getMaxAdAge();
+  }
+
   function _initCurrencies(data, deferred) {
     deferred = deferred || $q.defer();
     if (that.enable) {
@@ -107,36 +125,6 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
     return deferred.promise;
   }
 
-  function _compareVersion(v1, v2) {
-
-    var parts = v1 && v1.split('.');
-    var version1 = parts && parts.length === 3 ? {
-      major: parseInt(parts[0]),
-      minor: parseInt(parts[1]),
-      build: parseInt(parts[2])
-    }: {};
-    parts = v2 && v2.split('.');
-    var version2 = parts && parts.length == 3 ? {
-      major: parseInt(parts[0]),
-      minor: parseInt(parts[1]),
-      build: parseInt(parts[2])
-    } : {};
-
-    // check major
-    if (version1.major != version2.major) {
-      return version1.major < version2.major ? -1 : 1;
-    }
-    // check minor
-    if (version1.minor != version2.minor) {
-      return version1.minor < version2.minor ? -1 : 1;
-    }
-    // check build
-    if (version1.build != version2.build) {
-      return version1.build < version2.build ? -1 : 1;
-    }
-    return 0; // equals
-  }
-
   function onSettingsReset(data, deferred) {
     deferred = deferred || $q.defer();
     data.plugins = data.plugins || {};
@@ -152,20 +140,24 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
   // Listen for settings changed
   function onSettingsChanged(data) {
 
-    // Workaround (version < 0.5.0) : remove older settings
-    var isVersionPrevious_0_5_0 = _compareVersion(data.version, '0.5.0') <= 0;
-    if (isVersionPrevious_0_5_0 && data.plugins && data.plugins.market) {
-      console.info('[market] [settings] Detected version previous <= 0.5.0 - restoring default settings...');
-      delete data.login;
-      data.plugins.market = angular.copy(defaultSettings.plugins.market);
+    // Workaround (version < 1.2.6) : fix older settings
+    var isVersionPrevious_1_2_6 = csHttp.version.compare(data.version, '1.2.6') <= 0;
+    if (isVersionPrevious_1_2_6 && data.plugins && data.plugins.market) {
+      console.info('[market] [settings] Detected version previous <= 1.2.6 - Fix older settings...');
+      delete data.plugins.es.market;
+      var geoDistance = data.plugins.market.geoDistance;
+      delete data.plugins.market.geoDistance;
+      data.plugins.market.defaultSearch = data.plugins.market.defaultSearch || {};
+      data.plugins.market.defaultSearch.geoDistance = data.plugins.market.defaultSearch.geoDistance || geoDistance;
+      data.plugins.market.maxAdAge = defaultSettings.plugins.market.maxAdAge;
     }
 
     data.plugins.es.document = data.plugins.es.document || {};
     data.plugins.es.document.index = 'user,page,group,market';
     data.plugins.es.document.type = 'profile,record,comment';
+
     // Init currencies
     _initCurrencies(data);
-
 
   }
 

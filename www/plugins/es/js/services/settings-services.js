@@ -20,7 +20,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
       excludes: ['newIssueVersion', 'timeout', 'cacheTimeMs', 'time', 'login', 'build'],
       plugins: {
         es: {
-          excludes: ['enable', 'host', 'port', 'useSsl', 'fallbackNodes', 'minVersion', 'document', 'maxUploadBodySize', 'defaultCountry'],
+          excludes: ['enable', 'host', 'port', 'useSsl', 'fallbackNodes', 'minVersion', 'document', 'maxUploadBodySize', 'defaultCountry', 'market'],
           notifications: {
           }
         }

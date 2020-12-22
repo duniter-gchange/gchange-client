@@ -264,7 +264,7 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
     }
 
     console.debug('[ES] [notification] Loading count...');
-    var now = new Date().getTime();
+    var now = Date.now();
 
     // Load unread notifications count
     loadUnreadNotificationsCount(
@@ -285,7 +285,7 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
             }, 'COMMON.APP_NAME');
           }, 500);
         }
-        console.debug('[ES] [notification] Loaded count (' + unreadCount + ') in '+(new Date().getTime()-now)+'ms');
+        console.debug('[ES] [notification] Loaded count ({0}) in {1}ms'.format(unreadCount, Date.now() - now));
         deferred.resolve(data);
       })
       .catch(function(err){

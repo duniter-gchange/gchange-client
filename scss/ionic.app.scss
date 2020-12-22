@@ -192,6 +192,8 @@ form.lookupForm,
   .item-input > .selected-values .button {
     top: unset !important;
   }
+
+
 }
 
 .list.flex-row {
@@ -209,7 +211,7 @@ form.lookupForm,
   }
 }
 
-.row-record {
+.row.row-record {
   border: 0 !important;
   height: unset !important;
   min-height: unset !important;
@@ -271,8 +273,8 @@ form.lookupForm,
 // Very (very very) small screens
 .item-thumbnail-left,
 .item-thumbnail-left .item-content {
-  padding-left: calc(min(150px, 40vw) + 10px) !important;
-  min-height: calc(min(150px, 40vw) - 5px) !important;
+  padding-left: calc(min(150px, 40vw) + 10px);
+  min-height: calc(min(150px, 40vw) - 5px);
 }
 
 .item-thumbnail-left > i:first-child,
@@ -283,14 +285,13 @@ form.lookupForm,
   max-height: calc(min(150px, 40vw));
 
   &.icon {
-    font-size: calc(min(150px, 40vw) - 25px) !important;
-    line-height: calc(min(150px, 40vw) - 6px) !important;
+    font-size: calc(min(150px, 40vw) - 25px);
+    line-height: calc(min(150px, 40vw) - 6px);
   }
 }
-
 .item-thumbnail-left {
   h1, h2 {
-    font-size: 1em !important;
+    font-size: 1em;
   }
   h3 {
     font-size: 0.9em;
@@ -303,16 +304,16 @@ form.lookupForm,
 @media screen and (min-width: $screen-md) {
   .item-thumbnail-left,
   .item-thumbnail-left .item-content {
-    padding-left: calc(min(200px, 50vw) + 10px) !important;
-    min-height: calc(min(200px, 50vw) - 5px) !important;
+    padding-left: calc(min(200px, 50vw) + 10px);
+    min-height: calc(min(200px, 50vw) - 5px);
   }
 
   .item-thumbnail-left > i:first-child,
   .item-thumbnail-left i.item-image,
   .item-thumbnail-left .item-content > i:first-child,
   .item-thumbnail-left .item-content i.item-image {
-    max-width: calc(min(200px, 50vw));
-    max-height: calc(min(200px, 50vw));
+    max-width: calc(min(200px, 50vw)) !important;
+    max-height: calc(min(200px, 50vw)) !important;
 
     &.icon {
       font-size: calc(min(200px, 50vw) - 25px) !important;
@@ -324,6 +325,16 @@ form.lookupForm,
     p {
       font-size: 0.8em;
     }
+    h1, h2 {
+      font-weight: bold;
+      font-size: 1.4em;
+    }
+    h3 {
+      font-size: 1.1em;
+    }
+    h4, h5 {
+      font-size: 1em;
+    }
   }
 }
 
@@ -331,7 +342,7 @@ form.lookupForm,
   min-width: calc(min(350px, 100vh));
   max-width: calc(min(650px, 100vh));
 }
-.item-record {
+.item.item-record {
   background-color: white;
   width: 100%;
   border: 0 !important;
@@ -343,28 +354,43 @@ form.lookupForm,
   margin-bottom: .8rem;
   padding-top: 0 !important;
 
-  h2 {
+
+  h1, h2 {
     height: auto;
     display: inline-block;
     display: -webkit-inline-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     font-weight: bold;
-    font-size: 1.4em;
 
     overflow: hidden !important;
     white-space: normal;
 
   }
+  &:hover h1,
   &:hover h2 {
-    color: $positive !important;
+    color: $positive-900-bg !important;
   }
   .badge-secondary {
     top: 40px !important;
     right: 16px !important;
   }
+
+  .badge-picture-count {
+    position: absolute;
+    bottom: 8px;
+    left: calc(min(150px, 40vw) - 15px);
+    right: unset;
+    top: unset;
+  }
 }
 
+@media screen and (max-width: $screen-md) {
+  .item.item-record .badge-picture-count {
+    left: calc(min(200px, 50vw) - 25px);
+    bottom: 10px;
+  }
+}
 
 /* -- More like list results -- */
 
@@ -385,8 +411,8 @@ form.lookupForm,
   .item-thumbnail-left .item-image,
   .item-thumbnail-left .item-content > img:first-child,
   .item-thumbnail-left .item-content .item-image {
-    max-width: calc(min(120px, 50vw));
-    max-height: calc(min(120px, 50vw));
+    max-width: calc(min(120px, 50vw)) !important;
+    max-height: calc(min(120px, 50vw)) !important;
 
     &.icon {
       font-size: calc(min(120px, 50vw) - 12px) !important;
@@ -394,8 +420,8 @@ form.lookupForm,
     }
   }
 
-  .item-record {
-    h2 {
+  .item.item-record {
+    h1, h2 {
       font-size: 1em;
       font-weight: normal;
     }
@@ -405,25 +431,12 @@ form.lookupForm,
     h4, h5 {
       font-size: 0.7em;
     }
+
+    .badge-picture-count {
+      bottom: 8px;
+      left: calc(min(120px, 40vw) - 15px);
+    }
   }
+
 }
 
-
-.item-record .badge-picture-count {
-  position: absolute !important;
-  left: calc(min(200px, 50vw) - 25px) !important;
-  bottom: 10px !important;
-  right: unset !important;
-  top: unset !important;
-}
-
-@media screen and (max-width: $screen-sm-max) {
-  .item-record .badge-picture-count {
-    bottom: 8px !important;
-    left: calc(min(150px, 40vw) - 15px) !important;
-  }
-}
-.list-record-small .item-record .badge-picture-count {
-  bottom: 8px !important;
-  left: calc(min(120px, 40vw) - 15px) !important;
-}
