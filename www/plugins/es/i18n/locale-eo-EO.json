@@ -82,6 +82,7 @@
       "DIVIDER_GROUP": "Grupoj"
     },
     "VIEW": {
+      "SENIORITY": "Delongeco ĉe {{'COMMON.APP_NAME'|translate}}",
       "STARS": "Fido-nivelo",
       "STAR_HIT_COUNT": "{{total}} noto{{total>1 ? 'j' : ''}}",
       "BTN_STAR_HELP": "Noti tiun ĉi profilon",
