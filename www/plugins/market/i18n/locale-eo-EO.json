@@ -30,7 +30,8 @@
       "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Averto:</b> la identigilo kaj la pasvorto ne plu povos esti modifitaj.<br/><br/><b>Certiĝu, ke vi ĉiam rememoros ilin!</b><br/><br/><b>Ĉu vi certas</b>, ke vi volas daŭrigi per tiuj identigiloj?"
     },
     "PROFILE": {
-      "DEFAULT_TITLE": "Uzanto {{pubkey|formatPubkey}}"
+      "DEFAULT_TITLE": "Uzanto {{pubkey|formatPubkey}}",
+      "IDENTITY_RECORDS_TITLE": "Uzanto-anoncoj"
     },
     "LOGIN": {
       "HELP": "Bonvolu tajpi viajn identigilojn por konektiĝi:",
@@ -88,6 +89,7 @@
       "SEARCH_HELP": "Serĉado (biciklo, ŝuoj...)",
       "BY": "de",
       "BTN_ADD": "Nova",
+      "BTN_CATEGORIES": "Kategorioj",
       "BTN_OPTIONS": "Detala serĉado",
       "BTN_AROUND_ME": "Ĉirkaŭ mi",
       "GEO_DISTANCE": "Maksimuma distanco ĉirkaŭ la urbo:",
@@ -106,11 +108,21 @@
       "BTN_SHOW_CATEGORIES": "Trarigardi la kategoriojn",
       "BTN_OFFERS": "Proponoj",
       "BTN_CROWDFUNDING": "Financadoj",
+      "BTN_FAVORITES": "Preferoj",
       "BTN_AUCTION": "Aŭkcioj",
       "BTN_NEEDS": "Petoj",
       "SHOW_CLOSED_RECORD": "Afiŝi la fermitajn anoncojn?",
       "SHOW_OLD_RECORD": "Afiŝi la malnovajn anoncojn?",
-      "RECORD_STOCK": "Stoko:"
+      "RECORD_STOCK": "Stoko:",
+      "SORT": {
+        "PREFIX": "Ordigo: ",
+        "DATE": "Dato",
+        "PRICE": "Prezo",
+        "DATE_ASC": "Pli malnovaj",
+        "DATE_DESC": "Pli freŝdataj",
+        "PRICE_ASC": "Kreskantaj prezoj",
+        "PRICE_DESC": "Malkreskantaj prezoj"
+      }
     },
     "GALLERY": {
       "TITLE": "Bildaro",
@@ -119,6 +131,8 @@
       "BTN_PAUSE": "Paŭzi",
       "BTN_STOP": "Ĉesi",
       "SLIDE_DURATION": "Afiŝo-daŭro:",
+      "AD_TYPE": "Anonco-tipo:",
+      "ALL_AD_TYPES": "Ĉiuj",
       "SLIDE_DURATION_OPTION": "{{value}} sekundoj"
     },
     "VIEW": {
