@@ -164,6 +164,12 @@
   .card .header {
     color: $positive-100-bg !important;
   }
+
+  .emoji {
+    max-height: 16px;
+    max-width: 16px;
+    display: inline;
+  }
 }
 
 .list.half .item {
