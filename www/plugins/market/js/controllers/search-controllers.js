@@ -195,7 +195,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
     var request = mkRecord.record.createSearchRequest(angular.merge({}, $scope.search, {
       geoDistance: $scope.search.geoDistance + $scope.geoUnit
-    }))
+    }));
 
     return $scope.doRequest(request, options);
   };

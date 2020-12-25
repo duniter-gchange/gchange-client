@@ -115,7 +115,7 @@ function MkWalletFavoritesController($scope, $controller, UIUtils, csWallet, mkR
           return mkRecord.record.like.load({
             issuer: walletData.pubkey,
             kinds: ['LIKE', 'FOLLOW']
-          })
+          });
         })
         .then(function(res) {
 
@@ -168,6 +168,6 @@ function MkWalletFavoritesController($scope, $controller, UIUtils, csWallet, mkR
       $scope.search.ids = res && _.pluck(res.hits, 'id');
       console.debug('Found like ids:', $scope.search.ids);
       return parentDoSearch(from, options);
-    })
-  }
+    });
+  };
 }
