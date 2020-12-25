@@ -79,9 +79,9 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
    * @returns {number|*}
    */
   that.getMaxAdAge = function() {
-    return csSettings.data.plugins.market && csSettings.data.plugins.market.maxAdAge
-      || defaultSettings.plugins.market.maxAdAge;
-  }
+    return csSettings.data.plugins.market && csSettings.data.plugins.market.maxAdAge ||
+      defaultSettings.plugins.market.maxAdAge;
+  };
 
   /**
    * Max age of a Ad (in seconds)
@@ -89,7 +89,7 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
    */
   that.getMinAdTime = function() {
     return (Date.now() / 1000) - that.getMaxAdAge();
-  }
+  };
 
   function _initCurrencies(data, deferred) {
     deferred = deferred || $q.defer();
