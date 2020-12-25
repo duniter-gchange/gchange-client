@@ -166,9 +166,15 @@
   }
 
   .emoji {
-    max-height: 16px;
-    max-width: 16px;
+    max-height: 1.2em;
+    max-width: 1.2em;
     display: inline;
+  }
+
+  blockquote * {
+    font-size: 1em !important;
+    font-weight: bold;
+    font-style: italic;
   }
 }
 
