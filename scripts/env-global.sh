@@ -36,7 +36,7 @@ DIST_WEB=${PROJECT_DIR}/dist/web/build
 DIST_ANDROID=${PROJECT_DIR}/dist/android
 
 # Addons Mozilla Web extension ID
-WEB_EXT_ID="{TODO}"
+WEB_EXT_ID="{a6eb4040-4c87-4742-9901-2fc593b95efd}"
 
 # /!\ WARN can be define in your <project>/.local/env.sh file
 #JAVA_HOME=
