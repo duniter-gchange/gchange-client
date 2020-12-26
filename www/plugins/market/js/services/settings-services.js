@@ -30,6 +30,9 @@ angular.module('cesium.market.settings.services', ['cesium.services', 'cesium.es
               enable: true,
               baseUrl: "https://g1.duniter.fr/api"
             },
+            defaultSearch: {
+              geoDistance: 50
+            },
             maxAdAge: 60 * 60 * 24 * 365 // Max age of a Ad (in seconds) (=1 year)
           },
           converse: {
