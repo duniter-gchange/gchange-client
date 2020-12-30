@@ -397,7 +397,7 @@ form.lookupForm,
   }
 }
 
-@media screen and (max-width: $screen-md) {
+@media screen and (min-width: $screen-md) {
   .item.item-record .badge-picture-count {
     left: calc(min(200px, 50vw) - 25px);
     bottom: 10px;

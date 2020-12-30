@@ -1,7 +1,9 @@
 angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'cesium.es.services',
   'cesium.market.settings.services', 'cesium.market.category.services'])
 
-.factory('mkRecord', function($q, csSettings, BMA, csConfig, esHttp, esProfile, esComment, esGeo, csWot, csCurrency, esLike, mkSettings, mkCategory, csCache, Api) {
+.factory('mkRecord', function($q, csSettings, BMA, csConfig, csWallet, csWot, csCurrency, csCache, Api,
+                              esHttp, esProfile, esComment, esGeo, esLike,
+                              mkSettings, mkCategory ) {
   'ngInject';
 
   var
@@ -576,6 +578,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     var expectedSize = options.size || CONSTANTS.MORE_LIKE_THIS_SIZE;
     var fetchSize = expectedSize * 20;
     var minTime = mkSettings.getMinAdTime();
+    var walletPubkey = csWallet.isLogin() ? csWallet.data.pubkey : undefined;
     var oldHits = [];
     data.moreLikeThis.current = id; // Remember, to stop parallel jobs
 
@@ -627,6 +630,9 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
 
         // Exclude if closed
         if (hit._source.stock === 0) return res;
+
+        // Exclude wallet issuer
+        if (hit._source.issuer === walletPubkey) return res;
 
         // Exclude if too old
         var time = hit._source.time || hit._source.creationTime;
