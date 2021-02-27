@@ -136,7 +136,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
     deferred = deferred || $q.defer();
 
     // Crowdfunding
-    if (record.type === 'crowdfunding') {
+    if (record.type === 'crowdfunding' && record.pubkey) {
       return fillRecordTx(record, {withAvg: true, withIssuers: true})
         .then(deferred.resolve)
         .catch(deferred.reject);
