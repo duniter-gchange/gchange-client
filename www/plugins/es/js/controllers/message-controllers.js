@@ -503,25 +503,33 @@ function ESMessageViewController($scope, $state, $timeout, $translate, $ionicHis
       });
   };
 
-  $scope.delete = function() {
+  $scope.hideActionsPopover = function() {
     if ($scope.actionsPopover) {
       $scope.actionsPopover.hide();
+      $scope.actionsPopover = null;
     }
+  };
 
-    UIUtils.alert.confirm('MESSAGE.CONFIRM.REMOVE')
-      .then(function(confirm) {
-        if (confirm) {
-          return esMessage.remove($scope.id, $scope.type)
-            .then(function () {
-              $ionicHistory.nextViewOptions({
-                historyRoot: true
-              });
-              $state.go('app.user_message', {type: $scope.type});
-              UIUtils.toast.show('MESSAGE.INFO.MESSAGE_REMOVED');
-            })
-            .catch(UIUtils.onError('MESSAGE.ERROR.REMOVE_MESSAGE_FAILED'));
-        }
-      });
+  $scope.delete = function() {
+    $scope.hideActionsPopover();
+
+    // Add a timeout because alert with cause popover to not close completely, and application can freeze (on mobile)
+    // Fix issue #
+    setTimeout(function(){
+      return UIUtils.alert.confirm('MESSAGE.CONFIRM.REMOVE')
+          .then(function(confirm) {
+            if (!confirm) return; // Skip
+            return esMessage.remove($scope.id, $scope.type)
+                .then(function () {
+                  $ionicHistory.nextViewOptions({
+                    historyRoot: true
+                  });
+                  $state.go('app.user_message', {type: $scope.type});
+                  UIUtils.toast.show('MESSAGE.INFO.MESSAGE_REMOVED');
+                })
+                .catch(UIUtils.onError('MESSAGE.ERROR.REMOVE_MESSAGE_FAILED'));
+          });
+    }, 100);
   };
 
   /* -- Popover -- */
