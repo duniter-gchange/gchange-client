@@ -70,7 +70,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
 
     // Add filter on recipient pubkey
     if (record.pubkey) {
-      request.query.bool.filter = [{term : {recipient : record.pubkey}}];
+      request.query.bool.filter = [{term : {recipient: record.pubkey}}];
     }
 
     if (options.withAvg) {
@@ -82,7 +82,6 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
       request.aggs.issuers = {
         terms : { field : "issuer" }
       };
-
     }
 
     return postSearch(record.currency, request)
