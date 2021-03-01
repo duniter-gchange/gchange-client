@@ -99,7 +99,7 @@ rm -rf ${ANDROID_OUTPUT_APK_RELEASE}/*.apk || exit 1
 [[ $? -ne 0 ]] && exit 1
 
 APK_RELEASE_FILE="${ANDROID_OUTPUT_APK_RELEASE}/app-release.apk"
-  APK_RELEASE_UNSIGNED_FILE="${ANDROID_OUTPUT_APK_RELEASE}/app-release-unsigned.apk"
+APK_RELEASE_UNSIGNED_FILE="${ANDROID_OUTPUT_APK_RELEASE}/app-release-unsigned.apk"
 if [[ ! -f "${APK_RELEASE_FILE}" ]]; then
   if [[ ! -f "${APK_RELEASE_UNSIGNED_FILE}" ]]; then
     echo "ERROR: Missing android artifact at ${APK_RELEASE_FILE}"
