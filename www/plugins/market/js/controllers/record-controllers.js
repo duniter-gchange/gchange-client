@@ -493,11 +493,14 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     // Compute TX amount
     var amount = record.price;
     var comment;
+    var pubkey = record.pubkey || $scope.issuer.pubkey;
 
     // crowdfunding
     if (record.type === 'crowdfunding') {
       amount = undefined;
       comment = mkTx.record.computePrefix(record);
+      // If present, use the record pubkey
+      pubkey = record.pubkey || pubkey;
     }
 
     // Auction
@@ -506,9 +509,8 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
       comment = mkTx.record.computePrefix(record);
     }
 
-    var pubkey = $scope.issuer.pubkey;
     if (!pubkey) {
-      console.warn('[market] [record] No pubkey found in the issuer profile');
+      console.warn('[market] [record] No pubkey found in the issuer profile or in the Ad');
       $scope.showPayment = false;
       $scope.paymentData = null;
       return;

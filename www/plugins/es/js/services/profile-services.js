@@ -138,7 +138,8 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
     data.profile.time = hit._source.time;
 
     // Fetch payment pubkey (need by Gchange)
-    if (hit._source.pubkey) {
+    // but do NOT override if already set in the record (e.g. in crownfunding ad, there is a pubkey attribute: so keep it)
+    if (hit._source.pubkey && !data.pubkey) {
       data.pubkey = hit._source.pubkey;
     }
 
