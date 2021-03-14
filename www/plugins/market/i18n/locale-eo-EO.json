@@ -1,7 +1,8 @@
 {
   "MENU": {
     "MARKET": "Anoncoj",
-    "MY_RECORDS": "Miaj anoncoj"
+    "MY_RECORDS": "Miaj anoncoj",
+    "FAVORITES": "Preferoj"
   },
   "MARKET": {
     "COMMON": {
