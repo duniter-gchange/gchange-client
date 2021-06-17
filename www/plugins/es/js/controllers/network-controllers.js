@@ -47,7 +47,7 @@ angular.module('cesium.es.network.controllers', ['cesium.es.services'])
 
 ;
 
-function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $window, $translate,
+function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $window, $translate, BMA,
                                    esHttp, UIUtils, csConfig, csSettings, csCurrency, esNetwork, csWot) {
   'ngInject';
 
@@ -85,26 +85,42 @@ function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $w
     if ($scope.networkStarted) return;
     $scope.networkStarted = true;
     $scope.search.loading = true;
-    csCurrency.get()
-        .then(function (currency) {
-          if (currency) {
-            $scope.node = !esHttp.node.same(currency.node.host, currency.node.port) ?
-                esHttp.instance(currency.node.host, currency.node.port) : esHttp;
-            if (state && state.stateParams) {
-              if (state.stateParams.online == 'true') {
-                $scope.search.online = true;
-              }
-              if (state.stateParams.expert) {
-                $scope.expertMode = (state.stateParams.expert == 'true');
-              }
-            }
-            $scope.load();
+
+    csSettings.ready()
+      .then(function () {
+        if (esHttp.isStarted()) {
+          return esHttp;
+        } else {
+          return BMA.filterAliveNodes(csSettings.data && csSettings.data.fallbackNodes || [])
+              .then(function (fallbackNodes) {
+                if (!fallbackNodes.length) {
+                  throw new Error();
+                }
+                var randomIndex = Math.floor(Math.random() * fallbackNodes.length);
+                var fallbackNode = fallbackNodes[randomIndex];
+                var node = esHttp.instance(fallbackNode.host, fallbackNode.port, fallbackNode.useSsl);
+                node.started = true; // Force as started
+                node.alive = true;
+                return node;
+              });
+        }
+      })
+      .then(function(node) {
+        $scope.node = node;
+        if (state && state.stateParams) {
+          if (state.stateParams.online == 'true') {
+            $scope.search.online = true;
           }
-        })
-        .catch(function(err) {
-          UIUtils.onError('ERROR.GET_CURRENCY_FAILED')(err);
-          $scope.networkStarted = false;
-        });
+          if (state.stateParams.expert) {
+            $scope.expertMode = (state.stateParams.expert == 'true');
+          }
+        }
+        $scope.load();
+      })
+      .catch(function(err) {
+        UIUtils.onError('ERROR.CHECK_NETWORK_CONNECTION')(err);
+        $scope.networkStarted = false;
+      });
   };
   $scope.$on('$ionicParentView.enter', $scope.enter);
 
@@ -145,24 +161,24 @@ function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $w
   $scope.load = function() {
 
     if ($scope.search.loading){
-      esNetwork.start($scope.node, $scope.computeOptions());
+      $scope.refreshing = false;
+      var processData = function(data) {
+        if (!$scope.refreshing) {
+          // Avoid to refresh if view has been leaving
+          if ($scope.networkStarted) {
+            $scope.updateView(data);
+          }
+          $scope.refreshing = false;
+        }
+      }
+      esNetwork.start($scope.node, $scope.computeOptions())
+          .then(function(){
+            processData(esNetwork.data);
+          });
 
       // Catch event on new peers
-      $scope.refreshing = false;
       $scope.listeners.push(
-          esNetwork.api.data.on.changed($scope, function(data){
-            if (!$scope.refreshing) {
-              $scope.refreshing = true;
-              csWot.extendAll(data.peers)
-                  .then(function() {
-                    // Avoid to refresh if view has been leaving
-                    if ($scope.networkStarted) {
-                      $scope.updateView(data);
-                    }
-                    $scope.refreshing = false;
-                  });
-            }
-          }));
+          esNetwork.api.data.on.changed($scope, processData));
     }
   };
 

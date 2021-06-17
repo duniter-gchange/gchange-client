@@ -57,7 +57,7 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     cacheTimeMs: 60000, /*1 min*/
     timeWarningExpireMembership: 2592000 * 2 /*=2 mois*/,
     timeWarningExpire: 2592000 * 3 /*=3 mois*/,
-    minVersion: '1.7.0', // min duniter version
+    minVersion: '1.2.0', // min gchange version
     newIssueUrl: "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug",
     //userForumUrl: "https://forum.gchange.fr",
     userForumUrl: "https://forum.monnaie-libre.fr",
@@ -309,7 +309,7 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
   },
 
   ready = function() {
-    if (started) return $q.when();
+    if (started) return $q.when(data);
     return startPromise || start();
   },
 
@@ -328,6 +328,7 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
         startPromise = null;
         // Emit event (used by plugins)
         api.data.raise.ready(data);
+        return data;
       });
 
     return startPromise;

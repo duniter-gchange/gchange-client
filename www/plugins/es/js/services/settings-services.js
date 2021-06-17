@@ -32,7 +32,7 @@ angular.module('cesium.es.settings.services', ['cesium.services', 'cesium.es.htt
     fixedSettings = {
       plugins: {
         es: {
-          minVersion: "1.2.0",
+          minVersion: csSettings.data.minVersion, // Copy from core settings
           document: {
             index: 'user',
             type: 'profile'

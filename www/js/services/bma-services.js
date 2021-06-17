@@ -236,31 +236,29 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
       };
     };
 
-    that.isAlive = function() {
-      return csHttp.get(that.host, that.port, '/node/summary', that.useSsl)()
+    that.isAlive = function(node, timeout) {
+      node = node || that;
+
+      return csHttp.get(node.host, node.port, '/node/summary', node.useSsl || that.forceUseSsl, timeout)()
         .then(function(json) {
           var software = json && json.duniter && json.duniter.software;
-          var isCompatible = true;
+          var isCompatible = false;
 
-          // Check duniter min version
-          if (software === 'duniter' && json.duniter.version && csSettings.data.minVersion && true) {
-            isCompatible = csHttp.version.isCompatible(csSettings.data.minVersion, json.duniter.version);
-          }
           // gchange-pod
-          else if (software === 'gchange-pod' && json.duniter.version && csSettings.data.plugins.es.minVersion && true) {
-            isCompatible = csHttp.version.isCompatible(csSettings.data.plugins.es.minVersion, json.duniter.version);
+          if (software === 'gchange-pod' && json.duniter.version && csSettings.data.minVersion && true) {
+            isCompatible = csHttp.version.isCompatible(csSettings.data.minVersion, json.duniter.version);
+            if (!isCompatible) {
+              console.error('[BMA] Incompatible node [{0} v{1}]: expected at least v{2}'.format(software, json.duniter.version, csSettings.data.minVersion));
+            }
           }
-          // TODO: check version of other software (DURS, Juniter, etc.)
+          // TODO: check version of other software ?
           else {
             console.debug('[BMA] Unknown node software [{0} v{1}]: could not check compatibility.'.format(software || '?', json.duniter.version || '?'));
-          }
-          if (!isCompatible) {
-            console.error('[BMA] Incompatible node [{0} v{1}]: expected at least v{2}'.format(software, json.duniter.version, csSettings.data.minVersion));
           }
           return isCompatible;
         })
         .catch(function() {
-          return false;
+          return false; // Unreachable
         });
     };
 
@@ -369,6 +367,31 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
           }
           return alive;
         });
+    };
+
+    that.filterAliveNodes = function(fallbackNodes, timeout) {
+      var fallbackNodes = _.filter(fallbackNodes || [], function(node) {
+        node.server = node.server || node.host + ((!node.port && node.port != 80 && node.port != 443) ? (':' + node.port) : '');
+        var same = that.node.same(node);
+        if (same) console.debug('[BMA] Skipping fallback node [{0}]: same as current BMA node'.format(node.server));
+        return !same;
+      });
+
+      var aliveNodes = [];
+      return $q.all(_.map(fallbackNodes, function(node) {
+        return that.isAlive(node, timeout)
+            .then(function(alive) {
+              if (alive) {
+                aliveNodes.push(node);
+              }
+              else {
+                console.error('[BMA] Unreachable (or not compatible) fallback node [{0}]: skipping'.format(node.server));
+              }
+            })
+      }))
+      .then(function() {
+        return aliveNodes;
+      });
     };
 
     that.api.registerEvent('node', 'start');
@@ -678,14 +701,25 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
     };
 
     exports.copy = function(otherNode) {
-      var wasStarted = that.started;
 
       var server = csHttp.getUrl(otherNode.host, otherNode.port, ''/*path*/, otherNode.useSsl);
       var hasChanged = (server !== that.url);
       if (hasChanged) {
+        var wasStarted = that.started;
+        if (wasStarted) that.stop();
         that.init(otherNode.host, otherNode.port, otherNode.useSsl, that.useCache/*keep original value*/);
         // Restart (only if was already started)
-        return wasStarted ? that.restart() : $q.when();
+        if (wasStarted) {
+          return $timeout(function () {
+            return that.start()
+                .then(function (alive) {
+                  if (alive) {
+                    that.api.node.raise.restart();
+                  }
+                  return alive;
+                });
+          }, 200); // Wait stop finished
+        }
       }
     };
 

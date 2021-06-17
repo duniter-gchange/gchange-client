@@ -116,7 +116,7 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
                 .then(function(res){
                   var jobs = [];
                   _.forEach(res.peers, function(json) {
-                    if (json.status == 'UP') {
+                    if (json.status === 'UP') {
                       jobs.push(addOrRefreshPeerFromJson(json, newPeers));
                     }
                   });
@@ -144,6 +144,12 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
 
           .then(function(){
             data.searchingPeersOnNetwork = false;
+            data.loading = false;
+            $interval.cancel(interval);
+            if (newPeers.length) {
+              flushNewPeersAndSort(newPeers, true/*update main buid*/);
+            }
+            return data.peers;
           })
           .catch(function(err){
             console.error(err);
@@ -554,10 +560,10 @@ angular.module('cesium.es.network.services', ['ngApi', 'cesium.es.http.services'
 
       start = function(pod, options) {
         options = options || {};
-        return esHttp.ready()
+        close();
+        data.pod = pod || esHttp;
+        return $q.when()
           .then(function() {
-            close();
-            data.pod = pod || esHttp;
             data.filter = options.filter ? angular.merge(data.filter, options.filter) : data.filter;
             data.sort = options.sort ? angular.merge(data.sort, options.sort) : data.sort;
             data.expertMode = angular.isDefined(options.expertMode) ? options.expertMode : data.expertMode;

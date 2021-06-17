@@ -38,13 +38,12 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
               ES_USER_API_ENDPOINT: exact(constants.ES_USER_API_ENDPOINT),
               API_ENDPOINT: exact(constants.ANY_API_ENDPOINT),
             },
-            fallbackNodeIndex = 0,
             listeners,
             defaultSettingsNode,
             truncUrlFilter = $filter('truncUrl');
 
         that.data = {
-          isFallback: false
+          moderators: []
         };
         that.cache = _emptyCache();
         that.api = new Api(this, "esHttp");
@@ -57,9 +56,9 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         function init(host, port, useSsl, useCache) {
           // Use settings as default
           if (!host && csSettings.data) {
-            host = host || (csSettings.data.plugins && csSettings.data.plugins.es ? csSettings.data.plugins.es.host : null);
-            port = port || (host ? csSettings.data.plugins.es.port : null);
-            useSsl = angular.isDefined(useSsl) ? useSsl : (port == 443 || csSettings.data.plugins.es.useSsl || forceUseSsl);
+            host = host || csSettings.data.node.host || null;
+            port = port || csSettings.data.node.port || null;
+            useSsl = angular.isDefined(useSsl) ? useSsl : (port == 443 || csSettings.data.useSsl || forceUseSsl);
           }
 
           that.alive = false;
@@ -72,29 +71,19 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
         function isSameNodeAsSettings(data) {
           data = data || csSettings.data;
-          if (!data.plugins || !data.plugins.es) return false;
+          if (!data || !data.host) return false;
 
-          var host = data.plugins.es.host;
-          var useSsl = data.plugins.es.port == 443 || data.plugins.es.useSsl || forceUseSsl;
-          var port = data.plugins.es.port || (useSsl ? 443 : 80);
+          var host = data.host;
+          var useSsl = data.port == 443 || data.useSsl || forceUseSsl;
+          var port = data.port || (useSsl ? 443 : 80);
 
           return isSameNode(host, port, useSsl);
         }
 
         function isSameNode(host, port, useSsl) {
           return (that.host === host) &&
-              (that.port === port) &&
+              (that.port == port) &&
               (angular.isUndefined(useSsl) || useSsl == that.useSsl);
-        }
-
-        // Say if the ES node is a fallback node or the configured node
-        function isFallbackNode() {
-          return that.data.isFallback;
-        }
-
-        // Set fallback flag (e.g. called by ES settings, when resetting settings)
-        function setIsFallbackNode(isFallback) {
-          that.data.isFallback = isFallback;
         }
 
         function exact(regexpContent) {
@@ -115,15 +104,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         function onSettingsReset(data, deferred) {
           deferred = deferred || $q.defer();
 
-          if (that.data.isFallback) {
-            // Force a restart
-            if (that.started) {
-              that.stop();
-            }
-          }
-
           // Reset to default values
-          that.data.isFallback = false;
+          that.data.moderators = null;
           defaultSettingsNode = null;
 
           deferred.resolve(data);
@@ -143,7 +125,7 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
         that.copy = function(otherNode) {
           if (that.started) that.stop();
-          that.init(otherNode.host, otherNode.port, otherNode.useSsl || otherNode.port == 443);
+          that.init(otherNode.host, otherNode.port, otherNode.useSsl);
           that.data.isTemporary = false; // reset temporary flag
           return that.start(true /*skipInit*/);
         };
@@ -251,56 +233,27 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
         };
 
         that.isAlive = function() {
-          return csHttp.get(that.host, that.port, '/node/summary', that.useSsl)()
+          return csHttp.get(that.host, that.port, '/node/moderators', that.useSsl)()
               .then(function(json) {
-                var software = json && json.duniter && json.duniter.software || 'unknown';
-                if (software === "gchange-pod" || software === "cesium-plus-pod") return true;
-                console.error("[ES] [http] Not a Gchange Pod, but a {0} node. Please check '/summary/node'".format(software));
-                return false;
+                var moderators = json && json.moderators || [];
+                if (!moderators.length) {
+                  console.error("[ES] [http] No moderators defined in this pod!");
+                }
+                else {
+                  that.data.moderators = moderators;
+                }
+                return true;
               })
               .catch(function() {
+                console.error("[ES] [http] Not a Gchange Pod ? Please check '/node/moderators'");
                 return false;
               });
         };
 
         // Alert user if node not reached - fix issue #
         that.checkNodeAlive = function(alive) {
-          if (alive) {
-            setIsFallbackNode(!isSameNodeAsSettings());
-            return true;
-          }
-          if (angular.isUndefined(alive)) {
-            return that.isAlive().then(that.checkNodeAlive);
-          }
-
-          var settings = csSettings.data.plugins && csSettings.data.plugins.es || {};
-
-          // Remember the default node
-          defaultSettingsNode = defaultSettingsNode || {
-            host: settings.host,
-            port: settings.port
-          };
-
-          var fallbackNode = settings.fallbackNodes && fallbackNodeIndex < settings.fallbackNodes.length && settings.fallbackNodes[fallbackNodeIndex++];
-          if (!fallbackNode) {
-            $translate('ERROR.ES_CONNECTION_ERROR', {server: that.server})
-                .then(UIUtils.alert.info);
-            return false; // stop the loop
-          }
-          var newServer = csHttp.getServer(fallbackNode.host, fallbackNode.port);
-          UIUtils.loading.hide();
-          return $translate('CONFIRM.ES_USE_FALLBACK_NODE', {old: that.server, new: newServer})
-              .then(UIUtils.alert.confirm)
-              .then(function (confirm) {
-                if (!confirm) return false; // stop the loop
-
-                that.cleanCache();
-
-                that.init(fallbackNode.host, fallbackNode.port, fallbackNode.useSsl || fallbackNode.port == 443);
-
-                // check is alive then loop
-                return that.isAlive().then(that.checkNodeAlive);
-              });
+          if (angular.isDefined(alive)) return alive;
+          return that.isAlive();
         };
 
         that.isStarted = function() {
@@ -336,9 +289,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
                       that.alive = alive;
                       if (!alive) {
                         console.error('[ES] [http] Could not start [{0}]: node unreachable'.format(that.server));
-                        that.started = true;
+                        that.started = false;
                         delete that._startPromise;
-                        fallbackNodeIndex = 0; // reset the fallback node counter
                         return false;
                       }
 
@@ -348,10 +300,8 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
                       console.debug('[ES] [http] Started in '+(Date.now()-now)+'ms');
                       that.api.node.raise.start();
 
-
                       that.started = true;
                       delete that._startPromise;
-                      fallbackNodeIndex = 0; // reset the fallback node counter
 
 
                       return true;
@@ -365,7 +315,6 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
 
           removeListeners();
 
-          setIsFallbackNode(false); // will be re-computed during start phase
           delete that._startPromise;
           if (that.alive) {
             that.cleanCache();
@@ -722,10 +671,10 @@ angular.module('cesium.es.http.services', ['ngResource', 'ngApi', 'cesium.servic
           getServer: csHttp.getServer,
           node: {
             summary: that.get('/node/summary'),
+            moderators: that.get('/node/moderators'),
             parseEndPoint: parseEndPoint,
             same: isSameNode,
-            sameAsSettings: isSameNodeAsSettings,
-            isFallback: isFallbackNode
+            sameAsSettings: isSameNodeAsSettings
           },
           websocket: {
             changes: that.wsChanges,

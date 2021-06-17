@@ -83,7 +83,7 @@ function HomeController($scope, $state, $timeout, $ionicHistory, $http, $transla
           $scope.loading = false;
         });
     }
-    else if (state && state.stateParams && state.stateParams.error) { // Error query parameter
+    else if (state && state.stateParams && state.stateParams.error && !csPlatform.isStarted()) { // Error query parameter
       $scope.error = state.stateParams.error;
       $scope.node = csCurrency.data.node;
       $scope.loading = false;

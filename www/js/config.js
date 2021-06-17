@@ -28,18 +28,17 @@ angular.module("cesium.config", [])
 		},
 		"maxContentLength": 1300
 	},
-	"node": {
-		"host": "data.gchange.fr",
-		"port": "443"
-	},
+	"node": { "host": "data.gchange.fr", "port": "443" },
+	"fallbackNodes": [
+		{ "host": "data.gchange.fr", "port": "443" },
+		{ "host": "gchange.data.presles.fr", "port": "443" }
+	],
 	"share": {
 		"mastodonAuthor": "@gchange@framapiaf.org"
 	},
 	"plugins": {
 		"es": {
 			"enable": true,
-			"host": "data.gchange.fr",
-			"port": "443",
 			"maxUploadBodySize": 5242880,
 			"defaultCountry": "France"
 		},

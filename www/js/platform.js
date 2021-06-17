@@ -93,8 +93,7 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
 
     'ngInject';
     var
-      fallbackNodeIndex = 0,
-      defaultSettingsNode,
+      checkBmaNodeAliveCounter = 0,
       started = false,
       startPromise,
       listeners,
@@ -130,60 +129,61 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
     function checkBmaNodeAlive(alive) {
       if (alive) return true;
 
-      // Remember the default node
-      defaultSettingsNode = defaultSettingsNode || csSettings.data.node;
+      checkBmaNodeAliveCounter++;
+      if (checkBmaNodeAliveCounter > 3)  throw 'ERROR.CHECK_NETWORK_CONNECTION'; // Avoid infinite loop
 
-      var fallbackNode = csSettings.data.fallbackNodes && fallbackNodeIndex < csSettings.data.fallbackNodes.length && csSettings.data.fallbackNodes[fallbackNodeIndex++];
-      if (!fallbackNode) {
-        throw 'ERROR.CHECK_NETWORK_CONNECTION';
-      }
-      var newServer = fallbackNode.host + ((!fallbackNode.port && fallbackNode.port != 80 && fallbackNode.port != 443) ? (':' + fallbackNode.port) : '');
-
-      // Skip is same as actual node
-      if (BMA.node.same(fallbackNode.host, fallbackNode.port)) {
-        console.debug('[platform] Skipping fallback node [{0}]: same as actual node'.format(newServer));
-        return checkBmaNodeAlive(); // loop (= go to next node)
-      }
-
-      // Try to get summary
-      return csHttp.get(fallbackNode.host, fallbackNode.port, '/node/summary', fallbackNode.port==443 || BMA.node.forceUseSsl)()
-        .catch(function(err) {
-          console.error('[platform] Could not reach fallback node [{0}]: skipping'.format(newServer));
-          // silent, but return no result (will loop to the next fallback node)
+      return BMA.filterAliveNodes(csSettings.data.fallbackNodes, Math.min(csConfig.timeout, 3000)/*3s max*/)
+        .then(function (fallbackNodes) {
+          if (!fallbackNodes.length) {
+            throw 'ERROR.CHECK_NETWORK_CONNECTION';
+          }
+          var randomIndex = Math.floor(Math.random() * fallbackNodes.length);
+          var fallbackNode = fallbackNodes[randomIndex];
+          return fallbackNode;
         })
-        .then(function(res) {
-          if (!res) return checkBmaNodeAlive(); // Loop
+        .then(function (fallbackNode) {
+
+          // Not expert mode: continue with the fallback node
+          if (!csSettings.data.expertMode) {
+            console.info("[platform] Switching to fallback node: {0}".format(fallbackNode.server));
+            return fallbackNode;
+          }
+
+          // If expert mode: ask user to confirm, before switching to fallback node
+          var confirmMsgParams = {old: BMA.server, new: fallbackNode.server};
 
           // Force to show port/ssl, if this is the only difference
-          var messageParam = {old: BMA.server, new: newServer};
-          if (messageParam.old === messageParam.new) {
+          if (confirmMsgParams.old === confirmMsgParams.new) {
             if (BMA.port != fallbackNode.port) {
-              messageParam.new += ':' + fallbackNode.port;
-            }
-            else if (BMA.useSsl == false && (fallbackNode.useSsl || fallbackNode.port==443)) {
-              messageParam.new += ' (SSL)';
+              confirmMsgParams.new += ':' + fallbackNode.port;
+            } else if (BMA.useSsl == false && (fallbackNode.useSsl || fallbackNode.port == 443)) {
+              confirmMsgParams.new += ' (SSL)';
             }
           }
 
-          return $translate('CONFIRM.USE_FALLBACK_NODE', messageParam)
-            .then(function(msg) {
-              return UIUtils.alert.confirm(msg);
-            })
+          return $translate('CONFIRM.USE_FALLBACK_NODE', confirmMsgParams)
+            .then(UIUtils.alert.confirm)
             .then(function (confirm) {
-              if (!confirm) return;
-
-              // Only change BMA node in settings
-              csSettings.data.node = fallbackNode;
-
-              // Add a marker, for UI
-              csSettings.data.node.temporary = true;
-
-              csHttp.cache.clear();
-
-              // loop
-              return BMA.copy(fallbackNode)
-                .then(checkBmaNodeAlive);
+              if (!confirm) return; // Stop
+              return fallbackNode;
             });
+        })
+        .then(function (fallbackNode) {
+          if (!fallbackNode) return; // Skip
+
+          // Only change BMA node in settings
+          csSettings.data.node = fallbackNode;
+
+          // Add a marker, for UI (only if not expert mode)
+          if (csSettings.data.expertMode) {
+            csSettings.data.node.temporary = true;
+          }
+
+          csHttp.cache.clear();
+
+          // loop
+          return BMA.copy(fallbackNode)
+              .then(checkBmaNodeAlive);
         });
     }
 
@@ -258,7 +258,8 @@ angular.module('cesium.platform', ['cesium.config', 'cesium.services'])
 
         // Load BMA
         .then(function(){
-          return BMA.ready().then(checkBmaNodeAlive);
+          return BMA.ready()
+              .then(checkBmaNodeAlive);
         })
 
         // Load currency
