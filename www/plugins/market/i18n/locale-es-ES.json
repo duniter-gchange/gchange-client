@@ -71,10 +71,6 @@
         "RECORD_FEES_HELP": "Gastos de envío (opcional)",
         "RECORD_STOCK": "Stock disponible",
         "RECORD_STOCK_HELP": "Stock disponible",
-        "MODERATION": {
-          "DIVIDER": "Otras opciones ",
-          "ENABLE_COMMENTS": "¿Permitir comentarios?"
-        },
         "AUCTION": {
           "TITLE_NEW": "Nueva subasta",
           "START_PRICE_HELP": "Precio inicial (opcional)"
@@ -208,7 +204,16 @@
         "BTN_OFFERS": "Ofertas",
         "BTN_NEEDS": "Demandas",
         "SHOW_CLOSED_RECORD": "Mostrar anuncios cerrados",
-        "RECORD_STOCK": "Stock :"
+        "RECORD_STOCK": "Stock :",
+        "SORT": {
+          "PREFIX": "Clasificación: ",
+          "DATE": "Con fecha de",
+          "PRICE": "Precio",
+          "DATE_ASC": "Mayor",
+          "DATE_DESC": "Más recientes",
+          "PRICE_ASC": "Precios crecientes",
+          "PRICE_DESC": "Precios descendentes "
+        }
       },
       "TYPE": {
         "TITLE": "Nuevo anuncio",

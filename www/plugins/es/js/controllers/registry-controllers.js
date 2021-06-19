@@ -1036,7 +1036,8 @@ function ESRegistryRecordEditController($scope, $timeout,  $state, $q, $ionicHis
     title: null,
     description: null,
     socials: [],
-    geoPoint: null
+    geoPoint: null,
+    allowComments: false
   };
 
   $scope.loading = true;

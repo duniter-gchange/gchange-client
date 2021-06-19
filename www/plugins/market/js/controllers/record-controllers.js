@@ -605,7 +605,8 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
     category: {},
     geoPoint: null,
     useRelative: csSettings.data.useRelative,
-    pubkey: null
+    pubkey: null,
+    allowComments : false
   };
   $scope.id = null;
   $scope.pictures = [];

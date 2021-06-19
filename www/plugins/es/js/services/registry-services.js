@@ -17,7 +17,7 @@ angular.module('cesium.es.registry.services', ['ngResource', 'cesium.services', 
     fields = {
       commons: ["title", "description", "issuer", "time", "address", "city", "creationTime", "avatar._content_type",
         "picturesCount", "type", "category", "socials", "pubkey",
-        "geoPoint"
+        "geoPoint", "allowComments"
       ]
     },
     that = this,

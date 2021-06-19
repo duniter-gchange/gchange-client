@@ -107,6 +107,10 @@
     "DELETED_COMMENT": "Comment deleted",
     "MODIFIED_ON": "modified on {{time|formatDate}}",
     "MODIFIED_PARENTHESIS": "(modified then)",
+    "MODERATION": {
+      "DIVIDER": "Other options",
+      "ENABLE_COMMENTS": "Allow coments?"
+    },
     "ERROR": {
       "FAILED_SAVE_COMMENT": "Saving comment failed",
       "FAILED_REMOVE_COMMENT": "Deleting comment failed"

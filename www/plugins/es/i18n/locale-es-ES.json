@@ -154,6 +154,10 @@
     "REPLY_TO_DELETED_COMMENT": "En repuesta a un comentario suprimido",
     "REPLY_COUNT": "{{replyCount}} repuestas",
     "DELETED_COMMENT": "Comentario suprimido",
+    "MODERATION": {
+      "DIVIDER": "Otras opciones",
+      "ENABLE_COMMENTS": "¿Permitir comentarios?"
+    },
     "ERROR": {
       "FAILED_SAVE_COMMENT": "Fracaso durante el respaldo del comentario",
       "FAILED_REMOVE_COMMENT": "Fracaso durante la supresión del comentario"
