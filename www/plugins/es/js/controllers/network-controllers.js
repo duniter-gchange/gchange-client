@@ -170,15 +170,15 @@ function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $w
           }
           $scope.refreshing = false;
         }
-      }
+      };
       esNetwork.start($scope.node, $scope.computeOptions())
-          .then(function(){
-            processData(esNetwork.data);
-          });
+        .then(function(){
+          processData(esNetwork.data);
+        });
 
       // Catch event on new peers
       $scope.listeners.push(
-          esNetwork.api.data.on.changed($scope, processData));
+        esNetwork.api.data.on.changed($scope, processData));
     }
   };
 
