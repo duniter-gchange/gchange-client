@@ -370,24 +370,24 @@ angular.module('cesium.bma.services', ['ngApi', 'cesium.http.services', 'cesium.
     };
 
     that.filterAliveNodes = function(fallbackNodes, timeout) {
-      var fallbackNodes = _.filter(fallbackNodes || [], function(node) {
+      fallbackNodes = _.filter(fallbackNodes || [], function(node) {
         node.server = node.server || node.host + ((!node.port && node.port != 80 && node.port != 443) ? (':' + node.port) : '');
         var same = that.node.same(node);
-        if (same) console.debug('[BMA] Skipping fallback node [{0}]: same as current BMA node'.format(node.server));
+        //if (same) console.debug('[BMA] Skipping fallback node [{0}]: same as current BMA node'.format(node.server));
         return !same;
       });
 
       var aliveNodes = [];
       return $q.all(_.map(fallbackNodes, function(node) {
         return that.isAlive(node, timeout)
-            .then(function(alive) {
-              if (alive) {
-                aliveNodes.push(node);
-              }
-              else {
-                console.error('[BMA] Unreachable (or not compatible) fallback node [{0}]: skipping'.format(node.server));
-              }
-            })
+          .then(function(alive) {
+            if (alive) {
+              aliveNodes.push(node);
+            }
+            else {
+              console.error('[BMA] Unreachable (or not compatible) fallback node [{0}]: skipping'.format(node.server));
+            }
+          });
       }))
       .then(function() {
         return aliveNodes;

@@ -28,10 +28,19 @@ angular.module("cesium.config", [])
 		},
 		"maxContentLength": 1300
 	},
-	"node": { "host": "data.gchange.fr", "port": "443" },
+	"node": {
+		"host": "data.gchange.fr",
+		"port": "443"
+	},
 	"fallbackNodes": [
-		{ "host": "data.gchange.fr", "port": "443" },
-		{ "host": "gchange.data.presles.fr", "port": "443" }
+		{
+			"host": "data.gchange.fr",
+			"port": "443"
+		},
+		{
+			"host": "gchange.data.presles.fr",
+			"port": "443"
+		}
 	],
 	"share": {
 		"mastodonAuthor": "@gchange@framapiaf.org"
@@ -61,8 +70,8 @@ angular.module("cesium.config", [])
 			]
 		}
 	},
-	"version": "1.2.8",
-	"build": "2021-03-01T16:19:40.420Z",
+	"version": "1.3.0",
+	"build": "2021-06-19T10:20:34.107Z",
 	"newIssueUrl": "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug"
 })
 
