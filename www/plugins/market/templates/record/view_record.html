@@ -299,10 +299,11 @@
 
           <div class="lazy-load">
             <!-- pictures -->
-            <ng-include src="'plugins/es/templates/common/view_pictures.html'"></ng-include>
+            <ng-include src="::'plugins/es/templates/common/view_pictures.html'"></ng-include>
 
             <!-- comments -->
-            <ng-include src="'plugins/es/templates/common/view_comments.html'"></ng-include>
+            <ng-include ng-if="formData.allowComments !== false"
+                        src="'plugins/es/templates/common/view_comments.html'"></ng-include>
           </div>
         </div>
       </div>

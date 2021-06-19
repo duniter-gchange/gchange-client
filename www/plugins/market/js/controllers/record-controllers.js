@@ -840,6 +840,10 @@ function MkRecordEditController($scope, $rootScope, $q, $state, $ionicPopover, $
           json.location = null;
         }
 
+        // Prepare comment
+        json.allowComments = json.allowComments === true;
+
+        // Prepare pictures
         json.picturesCount = $scope.pictures.length;
         if (json.picturesCount) {
 

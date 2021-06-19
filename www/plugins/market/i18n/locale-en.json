@@ -1,7 +1,8 @@
 {
   "MENU": {
     "MARKET": "Ads",
-    "MY_RECORDS": "My ads"
+    "MY_RECORDS": "My ads",
+    "FAVORITES": "Favorites"
   },
   "MARKET": {
     "COMMON": {
@@ -197,6 +198,10 @@
       "RECORD_FEES_HELP": "Fees (optional)",
       "RECORD_STOCK": "Available stock",
       "RECORD_STOCK_HELP": "Available stock",
+      "MODERATION": {
+        "DIVIDER": "Other options",
+        "ENABLE_COMMENTS": "Allow coments ?"
+      },
       "AUCTION": {
         "TITLE_NEW": "New auction",
         "START_PRICE_HELP": "Starting price (optional)"

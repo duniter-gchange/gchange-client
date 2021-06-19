@@ -198,6 +198,10 @@
       "RECORD_FEES_HELP": "Frais (optionnel)",
       "RECORD_STOCK": "Stock disponible",
       "RECORD_STOCK_HELP": "Stock disponible",
+      "MODERATION": {
+        "DIVIDER": "Autres options",
+        "ENABLE_COMMENTS": "Autoriser les commentaires ?"
+      },
       "AUCTION": {
         "TITLE_NEW": "Nouvelle enchère",
         "START_PRICE_HELP": "Prix de départ (optionnel)"

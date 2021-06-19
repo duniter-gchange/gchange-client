@@ -71,6 +71,10 @@
         "RECORD_FEES_HELP": "Gastos de envío (opcional)",
         "RECORD_STOCK": "Stock disponible",
         "RECORD_STOCK_HELP": "Stock disponible",
+        "MODERATION": {
+          "DIVIDER": "Otras opciones ",
+          "ENABLE_COMMENTS": "¿Permitir comentarios?"
+        },
         "AUCTION": {
           "TITLE_NEW": "Nueva subasta",
           "START_PRICE_HELP": "Precio inicial (opcional)"
@@ -262,7 +266,8 @@
       }
 	},
 	"MENU": {
-		"MARKET": "Anuncios",
-		"MY_RECORDS": "Mis anuncios"
+      "MARKET": "Anuncios",
+      "MY_RECORDS": "Mis anuncios",
+      "FAVORITES": "Favoritos"
 	}
 }

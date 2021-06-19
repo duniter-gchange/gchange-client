@@ -46,6 +46,16 @@
               <!-- form content -->
               <ng-include ng-if="formData.type" src="::'plugins/market/templates/record/form_record_'+formData.type+'.html'"></ng-include>
 
+              <div class="item item-divider" translate>MARKET.EDIT.MODERATION.DIVIDER</div>
+
+              <ion-checkbox
+                      ng-model="formData.allowComments"
+                      class="item item-border-large">
+                <div class="item-content" translate>
+                  MARKET.EDIT.MODERATION.ENABLE_COMMENTS
+                </div>
+              </ion-checkbox>
+
               <!-- buttons -->
               <div class="item padding hidden-xs hidden-sm text-right">
                 <button class="button button-clear button-dark ink" ng-click="cancel()" type="button" translate>

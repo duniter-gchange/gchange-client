@@ -57,22 +57,20 @@
             ng-if="options.position.showCheckbox"
             ng-model="formPosition.enable"
             ng-change="onUseGeopointChanged()"
-            class="item item-border-large done in">
-      <div class="item-content">
-        <span translate>LOCATION.USE_GEO_POINT</span>
+            style="margin-top: 5px;">
+      <span translate>LOCATION.USE_GEO_POINT</span>
 
-        <!-- warning if no position-->
-        <h4 class="assertive" ng-if="options.position.warningMessage && !formPosition.enable">
-          <i class="icon ion-android-warning"></i>
-          <span ng-bind-html="options.position.warningMessage|translate"></span>
-        </h4>
+      <!-- warning if no position-->
+      <h4 class="assertive" ng-if="options.position.warningMessage && !formPosition.enable">
+        <i class="icon ion-android-warning"></i>
+        <span ng-bind-html="options.position.warningMessage|translate"></span>
+      </h4>
 
-        <!-- loading -->
-        <h4 class="gray" ng-if="formPosition.loading">
-          <ion-spinner class="icon ion-spinner-small" icon="android"></ion-spinner>
-          <span translate>LOCATION.LOADING_LOCATION</span>
-        </h4>
-      </div>
+      <!-- loading -->
+      <h4 class="gray" ng-if="formPosition.loading">
+        <ion-spinner class="icon ion-spinner-small" icon="android"></ion-spinner>
+        <span translate>LOCATION.LOADING_LOCATION</span>
+      </h4>
     </ion-checkbox>
   </div>
 

@@ -14,7 +14,7 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     fields = {
       commons: ["category", "title", "description", "issuer", "time", "creationTime", "location", "address", "city", "price",
           "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
-          "geoPoint", "pubkey", "freePrice"],
+          "geoPoint", "pubkey", "freePrice", "allowComments"],
       // Same as commons, but without description
       moreLikeThis: ["category", "title", "issuer", "time", "creationTime", "location", "address", "city", "price",
             "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
