@@ -25,7 +25,7 @@ angular.module('cesium.es.document.controllers', ['cesium.es.services'])
   .controller('ESLastDocumentsCtrl', ESLastDocumentsController)
 ;
 
-function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
+function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout, $state, $filter,
                                     csSettings, csWallet, UIUtils, esHttp, esDocument) {
   'ngInject';
 
@@ -46,7 +46,7 @@ function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
   $scope.defaultSizeLimit = $scope.defaultSizeLimit || (UIUtils.screen.isSmall() ? 50 : 100);
   $scope.helptipPrefix = 'helptip-document';
   $scope.compactMode = angular.isDefined($scope.compactMode) ? $scope.compactMode : true;
-  $scope._source = $scope._source || ["issuer", "hash", "time", "creationTime", "title", "message"];
+  $scope._source = $scope._source || ["issuer", "hash", "time", "creationTime", "title", "message", "record"];
 
   /**
    * Enter into the view
@@ -85,6 +85,11 @@ function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
 
     // Included fields
     options._source = options._source || $scope._source;
+
+    // Additional fields
+    if ($scope.search.index === 'like') {
+      options._source = options._source.concat(['kind', 'index', 'type', 'id', 'level']);
+    }
 
     return options;
   };
@@ -188,11 +193,51 @@ function ESDocumentLookupController($scope, $ionicPopover, $location, $timeout,
       });
   };
 
-  $scope.selectDocument = function(event, doc) {
-    console.debug("Selected document: ", doc, esHttp);
+  $scope.openRawDocument = function(event, doc) {
+    if (!doc || !event || event.defaultPrevented) return;
+    event.stopPropagation();
+    console.debug("Open raw document: ", doc);
 
     var url = esHttp.getUrl('/{0}/{1}/_search?pretty&q=_id:{2}'.format(doc.index, doc.type, doc.id));
     return $scope.openLink(event, url);
+  };
+
+  $scope.selectDocument = function(event, doc){
+    if (!doc || !event || event.defaultPrevented) return;
+    event.stopPropagation();
+    console.debug("Select document: ", doc);
+    var anchor;
+    // User profile
+    if (doc.index === "user" && doc.type === "profile") {
+      return $state.go('app.user_identity', {pubkey: doc.pubkey||doc.id, name: doc.name});
+    }
+    // Page
+    else if (doc.index === "page" && doc.type === "record") {
+      return $state.go('app.view_page', {title: doc.title, id: doc.id});
+    }
+    else if (doc.index === "page" && doc.type === "comment") {
+      anchor = $filter('formatHash')(doc.id);
+      return $state.go('app.view_page_anchor', {title: doc.title, id: doc.record, anchor: anchor});
+    }
+    // Group
+    else if (doc.index === "group" && doc.type === "record") {
+      return $state.go('app.view_group', {title: doc.title, id: doc.id});
+    }
+    else if (doc.index === "group" && doc.type === "comment") {
+      anchor = $filter('formatHash')(doc.id);
+      return $state.go('app.view_group_anchor', {title: doc.title, id: doc.record, anchor: anchor});
+    }
+    // Market
+    else  if (doc.index === "market" && doc.type === "record") {
+      return $state.go('app.market_view_record', {id: doc.id, title: doc.title});
+    }
+    else if (doc.index === "market" && doc.type === "comment") {
+      anchor = $filter('formatHash')(doc.id);
+      return $state.go('app.market_view_record_anchor', {id: doc.record, anchor: anchor});
+    }
+    else {
+      console.warn("Open this kind of document not implement yet!", doc);
+    }
   };
 
   $scope.toggleCompactMode = function() {
@@ -350,32 +395,6 @@ function ESLastDocumentsController($scope, $controller, $timeout, $state) {
   angular.extend(this, $controller('ESDocumentLookupCtrl', {$scope: $scope}));
   $scope.$on('$ionicParentView.enter', $scope.enter);
 
-  $scope.selectDocument = function(event, doc) {
-    if (!doc || !event || event.defaultPrevented) return;
-    event.stopPropagation();
-    var anchor;
-    if (doc.index === "user" && doc.type === "profile") {
-      $state.go('app.user_identity', {pubkey: doc.pubkey, name: doc.name});
-    }
-    else if (doc.index === "page" && doc.type === "record") {
-      $state.go('app.view_page', {title: doc.title, id: doc.id});
-    }
-    else if (doc.index === "page" && doc.type === "comment") {
-      anchor = $filter('formatHash')(doc.id);
-      $state.go('app.view_page_anchor', {title: doc.title, id: doc.record, anchor: anchor});
-    }
-    else if (doc.index === "group" && doc.type === "record") {
-      $state.go('app.view_group', {title: doc.title, id: doc.id});
-    }
-    else if (doc.index === "group" && doc.type === "comment") {
-      anchor = $filter('formatHash')(doc.id);
-      $state.go('app.view_group_anchor', {title: doc.title, id: doc.record, anchor: anchor});
-    }
-    else {
-      console.warn("Click on this kind of document not implement yet!", doc);
-    }
-  };
-
   // Override parent function computeOptions
   var inheritedComputeOptions = $scope.computeOptions;
   $scope.computeOptions = function(offset, size){
@@ -391,6 +410,7 @@ function ESLastDocumentsController($scope, $controller, $timeout, $state) {
     }
 
     options._source = options._source || $scope._source;
+
     options.getTimeFunction = function(doc) {
       doc.time = doc.creationTime || doc.time;
       return doc.time;

@@ -384,6 +384,7 @@
     "LOOKUP": {
       "TITLE": "Document search",
       "BTN_ACTIONS": "Actions",
+      "BTN_SHOW_RAW_DOCUMENT": "Show raw document",
       "SEARCH_HELP": "issuer:AAA*, time:1508406169",
       "LAST_DOCUMENTS_DOTS": "Last documents :",
       "LAST_DOCUMENTS": "Last documents",
@@ -409,7 +410,16 @@
         "PAGE_RECORD": "Page",
         "PAGE_COMMENT": "Comment on a page",
         "GROUP_RECORD": "Group",
-        "GROUP_COMMENT": "Comment on a group"
+        "GROUP_COMMENT": "Comment on a group",
+        "LIKE_RECORD": "Social event (like, etc.)",
+        "SUBSCRIPTION_RECORD": "Subscription (email)",
+        "LIKE_KIND" : {
+          "ABUSE": "Abuse report",
+          "LIKE": "Like",
+          "STAR": "Rating",
+          "VIEW": "View",
+          "FOLLOW": "Follow"
+        }
       }
     },
     "INFO": {

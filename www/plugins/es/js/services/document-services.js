@@ -68,6 +68,14 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
 
       var hits = (res && res.hits && res.hits.hits || []).reduce(function(res, hit) {
         var doc = hit._source || {};
+        // If reference exists as root properties, save it into a reference object
+        if (doc.index && doc.type && doc.id) {
+          doc.reference = {
+            index: hit._source.index,
+            type: hit._source.type,
+            id: hit._source.id,
+          };
+        }
         doc.index = hit._index;
         doc.type = hit._type;
         doc.id = hit._id;
@@ -125,6 +133,16 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
       };
       if (options.query) {
         request.query = options.query;
+      }
+
+      if (options.showClosed !== true) {
+        var matches = [
+          {range: {stock: {gt: 0}}},
+          {missing: {field: 'stock'}}
+        ];
+        request.query = {bool: {}};
+        request.query.bool.should = matches;
+        request.query.bool.minimum_should_match = 1;
       }
 
       return raw.search(request, {

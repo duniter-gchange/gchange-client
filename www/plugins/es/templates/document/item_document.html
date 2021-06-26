@@ -18,10 +18,16 @@
     </div>
 
     <div class="col">
-      <h3 class="dark">
+      <h4 class="gray">
         <i class="ion-locked" ng-if=":rebind:doc.nonce"></i>
-        {{:rebind:doc.time|formatDate}}</h3>
-      <h4 class="gray">{{:rebind:'DOCUMENT.HASH'|translate}} {{:rebind:doc.hash|formatHash}}</h4>
+        <i class="ion-clock"></i>
+        {{:rebind:doc.time|formatDate}}
+      </h4>
+      <h4 class="gray" ng-if="doc.creationTime && ((doc.time - doc.creationTime) > 3600)">
+        <i class="ion-calendar"></i>
+          {{:rebind:doc.creationTime | formatDate }}
+        </span>
+      </h4>
     </div>
 
     <div class="col col-50">
@@ -33,32 +39,35 @@
       </h4>
     </div>
 
+    <div class="col col-10">
+      <a
+        ng-if=":rebind:login && doc.pubkey==walletData.pubkey"
+        ng-click="remove($event, $index)"
+        class="gray pull-right"
+         title="{{'DOCUMENT.LOOKUP.BTN_REMOVE'|translate}}">
+        <i class="ion-trash-a"></i>
+      </a>
+      <a ng-click="openRawDocument($event, doc)"
+         class="gray pull-right"
+         title="{{'DOCUMENT.LOOKUP.BTN_SHOW_RAW_DOCUMENT'|translate}}">
+        <i class="ion-android-open"></i>
+      </a>
+      <h3 ng-if=":rebind:doc.recipient">
+          <a ui-sref="app.user_identity({pubkey: doc.recipient.pubkey, name: doc.recipient.name})">
+          <span class="gray">
+            <i class="ion-key"></i> {{:rebind:doc.recipient.pubkey|formatPubkey}}
+          </span>
+            <span class="positive" ng-if=":rebind:doc.recipient.name">
+            <i class="ion-person"></i> {{:rebind:doc.recipient.name}}
+          </span>
+          </a>
+      </h3>
+      <h4 class="gray" ng-if=":rebind:doc.read_signature">
+        <i class="ion-checkmark"></i>
+        <span translate>DOCUMENT.LOOKUP.READ</span>
+      </h4>
 
-
-    <!--<div class="col">-->
-      <!--<a-->
-        <!--ng-if=":rebind:login && doc.pubkey==walletData.pubkey"-->
-        <!--ng-click="remove($event, $index)"-->
-        <!--class="gray pull-right"-->
-         <!--title="{{'DOCUMENT.LOOKUP.BTN_REMOVE'|translate}}">-->
-        <!--<i class="ion-trash-a"></i>-->
-      <!--</a>-->
-      <!--<h3 ng-if=":rebind:doc.recipient">-->
-          <!--<a ui-sref="app.user_identity({pubkey: doc.recipient.pubkey, name: doc.recipient.name})">-->
-          <!--<span class="gray">-->
-            <!--<i class="ion-key"></i> {{:rebind:doc.recipient.pubkey|formatPubkey}}-->
-          <!--</span>-->
-            <!--<span class="positive" ng-if=":rebind:doc.recipient.name">-->
-            <!--<i class="ion-person"></i> {{:rebind:doc.recipient.name}}-->
-          <!--</span>-->
-          <!--</a>-->
-      <!--</h3>-->
-      <!--<h4 class="gray" ng-if=":rebind:doc.read_signature">-->
-        <!--<i class="ion-checkmark"></i>-->
-        <!--<span translate>DOCUMENT.LOOKUP.READ</span>-->
-      <!--</h4>-->
-
-    <!--</div>-->
+    </div>
 
   </div>
 </ion-item>

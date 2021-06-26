@@ -1,6 +1,6 @@
 
 <!-- Main section -->
-<ng-if ng-if=":state:enable && extensionPoint === 'menu-discover'">
+<div ng-if=":state:enable && extensionPoint === 'menu-discover'">
   <ion-item menu-close
             ng-if="$root.settings.expertMode"
             class="item item-icon-left"
@@ -12,7 +12,7 @@
   </ion-item>
   <a id="helptip-menu-btn-network"></a>
 
-</ng-if>
+</div>
 
 <!-- Toolbar section -->
 <div ng-if=":state:enable && extensionPoint === 'nav-buttons-right'" class="hidden-xs hidden-sm">

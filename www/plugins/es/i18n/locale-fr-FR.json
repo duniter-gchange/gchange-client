@@ -384,6 +384,7 @@
     "LOOKUP": {
       "TITLE": "Recherche de documents",
       "BTN_ACTIONS": "Actions",
+      "BTN_SHOW_RAW_DOCUMENT": "Voir le document brute",
       "SEARCH_HELP": "issuer:AAA*, time:1508406169",
       "LAST_DOCUMENTS_DOTS": "Derniers documents :",
       "LAST_DOCUMENTS": "Derniers documents",
@@ -409,7 +410,16 @@
         "PAGE_RECORD": "Page",
         "PAGE_COMMENT": "Commentaire sur une page",
         "GROUP_RECORD": "Groupe",
-        "GROUP_COMMENT": "Commentaire sur un groupe"
+        "GROUP_COMMENT": "Commentaire sur un groupe",
+        "LIKE_RECORD": "Interaction (like, etc.)",
+        "SUBSCRIPTION_RECORD": "Abonnement (email)",
+        "LIKE_KIND" : {
+          "ABUSE": "Signalement",
+          "LIKE": "J'aime",
+          "STAR": "Note de confiance",
+          "VIEW": "Vue",
+          "FOLLOW": "Suit"
+        }
       }
     },
     "INFO": {

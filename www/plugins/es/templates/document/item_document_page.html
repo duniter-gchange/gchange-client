@@ -1,0 +1,50 @@
+<ion-item id="doc-{{::doc.id}}"
+          class="item item-document item-icon-left ink {{::ionItemClass}} no-padding-top no-padding-bottom"
+          ng-class="{'positive-100-bg': doc.updated}"
+          ng-click="selectDocument($event, doc)">
+
+  <i ng-if=":rebind:doc.avatar" class="avatar" style="background-image: url({{:rebind:doc.avatar.src}})"></i>
+  <i ng-if=":rebind:!doc.avatar" class="icon cion-registry-{{doc.type}} stable"></i>
+
+  <div class="row no-padding">
+    <div class="col">
+      <h3 ng-if="doc.title">
+        {{:rebind:doc.title}}
+      </h3>
+      <h4>
+        <span class="dark" ng-if=":rebind:doc.picturesCount > 1">
+          <i class="ion-camera"></i> {{:rebind:doc.picturesCount}}
+        </span>
+        <span class="dark" ng-if=":rebind:doc.city">
+          <i class="ion-location"></i> {{:rebind:doc.city}}
+        </span>
+        <span class="gray" ng-if=":rebind:doc.name">
+          <i class="ion-person"></i> {{:rebind:doc.name}}
+        </span>
+      </h4>
+    </div>
+
+    <div class="col" ng-if=":rebind:!compactMode">
+      <h4 class="gray"> <i class="ion-clock"></i> {{:rebind:doc.time|formatDate}}</h4>
+    </div>
+
+    <div class="col col-50" ng-if=":rebind:!compactMode">
+    </div>
+
+    <div class="col col-10">
+      <a
+        ng-if=":rebind:login && doc.pubkey==walletData.pubkey"
+        ng-click="remove($event, $index)"
+        class="gray pull-right hidden-xs hidden-sm"
+        title="{{'DOCUMENT.LOOKUP.BTN_REMOVE'|translate}}">
+        <i class="ion-trash-a"></i>
+      </a>
+      <a ng-click="openRawDocument($event, doc)"
+         class="gray pull-right"
+         title="{{'DOCUMENT.LOOKUP.BTN_SHOW_RAW_DOCUMENT'|translate}}">
+        <i class="ion-android-open"></i>
+      </a>
+    </div>
+
+  </div>
+</ion-item>

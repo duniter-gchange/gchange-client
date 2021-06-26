@@ -22,21 +22,10 @@
         <span class="gray" ng-if=":rebind:doc.name">
           <i class="ion-person"></i> {{:rebind:doc.name}}
         </span>
-
-
       </h4>
-    </div>
-
-    <div class="col col-33">
-      <small class="gray pull-right"><i class="ion-clock"></i> {{:rebind:doc.time|formatDate}}
-      </small>
-      <a
-              ng-if=":rebind:login && doc.pubkey==walletData.pubkey"
-              ng-click="remove($event, $index)"
-              class="gray pull-right hidden-xs hidden-sm"
-              title="{{'DOCUMENT.LOOKUP.BTN_REMOVE'|translate}}">
-        <i class="ion-trash-a"></i>
-      </a>
+      <h5 class="gray" ng-if=":rebind:!compactMode">
+        <i class="ion-clock"></i> {{:rebind:doc.time|formatDate}}
+      </h5>
     </div>
 
   </div>

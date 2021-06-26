@@ -1,10 +1,10 @@
 <ion-item id="doc-{{::doc.id}}"
-          class="item item-document item-icon-left ink {{::ionItemClass}} no-padding-top no-padding-bottom"
-          ng-class="{'compacted': compactMode}"
+          class="item item-document ink {{::ionItemClass}} no-padding-top no-padding-bottom"
+          ng-class=":rebind:{'compacted': compactMode, 'item-icon-left': !compactMode}"
           ng-click="selectDocument($event, doc)">
 
-  <i ng-show=":rebind:!compactMode" ng-if=":rebind:doc.avatar" class="avatar" style="background-image: url({{:rebind:doc.avatar.src}})"></i>
-  <i ng-show=":rebind:!compactMode" ng-if=":rebind:!doc.avatar" class="icon ion-person stable"></i>
+  <i ng-if=":rebind:!compactMode && doc.avatar" class="avatar" style="background-image: url({{:rebind:doc.avatar.src}})"></i>
+  <i ng-if=":rebind:!compactMode && !doc.avatar" class="icon ion-person stable"></i>
 
   <div class="row no-padding">
     <div class="col">
@@ -22,12 +22,19 @@
           <i class="ion-location"></i> {{:rebind:doc.city}}
         </span>
         <span class="gray">
-          <i class="ion-clock"></i> {{:rebind:doc.time|formatDate}}
+          <i class="ion-clock"></i>
+          <ng-if ng-if="(doc.time - doc.creationTime) < 3600">
+            {{:locale:'WOT.REGISTERED_SINCE' | translate }}
+          </ng-if>
+          {{:rebind:doc.time |formatDate}}
+        </span>
+        <span class="gray" ng-if="doc.creationTime && ((doc.time - doc.creationTime) > 3600) ">
+          | {{:locale:'WOT.REGISTERED_SINCE' | translate }} {{:rebind:doc.creationTime | formatDate }}
         </span>
       </h4>
     </div>
 
-    <div class="col" ng-if=":rebind:!compactMode">
+    <div class="col col-10" ng-if=":rebind:!compactMode">
       <a
         ng-if=":rebind:login && doc.pubkey==walletData.pubkey"
         ng-click="remove($event, $index)"

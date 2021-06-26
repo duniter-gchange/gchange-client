@@ -1,0 +1,57 @@
+<ion-item id="doc-{{::doc.id}}"
+          class="item item-document ink item-text-wrap {{::ionItemClass}} no-padding-top no-padding-bottom"
+          ng-click="selectDocument($event, doc.reference)"
+          ng-class="{'compacted': compactMode, 'item-icon-left': !compactMode}">
+
+  <i ng-if=":rebind:!compactMode && doc.avatar" class="avatar" style="background-image: url('{{:rebind:doc.avatar.src}}')"></i>
+  <i ng-if=":rebind:!compactMode && !doc.avatar" class="icon ion-document stable" ></i>
+
+  <div class="row no-padding">
+    <div class="col">
+      <h4>
+        <a ui-sref="app.user_identity({pubkey: doc.pubkey, name: doc.name})">
+          <span class="positive" ng-if=":rebind:doc.name">
+            <i class="ion-person"></i> {{:rebind:doc.name}}
+          </span>
+        </a>
+        <ng-if ng-if=":rebind:compactMode">
+          <span class="dark">
+           {{:rebind:'DOCUMENT.LOOKUP.TYPE.LIKE_KIND.' + (doc.kind | uppercase) | translate}}
+          </span>
+          <span class="gray">
+           {{:rebind:'DOCUMENT.LOOKUP.TYPE.' + (doc.reference.index + '_' + doc.reference.type | uppercase) | translate | lowercase}}
+          </span>
+        </ng-if>
+      </h4>
+    </div>
+
+    <div class="col" ng-if=":rebind:!compactMode">
+      <h4 class="gray"> <i class="ion-clock"></i> {{:rebind:doc.time|formatDate}}</h4>
+    </div>
+
+    <div class="col col-50" ng-if=":rebind:!compactMode">
+      <h4 class="gray">
+        {{:rebind:'DOCUMENT.LOOKUP.TYPE.LIKE_KIND.' + (doc.kind | uppercase) | translate}}
+        <span class="gray" ng-if="doc.level">({{doc.level}} / 5)</span>
+        <span ng-if=":rebind:compactMode">
+           {{:rebind:'DOCUMENT.LOOKUP.TYPE.' + (doc.reference.index + '_' + doc.reference.type | uppercase) | translate}}
+          <span class="gray">{{doc.reference.id|truncText: 30}}</span>
+        </span>
+      </h4>
+      <h4 ng-if=":rebind:!compactMode">
+        {{:rebind:'DOCUMENT.LOOKUP.TYPE.' + (doc.reference.index + '_' + doc.reference.type | uppercase) | translate}}
+        <span class="gray">{{doc.reference.id}}</span>
+      </h4>
+    </div>
+
+    <div class="col col-10" ng-if=":rebind:!compactMode">
+      <a ng-click="openRawDocument($event, doc)"
+        class="gray pull-right"
+         title="{{'DOCUMENT.LOOKUP.BTN_SHOW_RAW_DOCUMENT'|translate}}">
+        <i class="ion-android-open"></i>
+      </a>
+
+    </div>
+
+  </div>
+</ion-item>

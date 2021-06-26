@@ -1,22 +1,20 @@
 
-<div class="item row row-header done in hidden-xs hidden-sm">
+<div class="item row row-header done in hidden-xs hidden-sm" ng-if=":rebind:expertMode">
 
   <a class="no-padding dark col col-header"
-     ng-if=":rebind:expertMode"
      ng-click="toggleSort('issuer')">
     <cs-sort-icon asc="search.asc" sort="search.sort" toggle="'issuer'"></cs-sort-icon>
     {{'DOCUMENT.LOOKUP.HEADER_ISSUER' | translate}}
   </a>
   <a class="no-padding dark col col-header"
-     ng-if=":rebind:expertMode"
      ng-click="toggleSort('time')">
     <cs-sort-icon asc="search.asc" sort="search.sort" toggle="'time'"></cs-sort-icon>
     {{'DOCUMENT.LOOKUP.HEADER_TIME' | translate}}
   </a>
   <div class="no-padding dark col col-50 col-header"
-     ng-if=":rebind:expertMode">
     <span class="gray">{{'DOCUMENT.LOOKUP.DOCUMENT_TYPE' | translate}} /</span> {{'DOCUMENT.LOOKUP.DOCUMENT_TITLE' | translate}}
   </div>
+  <div class="no-padding col col-10 col-header"></div>
 </div>
 
 <div class="padding gray" ng-if=":rebind:!search.loading && !search.results.length" translate>
@@ -31,6 +29,19 @@
   </div>
   <div ng-switch-when="profile">
     <ng-include src="::'plugins/es/templates/document/item_document_profile.html'"></ng-include>
+  </div>
+  <div ng-switch-when="record">
+    <div ng-switch on="doc.index">
+      <div ng-switch-when="page">
+        <ng-include src="::'plugins/es/templates/document/item_document_page.html'"></ng-include>
+      </div>
+      <div ng-switch-when="like">
+        <ng-include src="::'plugins/es/templates/document/item_document_like.html'"></ng-include>
+      </div>
+      <div ng-switch-default>
+        <ng-include src="::'plugins/es/templates/document/item_document.html'"></ng-include>
+      </div>
+    </div>
   </div>
   <div ng-switch-default>
     <ng-include src="::'plugins/es/templates/document/item_document.html'"></ng-include>
