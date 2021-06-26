@@ -47,12 +47,13 @@ angular.module('cesium.es.network.controllers', ['cesium.es.services'])
 
 ;
 
-function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $window, $translate, BMA,
+function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $window, $translate, $q, BMA,
                                    esHttp, UIUtils, csConfig, csSettings, csCurrency, esNetwork, csWot) {
   'ngInject';
 
   $scope.networkStarted = false;
   $scope.ionItemClass = '';
+  $scope.enableFilter = true;
   $scope.expertMode = csSettings.data.expertMode && !UIUtils.screen.isSmall();
   $scope.isHttps = ($window.location.protocol === 'https:');
   $scope.search = {
@@ -62,7 +63,8 @@ function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $w
     results: [],
     endpointFilter: esHttp.constants.GCHANGE_API,
     sort : undefined,
-    asc: true
+    asc: true,
+    profile: true
   };
   $scope.listeners = [];
   $scope.helptipPrefix = 'helptip-network';
@@ -162,23 +164,23 @@ function ESNetworkLookupController($scope,  $state, $location, $ionicPopover, $w
 
     if ($scope.search.loading){
       $scope.refreshing = false;
-      var processData = function(data) {
-        if (!$scope.refreshing) {
-          // Avoid to refresh if view has been leaving
+      var refreshData = function() {
+        if ($scope.refreshing || !$scope.networkStarted) return; // Skip if refreshing, or view leaves
+        $scope.refreshing = true;
+        var data = esNetwork.data;
+        var loadProfiles = $scope.search.profile ? csWot.extendAll(data.peers) : $q.when();
+        return loadProfiles.then(function() {
+          // Skip update if view leaves
           if ($scope.networkStarted) {
             $scope.updateView(data);
           }
           $scope.refreshing = false;
-        }
-      };
-      esNetwork.start($scope.node, $scope.computeOptions())
-        .then(function(){
-          processData(esNetwork.data);
         });
+      };
+      esNetwork.start($scope.node, $scope.computeOptions()).then(refreshData);
 
       // Catch event on new peers
-      $scope.listeners.push(
-        esNetwork.api.data.on.changed($scope, processData));
+      $scope.listeners.push(esNetwork.api.data.on.changed($scope, refreshData));
     }
   };
 
@@ -357,6 +359,7 @@ function ESNetworkLookupModalController($scope, $controller, parameters) {
   $scope.enableFilter = angular.isDefined(parameters.enableFilter) ? parameters.enableFilter : true;
   $scope.search.type = angular.isDefined(parameters.type) ? parameters.type : $scope.search.type;
   $scope.search.endpointFilter = angular.isDefined(parameters.endpointFilter) ? parameters.endpointFilter : $scope.search.endpointFilter;
+  $scope.search.profile = angular.isDefined(parameters.profile) ? parameters.profile : $scope.search.profile;
   $scope.expertMode = angular.isDefined(parameters.expertMode) ? parameters.expertMode : $scope.expertMode;
   $scope.ionItemClass = parameters.ionItemClass || 'item-border-large';
   $scope.enableLocationHref = false;
@@ -389,6 +392,7 @@ function ESNetworkLookupPopoverController($scope, $controller) {
   $scope.enableFilter = angular.isDefined(parameters.enableFilter) ? parameters.enableFilter : true;
   $scope.search.type = angular.isDefined(parameters.type) ? parameters.type : $scope.search.type;
   $scope.search.endpointFilter = angular.isDefined(parameters.endpointFilter) ? parameters.endpointFilter : $scope.search.endpointFilter;
+  $scope.search.profile = angular.isDefined(parameters.profile) ? parameters.profile : $scope.search.profile;
   $scope.expertMode = angular.isDefined(parameters.expertMode) ? parameters.expertMode : $scope.expertMode;
   $scope.ionItemClass = parameters.ionItemClass || 'item-border-large';
   $scope.helptipPrefix = '';

@@ -181,9 +181,10 @@ function ESPluginSettingsController ($scope, $window, $q,  $translate, $ionicPop
 
     $ionicPopup._popupStack[0].responseDeferred.promise.close();
     return esModals.showNetworkLookup({
-      enableFilter: true,
+      enableFilter: false,
       endpoint: esHttp.constants.GCHANGE_API,
-      ssl: forceUseSsl ? true: undefined
+      ssl: forceUseSsl ? true: undefined,
+      profile: false
     })
       .then(function (peer) {
         if (!peer) return;

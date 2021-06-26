@@ -59,8 +59,8 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     timeWarningExpire: 2592000 * 3 /*=3 mois*/,
     minVersion: '1.2.0', // min gchange version
     newIssueUrl: "https://github.com/duniter-gchange/gchange-client/issues/new?labels=bug",
-    //userForumUrl: "https://forum.gchange.fr",
-    userForumUrl: "https://forum.monnaie-libre.fr",
+    userForumUrl: "https://forum.gchange.fr",
+    //userForumUrl: "https://forum.monnaie-libre.fr",
     latestReleaseUrl: "https://api.github.com/repos/duniter-gchange/gchange-client/releases/latest",
     httpsMode: false,
     share: {
