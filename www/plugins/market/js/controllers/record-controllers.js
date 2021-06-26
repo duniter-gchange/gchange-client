@@ -70,6 +70,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   $scope.category = {};
   $scope.pictures = [];
   $scope.canEdit = false;
+  $scope.canDelete = false;
   $scope.maxCommentSize = 10;
   $scope.loading = true;
   $scope.motion = UIUtils.motion.fadeSlideInRight;
@@ -278,6 +279,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
 
   $scope.updateButtons = function() {
     $scope.canEdit = $scope.formData && csWallet.isUserPubkey($scope.formData.issuer);
+    $scope.canDelete = $scope.formData && csWallet.isLogin() && csWallet.data.moderator;
     $scope.canSold = $scope.canEdit && $scope.formData.stock > 0;
     $scope.canReopen = $scope.canEdit && $scope.formData.stock === 0;
     if ($scope.canReopen) {
@@ -317,7 +319,10 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
   };
 
   $scope.delete = function () {
+    if (!csWallet.data.moderator) return; // Only a moderator can delete Ad
     $scope.hideActionsPopover();
+
+    // TODO: send a message to Add issuer
 
     UIUtils.alert.confirm('MARKET.VIEW.REMOVE_CONFIRMATION')
       .then(function (confirm) {

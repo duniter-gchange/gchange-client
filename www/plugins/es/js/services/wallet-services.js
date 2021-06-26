@@ -7,10 +7,15 @@ angular.module('cesium.es.wallet.services', ['ngResource', 'cesium.platform', 'c
     listeners,
     that = this;
 
+  that.isModerator = function() {
+    return csWallet.data.moderator || false;
+  }
+
   function onWalletReset(data) {
     data.avatar = null;
     data.profile = null;
     data.name = null;
+    data.moderator = false;
     csWallet.events.cleanByContext('esWallet');
     if (data.keypair) {
       delete data.keypair.boxSk;
@@ -32,6 +37,10 @@ angular.module('cesium.es.wallet.services', ['ngResource', 'cesium.platform', 'c
         return onWalletLogin(data, deferred);
       }, 50);
     }
+
+    // Set if moderator
+    data.moderator = esHttp.data.moderators.includes(data.pubkey);
+    console.debug('[ES] [wallet] Moderator: ' + data.moderator);
 
     console.debug('[ES] [wallet] Loading user avatar+name...');
     var now = Date.now();
@@ -170,6 +179,7 @@ angular.module('cesium.es.wallet.services', ['ngResource', 'cesium.platform', 'c
       }
     }
   };
+
 
   return that;
 })
