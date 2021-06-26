@@ -135,7 +135,7 @@ angular.module('cesium.es.document.services', ['ngResource', 'cesium.platform', 
         request.query = options.query;
       }
 
-      if (options.showClosed !== true) {
+      if (options.showClosed === false) {
         var matches = [
           {range: {stock: {gt: 0}}},
           {missing: {field: 'stock'}}

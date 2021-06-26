@@ -409,6 +409,9 @@ function ESLastDocumentsController($scope, $controller, $timeout, $state) {
       ];
     }
 
+    // Hide closed market records
+    options.showClosed = false;
+
     options._source = options._source || $scope._source;
 
     options.getTimeFunction = function(doc) {
