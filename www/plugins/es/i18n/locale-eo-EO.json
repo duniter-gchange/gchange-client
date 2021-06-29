@@ -107,6 +107,10 @@
     "DELETED_COMMENT": "Komento forigita",
     "MODIFIED_ON": "modifita la {{time|formatDate}}",
     "MODIFIED_PARENTHESIS": "(modifita poste)",
+    "MODERATION": {
+      "DIVIDER": "Aliaj kromeblecoj",
+      "ENABLE_COMMENTS": "Permesi la komentojn?"
+    },
     "ERROR": {
       "FAILED_SAVE_COMMENT": "Eraro dum la konservo de la komento",
       "FAILED_REMOVE_COMMENT": "Eraro dum la forigo de la komento"
