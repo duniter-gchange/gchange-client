@@ -1,21 +1,25 @@
 <ion-view left-buttons="leftButtons" class="market">
   <ion-nav-title>
-    <span ng-if="entered && !search.category" translate>MARKET.SEARCH.TITLE</span>
+    <span ng-if="entered && !search.category">{{options.title|translate}}</span>
     <span ng-if="search.category" ng-bind-html="search.category.name"></span>
   </ion-nav-title>
 
   <ion-nav-buttons side="secondary">
-    <button class="button button-icon button-clear icon ion-loop visible-xs visible-sm"
+    <!--<button class="button button-icon button-clear icon ion-loop visible-xs visible-sm"
             ng-click="refresh()">
-    </button>
+    </button>-->
     <button class="button button-icon button-clear visible-xs visible-sm"
             ng-click="showActionsPopover($event)">
       <i class="icon ion-android-funnel"></i>
     </button>
   </ion-nav-buttons>
 
-  <ion-content class="lookupForm stable-100-bg "
+  <ion-content class="lookupForm stable-100-bg refresher-top-bg"
                bind-notifier="{ rebind: $root.settings.useRelative }">
+
+    <ion-refresher pulling-text="{{'COMMON.BTN_REFRESH' | translate}}"
+                   on-refresh="refresh()">
+    </ion-refresher>
 
       <form ng-submit="doSearch()" class="light-bg">
 

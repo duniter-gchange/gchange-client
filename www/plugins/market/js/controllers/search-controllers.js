@@ -34,12 +34,41 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
         data: {
           silentLocationChange: true
         }
+      })
+
+      .state('app.crowdfunding_lookup', {
+        url: "/crowdfunding?" + queryParams,
+        views: {
+          'menuContent': {
+            templateUrl: "plugins/market/templates/search/lookup.html",
+            controller: 'MkCrowdfundingLookupCtrl'
+          }
+        },
+        data: {
+          large: 'app.crowdfunding_lookup_lg',
+          silentLocationChange: true
+        }
+      })
+
+      .state('app.crowdfunding_lookup_lg', {
+        url: "/crowdfunding/lg?" + queryParams,
+        views: {
+          'menuContent': {
+            templateUrl: "plugins/market/templates/search/lookup_lg.html",
+            controller: 'MkCrowdfundingLookupCtrl'
+          }
+        },
+        data: {
+          silentLocationChange: true
+        }
       });
   })
 
  .controller('MkLookupAbstractCtrl', MkLookupAbstractController)
 
  .controller('MkLookupCtrl', MkLookupController)
+
+ .controller('MkCrowdfundingLookupCtrl', MkCrowdfundingLookupController)
 
 ;
 
@@ -57,6 +86,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     text: '',
     type: null,
     lastRecords: true,
+    size: defaultSearchLimit,
     results: [],
     loading: true,
     category: null,
@@ -76,6 +106,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
 
   // Screen options
   $scope.options = $scope.options || angular.merge({
+      title: 'MARKET.SEARCH.TITLE',
       type: {
         show: true
       },
@@ -95,7 +126,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         show: true
       },
       filter: {
-        lastRecords: true
+        lastRecords: false
       }
     }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
@@ -129,6 +160,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
   };
 
   $scope.toggleAdType = function(type) {
+    $scope.hideActionsPopover();
     if (type === $scope.search.type) {
       $scope.search.type = undefined;
     }
@@ -179,7 +211,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         hash: hash,
         last: $scope.search.lastRecords ? true : undefined,
         category: $scope.search.category && $scope.search.category.id || undefined,
-        type: $scope.search.type,
+        type: $scope.options.type.show ? $scope.search.type : undefined,
         // Location
         location: $scope.search.location && $scope.search.location.trim() || undefined,
         lat: $scope.search.geoPoint && $scope.search.geoPoint.lat,
@@ -210,7 +242,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     $scope.hideActionsPopover();
 
     // Clean text
-    $scope.text=undefined;
+    $scope.search.text=null;
+    $scope.search.lastRecords=true;
 
     return $scope.doSearch();
   };
@@ -690,4 +723,18 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
 
     $scope.updateSettings();
   };
+}
+
+
+function MkCrowdfundingLookupController($scope, $rootScope, $controller) {
+  'ngInject';
+
+  // Initialize the super class and extend it.
+  angular.extend(this, $controller('MkLookupCtrl', {$scope: $scope}));
+
+  // Change market lookup defaults
+  $scope.search.type = 'crowdfunding';
+  $scope.options.type.show = false;
+  $scope.options.filter.lastRecords = true;
+  $scope.options.title = 'MENU.CROWDFUNDING';
 }

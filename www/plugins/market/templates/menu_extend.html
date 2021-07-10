@@ -2,37 +2,39 @@
 <!-- Toolbar section -->
 <div ng-if="::extensionPoint === 'nav-buttons-right'" class="hidden-xs hidden-sm">
 
-  <!-- favorites
-    TODO update counter when changes
-  <button class="button button-clear icon ion-heart"
-          ng-if="login && walletData.favorites.count"
-          ui-sref="app.market_favorites">
-          <span
-                  ng-if="walletData.favorites.count"
-                  class="badge badge-button badge-positive">{{walletData.favorites.count}}</span>
-  </button> -->
+
 </div>
 
 <!-- Menu: main section -->
 <ng-if ng-if="::extensionPoint === 'menu-main'">
 
-  <!-- view market -->
-  <ion-item menu-close class="item item-icon-left"
+  <!-- market search -->
+  <a menu-close class="item item-icon-left"
             active-link="active"
             active-link-path-prefix="#/app/market"
             ui-sref="app.market_lookup">
     <i class="icon ion-speakerphone"></i>
     <span translate>MENU.MARKET</span>
-  </ion-item>
+  </a>
+
+  <!-- crowdfunding -->
+  <a menu-close
+            class="item item-icon-left"
+            active-link="active"
+            active-link-path-prefix="#/app/crowdfunding"
+            ui-sref="app.crowdfunding_lookup">
+    <i class="icon ion-ios-people"></i>
+    <span translate>MENU.CROWDFUNDING</span>
+  </a>
 
   <!-- view pages -->
-  <ion-item menu-close class="item item-icon-left"
+  <a menu-close class="item item-icon-left"
             active-link="active"
             active-link-path-prefix="#/app/page"
             ui-sref="app.registry_lookup">
     <i class="icon ion-social-buffer"></i>
     <span translate>MENU.REGISTRY</span>
-  </ion-item>
+  </a>
 </ng-if>
 
 <!-- Menu: user section -->
@@ -48,7 +50,7 @@
     <span translate>MENU.MY_RECORDS</span>
   </a>
 
-  <!-- wallet records -->
+  <!-- wallet favorites -->
   <a menu-close class="item item-border item-icon-left"
      active-link="active"
      active-link-path-prefix="#/app/favorites"

@@ -323,6 +323,7 @@ function MkRecordViewController($scope, $rootScope, $anchorScroll, $ionicPopover
     $scope.hideActionsPopover();
 
     // TODO: send a message to Add issuer
+    //UIUtils.alert.confirm
 
     UIUtils.alert.confirm('MARKET.VIEW.REMOVE_CONFIRMATION')
       .then(function (confirm) {

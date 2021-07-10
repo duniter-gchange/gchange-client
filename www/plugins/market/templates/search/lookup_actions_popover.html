@@ -14,6 +14,24 @@
         {{'MARKET.SEARCH.BTN_LAST_RECORDS' | translate}}
       </button>
 
+      <!-- offers -->
+      <button type="button" class="item item-icon-left ink visible-sm visible-xs"
+              ng-class="{'button-text-positive': search.type==='offer'}"
+              ng-if="options.type.show"
+              ng-click="toggleAdType('offer')">
+        <i class="icon cion-market-offer"></i>
+        {{'MARKET.SEARCH.BTN_OFFERS' | translate}}
+      </button>
+
+      <!-- needs -->
+      <button type="button" class="item item-icon-left ink visible-sm visible-xs"
+              ng-class="{'button-text-positive': search.type==='need'}"
+              ng-if="options.type.show"
+              ng-click="toggleAdType('need')">
+        <i class="icon cion-market-need"></i>
+        {{'MARKET.SEARCH.BTN_NEEDS' | translate}}
+      </button>
+
       <!-- show closed Ads ? -->
       <a class="item item-icon-left ink"
          ng-click="toggleShowClosed()">

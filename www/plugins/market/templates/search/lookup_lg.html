@@ -1,6 +1,6 @@
 <ion-view left-buttons="leftButtons" class="market">
   <ion-nav-title>
-    <span translate>MARKET.SEARCH.TITLE</span>
+    <span>{{options.title|translate}}</span>
   </ion-nav-title>
 
   <ion-content class="lookupForm padding no-padding-xs stable-100-bg"
@@ -130,36 +130,29 @@
       <div class="hidden-xs hidden-sm pull-right" >
 
         <a class="button button-text button-small ink icon ion-clock"
-           ng-if="!options.type.show"
-           ng-class="{'button-text-positive': search.type=='last'}"
+           ng-if="options.filter.lastRecords"
+           ng-class="{'button-text-positive': search.lastRecords}"
            ng-click="doGetLastRecords()">
           <span translate>MARKET.SEARCH.BTN_LAST_RECORDS</span>
         </a>
         <a class="button button-text button-small ink icon cion-market-offer"
            ng-if="options.type.show"
-           ng-class="{'button-text-positive': search.type=='offer'}"
+           ng-class="{'button-text-positive': search.type==='offer'}"
            ng-click="toggleAdType('offer')">
           <span translate>MARKET.SEARCH.BTN_OFFERS</span>
         </a>
         <a class="button button-text button-small ink icon cion-market-need"
            ng-if="options.type.show"
-           ng-class="{'button-text-positive': search.type=='need'}"
+           ng-class="{'button-text-positive': search.type==='need'}"
            ng-click="toggleAdType('need')">
           <span translate>MARKET.SEARCH.BTN_NEEDS</span>
         </a>
         <a class="button button-text button-small ink icon cion-market-crowdfunding"
            ng-if="options.type.show"
-           ng-class="{'button-text-positive': search.type=='crowdfunding'}"
+           ng-class="{'button-text-positive': search.type==='crowdfunding'}"
            ng-click="toggleAdType('crowdfunding')">
           <span translate>MARKET.SEARCH.BTN_CROWDFUNDING</span>
         </a>
-
-        <!--<a class="button button-text button-small ink icon ion-heart"
-           ng-if="options.type.show"
-           ng-class="{'button-text-positive': search.type=='star'}"
-           ng-click="toggleAdType('star')">
-          {{'MARKET.SEARCH.BTN_FAVORITES' | translate}}
-        </a>-->
         &nbsp;
         <button type="button"
                 class="button button-small button-stable ink"
