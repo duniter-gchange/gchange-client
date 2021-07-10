@@ -261,18 +261,27 @@ function ESCommentsController($scope, $filter, $state, $focus, $timeout, $anchor
   $scope.save = function() {
     if (!$scope.formData.message || !$scope.formData.message.length) return;
 
+    // Reset the comment (to avoid too many call)
+    var comment = $scope.formData;
+    $scope.formData = {};
+
     $scope.loadWallet({minData: true, auth: true})
       .then(function() {
         UIUtils.loading.hide();
-        var comment = $scope.formData;
-        $scope.formData = {};
         $scope.focusNewComment();
-        return $scope.service.save($scope.id, $scope.comments, comment);
+        return $scope.service.save($scope.id, $scope.comments, comment)
+            .then(function() {
+              $scope.comments.total++;
+            });
       })
-      .then(function() {
-        $scope.comments.total++;
-      })
-      .catch(UIUtils.onError('COMMENTS.ERROR.FAILED_SAVE_COMMENT'));
+      .catch(function(err) {
+        // Show error (if not login was not cancelled)
+        if (err !== 'CANCELLED') {
+          UIUtils.onError('COMMENTS.ERROR.FAILED_SAVE_COMMENT')(err);
+        }
+        // Restore comment, if not sent
+        $scope.formData = comment;
+      });
   };
 
   $scope.share = function(event, comment) {
