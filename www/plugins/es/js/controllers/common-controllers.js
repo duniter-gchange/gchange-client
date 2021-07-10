@@ -259,7 +259,7 @@ function ESCommentsController($scope, $filter, $state, $focus, $timeout, $anchor
   };
 
   $scope.save = function() {
-    if (!$scope.formData.message || !$scope.formData.message.length) return;
+    if (!$scope.formData.message || $scope.formData.message.trim().length === 0) return;
 
     // Reset the comment (to avoid too many call)
     var comment = $scope.formData;
