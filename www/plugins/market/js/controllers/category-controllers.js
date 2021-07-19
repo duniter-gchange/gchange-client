@@ -57,6 +57,7 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
 
   // Screen options
   $scope.options = $scope.options || angular.merge({
+    type: undefined,
     category: {
       filter: undefined,
       withCache: false,
@@ -77,6 +78,7 @@ function MkListCategoriesController($scope, $translate, UIUtils, csConfig, mkCat
     options.withOld = angular.isDefined(options.withOld) ? options.withOld : (!$scope.options || $scope.options.showOld);
     options.silent = angular.isDefined(options.silent) ? options.silent : true;
     options.locale = angular.isDefined(options.locale) ? options.locale : $translate.use();
+    options.type = angular.isDefined(options.type) ? options.type : $scope.search.type;
     options.nbsp = angular.isDefined(options.nbsp) ? options.nbsp : ($scope.options && $scope.options.category && $scope.options.category.nbsp);
 
     if (!options.silent) $scope.loading = true;
@@ -406,3 +408,4 @@ function MkEditCategoriesController($scope, $controller, $ionicPopup, $translate
     }) === -1;
   };
 }
+

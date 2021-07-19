@@ -50,7 +50,6 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
         return deferred.promise;
       }
 
-
       return raw.all()
         .then(function (res) {
           var categories;
@@ -200,6 +199,10 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
       }
       if (options.currencies && options.currencies.length) {
         filters.push({terms: {currency: options.currencies}});
+      }
+      if (options.type) {
+        var types = options.type === 'offer' ? ['offer', 'auction'] : [options.type];
+        filters.push({terms: {type: types}});
       }
       // Add query to request
       if (matches.length || filters.length) {

@@ -373,12 +373,9 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
         });
     }
     if (options.type) {
-        var types = options.type === 'offer' ?
-            ['offer', 'auction'] :
-            (options.type === 'need' ? ['need', 'crowdfunding'] : [options.type]);
+        var types = options.type === 'offer' ? ['offer', 'auction'] : [options.type];
         filters.push({terms: {type: types}});
     }
-
 
     var text = (options.text || '').trim();
     var tags = text.length > 0 ? esHttp.util.parseTags(text) : undefined;
