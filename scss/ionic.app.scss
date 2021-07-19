@@ -46,12 +46,18 @@
   .no-padding-xs {
     padding: 0 !important;
   }
+  .text-larger-xs {
+    font-size: larger;
+  }
 }
 @media screen and (max-width: $screen-sm-max) {
   #home {
     .row {
       display: inline-block;
     }
+  }
+  .text-larger-sm {
+    font-size: larger;
   }
 }
 
