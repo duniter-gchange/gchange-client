@@ -1,6 +1,6 @@
 
 <!-- Main section -->
-<div ng-if=":state:enable && extensionPoint === 'menu-discover'">
+<ng-if ng-if="::extensionPoint === 'menu-discover'">
   <ion-item menu-close
             ng-if="$root.settings.expertMode"
             class="item item-icon-left"
@@ -12,10 +12,10 @@
   </ion-item>
   <a id="helptip-menu-btn-network"></a>
 
-</div>
+</ng-if>
 
 <!-- Toolbar section -->
-<div ng-if=":state:enable && extensionPoint === 'nav-buttons-right'" class="hidden-xs hidden-sm">
+<ng-if ng-if="::extensionPoint === 'nav-buttons-right'" class="hidden-xs hidden-sm">
 
   <!-- messages -->
   <button class="button button-clear icon ion-email"
@@ -38,10 +38,10 @@
             ng-if="walletData.notifications.unreadCount"
             class="badge badge-button badge-positive">{{walletData.notifications.unreadCount}}</span>
   </button>
-</div>
+</ng-if>
 
 <!-- User section -->
-<div ng-if=":state:enable && extensionPoint === 'menu-user'" class="visible-xs visible-sm">
+<div ng-if="::extensionPoint === 'menu-user'" class="visible-xs visible-sm">
 
   <a menu-close class="item item-icon-left" active-link="active"
        active-link-path-prefix="#/app/message"

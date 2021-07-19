@@ -25,7 +25,6 @@ function MapShapeViewController($scope, $translate, $timeout, $q, $document,
                                   UIUtils, csConfig, csSettings, esShape) {
   'ngInject';
 
-
   $scope.loading = true;
   $scope.shapeId = 'shape-' + $scope.$id;
   $scope.formData = {

@@ -1,5 +1,5 @@
 <!-- Hero -->
-<ng-if ng-if=":state:enable && extensionPoint === 'hero'">
+<ng-if ng-if="::extensionPoint === 'hero'">
   <!-- likes -->
   <h4 class="light">
     <small ng-include="'plugins/es/templates/common/view_likes.html'"></small>
@@ -7,7 +7,7 @@
 </ng-if>
 
 <!-- Top fab buttons -->
-<ng-if ng-if=":state:enable && extensionPoint === 'buttons-top-fab'">
+<ng-if ng-if="::extensionPoint === 'buttons-top-fab'">
   <button id="fab-compose-{{:rebind:formData.pubkey}}"
           class="button button-fab button-fab-top-left button-fab-hero mini button-stable spin"
           style="left: 88px;"
@@ -17,7 +17,7 @@
 </ng-if>
 
 <!-- Buttons section -->
-<ng-if ng-if=":state:enable && extensionPoint === 'buttons'">
+<ng-if ng-if="::extensionPoint === 'buttons'">
 
   <!-- message -->
   <button class="button button-calm button-raised icon icon-left icon ion-compose ink"
@@ -47,7 +47,7 @@
 </ng-if>
 
 <!-- General section -->
-<ng-if ng-if=":state:enable && extensionPoint === 'general'">
+<ng-if ng-if="::extensionPoint === 'general'">
 
   <!-- star level -->
   <div class="item item-icon-left item-text-wrap" ng-if="likeData.stars"
@@ -87,7 +87,7 @@
 </ng-if>
 
 <!-- After general section -->
-<ng-if ng-if=":state:enable && extensionPoint === 'after-general'">
+<ng-if ng-if="::extensionPoint === 'after-general'">
 
   <span class="item item-divider item-divider-top-border" translate>PROFILE.PROFILE_DIVIDER</span>
 

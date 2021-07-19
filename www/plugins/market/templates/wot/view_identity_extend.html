@@ -1,6 +1,6 @@
 
 <!-- General section -->
-<ng-if ng-if=":state:enable && extensionPoint === 'general'">
+<ng-if ng-if="::extensionPoint === 'general'">
 
   <ion-item class="item-icon-left item-text-wrap ink"
             ng-if="formData.profile.pubkey"
@@ -22,7 +22,7 @@
   </div>
 </ng-if>
 
-<ng-if ng-if=":state:enable && extensionPoint === 'after-general'">
+<ng-if ng-if="::extensionPoint === 'after-general'">
 
   <div class="item item-divider item-divider-top-border">
     {{'MENU.MARKET' | translate}}

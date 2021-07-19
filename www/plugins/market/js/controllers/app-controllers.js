@@ -19,13 +19,7 @@ angular.module('cesium.market.app.controllers', ['ngResource',
          'menu-discover': {
            templateUrl: "plugins/market/templates/menu_extend.html",
            controller: "MarketMenuExtendCtrl"
-         },
-
-         /* TODO update counter when changes
-         'nav-buttons-right': {
-           templateUrl: "plugins/market/templates/menu_extend.html",
-           controller: "MarketMenuExtendCtrl"
-         }*/
+         }
        }
       });
   })

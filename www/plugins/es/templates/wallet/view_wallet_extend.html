@@ -1,4 +1,4 @@
-<ng-if ng-if=":state:enable && extensionPoint === 'hero'">
+<ng-if ng-if="::extensionPoint === 'hero'">
   <!-- likes -->
   <h4 class="light">
     <small ng-include="'plugins/es/templates/common/view_likes.html'"
@@ -6,7 +6,7 @@
   </h4>
 </ng-if>
 
-<ng-if ng-if=":state:enable && extensionPoint === 'after-general'">
+<ng-if ng-if="::extensionPoint === 'after-general'">
 
   <!-- profile -->
   <div class="item item-divider item-divider-top-border">
