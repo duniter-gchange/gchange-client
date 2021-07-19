@@ -213,6 +213,9 @@
           "DATE_DESC": "Más recientes",
           "PRICE_ASC": "Precios crecientes",
           "PRICE_DESC": "Precios descendentes "
+        },
+        "CROWDFUNDING": {
+          "SEARCH_HELP": "Búsqueda"
         }
       },
       "TYPE": {

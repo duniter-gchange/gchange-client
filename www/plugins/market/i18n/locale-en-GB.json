@@ -87,7 +87,7 @@
     "SEARCH": {
       "TITLE": "Market",
       "CATEGORY": "Category: ",
-      "SEARCH_HELP": "Search (car, sweat...)",
+      "SEARCH_HELP": "Your search (car, sweat...)",
       "BY": "by",
       "BTN_ADD": "New",
       "BTN_CATEGORIES": "Categories",
@@ -123,6 +123,9 @@
         "DATE_DESC": "Most recent",
         "PRICE_ASC": "Increasing prices",
         "PRICE_DESC": "Descending prices"
+      },
+      "CROWDFUNDING": {
+        "SEARCH_HELP": "Your search"
       }
     },
     "GALLERY": {

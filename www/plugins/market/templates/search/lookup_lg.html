@@ -69,14 +69,14 @@
               <input type="text"
                      autocomplete="off"
                      class="visible-xs visible-sm"
-                     placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+                     placeholder="{{options.searchTextHelp|translate}}"
                      ng-model="search.text"
                      ng-model-options="{ debounce: 950 }"
                      ng-change="doSearch()">
               <input type="text"
                      autocomplete="off"
                      class="hidden-xs hidden-sm"
-                     placeholder="{{'MARKET.SEARCH.SEARCH_HELP'|translate}}"
+                     placeholder="{{options.searchTextHelp|translate}}"
                      id="marketSearchText"
                      ng-model="search.text"
                      on-return="doSearch()">

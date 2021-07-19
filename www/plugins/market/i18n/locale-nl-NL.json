@@ -23,7 +23,10 @@
       "LAST_RECORDS": "Nieuwste advertenties:",
       "RESULTS": "Resultaat:",
       "BTN_OFFERS": "Aangeboden",
-      "BTN_NEEDS": "Gezocht"
+      "BTN_NEEDS": "Gezocht",
+      "CROWDFUNDING": {
+        "SEARCH_HELP": "Wat, waar..."
+      }
     },
     "VIEW": {
       "TITLE": "Advertentie",

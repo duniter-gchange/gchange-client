@@ -123,6 +123,9 @@
         "DATE_DESC": "Pli freŝdataj",
         "PRICE_ASC": "Kreskantaj prezoj",
         "PRICE_DESC": "Malkreskantaj prezoj"
+      },
+      "CROWDFUNDING": {
+        "SEARCH_HELP": "Serĉado"
       }
     },
     "GALLERY": {

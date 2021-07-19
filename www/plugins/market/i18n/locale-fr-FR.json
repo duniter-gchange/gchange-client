@@ -88,7 +88,7 @@
     "SEARCH": {
       "TITLE": "Annonces",
       "CATEGORY": "Catégorie : ",
-      "SEARCH_HELP": "Recherche (vélo, rollers...)",
+      "SEARCH_HELP": "Tapez votre recherche (vélo, rollers...)",
       "BY": "par",
       "BTN_ADD": "Nouveau",
       "BTN_CATEGORIES": "Catégories",
@@ -124,6 +124,9 @@
         "DATE_DESC": "Plus récentes",
         "PRICE_ASC": "Prix croissants",
         "PRICE_DESC": "Prix décroissants"
+      },
+      "CROWDFUNDING": {
+        "SEARCH_HELP": "Tapez votre recherche"
       }
     },
     "GALLERY": {

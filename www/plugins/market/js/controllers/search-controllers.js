@@ -107,6 +107,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
   // Screen options
   $scope.options = $scope.options || angular.merge({
       title: 'MARKET.SEARCH.TITLE',
+      searchTextHelp: 'MARKET.SEARCH.SEARCH_HELP',
       type: {
         show: true
       },
@@ -737,4 +738,5 @@ function MkCrowdfundingLookupController($scope, $rootScope, $controller) {
   $scope.options.type.show = false;
   $scope.options.filter.lastRecords = true;
   $scope.options.title = 'MENU.CROWDFUNDING';
+  $scope.options.searchTextHelp = 'MARKET.SEARCH.CROWDFUNDING.SEARCH_HELP';
 }
