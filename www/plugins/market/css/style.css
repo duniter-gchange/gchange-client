@@ -3,15 +3,18 @@
 * Market Home
 */
 
-
 #home .main-content {
     background-color: rgba(255,255,255,0.7);
     z-index: 10;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
 }
-#home .main-content .item-input {
-    border-bottom: none;
+#home .main-content .item {
+    margin-bottom: -2px;
 }
+#home .main-content .item-input {
+    border: 1px solid lightgrey;
+}
+
 /**
 * Market search
 */
