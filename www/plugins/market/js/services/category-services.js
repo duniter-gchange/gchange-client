@@ -204,6 +204,9 @@ angular.module('cesium.market.category.services', ['ngResource', 'cesium.service
         var types = options.type === 'offer' ? ['offer', 'auction'] : [options.type];
         filters.push({terms: {type: types}});
       }
+      else if (options.types && options.types.length) {
+        filters.push({terms: {type: options.types}});
+      }
       // Add query to request
       if (matches.length || filters.length) {
         request.query = {bool: {}};

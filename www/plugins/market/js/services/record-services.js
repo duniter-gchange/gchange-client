@@ -376,6 +376,9 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
         var types = options.type === 'offer' ? ['offer', 'auction'] : [options.type];
         filters.push({terms: {type: types}});
     }
+    else if (options.types && options.types.length) {
+      filters.push({terms: {type: options.types}});
+    }
 
     var text = (options.text || '').trim();
     var tags = text.length > 0 ? esHttp.util.parseTags(text) : undefined;
