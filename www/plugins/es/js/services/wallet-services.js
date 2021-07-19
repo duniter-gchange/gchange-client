@@ -9,7 +9,7 @@ angular.module('cesium.es.wallet.services', ['ngResource', 'cesium.platform', 'c
 
   that.isModerator = function() {
     return csWallet.data.moderator || false;
-  }
+  };
 
   function onWalletReset(data) {
     data.avatar = null;
