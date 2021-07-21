@@ -1,12 +1,18 @@
-# Compile from sources
+# Development Guide
 
 ## In a post-it
 
 ```bash
+# Install NodeJS v12
 nvm use 12
+npm install -g yarn 
+
+# Clone and compile from source
 git clone git@github.com:duniter-gchange/gchange-client.git
 cd gchange-client
 yarn
+
+# Run the App !
 yarn run start
 ```
 
@@ -14,7 +20,7 @@ yarn run start
 
 ### Prerequisite  
 
-To build Cesium, you will have to: 
+To build Gchange, you will have to: 
  
   - Installing build tools:
 ```
@@ -88,6 +94,14 @@ To compile and launch, run:
 ```
  
 > or alternative: `npm start` or `ionic serve` 
+
+
+### Build artifacts
+
+Gchange can be build:
+- [as an unhosted web applicationa](build_web.md);
+- [for Android](build_android.md);
+- [as a Web extension](build_web_extension.md) for Mozilla Firefox or Chrome/Chomium;
 
 ### Time to code !
 
