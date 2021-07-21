@@ -12,10 +12,11 @@ After that you should be able to start the application using `npm start`or `yarn
 
 ## Build the web extension
 
-- To create a uncompressed extension, use :
+- To create an uncompressed extension, use :
   ```bash
      cd gchange
-     gulp webExtCompile --release
+     gulp build
+     gulp webExtCompile --release  
   ```
   
   The uncompressed web extension will be visible `dist/web/ext`
@@ -23,6 +24,7 @@ After that you should be able to start the application using `npm start`or `yarn
 - To create a portable and compressed ZIP extension : 
   ```bash
      cd gchange
+     gulp build
      gulp webExtBuild --release
   ```
   
