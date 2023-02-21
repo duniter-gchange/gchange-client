@@ -1,7 +1,7 @@
 {
   "COMMON": {
-    "APP_NAME": "Cesium",
-    "APP_VERSION": "v{{Version}}",
+    "APP_NAME": "ğ<b>change</b>",
+    "APP_VERSION": "v{{version}}",
     "APP_BUILD": "Build {{build}}",
     "PUBKEY": "Öffentlicher Schlüssel",
     "MEMBER": "Mitglied",
@@ -23,6 +23,7 @@
     "BTN_IMPORT": "Importieren",
     "BTN_CANCEL": "Abbrechen",
     "BTN_CLOSE": "Schließen",
+    "BTN_COPY": "Kopieren",
     "BTN_LATER": "Später",
     "BTN_LOGIN": "Anmelden",
     "BTN_LOGOUT": "Abmelden",
@@ -39,7 +40,7 @@
     "BTN_CREATE": "Erstellen",
     "BTN_UNDERSTOOD": "Ich habe es verstanden",
     "BTN_OPTIONS": "Optionen",
-    "BTN_HELP_TOUR": "Cesium erkunden",
+    "BTN_HELP_TOUR": "{{'COMMON.APP_NAME'|translate}} erkunden",
     "BTN_HELP_TOUR_SCREEN": "Tour: Erkunde diesen Bildschirm",
     "BTN_DOWNLOAD": "Download",
     "BTN_DOWNLOAD_ACCOUNT_STATEMENT": "Kontoauszug herunterladen",
@@ -78,7 +79,8 @@
       "SHARE_ON_TWITTER": "Teilen auf Twitter",
       "SHARE_ON_FACEBOOK": "Teilen auf Facebook",
       "SHARE_ON_DIASPORA": "Teilen auf Diaspora*",
-      "SHARE_ON_GOOGLEPLUS": "Teilen auf Google+"
+      "SHARE_ON_MASTODON": "Teilen auf Mastodon",
+      "INSTANCE_ADDRESS_HELP": "Enter an intance address (ex: https://framapiaf.org):"
     },
     "FILE": {
       "DATE" : "Datum:",
@@ -98,6 +100,8 @@
     "CURRENCY": "Währung",
     "ACCOUNT": "Mein Konto",
     "WALLETS": "Meine Brieftaschen",
+    "TRANSFER": "Überweisen",
+    "SCAN": "Scannen",
     "SETTINGS": "Einstellungen",
     "NETWORK": "Netzwerk",
     "TRANSACTIONS": "Meine Transaktionen"
@@ -119,10 +123,11 @@
     "BTN_OPEN_DEV_WINDOW": "Debug Fenster öffnen"
   },
   "HOME": {
-    "TITLE": "Cesium",
-    "WELCOME": "Willkommen in der Cesium App!",
-    "WELCOME_READONLY": "Willkommen zu Cesium <span class='badge badge-balanced'>Monit</span> !",
-    "MESSAGE": "Sieh dir {{currency|abbreviate}} Konten in Echtzeit an.",
+    "TITLE": "{{'COMMON.APP_NAME'|translate}}",
+    "WELCOME": "Willkommen in der {{'COMMON.APP_NAME'|translate}} App!",
+    "WELCOME_READONLY": "Willkommen zu {{'COMMON.APP_NAME'|translate}} <span class='badge badge-balanced'>Monit</span> !",
+    "MESSAGE": "ğ<b>change</b> ?",
+    "MESSAGE_CURRENCY": "Eine Software zur <b>Verwaltung</b> Ihrer Kleinanzeigen in {{currency|abbreviate}}",
     "MESSAGE_READONLY": "Echtzeitüberwachung der freien Währung {{currency|abbreviate}}",
     "BTN_REGISTRY": "Verzeichnis",
     "BTN_CURRENCY": "Währung kennenlernen {{currency|abbreviate}}",
@@ -322,7 +327,7 @@
       }
     },
     "INFO": {
-      "ONLY_SSL_PEERS": "Die nicht mit SSL gesicherten Knoten haben eine reduzierte Darstellung, weil Cesium im HTTPS Modus funktioniert."
+      "ONLY_SSL_PEERS": "Die nicht mit SSL gesicherten Knoten haben eine reduzierte Darstellung, weil {{'COMMON.APP_NAME'|translate}} im HTTPS Modus funktioniert."
     }
   },
   "PEER": {
@@ -652,7 +657,7 @@
       "TITLE": "Konto and Sicherheit",
       "KEYFILE": {
         "PUBSEC_FORMAT": "PubSec Format.",
-        "PUBSEC_FORMAT_HELP": "Dieses Dateiformat ist insbesondere mit Cesium und Gannonce kompatibel. Ihr Schlüsselbund wird <b>unverschlüsselt</b> gespeichert: Jeder, der eine Kopie dieser Datei besitzt, kann Ihr Konto ausräumen.",
+        "PUBSEC_FORMAT_HELP": "Dieses Dateiformat ist insbesondere mit {{'COMMON.APP_NAME'|translate}} und Gannonce kompatibel. Ihr Schlüsselbund wird <b>unverschlüsselt</b> gespeichert: Jeder, der eine Kopie dieser Datei besitzt, kann Ihr Konto ausräumen.",
         "WIF_FORMAT": "Wallet Import Format (WIF)",
         "WIF_FORMAT_HELP": "Dieses Format wird insbesondere von &quot;Paper Wallets&quot; verwendet. Ihr Schlüsselbund wird <b>unverschlüsselt</b> gespeichert: Jeder, der eine Kopie dieser Datei besitzt, kann Ihr Konto ausräumen.",
         "EWIF_FORMAT": "Encrypted Wallet Import Format (WIF)",
@@ -854,13 +859,13 @@
       "BADGE": "Demo",
       "MODE": "Demonstrationsmodus",
       "FEATURE_NOT_AVAILABLE": "Einige Funktionen sind auf dieser Demo-Seite <b>nicht verfügbar</b>.",
-      "MODE_HELP": "Cesium arbeitet im <b>Demonstrationsmodus</b>: Einsicht in Konten ist verfügbar, jedoch können keine Vorgänge angestoßen werden.",
+      "MODE_HELP": "{{'COMMON.APP_NAME'|translate}} arbeitet im <b>Demonstrationsmodus</b>: Einsicht in Konten ist verfügbar, jedoch können keine Vorgänge angestoßen werden.",
       "INSTALL_HELP": "Aus <b>Sicherheitsgründen</b> empfehlen wir, deine <b>eigene Kopie</b> der Software zu <b>installieren</b>.<br/> Besuche die Seite <a href='https://cesium.app'>www.cesium.app</a> für weitere Hilfe."
     },
     "READONLY": {
       "BADGE": "Monit",
       "MODE": "Überwachungsmodus",
-      "MODE_HELP": "Cesium arbeitet im <b>Überwachungsmodus</b>: ausschließlich Funktionen zur Überwachung der Währung sind verfügbar.",
+      "MODE_HELP": "{{'COMMON.APP_NAME'|translate}} arbeitet im <b>Überwachungsmodus</b>: ausschließlich Funktionen zur Überwachung der Währung sind verfügbar.",
       "INSTALL_HELP": "Falls du <b>eine Brieftasche anlegen</b> möchtest, um Geld zu transferieren, empfehlen wir, deine <b>eigene Kopie</b> der Software zu <b>installieren</b>.<br/> Besuche die Seite <a href='https://cesium.app'>www.cesium.app</a> für weitere Hilfe."
     }
   },
@@ -885,7 +890,7 @@
     },
     "GLOSSARY": {
       "SECTION": "Glossar",
-      "PUBKEY_DEF": "Ein öffentlicher Schlüssel ist immer mit einem Konto verbunden. Es kann auch zu einem Mitglied gehören. In Cesium wird der öffentliche Schlüssel aus der geheimen Benutzerkennung und dem Passwort berechnet.",
+      "PUBKEY_DEF": "Ein öffentlicher Schlüssel ist immer mit einem Konto verbunden. Es kann auch zu einem Mitglied gehören. In {{'COMMON.APP_NAME'|translate}} wird der öffentliche Schlüssel aus der geheimen Benutzerkennung und dem Passwort berechnet.",
       "MEMBER": "Mitglied",
       "MEMBER_DEF": "Ein Mitglied ist ein realter und lebender Mensch, der freiwillig an dieser Währungs Gemeinschaft teilnehmen möchte. Ein Mitglied erhält täglich eine universelle Dividende, mit dem zeitlichen Rhytmus und in der Höhe, wie es die <span class=\"text-italic\">Parameter der Währung</span> vorgeben.",
       "CURRENCY_RULES": "Regeln für die Währung",
@@ -937,7 +942,7 @@
       "WOT_VIEW_CERTIFICATIONS_CLICK": "Wenn du hier klickst erscheint <b>eine Liste mit allen Zertifizierungen</b> die dieses Mitglied erhalten und erteilt hat.",
       "WOT_VIEW_CERTIFY": "Der Button <b>{{'WOT.BTN_CERTIFY'|translate}}</b> fügt deine Zertifizierung zu diesem Mitgliedskonto hinzu.",
       "CERTIFY_RULES": "<b>Achtung:</b> Zertifiziere nur <b>echte und lebende Personen</b> die kein weiteres zertifiziertes Mitgliedskonto besitzen.<br/><br/>Das Vertrauen in diese Währung wird von der Zuverlässigkeit aller Mitglieder getragen.!",
-      "MENU_BTN_SETTINGS": "Mit den  <b>{{'MENU.SETTINGS'|translate}}</b> kannst du die Cesium Anwendung einrichten.<br/><br/>Zum Beispiel kannst du einstellen, in welcher <b>Einheit</b>die Währung angezeigt wird.",
+      "MENU_BTN_SETTINGS": "Mit den  <b>{{'MENU.SETTINGS'|translate}}</b> kannst du die {{'COMMON.APP_NAME'|translate}} Anwendung einrichten.<br/><br/>Zum Beispiel kannst du einstellen, in welcher <b>Einheit</b>die Währung angezeigt wird.",
       "HEADER_BAR_BTN_PROFILE": "Hier klicken, um zu deinem <b>Profil</b> zu kommen",
       "SETTINGS_CHANGE_UNIT": "Du kannst die angezeigte Einheit der Menge ändern: <b>hier klicken</b>.<br/><br/>- Option zur Deaktivierung der Anzeige von Werten in {{currency|capitalize}}.<br/>- Activiere diese Option für relative Beträge in {{'COMMON.UD'|translate}}<sub>{{currency|abbreviate}}</sub> (<b>Einheiten der aktuellen universellen Dividende</b>).",
       "END_LOGIN": "Diese geführte Tour ist nun zu <b>Ende</b>.<br/><br/>Herzlich willkommen im Netz bei der <b>freien Ökonomie</b>!",
