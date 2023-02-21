@@ -1,0 +1,286 @@
+{
+  "MENU": {
+    "MARKET": "Anzeigen",
+    "CROWDFUNDING": "Crowdfunding",
+    "MY_RECORDS": "Meine Anzeigen",
+    "FAVORITES": "Favoriten",
+    "REGISTRY": "Seiten"
+  },
+  "MARKET": {
+    "COMMON": {
+      "PRICE": "Preis",
+      "BTN_NEW_AD": "Neue Anzeige",
+      "SOLD": "Anzeige geschlossen",
+      "LAST_UPDATE": "Letztes Update",
+      "AROUND_ME": "Um mich herum",
+      "CROWDFUNDING_PROGRESS": "{{pct|formatInteger}}% finanziert",
+      "FREE": "Nach Absprache",
+      "FREE_PRICE": "Preis nach Absprache"
+    },
+    "JOIN": {
+      "PROFILE": {
+        "WARNING": "Sie müssen nun Ihr Benutzerprofil vervollständigen.<br/><br/>Dies sind <b>öffentliche Informationen</b>, die für jeden zugänglich sind.",
+        "TITLE": "Nachname, Vorname",
+        "TITLE_HELP": "Nachname, Vorname oder Pseudonym",
+        "DESCRIPTION": "Über mich",
+        "DESCRIPTION_HELP": "Sag etwas über dich selbst..."
+      },
+      "SUBSCRIPTION": {
+        "EMAIL": "Email",
+        "EMAIL_HELP": "E-Mail (optional)"
+      },
+      "LAST_SLIDE_CONGRATULATION": "Sie haben alle erforderlichen Informationen eingegeben: Herzlichen Glückwunsch!<br/>Sie können jetzt <b>die Anfrage zur Kontoerstellung senden</b>.<br/><br/>Vergessen Sie nicht Ihre Anmeldedaten, sie sind im Nachhinein nicht änderbar!",
+      "CONFIRMATION_WALLET_ACCOUNT": "<b class=\"assertive\">Warnung:</b> Benutzername und Passwort können nicht mehr geändert werden.<br/><br/>Sie sollten es sich <b>gut merken!</b><br/><br/><b>Sind Sie sicher</b>, dass Sie mit diesen Anmeldeinformationen fortfahren möchten?"
+    },
+    "PROFILE": {
+      "DEFAULT_TITLE": "Benutzer {{pubkey|formatPubkey}}",
+      "IDENTITY_RECORDS_TITLE": "Benutzeranzeigen"
+    },
+    "LOGIN": {
+      "HELP": "Bitte geben Sie Ihre Zugangsdaten ein:",
+      "REMEMBER_ME": "Zugangsdaten auf diesem Gerät merken?"
+    },
+    "EVENT_LOGIN": {
+      "TITLE": "Kontaktinformationen",
+      "HELP": "Bitte geben Sie eine <b>E-Mail Adresse oder Handynummer</b> an, damit die Organisatoren Sie während der Veranstaltung erreichen können:",
+      "EMAIL_OR_PHONE": "E-Mail oder Telefonnummer",
+      "EMAIL_OR_PHONE_HELP": "E-Mail oder Telefonnummer",
+      "REMEMBER_ME": "Zugangsdaten auf diesem Gerät merken?",
+      "ERROR": {
+        "INVALID_USERNAME": "Ungültige E-Mail Adresse oder Telefonnummer"
+      }
+    },
+    "HOME": {
+      "BTN_NEW_AD": "Anzeige aufgeben",
+      "BTN_SHOW_MARKET_OFFER": "Anzeigen durchstöbern",
+      "LOCATION_LABEL": "Anzeigen nach Ort suchen:",
+      "LOCATION_HELP": "Stadt, Land oder PLZ",
+      "ERROR": {
+        "GEO_LOCATION_NOT_FOUND": "Stadt oder Postleitzahl nicht gefunden"
+      }
+    },
+    "CATEGORY": {
+      "ALL": "Alle Kategorien",
+      "UNKNOWN": "Unbekannte Kategorie",
+      "EDIT": {
+        "TITLE": "Kategorienverwaltung",
+        "ID": "Kennung",
+        "NAME": "Name",
+        "ROOT_CATEGORIES": "Root-Kategorien",
+        "BTN_ADD": "Hinzufügen",
+        "BTN_REORDER": "Neu anordnen",
+        "POPUP": {
+          "TITLE_EDIT": "Kategorie bearbeiten",
+          "TITLE_NEW": "Neue Kategorie"
+        },
+        "CONFIRM": {
+          "CANCEL": "Änderungen wurden nicht gespeichert.<br/><br/><b>Sind Sie sicher</b>, dass Sie diesen Vorgang fortsetzen möchten?"
+        },
+        "INFO": {
+          "SAVED": "Kategorien erfolgreich gespeichert"
+        },
+        "ERROR": {
+          "CANNOT_SAVE": "Fehler beim Speichern von Kategorien",
+          "INVALID_ID_PATTERN": "Format 'catNNN' wird nicht eingehalten",
+          "ID_ALREADY_USED": "Kennung bereits verwendet"
+        }
+      }
+    },
+    "SEARCH": {
+      "TITLE": "Markt",
+      "CATEGORY": "Kategorie:",
+      "SEARCH_HELP": "Geben Sie Ihre Suche ein (Fahrrad, Rollerblades...)",
+      "BY": "von",
+      "BTN_ADD": "Neu",
+      "BTN_CATEGORIES": "Kategorien",
+      "BTN_OPTIONS": "Erweiterte Suche",
+      "BTN_AROUND_ME": "Um mich herum",
+      "GEO_DISTANCE": "Maximale Entfernung um die Stadt:",
+      "GEO_DISTANCE_OPTION": "{{value}} {{'LOCATION.DISTANCE_UNIT'|translate}}",
+      "SHOW_MORE": "Mehr anzeigen",
+      "SHOW_MORE_COUNT": "(aktuelles Limit bei {{limit}})",
+      "LOCATION": "Stadt",
+      "LOCATION_HELP": "Stadt, Land oder PLZ",
+      "RESULTS": "Ergebnisse",
+      "RESULT_COUNT_LOCATION": "{{count}} Ergebnis{{count>0?'s':''}}, in der Nähe von {{location}}",
+      "RESULT_COUNT": "{{count}} Ergebnis{{count>0?'s':''}}",
+      "LAST_RECORDS": "Aktuelle Anzeigen:",
+      "LAST_RECORD_COUNT_LOCATION": "{{count}} Anzeige{{count>0?'n':''}} in der Nähe von {{location}}",
+      "LAST_RECORD_COUNT": "{{count}} aktuelle Anzeige{{count>0?'n':''}}",
+      "BTN_LAST_RECORDS": "Aktuelle Anzeigen",
+      "BTN_SHOW_CATEGORIES": "Kategorien durchsuchen",
+      "BTN_OFFERS": "Angebote",
+      "BTN_CROWDFUNDING": "Crowdfunding",
+      "BTN_FAVORITES": "Favoriten",
+      "BTN_AUCTION": "Versteigerung",
+      "BTN_NEEDS": "Gesuche",
+      "SHOW_CLOSED_RECORD": "Geschlossene Anzeigen anzeigen?",
+      "SHOW_OLD_RECORD": "Alte Anzeigen anzeigen?",
+      "RECORD_STOCK": "Bestand:",
+      "SORT": {
+        "PREFIX": "Sortieren nach:",
+        "DATE": "Datum",
+        "PRICE": "Preis",
+        "DATE_ASC": "Älteste zuerst",
+        "DATE_DESC": "Neueste zuerst",
+        "PRICE_ASC": "Preis (aufsteigend)",
+        "PRICE_DESC": "Preis (absteigend)"
+      },
+      "CROWDFUNDING": {
+        "SEARCH_HELP": "Deine Suche"
+      }
+    },
+    "GALLERY": {
+      "TITLE": "Diashow",
+      "BTN_START": "Start",
+      "BTN_CONTINUE": "Fortsetzen",
+      "BTN_PAUSE": "Pause",
+      "BTN_STOP": "Stoppen",
+      "SLIDE_DURATION": "Anzeigezeit:",
+      "AD_TYPE": "Anzeigentyp:",
+      "ALL_AD_TYPES": "Alle",
+      "SLIDE_DURATION_OPTION": "{{value}} Sekunden"
+    },
+    "VIEW": {
+      "TITLE": "Anzeige",
+      "BTN_SOLD_AD": "Anzeige schließen",
+      "BTN_SOLD": "Schließen",
+      "BTN_REOPEN": "Anzeige wieder öffnen",
+      "BTN_WRITE": "Nachricht schreiben",
+      "BTN_FOLLOW": "Anzeige beobachten",
+      "BTN_STOP_FOLLOW": "Folgen Sie dieser Anzeige nicht mehr",
+      "BTN_PAYMENT_HELP": "Wie zahle ich?",
+      "MENU_TITLE": "Optionen",
+      "RECORD_FEES_PARENTHESIS": "(Gebühren)",
+      "RECORD_STOCK": "Bestand:",
+      "POPOVER_SHARE_TITLE": "Anzeige {{title}}",
+      "REMOVE_CONFIRMATION": "Möchten Sie diese Anzeige wirklich löschen?<br/><br/>Dieser Vorgang kann nicht rückgängig gemacht werden.",
+      "SOLD_CONFIRMATION": "<b>Sind Sie sicher</b>, dass Sie diese Anzeige schließen möchten?",
+      "REOPEN_CONFIRMATION": "<b>Sind Sie sicher</b>, dass Sie diese Anzeige wieder öffnen möchten?",
+      "NEW_MESSAGE_TITLE": "Über die Anzeige \"{{title}}\"...",
+      "MORE_LIKE_THIS": "Das könnte Sie interessieren:",
+      "PAYMENT": "<b>Um eine Zahlung zu leisten</b>, senden Sie {{currency|abbreviate}}:<ul><li>- an den öffentlichen Schlüssel <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum || pubkey}}\"title=\"Schlüssel kopieren\">{{pubkey}}</a></li></p>",
+      "PAYMENT_WITH_COMMENT": "<b>Um eine Zahlung zu leisten</b>, senden Sie {{currency|abbreviate}}:<ul><li>- an den öffentlichen Schlüssel <a class=\"positive\" copy-on-click=\"{{pubkeyWithChecksum || pubkey}}\"title=\"Copy key\">{{pubkey}}</a></li><li>- mit dem Kommentar <a class=\"positive\" copy-on-click=\"{{comment}}\" title=\"Kommentar kopieren\">{{comment}}</a> zur Nachverfolgung.</li></ul></p>",
+      "CROWDFUNDING_ISSUERS": "{{issuers.length}} Spender",
+      "SHOW_CROWDFUNDING_ISSUERS": "Spender anzeigen"
+    },
+    "WALLET": {
+      "DUNITER_PUBKEY": "Öffentlicher Schlüssel zum Empfangen von Zahlungen",
+      "DUNITER_ACCOUNT": "Zahlungen in {{currency|currencySymbol}} erhalten",
+      "DUNITER_ACCOUNT_HELP": "Der öffentliche Schlüssel (oben) gibt das Ziel der Zahlungen an, die Sie erhalten.",
+      "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Es wurde kein öffentlicher Kontoschlüssel eingegeben. Sie müssen ihn den potenziellen Käufern einzeln nennen.<br/>Sie können ihn jederzeit eingeben, <b>indem Sie Ihr Profil bearbeiten</b>."
+    },
+    "TYPE": {
+      "TITLE": "Neue Anzeige",
+      "SELECT_TYPE": "Art der Anzeige:",
+      "OFFER": "Angebot, Verkauf",
+      "OFFER_SHORT": "Angebot",
+      "CROWDFUNDING": "Crowdfunding",
+      "CROWDFUNDING_SHORT": "Crowdfunding",
+      "NEED": "Gesuch, Kauf",
+      "NEED_SHORT": "Gesuch",
+      "AUCTION": "Versteigerung",
+      "AUCTION_SHORT": "Versteigerung"
+    },
+    "LOCAL_SALE": {
+      "LOCATION": "Standnummer",
+      "LOCATION_HELP": "Standnummer: 1, 2, ...",
+      "LOCATION_PREFIX": "Stand-Nr."
+    },
+    "EDIT": {
+      "TITLE": "Bearbeiten",
+      "RECORD_TITLE": "Titel",
+      "RECORD_TITLE_HELP": "Titel: Fahrrad, Buch...",
+      "RECORD_DESCRIPTION": "Beschreibung",
+      "RECORD_DESCRIPTION_HELP": "Beschreibung",
+      "RECORD_LOCATION": "Ort",
+      "RECORD_LOCATION_HELP": "Stadt, Land oder PLZ",
+      "RECORD_PRICE": "Preis",
+      "RECORD_PRICE_HELP": "Preis (optional)",
+      "FREE_PRICE": "Kostenloser Preis?",
+      "RECORD_CURRENCY": "Währung",
+      "RECORD_FEES": "Gebühren",
+      "RECORD_FEES_HELP": "Gebühren (optional)",
+      "RECORD_STOCK": "Lagerbestand",
+      "RECORD_STOCK_HELP": "Lagerbestand",
+      "AUCTION": {
+        "TITLE_NEW": "Neue Auktion",
+        "START_PRICE_HELP": "Startpreis (optional)"
+      },
+      "OFFER": {
+        "TITLE_NEW": "Neue Anzeige"
+      },
+      "NEED": {
+        "TITLE_NEW": "Neue Anfrage",
+        "MAX_PRICE_HELP": "Höchstpreis (optional)"
+      },
+      "CROWDFUNDING": {
+        "TITLE_NEW": "Neue Crowdfunding-Kampagne",
+        "TITLE_HELP": "Titel der Kampagne",
+        "DESCRIPTION_HELP": "Beschreibung: Beschreiben Sie hier Ihr Projekt",
+        "PRICE_HELP": "Zielbetrag"
+      },
+      "WARNING": {
+        "NO_GEO_POINT": "Ihre Anzeige wird bei räumlichen Suchen <b>nicht sichtbar</b> sein."
+      }
+    },
+    "WOT": {
+      "VIEW": {
+        "BTN_RECORDS": "Anzeigen",
+        "DUNITER_PUBKEY": "Öffentlicher Schlüssel zum Empfangen von Zahlungen",
+        "DUNITER_ACCOUNT": "Zahlungen in {{currency|currencySymbol}}",
+        "DUNITER_ACCOUNT_HELP": "Der öffentliche Schlüssel (oben) entspricht dem Konto, das verwendet werden soll, um diesen Benutzer zu bezahlen.",
+        "DUNITER_ACCOUNT_HELP_ASK_USER": "Dieser Benutzer hat den öffentlichen Schlüssel seines Kontos nicht mitgeteilt. <a ng-click=\"showNewMessageModal()\">Kontaktieren Sie ihn</a>, um ihn anzufragen."
+      },
+      "ERROR": {
+        "FAILED_STAR_PROFILE": "Fehler beim Senden Ihrer Notiz. Bitte versuchen Sie es später erneut."
+      }
+    },
+    "PAYMENT": {
+      "MODAL": {
+        "TITLE": "Bezahlen",
+        "SOFTWARE_HELP": "Du weißt nicht, <b>wie du die Währung {{currency|abbreviate}} senden sollst?</b><ul><li>- <a ng-click=\"openHelpSite($event)\">Konsultiere das Benutzerforum;</a><li>- Installiere kompatible Software: <a ng-click=\"openLink($event,'https://cesium.app')\">Cesium</a> (Linux, Windows, Mac), Silkaj (Linux) oder Sakia (Linux).</li>",
+        "PAYMENT_LINK_HELP": "Zahlungslinks (Beta):"
+      }
+    },
+    "ERROR": {
+      "INVALID_LOGIN_CREDENTIALS": "Ungültige Anmeldedaten.<br/>Bitte versuchen Sie es erneut.",
+      "FAILED_SAVE_RECORD": "Fehler beim Speichern der Anzeige",
+      "FAILED_UPDATE_RECORD": "Fehler beim Aktualisieren der Anzeige",
+      "LOAD_CATEGORY_FAILED": "Kategorien konnten nicht geladen werden",
+      "LOOKUP_RECORDS_FAILED": "Fehler beim Ausführen der Suche",
+      "LOAD_RECORD_FAILED": "Fehler beim Laden der Anzeige",
+      "REMOVE_RECORD_FAILED": "Fehler beim Löschen der Anzeige",
+      "SOLD_RECORD_FAILED": "Fehler beim Schließen der Anzeige",
+      "REOPEN_RECORD_FAILED": "Fehler beim erneuten Öffnen der Anzeige",
+      "FAILED_SAVE_COMMENT": "Fehler beim Speichern des Kommentars",
+      "FAILED_REMOVE_COMMENT": "Fehler beim Löschen des Kommentars",
+      "RECORD_NOT_EXISTS": "Nicht vorhandene Anzeige",
+      "RECORD_EXCEED_UPLOAD_SIZE": "Anscheinend ist Ihre Anzeige <b>zu groß</b>, um vom Datenknoten akzeptiert zu werden.<br/><br/>Beispielsweise können Sie <b>Fotos löschen</b> und dann erneut versuchen.",
+      "GEO_LOCATION_NOT_FOUND": "Stadt oder Postleitzahl nicht gefunden"
+    },
+    "INFO": {
+      "RECORD_REMOVED": "Anzeige erfolgreich gelöscht",
+      "RECORD_SOLD": "Anzeige geschlossen",
+      "RECORD_REOPEN": "Anzeige wieder geöffnet"
+    }
+  },
+  "EVENT": {
+    "MARKET": {
+      "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat Ihre Anzeige kommentiert: <b>{{params[2]}}</b>",
+      "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat einen Kommentar zu Ihrer Anzeige geändert: <b>{{params[2]}}</b>",
+      "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat auf Ihren Kommentar zur Anzeige geantwortet: <b>{{params[2]}}</b>",
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat eine Antwort auf Ihren Kommentar zur Anzeige geändert : <b>{{params[2]}}</b>",
+      "FOLLOW_NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat die Anzeige kommentiert: <b>{{params [2]}}</b>",
+      "FOLLOW_UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat einen Kommentar zur Anzeige geändert: <b>{{params[2]}}</b>",
+      "FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat die Anzeige hinzugefügt: <b>{{params[2]}}</b>",
+      "FOLLOW_UPDATE": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat die Anzeige aktualisiert: <b>{{params[2]}}</b>",
+      "FOLLOW_CLOSE": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat die Anzeige verkauft: <b>{{params[2]}}</b>",
+      "MODERATION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> bittet um Moderation der Anzeige: <b>{{params[2]}}</b><br/><b class=\"dark ion-quote\"> </b><span class=\"text-italic\">{{params[3]}}</span>",
+      "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> hat eine zu moderierende gemeldet: <b>{{params[2]}}</b>",
+      "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span>hat Missbrauch in Ihrer Anzeige gemeldet: <b>{{params[2]}}</b>",
+      "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> mochte Ihre Anzeige: <b>{{params[2]}}</b>",
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i> {{name||params[1]}}</span> beobachtet Ihre Anzeige: <b>{{params[2]}}</b>"
+    }
+  }
+}
