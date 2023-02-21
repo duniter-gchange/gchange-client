@@ -123,7 +123,7 @@
   "HOME": {
     "TITLE": "Cesium",
     "MESSAGE": "Welcome to the {{'COMMON.APP_NAME'|translate}} Application!",
-    "MESSAGE_CURRENCY": "Make exchanges in the libre currency {{currency|abbreviate}}!",
+    "MESSAGE_CURRENCY": "A software to <b>keep control</b> of your classified ads in {{currency|abbreviate}}",
     "BTN_CURRENCY": "Explore currency",
     "BTN_ABOUT": "about",
     "BTN_HELP": "Help",
