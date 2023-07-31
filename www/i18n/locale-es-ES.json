@@ -464,7 +464,7 @@
       "SCRYPT_ADVANCED": "Aleatoriedad avanzada",
       "SCRYPT_DEFAULT": "Estándar (por defecto)"
     },
-    "METHOD_LABEL": "Método de autenticación", 
+    "METHOD_LABEL": "Método de autenticación",
     "SCRYPT_FORM_HELP": "Autentíquese :"
   },
   "ACCOUNT": {
@@ -518,8 +518,8 @@
       "WALLET_ACCOUNT": "Simple monedero",
       "WALLET_ACCOUNT_TITLE": "Crear una cuenta simple",
       "WALLET_ACCOUNT_HELP": "Monedero simple para todos los otros casos, por ejemplo si necesita una cuenta suplementaria.<br/>El Dividendo Universal no será producido para esta cuenta.",
-      "SALT_WARNING": "Elija su identificador.<br/>Se solicitará cada vez que se conectará con esta cuenta.<br/><br/><b>Conserve bien este identificador</b>.<br/>¡En caso de pérdida, nadie podrá acceder a su cuenta!",
-      "PASSWORD_WARNING": "Elija su contraseña.<br/>Se solicitará cada vez que se conectará con esta cuenta.<br/><br/><b>Conserve bien esta contraseña</b>.<br/>¡En caso de pérdida, nadie podrá acceder su cuenta!",
+      "SALT_WARNING": "Elija su identificador.<br/>Se solicitará cada vez que se conecte con esta cuenta.<br/><br/><b>Conserve bien este identificador</b>.<br/>¡En caso de pérdida, nadie podrá acceder a su cuenta!",
+      "PASSWORD_WARNING": "Elija su contraseña.<br/>Se solicitará cada vez que se conecte con esta cuenta.<br/><br/><b>Conserve bien esta contraseña</b>.<br/>¡En caso de pérdida, nadie podrá acceder su cuenta!",
       "PSEUDO_WARNING": "Elija un seudónimo.<br/>Sirve para que los otros miembros puedan encontrarlo más fácilmente.<br/><br/>No debe contener <b>ni espacios ni caracteres acentuados</b>.<div class='hidden-xs'><br/>Ejemplo: <span class='gray'>SophieDupond, MarcelChemin, etc.</span>",
       "PSEUDO": "Seudónimo",
       "PSEUDO_HELP": "Seudónimo",
