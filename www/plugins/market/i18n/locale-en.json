@@ -237,7 +237,7 @@
     "PAYMENT": {
       "MODAL": {
         "TITLE": "Make a payment",
-        "SOFTWARE_HELP": "Don't know <b> how to send {{currency | abbreviate}}?</b><ul><li> - <a ng-click=\"openHelpSite($event)\"> Consult the user forum;</a><li> - Install compatible software: <a ng-click=\"openLink($event,'https://cesium.app')\"> Cesium </a> (Linux, Windows, Mac), Silkaj (Linux) or Sakia (Linux).</li>",
+        "SOFTWARE_HELP": "Don't know <b> how to send {{currency | abbreviate}}?</b><ul><li> - <a ng-click=\"openHelpSite($event)\"> Consult the user forum;</a><li> - Install compatible software: <a ng-click=\"openLink($event,'https://cesium.app')\"> Cesium </a> (Linux, Windows, Mac) or Silkaj (Linux).</li>",
         "PAYMENT_LINK_HELP": "Payment links (bêta) :"
       }
     },

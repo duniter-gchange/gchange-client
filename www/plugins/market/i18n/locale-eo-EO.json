@@ -237,7 +237,7 @@
     "PAYMENT": {
       "MODAL": {
         "TITLE": "Fari pagon",
-        "SOFTWARE_HELP": "Vi ne scias <b>kiel sendi monon {{currency|abbreviate}}?</b><ul><li>- <a ng-click=\"openHelpSite($event)\">Konsulti la forumon por uzantoj;</a><li>- Instali kongruan programon: <a ng-click=\"openLink($event, 'https://cesium.app/eo/')\">Cesium</a> (Linukso, Vindozo, Makintoŝo), Silkaj (Linukso) aŭ Sakia (Linukso).</li>",
+        "SOFTWARE_HELP": "Vi ne scias <b>kiel sendi monon {{currency|abbreviate}}?</b><ul><li>- <a ng-click=\"openHelpSite($event)\">Konsulti la forumon por uzantoj;</a><li>- Instali kongruan programon: <a ng-click=\"openLink($event, 'https://cesium.app/eo/')\">Cesium</a> (Linukso, Vindozo, Makintoŝo) aŭ Silkaj (Linukso).</li>",
         "PAYMENT_LINK_HELP": "Ligoj por pago (provaĵo):"
       }
     },

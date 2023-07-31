@@ -164,7 +164,7 @@
       "PAYMENT": {
         "MODAL": {
             "PAYMENT_LINK_HELP": "Enlaces de pago (en beta) :",
-            "SOFTWARE_HELP": "¿ No sabe <b>cómo pagar con la moneda {{currency|abbreviate}} ?</b><ul><li>- <a ng-click=\"openHelpSite($event)\">Consulte el foro de usuaries;</a><li>- Instale un programa compatible : <a ng-click=\"openLink($event, 'https://cesium.app')\">Cesium</a> (GNU/Linux, Windows, Mac), Silkaj (GNU/Linux) o Sakia (GNU/Linux).</li>",
+            "SOFTWARE_HELP": "¿ No sabe <b>cómo pagar con la moneda {{currency|abbreviate}} ?</b><ul><li>- <a ng-click=\"openHelpSite($event)\">Consulte el foro de usuaries;</a><li>- Instale un programa compatible : <a ng-click=\"openLink($event, 'https://cesium.app')\">Cesium</a> (GNU/Linux, Windows, Mac), Silkaj (GNU/Linux).</li>",
             "TITLE": "Hacer un pago"
         }
       },
