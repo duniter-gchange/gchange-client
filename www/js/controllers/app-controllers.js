@@ -555,7 +555,8 @@ function AppController($scope, $rootScope, $state, $ionicSideMenuDelegate, $q, $
   ////////////////////////////////////////
 
   // Ask switching fullscreen
-  $scope.askFullscreen();
+
+  //$scope.askFullscreen();
 
   // Register protocol handlers
   $scope.registerProtocolHandlers();
