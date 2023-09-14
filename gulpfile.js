@@ -2,7 +2,7 @@
 
 const gulp = require('gulp'),
   path = require("path"),
-  sass = require('gulp-sass'),
+  sass = require('gulp-sass')(require('node-sass')),
   cleanCss = require('gulp-clean-css'),
   base64 = require('gulp-base64-v2'),
   rename = require('gulp-rename'),
@@ -169,7 +169,7 @@ function appConfig() {
     .pipe(gulp.dest('www/js'));
 }
 
-function appAndPluginLint(done) {
+function appAndPluginLint() {
   log(colors.green('Linting JS files...'));
 
   // Copy Js (and remove unused code)
@@ -182,8 +182,8 @@ function appAndPluginLint(done) {
         console.error('jshint failed');
         process.exit(1);
       }
-    }))
-    .on('end', done);
+      cb();
+    }));
 }
 
 function appNgTemplate() {
@@ -1388,4 +1388,4 @@ exports.geoJson = geoJson;
 // Ionic CLI
 exports.default = gulp.series(appConfig, build);
 exports.serveBefore = gulp.series(build, appAndPluginWatch);
-exports['ionic:serve:before'] = exports.serveBefore; // Alias need need by @ionic/cli
+exports['ionic:serve:before'] = exports.serveBefore; // Alias need by @ionic/cli

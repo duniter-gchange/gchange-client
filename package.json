@@ -12,6 +12,7 @@
   "scripts": {
     "clean": "gulp clean webClean webExtClean && trash dist/desktop/**/*.deb platforms/android/**/*.apk",
     "postinstall": "node scripts/node/postinstall.js",
+    "gulp": "gulp",
     "lint": "gulp lint",
     "install-platforms": "ionic cordova prepare",
     "start": "ionic serve",
@@ -22,8 +23,8 @@
     "build": "gulp build",
     "build:web": "gulp config --env default && gulp webBuild --release",
     "build:webExt": "gulp config --env default && gulp webExtBuild --release",
-    "build:android": "ionic cordova build android --color --release",
-    "build:ios": "ionic cordova build ios --color --release"
+    "build:android": "ionic cordova build android --warning-mode=none --color --release",
+    "build:ios": "ionic cordova build ios --warning-mode=none --color --release"
   },
   "keywords": [
     "duniter",
@@ -95,32 +96,29 @@
     "uuid": "3.2.1"
   },
   "devDependencies": {
-    "@ionic/cli": "^6.12.3",
-    "@ionic/v1-toolkit": "^3.2.15",
+    "@ionic/cli": "~6.20.9",
+    "@ionic/v1-toolkit": "^3.2.20",
     "@prantlf/gulp-jsonlint": "^2.4.0",
     "ansi-colors": "^4.1.1",
-    "cordova": "^10.0.0",
-    "cordova-android": "^9.0.0",
+    "cordova": "^11.1.0",
+    "cordova-android": "^10.1.2",
     "cordova-clipboard": "^1.3.0",
-    "cordova-ios": "^6.1.0",
-    "cordova-osx": "^6.0.0",
-    "cordova-plugin-androidx": "^2.0.0",
-    "cordova-plugin-androidx-adapter": "^1.1.1",
-    "cordova-plugin-camera": "^4.1.0",
-    "cordova-plugin-compat": "^1.2.0",
+    "cordova-fetch": "^4.0.0",
+    "cordova-ios": "^6.3.0",
+    "cordova-plugin-androidx-adapter": "^1.1.3",
+    "cordova-plugin-camera": "^5.0.3",
     "cordova-plugin-customurlscheme": "^5.0.2",
-    "cordova-plugin-device": "^2.0.3",
+    "cordova-plugin-device": "^2.1.0",
     "cordova-plugin-dialogs": "^2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
-    "cordova-plugin-ionic-webview": "^4.2.1",
-    "cordova-plugin-minisodium": "git+https://github.com/duniter-cesium/cordova-plugin-minisodium.git#v1.0.2",
-    "cordova-plugin-secure-storage-android10": "git+https://github.com/duniter-cesium/cordova-plugin-secure-storage-android10.git#6.0.4",
-    "cordova-plugin-splashscreen": "^6.0.0",
-    "cordova-plugin-statusbar": "^2.4.3",
+    "cordova-plugin-ionic-webview": "^5.0.0",
+    "cordova-plugin-network-information": "~3.0.0",
+    "cordova-plugin-secure-storage-android10": "~6.0.7",
+    "cordova-plugin-splashscreen": "^6.0.2",
+    "cordova-plugin-statusbar": "^3.0.0",
     "cordova-plugin-vibration": "^3.1.1",
     "cordova-plugin-websocket": "^0.12.2",
-    "cordova-plugin-whitelist": "^1.3.4",
-    "cordova-plugin-x-toast": "^2.7.2",
+    "cordova-plugin-x-toast": "^2.7.3",
     "del": "^5.1.0",
     "delete-empty": "^0.1.3",
     "event-stream": "3.3.4",
@@ -128,7 +126,7 @@
     "glob": "^5.0.15",
     "graceful-fs": "^4.2.3",
     "gulp": "^4.0.2",
-    "gulp-angular-templatecache": "^3.0.0",
+    "gulp-angular-templatecache": "^3.0.1",
     "gulp-angular-translate": "^0.1.4",
     "gulp-base64-v2": "^1.0.4",
     "gulp-bump": "^3.1.3",
@@ -149,7 +147,7 @@
     "gulp-remove-code": "^3.0.4",
     "gulp-rename": "^2.0.0",
     "gulp-replace": "^1.0.0",
-    "gulp-sass": "^4.1.0",
+    "gulp-sass": "^5.1.0",
     "gulp-sort": "^2.0.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-sri-hash": "^2.2.1",
@@ -163,12 +161,12 @@
     "map-stream": "0.0.7",
     "merge2": "^1.3.0",
     "mv": "^2.1.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^8.0.0",
     "phonegap-plugin-barcodescanner": "^8.1.0",
     "playup": "^1.1.0",
     "simplify-geojson": "^1.0.3",
     "vinyl-fs": "^3.0.3",
-    "web-ext": "^4.3.0",
+    "web-ext": "^7.6.2",
     "yargs": "^5.0.0"
   },
   "peerDependencies": {
@@ -180,8 +178,7 @@
   "resolutions": {
     "gulp": "4.0.2",
     "gulp-cli": "2.3.0",
-    "graceful-fs": "4.2.4",
-    "npm": "^6.14.7"
+    "graceful-fs": "4.2.4"
   },
   "cordova": {
     "plugins": {
@@ -196,7 +193,6 @@
       "cordova-plugin-statusbar": {},
       "cordova-plugin-vibration": {},
       "cordova-plugin-websocket": {},
-      "cordova-plugin-whitelist": {},
       "cordova-plugin-x-toast": {},
       "cordova-plugin-ionic-keyboard": {},
       "phonegap-plugin-barcodescanner": {
@@ -208,7 +204,6 @@
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "28.+"
       },
-      "cordova-plugin-androidx": {},
       "cordova-plugin-androidx-adapter": {},
       "cordova-plugin-customurlscheme": {
         "URL_SCHEME": "gchange",
@@ -217,16 +212,15 @@
         "ANDROID_PATHPREFIX": "/"
       },
       "cordova-plugin-secure-storage-android10": {},
-      "cordova-plugin-minisodium": {}
+      "cordova-plugin-network-information": {}
     },
     "platforms": [
       "ios",
-      "osx",
       "android"
     ]
   },
   "engines": {
-    "node": ">= 12.18.3",
+    "node": ">= 16.17.0",
     "yarn": ">= 1.22.0"
   }
 }
