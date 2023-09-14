@@ -202,10 +202,12 @@ function ESCommentsController($scope, $filter, $state, $focus, $timeout, $anchor
         $scope.service.changes.start(id, data, $scope);
 
         // Set Motion
-        $scope.motion.show({
-          selector: '.comments .item',
-          ink: false
-        });
+        if (data.result.length) {
+          $scope.motion.show({
+            selector: '.comments .item',
+            ink: false
+          });
+        }
       });
   };
 

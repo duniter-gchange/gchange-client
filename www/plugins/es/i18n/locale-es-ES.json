@@ -75,6 +75,7 @@
       "BTN_STAR_HELP": "Puntuar este perfil",
       "BTN_STARS_REMOVE": "Suprimir mi puntuación",
       "BTN_STOP_FOLLOW": "Dejar de seguir este perfil",
+      "PROFILE_UPDATE": "Actualizado {{time|formatFromNow}}",
       "SENIORITY": "Antigüedad en {{'COMMON.APP_NAME'|translate}}",
       "STAR_HIT_COUNT": "{{total}} puntuaci{{total>1 ? 'ones' : 'ón'}}",
       "STARS": "Nivel de confianza"

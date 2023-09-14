@@ -5,6 +5,7 @@ function EsNotification(json, markAsReadCallback) {
 
   var messagePrefixes = {
     'user': 'EVENT.USER.',
+    'block': 'EVENT.BLOCK.',
     'page': 'EVENT.PAGE.',
     // gchange market record
     'market': 'EVENT.MARKET.'
@@ -15,6 +16,8 @@ function EsNotification(json, markAsReadCallback) {
   // Avoid undefined errors
   json = json || {};
 
+  console.log('TODO json', json);
+
   that.id = json.id || ('' + Date.now()); // Keep id if exists, otherwise create it from timestamp
   that.type = json.type && json.type.toLowerCase();
   that.time = json.time;
@@ -24,6 +27,18 @@ function EsNotification(json, markAsReadCallback) {
   that.message = json.reference && messagePrefixes[json.reference.index] ?
     messagePrefixes[json.reference.index] + json.code :
     'EVENT.' + json.code;
+
+  // Blockchain event
+  if (json.reference.type === 'block') {
+    console.log("TODO", json);
+    if (json.code.startsWith('CROWDFUNDING')) {
+      that.message = 'EVENT.MARKET.' + json.code;
+    }
+    else if (json.code.endsWith('_PUBKEY')) {
+      that.message = 'EVENT.USER.' + json.code;
+    }
+  }
+
   that.params = json.params;
 
   if (markAsReadCallback && (typeof markAsReadCallback === "function") ) {

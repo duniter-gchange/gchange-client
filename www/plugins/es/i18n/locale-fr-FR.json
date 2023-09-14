@@ -83,6 +83,7 @@
     },
     "VIEW": {
       "SENIORITY": "Ancienneté sur {{'COMMON.APP_NAME'|translate}}",
+      "PROFILE_UPDATE": "Mis à jour {{time|formatFromNow}}",
       "STARS": "Niveau de confiance",
       "STAR_HIT_COUNT": "{{total}} note{{total>1 ? 's' : ''}}",
       "BTN_STAR_HELP": "Noter ce profil",

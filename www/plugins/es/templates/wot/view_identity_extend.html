@@ -80,7 +80,7 @@
     <span translate>WOT.VIEW.SENIORITY</span>
     <h5 class="dark">
       <span translate>WOT.REGISTERED_SINCE</span>
-      {{formData.profile.creationTime | formatDate}}
+      {{::formData.profile.creationTime | formatDate}}
     </h5>
     <span class="badge badge-stable">{{formData.profile.creationTime | formatFromNowShort }}</span>
   </ion-item>
@@ -89,7 +89,16 @@
 <!-- After general section -->
 <ng-if ng-if="::extensionPoint === 'after-general'">
 
-  <span class="item item-divider item-divider-top-border" translate>PROFILE.PROFILE_DIVIDER</span>
+  <span class="item item-divider item-divider-top-border">
+    <span translate>PROFILE.PROFILE_DIVIDER</span>
+
+    <!-- profile last update date -->
+    <span class="item-note gray padding-right hidden-xs hidden-sm"
+         ng-if="formData.profile.creationTime !== formData.profile.time"
+         title="{{formData.profile.time | formatDate}}">
+      <small style="font-weight: normal">{{'WOT.VIEW.PROFILE_UPDATE'|translate:formData.profile}}</small>
+    </span>
+  </span>
 
   <div class="double-padding-x padding-bottom">
     <ng-include src="'plugins/es/templates/user/items_profile.html'" ng-init="showName=false;"></ng-include>

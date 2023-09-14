@@ -83,6 +83,7 @@
     },
     "VIEW": {
       "SENIORITY": "Delongeco ĉe {{'COMMON.APP_NAME'|translate}}",
+      "PROFILE_UPDATE": "Ĝisdatigita {{time|formatFromNow}}",
       "STARS": "Fido-nivelo",
       "STAR_HIT_COUNT": "{{total}} noto{{total>1 ? 'j' : ''}}",
       "BTN_STAR_HELP": "Noti tiun ĉi profilon",
