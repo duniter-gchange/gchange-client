@@ -14,11 +14,11 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     fields = {
       commons: ["category", "title", "description", "issuer", "time", "creationTime", "location", "address", "city", "price",
           "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
-          "geoPoint", "pubkey", "freePrice", "allowComments"],
+          "geoPoint", "pubkey", "freePrice", "allowComments", "allowShipping"],
       // Same as commons, but without description
       moreLikeThis: ["category", "title", "issuer", "time", "creationTime", "location", "address", "city", "price",
             "unit", "currency", "thumbnail._content_type", "picturesCount", "type", "stock", "fees", "feesCurrency",
-            "geoPoint", "pubkey", "freePrice"]
+            "geoPoint", "pubkey", "freePrice", "allowShipping"]
     },
     CONSTANTS = {
       DEFAULT_SEARCH_SIZE: 20,
@@ -436,13 +436,14 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
     }
 
     var location = options.location && options.location.trim();
-    var geoDistance = options.geoDistance || '50km';
+    var geoDistance = options.geoDistance && options.geoDistance.trim().length ? options.geoDistance : '50km';
+    var geoFilter;
     if (options.geoPoint && options.geoPoint.lat && options.geoPoint.lon) {
 
         // match location OR geo distance
         if (location && location.length) {
             var locationCity = location.toLowerCase().split(',')[0];
-            filters.push({
+            geoFilter = {
                 or : [
                     // No position defined: search on text
                     {
@@ -463,18 +464,19 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
                             }
                         }}
                 ]
-            });
+            };
         }
 
         else {
-            filters.push(
-                {geo_distance: {
-                        distance: geoDistance,
-                        geoPoint: {
-                            lat: options.geoPoint.lat,
-                            lon: options.geoPoint.lon
-                        }
-                    }});
+          geoFilter = {
+            geo_distance: {
+              distance: geoDistance,
+                geoPoint: {
+                    lat: options.geoPoint.lat,
+                    lon: options.geoPoint.lon
+                }
+            }
+          };
         }
       }
       else if (options.geoShape && options.geoShape.geometry) {
@@ -483,18 +485,17 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
           if (location && (type === 'Polygon' || type === 'MultiPolygon') && coordinates && coordinates.length) {
               // One polygon
               if (coordinates.length === 1) {
-                  filters.push(
-                      {
-                          geo_polygon: {
-                              geoPoint: {
-                                  points: coordinates.length === 1 ? coordinates[0] : coordinates
-                              }
-                          }
-                      });
+                geoFilter = {
+                    geo_polygon: {
+                        geoPoint: {
+                            points: coordinates.length === 1 ? coordinates[0] : coordinates
+                        }
+                    }
+                };
               }
               // Multi polygon
               else {
-                  filters.push({
+                geoFilter = {
                       or: coordinates.reduce(function (res, coords) {
                           return res.concat(coords.reduce(function(res, points) {
                               return res.concat({geo_polygon: {
@@ -504,9 +505,21 @@ angular.module('cesium.market.record.services', ['ngApi', 'cesium.services', 'ce
                                   }});
                           }, []));
                       }, [])
-                  });
+                  };
               }
           }
+      }
+      if (geoFilter) filters.push(geoFilter);
+
+      // Allow shipping ?
+      if (geoFilter && options.shipping) {
+        var shippingFilter = {term: {allowShipping: true}};
+        if (!geoFilter.or) {
+          geoFilter = {or: [geoFilter, shippingFilter]};
+        }
+        else {
+          geoFilter.or.push(shippingFilter)
+        }
       }
 
       // Add query to request

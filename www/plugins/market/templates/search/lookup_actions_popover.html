@@ -1,4 +1,4 @@
-<ion-popover-view class="fit has-header ">
+<ion-popover-view class="fit has-header popover-market-search-actions">
   <ion-header-bar>
     <h1 class="title"  translate>COMMON.POPOVER_FILTER_TITLE</h1>
   </ion-header-bar>
@@ -32,12 +32,12 @@
         {{'MARKET.SEARCH.BTN_NEEDS' | translate}}
       </button>
 
-      <!-- show closed Ads ? -->
-      <a class="item item-icon-left ink"
-         ng-click="toggleShowClosed()">
-        <i class="icon ion-android-checkbox-outline-blank" ng-show="!search.showClosed"></i>
-        <i class="icon ion-android-checkbox-outline" ng-show="search.showClosed"></i>
-        <span translate>MARKET.SEARCH.SHOW_CLOSED_RECORD</span>
+      <!-- allow  shipping ? -->
+      <a class="item  item-icon-left ink"
+         ng-click="toggleShipping()">
+        <i class="icon ion-android-checkbox-outline-blank" ng-show="!search.shipping"></i>
+        <i class="icon ion-android-checkbox-outline" ng-show="search.shipping"></i>
+        <span translate>MARKET.SEARCH.SHOW_SHIPPING</span>
       </a>
 
       <!-- show old Ads ? -->
@@ -46,6 +46,14 @@
         <i class="icon ion-android-checkbox-outline-blank" ng-show="!search.showOld"></i>
         <i class="icon ion-android-checkbox-outline" ng-show="search.showOld"></i>
         <span translate>MARKET.SEARCH.SHOW_OLD_RECORD</span>
+      </a>
+
+      <!-- show closed Ads ? -->
+      <a class="item item-icon-left ink"
+         ng-click="toggleShowClosed()">
+        <i class="icon ion-android-checkbox-outline-blank" ng-show="!search.showClosed"></i>
+        <i class="icon ion-android-checkbox-outline" ng-show="search.showClosed"></i>
+        <span translate>MARKET.SEARCH.SHOW_CLOSED_RECORD</span>
       </a>
     </div>
   </ion-content>

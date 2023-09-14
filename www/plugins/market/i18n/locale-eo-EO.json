@@ -114,6 +114,7 @@
       "BTN_NEEDS": "Petoj",
       "SHOW_CLOSED_RECORD": "Afiŝi la fermitajn anoncojn?",
       "SHOW_OLD_RECORD": "Afiŝi la malnovajn anoncojn?",
+      "SHOW_SHIPPING": "Vidi anoncojn kun ebla liverado?",
       "RECORD_STOCK": "Stoko:",
       "SORT": {
         "PREFIX": "Ordigo: ",
@@ -150,6 +151,7 @@
       "BTN_PAYMENT_HELP": "Kiel fari pagon?",
       "MENU_TITLE": "Kromeblecoj",
       "RECORD_FEES_PARENTHESIS": "(kostoj)",
+      "RECORD_ALLOW_SHIPPING": "Liverado eblas",
       "RECORD_STOCK": "Stoko disponebla:",
       "POPOVER_SHARE_TITLE": "Anonco {{title}}",
       "REMOVE_CONFIRMATION" : "Ĉu vi certas, ke vi volas forigi tiun ĉi anoncon?<br/><br/>Tiu ago estas neinversigebla.",
@@ -201,6 +203,7 @@
       "RECORD_FEES_HELP": "Kostoj (nedeviga)",
       "RECORD_STOCK": "Stoko disponebla",
       "RECORD_STOCK_HELP": "Stoko disponebla",
+      "RECORD_ALLOW_SHIPPING": "Ĉu ekspedo eblas?",
       "AUCTION": {
         "TITLE_NEW": "Nova aŭkcio",
         "START_PRICE_HELP": "Komenca prezo (nedeviga)"
@@ -278,7 +281,8 @@
       "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri anonco moderiginda: <b>{{params[2]}}</b>",
       "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> atentigis pri via anonco: <b>{{params[2]}}</b>",
       "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ŝatis vian anoncon: <b>{{params[2]}}</b>",
-      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> sekvas vian anoncon: <b>{{params[2]}}</b>"
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> sekvas vian anoncon: <b>{{params[2]}}</b>",
+      "CROWDFUNDING_TX_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has contributed to the funding of the listing: <b>{{params[2]}}</b>"
     }
   }
 }

@@ -113,8 +113,9 @@
       "BTN_FAVORITES": "Favoris",
       "BTN_AUCTION": "Enchères",
       "BTN_NEEDS": "Demandes",
-      "SHOW_CLOSED_RECORD": "Afficher les annonces closes ?",
-      "SHOW_OLD_RECORD": "Afficher les anciennes annonces ?",
+      "SHOW_CLOSED_RECORD": "Voir les annonces closes ?",
+      "SHOW_OLD_RECORD": "Voir les anciennes annonces ?",
+      "SHOW_SHIPPING": "Voir les annonces avec livraison possible ?",
       "RECORD_STOCK": "Stock :",
       "SORT": {
         "PREFIX": "Tri: ",
@@ -150,6 +151,7 @@
       "BTN_STOP_FOLLOW": "Ne plus suivre cette annonce",
       "BTN_PAYMENT_HELP": "Comment faire un paiement ?",
       "MENU_TITLE": "Options",
+      "RECORD_ALLOW_SHIPPING": "Livraison possible",
       "RECORD_FEES_PARENTHESIS": "(frais)",
       "RECORD_STOCK": "Stock disponible :",
       "POPOVER_SHARE_TITLE": "Annonce {{title}}",
@@ -202,6 +204,7 @@
       "RECORD_FEES_HELP": "Frais (optionnel)",
       "RECORD_STOCK": "Stock disponible",
       "RECORD_STOCK_HELP": "Stock disponible",
+      "RECORD_ALLOW_SHIPPING": "Expédition possible ?",
       "AUCTION": {
         "TITLE_NEW": "Nouvelle enchère",
         "START_PRICE_HELP": "Prix de départ (optionnel)"
@@ -279,7 +282,12 @@
       "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé une annonce à modérer : <b>{{params[2]}}</b>",
       "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a signalé votre annonce : <b>{{params[2]}}</b>",
       "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a aimé votre annonce : <b>{{params[2]}}</b>",
-      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> suit votre annonce : <b>{{params[2]}}</b>"
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> suit votre annonce : <b>{{params[2]}}</b>",
+      "CROWDFUNDING_TX_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> a participé au financement de l'annonce : <b>{{params[2]}}</b>"
+    },
+    "USER": {
+      "LINK_PUBKEY": "Votre compte a été associé à la clé publique {{params[1]|currencySymbol}} <span class=\"gray\"><i class=\"icon ion-key\"></i>&thinsp;{{params[2]}}</span>",
+      "UNLINK_PUBKEY": "Votre compte a été dissocié de la clé publique {{params[1]|currencySymbol}} <span class=\"gray\"><i class=\"icon ion-key\"></i>&thinsp;{{params[2]}}</span>"
     }
   }
 }

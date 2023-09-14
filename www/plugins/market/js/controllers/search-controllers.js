@@ -4,7 +4,7 @@ angular.module('cesium.market.search.controllers', ['cesium.market.record.servic
   .config(function($stateProvider) {
     'ngInject';
 
-    var queryParams = ['q', 'category', 'shape', 'location', 'reload', 'type', 'hash', 'closed', 'lat', 'lon', 'last', 'old', 'dist']
+    var queryParams = ['q', 'category', 'shape', 'location', 'reload', 'type', 'hash', 'closed', 'lat', 'lon', 'last', 'old', 'dist', 'shipping']
         .join('&');
 
     $stateProvider
@@ -85,6 +85,7 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
   $scope.search = {
     text: '',
     type: null,
+    types: ['offer', 'need', 'auction'],
     lastRecords: true,
     size: defaultSearchLimit,
     results: [],
@@ -97,11 +98,13 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     loadingMore: false,
     showClosed: false,
     showOld: false,
+    shipping: null,
     // 50km by default
     geoDistance: !isNaN(csSettings.data.plugins.es.geoDistance) ? csSettings.data.plugins.es.geoDistance : 50,
     sortAttribute: null,
     sortDirection: 'desc',
-    compactMode: csSettings.data.plugins.market && csSettings.data.plugins.market.compactMode
+    compactMode: csSettings.data.plugins.market && csSettings.data.plugins.market.compactMode,
+    filterCriteriaCount: 0
   };
 
   // Screen options
@@ -109,7 +112,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
       title: 'MARKET.SEARCH.TITLE',
       searchTextHelp: 'MARKET.SEARCH.SEARCH_HELP',
       type: {
-        show: true
+        show: true,
+        excluded: ['crowdfunding']
       },
       category: {
         show: true,
@@ -127,11 +131,12 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         show: true
       },
       filter: {
-        lastRecords: false
+        lastRecords: false,
+        showShipping: true
       }
     }, csConfig.plugins && csConfig.plugins.market && csConfig.plugins.market.record || {});
 
-  $scope.$watch('search.showOld+search.showClosed', function() {
+  $scope.$watch('search.type+search.showOld+search.showClosed+search.shipping', function() {
     if (!$scope.search.loading && $scope.entered) $scope.doRefresh(); // Refresh results
   }, true);
 
@@ -168,7 +173,6 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     else {
       $scope.search.type = type;
     }
-    $scope.doSearch();
   };
 
   $scope.doSearch = function(from, options) {
@@ -180,6 +184,10 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
     $scope.search.sortAttribute = $scope.search.sortAttribute || 'creationTime';
     $scope.search.sortDirection = $scope.search.sortDirection || ($scope.search.sortAttribute === 'creationTime' ? 'desc' : 'asc');
+    $scope.search.filterCriteriaCount = ($scope.search.type ? 1 : 0)
+      + ($scope.search.showOld ? 1 : 0)
+      + ($scope.search.showClosed ? 1 : 0)
+      + ($scope.search.shipping !== null ? 1 : 0);
 
     // When a location has been set, but NOT position found: resolve position
     if ($scope.search.location && !$scope.search.geoPoint && !$scope.search.geoShape) {
@@ -221,7 +229,8 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
         shape: $scope.search.geoShape && ($scope.search.geoShape.id || $scope.search.geoShape.properties && $scope.search.geoShape.properties.id),
         // Advanced options
         old: $scope.search.showOld ? true : undefined,
-        closed: $scope.search.showClosed ? true : undefined
+        closed: $scope.search.showClosed ? true : undefined,
+        shipping: $scope.search.shipping ? true : undefined
       });
     }
 
@@ -378,6 +387,10 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
     }
   };
 
+  $scope.clearAdvancedFilter = function() {
+    angular.merge($scope.search, {type: null, showOld: false, showClosed: false, shipping: null});
+  }
+
   $scope.showActionsPopover = function (event, url) {
     return UIUtils.popover.show(event, {
       templateUrl: url = url || 'plugins/market/templates/search/lookup_actions_popover.html',
@@ -416,6 +429,11 @@ function MkLookupAbstractController($scope, $state, $filter, $q, $location, $tra
   $scope.toggleShowOld = function() {
     $scope.hideActionsPopover();
     $scope.search.showOld = !$scope.search.showOld;
+  };
+
+  $scope.toggleShipping = function() {
+    $scope.hideActionsPopover();
+    $scope.search.shipping = !$scope.search.shipping;
   };
 
   $scope.toggleCompactMode = function() {
@@ -517,6 +535,12 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
           $scope.search.showOld = true;
           showAdvanced = true;
         }
+
+        // Show shipping
+        if (angular.isDefined(state.stateParams.shipping)) {
+          $scope.search.shipping = true;
+          showAdvanced = true;
+        }
       }
 
       // Search on category
@@ -554,8 +578,8 @@ function MkLookupController($scope, $rootScope, $controller, $focus, $timeout, $
   };
   $scope.$on('$ionicView.enter', $scope.enter);
 
-  $scope.finishEnter = function(isAdvanced) {
-    $scope.search.advanced = isAdvanced ? true : $scope.search.advanced; // keep null if first call
+  $scope.finishEnter = function(showAdvanced) {
+    $scope.search.advanced = showAdvanced ? true : $scope.search.advanced; // keep null if first call
     $scope.doSearch()
         .then(function() {
           $scope.showFab('fab-add-market-record');
@@ -734,9 +758,11 @@ function MkCrowdfundingLookupController($scope, $rootScope, $controller) {
   angular.extend(this, $controller('MkLookupCtrl', {$scope: $scope}));
 
   // Change market lookup defaults
-  $scope.search.type = 'crowdfunding';
+  $scope.search.type = null;
+  $scope.search.types = ['crowdfunding'];
   $scope.options.type.show = false;
   $scope.options.filter.lastRecords = true;
+  $scope.options.filter.showShipping = false;
   $scope.options.title = 'MENU.CROWDFUNDING';
   $scope.options.searchTextHelp = 'MARKET.SEARCH.CROWDFUNDING.SEARCH_HELP';
 }

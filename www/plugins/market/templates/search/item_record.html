@@ -6,51 +6,55 @@
       <i ng-if="::item.thumbnail" class="item-image" style="background-image: url({{::item.thumbnail.src}})"></i>
       <i ng-if="::!item.thumbnail" class="item-image icon cion-market-{{::item.type}}"></i>
 
-      <!-- title -->
-      <h2 title="{{item.title|noHtml}}" ng-bind-html="::item.title" ></h2>
-
       <!-- category -->
       <h3 class="gray text-nowrap hidden-xxs">
+         <span ng-if="::item.type ==='need'">
+           <i class="cion-market-need"></i>
+          {{::'MARKET.TYPE.NEED_SHORT'|upper|translate}} <span ng-if="!search.compactMode">&gt;</span>
+        </span>
         <span ng-if="::item.category" ng-bind-html="::item.category.name"></span>
       </h3>
 
-      <!--TODO -->
-      <!--<i class="icon ink"
-         title="{{'MARKET..'|translate}}"
-         ng-click="toggleLike($event)"
-         ng-class="{'ion-ios-heart-outline': !likeData.likes.wasHit, 'ion-ios-heart calm': likeData.likes.wasHit}">
-      </i>-->
-      <br class="hidden-xxs hidden-xs hidden-sm"/>
+      <!-- title -->
+      <h2 title="{{item.title|noHtml}}" ng-bind-html="::item.title" ></h2>
+
+      <!-- price -->
+      <h3>
+        <span style="font-weight: 600;" ng-if="::item.price" ng-bind-html=":rebind:item.price|formatAmount:{currency: item.currency, useRelative: $root.settings.useRelative, decimalCount: 0}"></span>
+        <span class="text-italic" ng-if="::item.price === 0">{{::'MARKET.COMMON.FREE'|translate}}</span>
+        <span class="text-italic" ng-if="::!item.price && item.freePrice">{{::'MARKET.COMMON.FREE_PRICE'|translate}}</span>
+      </h3>
+
+      <br class="hidden-xxs hidden-xs hidden-sm" ng-if="!search.compactMode"/>
 
       <!-- location -->
       <h4>
         <span class="positive" ng-if="item.city">
-        <i class="icon ion-location"></i>
         {{::options.location.prefix|translate}}<span ng-bind-html="::item.city"></span>
         </span>
         <span class="gray" ng-if="::item.distance">
           ({{::item.distance|formatDecimal}} {{::geoUnit}})
         </span>
-        <span ng-if="::item.stock>1" class="gray"><i class="icon ion-pie-graph"></i> <span class="">{{::item.stock}} <i class="ion-checkmark balanced"></i></span></span>
       </h4>
 
+      <!-- allow shipping -->
+      <h5 class="gray text-nowrap" ng-if="::item.allowShipping">
+        <i class="icon icon-svg ion-delivery" ng-if="!search.compactMode"></i>
+        <span>{{::'MARKET.VIEW.RECORD_ALLOW_SHIPPING'|translate}}</span>
+      </h5>
+
       <!-- creation date -->
-      <h4 class="gray" ng-if="item.creationTime">
-        <i class="icon ion-clock" ></i>
+      <h5 class="gray" ng-if="::item.creationTime">
         {{::item.creationTime | formatFromNow}}
-        <span class="hidden-xxs">{{::'MARKET.SEARCH.BY'|translate}}</span>
-        <span class="hidden-xxs dark">{{::item.name || (item.pubkey|formatPubkey)}}</span>
-      </h4>
+        <ng-if ng-if="!search.compactMode">
+          <span class="hidden-xxs">{{::'MARKET.SEARCH.BY'|translate}}</span>
+          <span class="hidden-xxs dark">{{::item.name || (item.pubkey|formatPubkey)}}</span>
+        </ng-if>
+      </h5>
 
       <span  ng-if="::item.picturesCount > 1"
              class="badge badge-balanced badge-picture-count hidden-xxs">{{::item.picturesCount}}&nbsp;<i class="icon ion-camera"></i></span>
 
-      <!-- Tx progress -->
-      <div ng-if="::item.price && item.tx" class="badge badge-secondary"
-          ng-class="{'badge-balanced badge-shadow': item.tx.pct>=100, 'badge-positive badge-shadow': item.tx.pct < 100 && item.tx.pct > 0, 'badge-calm badge-shadow': item.tx.pct === 0}">
-        <i class="ion-android-checkmark-circle" ng-if="::item.tx.pct>=100"></i>
-        <span>{{'MARKET.COMMON.CROWDFUNDING_PROGRESS'|translate: item.tx}}</span>
-      </div>
 
     </div>
 
@@ -65,7 +69,14 @@
 
     <div ng-if="::item.stock===0" class="badge badge-closed badge-shadow badge-assertive"  translate>MARKET.COMMON.SOLD</div>
 
-    <!-- price -->
+    <!-- Tx progress -->
+    <div ng-if="::item.price && item.tx" class="badge badge-price"
+         ng-class="{'badge-balanced badge-shadow': item.tx.pct>=100, 'badge-positive badge-shadow': item.tx.pct < 100 && item.tx.pct > 0, 'badge-calm badge-shadow': item.tx.pct === 0}">
+        <i class="ion-android-checkmark-circle" ng-if="::item.tx.pct>=100"></i>
+        <span>{{'MARKET.COMMON.CROWDFUNDING_PROGRESS'|translate: item.tx}}</span>
+    </div>
+
+    <!-- price
     <div class="badge badge-price badge-shadow"
          ng-class="{'badge-calm': item.type==='offer'||item.type==='auction', 'badge-energized': item.type==='need'||item.type==='crowdfunding', 'badge-price-closed': !item.stock}">
       <i class="cion-market-{{item.type}}"></i>
@@ -74,6 +85,6 @@
       <span ng-if="::item.price === 0">{{::'MARKET.COMMON.FREE'|translate}}</span>
       <span ng-if="::!item.price && item.freePrice">{{::'MARKET.COMMON.FREE_PRICE'|translate}}</span>
       <span ng-if="::!item.price && item.price !== 0 && !item.freePrice">{{::'MARKET.TYPE.'+item.type+'_SHORT'|upper|translate}}</span>
-    </div>
+    </div> -->
   </div>
 </a>

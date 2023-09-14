@@ -2,6 +2,7 @@
 	"EVENT": {
 		"MARKET": {
 			"ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha reportardo su anuncio : <b>{{params[2]}}</b>",
+            "CROWDFUNDING_TX_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha participado en la financiación del anuncio: <b>{{params[2]}}</b>",
 			"DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha reportado un anuncio para moderar : <b>{{params[2]}}</b>",
 			"FOLLOW_CLOSE": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha cerrado el anuncio : <b>{{params[2]}}</b>",
 			"FOLLOW_NEW": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha añadido el anuncio : <b>{{params[2]}}</b>",
@@ -15,7 +16,7 @@
 			"UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado su comentario sobre su anuncio : <b>{{params[2]}}</b>",
 			"NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha contestado a su comentario sobre el anuncio : <b>{{params[2]}}</b>",
 			"UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> ha modificado la repuesta a su comentario sobre el anuncio : <b>{{params[2]}}</b>"
-		}
+  		}
 	},
 	"MARKET": {
       "CATEGORY": {
@@ -71,6 +72,7 @@
         "RECORD_FEES_HELP": "Gastos de envío (opcional)",
         "RECORD_STOCK": "Stock disponible",
         "RECORD_STOCK_HELP": "Stock disponible",
+        "DELIVERY_AVAILABLE": "¿Envío disponible?",
         "AUCTION": {
           "TITLE_NEW": "Nueva subasta",
           "START_PRICE_HELP": "Precio inicial (opcional)"
@@ -195,6 +197,7 @@
         "LOCATION_HELP": "Ciudad",
         "LAST_RECORDS": "Anuncios recientes:",
         "SHOW_OLD_RECORD": "Mostrar anuncios viejos",
+        "SHOW_SHIPPING": "Mostrar anuncios con envío posible",
         "RESULTS": "Resultados :",
         "BTN_CROWDFUNDING": "Crowdfunding",
         "BTN_FAVORITES": "Favoritas",
@@ -250,6 +253,7 @@
         "BTN_WRITE": "Escribir",
         "MENU_TITLE": "Opciones",
         "RECORD_FEES_PARENTHESIS": "(costes)",
+        "RECORD_ALLOW_SHIPPING": "Envío posible",
         "RECORD_STOCK": "Stock disponible :",
         "POPOVER_SHARE_TITLE": "Anuncio {{title}}",
         "REMOVE_CONFIRMATION": "¿ Desea suprimir este anuncio ?<br/><br/>Esta operación es irreversible."

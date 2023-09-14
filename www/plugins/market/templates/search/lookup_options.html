@@ -1,15 +1,16 @@
 
 <div class="row no-padding responsive-lg disable-user-behavior" ng-if="search.advanced">
-    <div class="col no-padding no-margin">
-        <!-- Show closed ad ? -->
+
+    <!-- Show shipping ? -->
+    <div class="col no-padding no-margin" ng-if="options.filter.showShipping">
+
         <div class="item item-icon-left item-input item-toggle stable-bg" >
-            <i class="icon ion-speakerphone gray"></i>
-            <b class="icon-secondary ion-close-circled assertive" style="top:7px; left: 34px;"></b>
-            <span class="input-label item-icon-left-padding" ng-click="search.showClosed=!search.showClosed">
-                {{'MARKET.SEARCH.SHOW_CLOSED_RECORD' | translate}}
+            <i class="icon icon-svg ion-delivery gray"></i>
+            <span class="input-label item-icon-left-padding">
+                {{'MARKET.SEARCH.SHOW_SHIPPING' | translate}}
             </span>
             <label class="toggle toggle-royal">
-                <input type="checkbox" ng-model="search.showClosed">
+                <input type="checkbox" ng-model="search.shipping">
                 <div class="track">
                     <div class="handle"></div>
                 </div>
@@ -17,12 +18,12 @@
         </div>
     </div>
 
+    <!-- Show OLD ad ? -->
     <div class="col no-padding no-margin">
-        <!-- Show OLD ad ? -->
         <div class="item item-icon-left item-input item-toggle stable-bg" >
             <i class="icon ion-clock gray"></i>
             <b class="icon-secondary ion-close-circled assertive" style="top:7px; left: 34px;"></b>
-            <span class="input-label item-icon-left-padding" ng-click="search.showOld=!search.showOld">
+            <span class="input-label item-icon-left-padding">
                 {{'MARKET.SEARCH.SHOW_OLD_RECORD' | translate}}
             </span>
             <label class="toggle toggle-royal">
@@ -34,4 +35,20 @@
         </div>
     </div>
 
+    <!-- Show closed ad ? -->
+    <div class="col no-padding no-margin">
+        <div class="item item-icon-left item-input item-toggle stable-bg" >
+            <i class="icon ion-speakerphone gray"></i>
+            <b class="icon-secondary ion-close-circled assertive" style="top:7px; left: 34px;"></b>
+            <span class="input-label item-icon-left-padding">
+                {{'MARKET.SEARCH.SHOW_CLOSED_RECORD' | translate}}
+            </span>
+            <label class="toggle toggle-royal">
+                <input type="checkbox" ng-model="search.showClosed">
+                <div class="track">
+                    <div class="handle"></div>
+                </div>
+            </label>
+        </div>
+    </div>
 </div>

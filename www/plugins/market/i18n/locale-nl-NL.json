@@ -18,6 +18,7 @@
       "BTN_AROUND_ME": "In mijn omgeving",
       "SHOW_MORE": "Toon meer",
       "SHOW_MORE_COUNT": "(huidige limiet op {{limit}})",
+      "SHOW_SHIPPING": "Bekijk advertenties met mogelijke verzending?",
       "LOCATION": "Locatie",
       "LOCATION_HELP": "Plaats",
       "LAST_RECORDS": "Nieuwste advertenties:",
@@ -32,7 +33,8 @@
       "TITLE": "Advertentie",
       "MENU_TITLE": "Opties",
       "POPOVER_SHARE_TITLE": "Advertentie {{title}}",
-      "REMOVE_CONFIRMATION" : "Weet je zeker dat je deze advertentie wil wissen?<br/><br/>Dit kan niet ongedaan worden gemaakt."
+      "REMOVE_CONFIRMATION" : "Weet je zeker dat je deze advertentie wil wissen?<br/><br/>Dit kan niet ongedaan worden gemaakt.",
+      "RECORD_ALLOW_SHIPPING": "Verzending mogelijk"
     },
     "TYPE": {
       "TITLE": "Nieuwe advertentie",
@@ -51,7 +53,8 @@
       "RECORD_LOCATION_HELP": "Straat, Plaats",
       "RECORD_PRICE": "Prijs",
       "RECORD_PRICE_HELP": "Prijs (optioneel)",
-      "RECORD_CURRENCY": "Valuta"
+      "RECORD_CURRENCY": "Valuta",
+      "RECORD_ALLOW_SHIPPING": "Is verzending mogelijk?"
     },
     "ERROR": {
       "FAILED_SAVE_RECORD": "Advertentie opslaan mislukt",
@@ -73,7 +76,8 @@
       "NEW_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft gereageerd op jouw advertentie: <b>{{params[2]}}</b>",
       "UPDATE_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft zijn/aar reactie op jouw advertentie bewerkt: <b>{{params[2]}}</b>",
       "NEW_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft gereageerd op jouw commentaar op advertentie: <b>{{params[2]}}</b>",
-      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft zijn/haar reactie op jouw commentaar bewerkt, op advertentie: <b>{{params[2]}}</b>"
+      "UPDATE_REPLY_COMMENT": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||uid||params[1]}}</span> heeft zijn/haar reactie op jouw commentaar bewerkt, op advertentie: <b>{{params[2]}}</b>",
+      "CROWDFUNDING_TX_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> heeft bijgedragen aan de financiering van de vermelding: <b>{{params[2]}}</b>"
     }
   }
 }

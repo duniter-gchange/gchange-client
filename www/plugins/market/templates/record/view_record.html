@@ -46,6 +46,11 @@
                 <i class="icon ion-flag"></i>
                 <span ng-bind-html="::formData.category.name"></span>
               </a>
+
+              <a ng-if="formData.allowShipping" ui-sref="app.market_lookup({shipping: true})">
+                <i class="icon icon-svg ion-delivery"></i>
+                <span>{{::'MARKET.VIEW.RECORD_ALLOW_SHIPPING'|translate}}</span>
+              </a>
             </h2>
             <h4>
               <i class="icon ion-clock"></i>
@@ -101,7 +106,13 @@
                 <i class="icon ion-flag"></i>
                 <span ng-bind-html="::formData.category.name"></span>
               </a>
-
+              <ng-if ng-if="formData.allowShipping">
+                <br class="visible-xxs"/>
+                <a ui-sref="app.market_lookup({shipping: true})">
+                  <i class="icon icon-svg ion-delivery"></i>
+                  <span>{{::'MARKET.VIEW.RECORD_ALLOW_SHIPPING'|translate}}</span>
+                </a>
+              </ng-if>
             </h2>
             <h4>
               <i class="icon ion-clock"></i>

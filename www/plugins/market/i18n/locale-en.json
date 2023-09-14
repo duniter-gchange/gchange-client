@@ -1,6 +1,7 @@
 {
   "MENU": {
     "MARKET": "Ads",
+    "CROWDFUNDING": "Crowdfunding",
     "MY_RECORDS": "My ads",
     "FAVORITES": "Favorites"
   },
@@ -114,6 +115,7 @@
       "BTN_NEEDS": "Needs",
       "SHOW_CLOSED_RECORD": "Display closed ads?",
       "SHOW_OLD_RECORD": "Display old ads?",
+      "SHOW_SHIPPING": "View listings with possible shipping?",
       "RECORD_STOCK": "Stock:",
       "SORT": {
         "PREFIX": "Sort: ",
@@ -149,6 +151,7 @@
       "BTN_STOP_FOLLOW": "Stop following this ad",
       "BTN_PAYMENT_HELP": "How to make a payment?",
       "MENU_TITLE": "Options",
+      "RECORD_ALLOW_SHIPPING": "Shipping possible",
       "RECORD_FEES_PARENTHESIS": "(fees)",
       "RECORD_STOCK": "Available stock:",
       "POPOVER_SHARE_TITLE": "Ad {{title}}",
@@ -201,6 +204,7 @@
       "RECORD_FEES_HELP": "Fees (optional)",
       "RECORD_STOCK": "Available stock",
       "RECORD_STOCK_HELP": "Available stock",
+      "RECORD_ALLOW_SHIPPING": "Is shipping possible?",
       "AUCTION": {
         "TITLE_NEW": "New auction",
         "START_PRICE_HELP": "Starting price (optional)"
@@ -278,7 +282,8 @@
       "DELETION_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> posted an ad to moderate: <b>{{params[2]}}</b>",
       "ABUSE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span>reported abuse on your ad: <b>{{params[2]}}</b>",
       "LIKE_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> liked your ad: <b>{{params[2]}}</b>",
-      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> follows your ad: <b>{{params[2]}}</b>"
+      "FOLLOW_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> follows your ad: <b>{{params[2]}}</b>",
+      "CROWDFUNDING_TX_RECEIVED": "<span class=\"positive\"><i class=\"icon ion-person\"></i>&thinsp;{{name||params[1]}}</span> has contributed to the funding of the listing: <b>{{params[2]}}</b>"
     }
   }
 }

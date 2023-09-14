@@ -5,12 +5,20 @@
   </ion-nav-title>
 
   <ion-nav-buttons side="secondary">
-    <!--<button class="button button-icon button-clear icon ion-loop visible-xs visible-sm"
-            ng-click="refresh()">
-    </button>-->
+
+    <button class="button button-icon button-clear visible-xs visible-sm"
+            ng-if="search.filterCriteriaCount"
+            ng-click="clearAdvancedFilter($event)">
+      <i class="icon ion-android-funnel"></i>
+      <i class="icon icon-secondary assertive ion-close" style="top: -5px; left: 24px; font-size: 10px;"></i>
+    </button>
+    &nbsp;
+
     <button class="button button-icon button-clear visible-xs visible-sm"
             ng-click="showActionsPopover($event)">
       <i class="icon ion-android-funnel"></i>
+
+      <span ng-if="search.filterCriteriaCount" class="badge badge-button badge-assertive">{{search.filterCriteriaCount}}</span>
     </button>
   </ion-nav-buttons>
 

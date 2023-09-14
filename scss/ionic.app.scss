@@ -156,6 +156,36 @@
   }
 }
 
+/***
+More icons
+*/
+
+.icon.ion-delivery:before {
+  content: ' ';
+  background-image: url('../img/delivery.svg');
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position-y: 2px;
+  background-position-x: center;
+}
+
+.icon-svg:before {
+  width: 1rem;
+  height: 1rem;
+}
+
+.item-icon-left .icon-svg:before {
+  background-position-y: center;
+  width: 32px;
+  height: 32px;
+}
+
+.popover-market-search-actions {
+  width: 350px;
+  height: 307px;
+}
+
 /**********
   feed (home page)
 **********/
@@ -308,14 +338,23 @@ form.lookupForm,
   }
 }
 .item-thumbnail-left {
-  h1, h2 {
+  h1 {
+    font-size: 1.2em;
+  }
+  h2 {
     font-size: 1em;
   }
   h3 {
     font-size: 0.9em;
   }
-  h4, h5 {
+  h4{
     font-size: 0.8em;
+  }
+  h5 {
+    font-size: 0.7em;
+  }
+  h6 {
+    font-size: 0.6em;
   }
 }
 // All other screen size: use relative size for thumbnail (max 200px)
@@ -343,15 +382,24 @@ form.lookupForm,
     p {
       font-size: 0.8em;
     }
-    h1, h2 {
-      font-weight: bold;
+    h1 {
+      font-weight: 600;
       font-size: 1.4em;
+    }
+    h2 {
+      font-size: 1.2em;
     }
     h3 {
       font-size: 1.1em;
     }
-    h4, h5 {
+    h4 {
       font-size: 1em;
+    }
+    h5 {
+      font-size: 0.9em;
+    }
+    h6 {
+      font-size: 0.8em;
     }
   }
 }
@@ -379,12 +427,14 @@ form.lookupForm,
     display: -webkit-inline-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    font-weight: bold;
-
     overflow: hidden !important;
     white-space: normal;
-
   }
+
+  h1, h2 {
+    font-weight: 600;
+  }
+
   &:hover h1,
   &:hover h2 {
     color: $positive-900-bg !important;
@@ -397,7 +447,7 @@ form.lookupForm,
   .badge-picture-count {
     position: absolute;
     bottom: 8px;
-    left: calc(min(150px, 40vw) - 15px);
+    left: calc(min(150px, 40vw) - 30px);
     right: unset;
     top: unset;
   }
@@ -405,7 +455,7 @@ form.lookupForm,
 
 @media screen and (min-width: $screen-md) {
   .item.item-record .badge-picture-count {
-    left: calc(min(200px, 50vw) - 25px);
+    left: calc(min(200px, 50vw) - 30px);
     bottom: 10px;
   }
 }
@@ -446,8 +496,14 @@ form.lookupForm,
     h3 {
       font-size: 0.8em;
     }
-    h4, h5 {
+    h4 {
       font-size: 0.7em;
+    }
+    h5 {
+      font-size: 0.6em;
+    }
+    h6 {
+      font-size: 0.5em;
     }
 
     .badge-picture-count {

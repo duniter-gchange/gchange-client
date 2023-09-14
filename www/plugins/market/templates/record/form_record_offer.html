@@ -47,6 +47,14 @@
             rows="8" cols="10"></textarea>
 </div>
 
+<!-- Allow shipping ? -->
+<ion-checkbox
+        ng-model="formData.allowShipping"
+        class="item item-border-large">
+  <div class="item-content" translate>
+    MARKET.EDIT.RECORD_ALLOW_SHIPPING
+  </div>
+</ion-checkbox>
 
 <!-- price -->
 <ion-item class="row responsive-sm no-padding ">
@@ -150,6 +158,7 @@
     <span translate="ERROR.FIELD_NOT_INT"></span>
   </div>
 </div>
+
 
 <!-- position -->
 <ng-include src="'plugins/es/templates/common/edit_position.html'" ng-controller="ESPositionEditCtrl"></ng-include>

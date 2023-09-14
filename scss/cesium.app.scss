@@ -50,6 +50,10 @@ $cesiumicons-font-path: "../fonts" !default;
     display: none !important;
     visibility: hidden !important;
   }
+  .visible-xxs {
+    display: inherit !important;
+    visibility: visible !important;
+  }
   .no-padding-xxs {
     padding: 0 !important;
   }
@@ -57,7 +61,12 @@ $cesiumicons-font-path: "../fonts" !default;
     right: 16px;
   }
 }
-
+@media screen and (min-width: $screen-xs) {
+  .visible-xxs {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
 // ----------------------------------
 // Extra small device: Phones (<767px)
 // ----------------------------------
