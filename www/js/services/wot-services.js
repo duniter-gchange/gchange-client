@@ -222,211 +222,6 @@ angular.module('cesium.wot.services', ['ngApi', 'cesium.bma.services', 'cesium.c
           });
       },
 
-      loadCertifications = function(getFunction, pubkey, lookupCertifications, parameters, medianTime, certifiersOf) {
-
-        function _certId(pubkey, block) {
-          return pubkey + '-' + block;
-        }
-
-        // TODO : remove this later (when all node will use duniter v0.50+)
-        var lookupHasCertTime = true; // Will be set ti FALSE before Duniter v0.50
-        var lookupCerticationsByCertId = lookupCertifications ? lookupCertifications.reduce(function(res, cert){
-          var certId = _certId(cert.pubkey, cert.cert_time ? cert.cert_time.block : cert.sigDate);
-          if (!cert.cert_time) lookupHasCertTime = false;
-          res[certId] = cert;
-          return res;
-        }, {}) : {};
-
-        var isMember = true;
-
-        return getFunction({ pubkey: pubkey })
-          .then(function(res) {
-            return res.certifications.reduce(function (res, cert) {
-              // Rappel :
-              //   cert.sigDate = blockstamp de l'identité
-              //   cert.cert_time.block : block au moment de la certification
-              //   cert.written.number : block où la certification est écrite
-
-              var pending = !cert.written;
-              var certTime = cert.cert_time ? cert.cert_time.medianTime : null;
-              var expiresIn = (!certTime) ? 0 : (pending ?
-                (certTime + parameters.sigWindow - medianTime) :
-                (certTime + parameters.sigValidity - medianTime));
-              expiresIn = (expiresIn < 0) ? 0 : expiresIn;
-              // Remove from lookup certs
-              var certId = _certId(cert.pubkey, lookupHasCertTime && cert.cert_time ? cert.cert_time.block : cert.sigDate);
-              delete lookupCerticationsByCertId[certId];
-
-              // Add to result list
-              return res.concat({
-                pubkey: cert.pubkey,
-                uid: cert.uid,
-                time: certTime,
-                isMember: cert.isMember,
-                wasMember: cert.wasMember,
-                expiresIn: expiresIn,
-                willExpire: (expiresIn && expiresIn <= csSettings.data.timeWarningExpire),
-                pending: pending,
-                block: (cert.written !== null) ? cert.written.number :
-                  (cert.cert_time ? cert.cert_time.block : null),
-                valid: (expiresIn > 0)
-              });
-            }, []);
-          })
-          .catch(function(err) {
-            if (!!err && err.ucode == BMA.errorCodes.NO_MATCHING_MEMBER) { // member not found
-              isMember = false;
-              return []; // continue (append pendings cert if exists in lookup)
-            }
-            else {
-              throw err;
-            }
-          })
-
-          // Add pending certs (found in lookup - see loadIdentityByLookup())
-          .then(function(certifications) {
-            var pendingCertifications = _.values(lookupCerticationsByCertId);
-            if (!pendingCertifications.length) return certifications; // No more pending continue
-
-            // Special case for initPhase - issue #
-            if (csCurrency.data.initPhase) {
-              return pendingCertifications.reduce(function(res, cert) {
-                return res.concat({
-                  pubkey: cert.pubkey,
-                  uid: cert.uid,
-                  isMember: cert.isMember,
-                  wasMember: cert.wasMember,
-                  time: null,
-                  expiresIn: parameters.sigWindow,
-                  willExpire: false,
-                  pending: true,
-                  block: 0,
-                  valid: true
-                });
-              }, certifications);
-            }
-
-            var pendingCertByBlocks = pendingCertifications.reduce(function(res, cert){
-              var block = lookupHasCertTime && cert.cert_time ? cert.cert_time.block :
-                (cert.sigDate ? cert.sigDate.split('-')[0] : null);
-              if (angular.isDefined(block)) {
-                if (!res[block]) {
-                  res[block] = [cert];
-                }
-                else {
-                  res[block].push(cert);
-                }
-              }
-              return res;
-            }, {});
-
-            // Set time to pending cert, from blocks
-            return BMA.blockchain.blocks(_.keys(pendingCertByBlocks)).then(function(blocks){
-              certifications = blocks.reduce(function(res, block){
-                return res.concat(pendingCertByBlocks[block.number].reduce(function(res, cert) {
-                  var certTime = block.medianTime;
-                  var expiresIn = Math.max(0, certTime + parameters.sigWindow - medianTime);
-                  var validBuid = (!cert.cert_time || !cert.cert_time.block_hash || cert.cert_time.block_hash == block.hash);
-                  if (!validBuid) {
-                    console.debug("[wot] Invalid cert {0}: block hash changed".format(cert.pubkey.substring(0,8)));
-                  }
-                  var valid = (expiresIn > 0) && (!certifiersOf || cert.isMember) && validBuid;
-                  return res.concat({
-                    pubkey: cert.pubkey,
-                    uid: cert.uid,
-                    isMember: cert.isMember,
-                    wasMember: cert.wasMember,
-                    time: certTime,
-                    expiresIn: expiresIn,
-                    willExpire: (expiresIn && expiresIn <= csSettings.data.timeWarningExpire),
-                    pending: true,
-                    block: lookupHasCertTime && cert.cert_time ? cert.cert_time.block :
-                    (cert.sigDate ? cert.sigDate.split('-')[0] : null),
-                    valid: valid
-                  });
-                }, []));
-              }, certifications);
-              return certifications;
-            });
-          })
-
-          // Sort and return result
-          .then(function(certifications) {
-
-            // Remove pending cert duplicated with a written & valid cert
-            var writtenCertByPubkey = certifications.reduce(function(res, cert) {
-              if (!cert.pending && cert.valid && cert.expiresIn >= parameters.sigWindow) {
-                res[cert.pubkey] = true;
-              }
-              return res;
-            }, {});
-
-            // Final sort
-            certifications = _sortCertifications(certifications);
-
-            // Split into valid/pending/error
-            var pendingCertifications = [];
-            var errorCertifications = [];
-            var validCertifications = certifications.reduce(function(res, cert) {
-              if (cert.pending) {
-                if (cert.valid && !writtenCertByPubkey[cert.pubkey]) {
-                  pendingCertifications.push(cert);
-                }
-                else if (!cert.valid && !writtenCertByPubkey[cert.pubkey]){
-                  errorCertifications.push(cert);
-                }
-                return res;
-              }
-              return res.concat(cert);
-            }, []);
-
-            return {
-              valid: validCertifications,
-              pending: pendingCertifications,
-              error: errorCertifications
-            };
-          })
-          ;
-      },
-
-      finishLoadRequirements = function(data) {
-        data.requirements.needCertificationCount = (!data.requirements.needMembership && (data.requirements.certificationCount < data.sigQty)) ?
-          (data.sigQty - data.requirements.certificationCount) : 0;
-        data.requirements.willNeedCertificationCount = (!data.requirements.needMembership && !data.requirements.needCertificationCount &&
-          (data.requirements.certificationCount - data.requirements.willExpireCertificationCount) < data.sigQty) ?
-          (data.sigQty - data.requirements.certificationCount + data.requirements.willExpireCertificationCount) : 0;
-        data.requirements.pendingCertificationCount = data.received_cert_pending ? data.received_cert_pending.length : 0;
-
-        // Use /wot/lookup.revoked when requirements not filled
-        data.requirements.revoked = angular.isDefined(data.requirements.revoked) ? data.requirements.revoked : data.revoked;
-
-        // Add events
-        if (data.requirements.revoked) {
-          delete data.hasBadSelfBlock;
-          addEvent(data, {type: 'error', message: 'ERROR.IDENTITY_REVOKED', messageParams: {revocationTime: data.revocationTime}});
-          console.debug("[wot] Identity [{0}] has been revoked".format(data.uid));
-        }
-        else if (data.requirements.pendingRevocation) {
-          addEvent(data, {type:'error', message: 'ERROR.IDENTITY_PENDING_REVOCATION'});
-          console.debug("[wot] Identity [{0}] has pending revocation".format(data.uid));
-        }
-        else if (data.hasBadSelfBlock) {
-          delete data.hasBadSelfBlock;
-          if (!data.isMember) {
-            addEvent(data, {type: 'error', message: 'ERROR.IDENTITY_INVALID_BLOCK_HASH'});
-            console.debug("[wot] Invalid membership for {0}: block hash changed".format(data.uid));
-          }
-        }
-        else if (data.requirements.expired) {
-          addEvent(data, {type: 'error', message: 'ERROR.IDENTITY_EXPIRED'});
-          console.debug("[wot] Identity {0} expired (in sandbox)".format(data.uid));
-        }
-        else if (data.requirements.willNeedCertificationCount > 0) {
-          addEvent(data, {type: 'error', message: 'INFO.IDENTITY_WILL_MISSING_CERTIFICATIONS', messageParams: data.requirements});
-          console.debug("[wot] Identity {0} will need {1} certification(s)".format(data.uid, data.requirements.willNeedCertificationCount));
-        }
-      },
-
       loadData = function(pubkey, withCache, uid, force) {
 
         var data;
@@ -483,18 +278,6 @@ angular.module('cesium.wot.services', ['ngApi', 'cesium.bma.services', 'cesium.c
                 }
               }),
 
-            // Get requirements
-            $q.when()
-              .then(function () {
-                data.requirements = {};
-                data.isMember = false;
-              }),
-            // loadRequirements(pubkey, uid)
-            //   .then(function (requirements) {
-            //     data.requirements = requirements;
-            //     data.isMember = requirements.isMember;
-            //   }),
-
             // Get identity using lookup
             loadIdentityByLookup(pubkey, uid)
               .then(function (identity) {
@@ -502,33 +285,6 @@ angular.module('cesium.wot.services', ['ngApi', 'cesium.bma.services', 'cesium.c
               })
           ])
           .then(function() {
-            if (!data.requirements.uid) {
-              return;
-            }
-
-            var idtyFullKey = data.requirements.uid + '-' + data.requirements.meta.timestamp;
-
-            return $q.all([
-              // Get received certifications
-              loadCertifications(BMA.wot.certifiersOf, data.pubkey, data.lookup ? data.lookup.certifications[idtyFullKey] : null, parameters, medianTime, true /*certifiersOf*/)
-                .then(function (res) {
-                  data.received_cert = res.valid;
-                  data.received_cert_pending = res.pending;
-                  data.received_cert_error = res.error;
-                }),
-
-              // Get given certifications
-              loadCertifications(BMA.wot.certifiedBy, data.pubkey, data.lookup ? data.lookup.givenCertifications : null, parameters, medianTime, false/*certifiersOf*/)
-                .then(function (res) {
-                  data.given_cert = res.valid;
-                  data.given_cert_pending = res.pending;
-                  data.given_cert_error = res.error;
-                })
-            ]);
-          })
-          .then(function() {
-            // Add compute some additional requirements (that required all data like certifications)
-            finishLoadRequirements(data);
 
             // API extension
             return api.data.raisePromise.load(data)
@@ -918,6 +674,7 @@ angular.module('cesium.wot.services', ['ngApi', 'cesium.bma.services', 'cesium.c
     // Register extension points
     api.registerEvent('data', 'load');
     api.registerEvent('data', 'search');
+    api.registerEvent('data', 'loadRequirements');
 
     return {
       id: id,

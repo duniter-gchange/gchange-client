@@ -166,7 +166,7 @@
     },
     "WALLET": {
       "DUNITER_PUBKEY": "Publika ŝlosilo por ricevi la pagojn",
-      "DUNITER_ACCOUNT": "Ricevo de la pagoj en {{currency|currencySymbol}}",
+      "DUNITER_ACCOUNT": "Ricevo de la pagoj en {{currency|abbreviate}}",
       "DUNITER_ACCOUNT_HELP": "La publika ŝlosilo (ĉi-supre) indikas la celkonton de la pagoj, kiujn vi ricevos.",
       "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Neniu publika ŝlosilo de konto estis sciigita. Vi devos doni ĝin al la eventualaj aĉetontoj.<br/>Vi povas tajpi ĝin iam ajn, <b>redaktante vian profilon</b>."
     },
@@ -229,7 +229,7 @@
       "VIEW": {
         "BTN_RECORDS": "Anoncoj",
         "DUNITER_PUBKEY": "Publika ŝlosilo por ricevi la pagojn",
-        "DUNITER_ACCOUNT": "Ricevo de la pagoj en {{currency|currencySymbol}}",
+        "DUNITER_ACCOUNT": "Ricevo de la pagoj en {{currency|abbreviate}}",
         "DUNITER_ACCOUNT_HELP": "La publika ŝlosilo (ĉi-supre) rilatas al la konto uzota por pagi tiun ĉi anoncanton.",
         "DUNITER_ACCOUNT_HELP_ASK_USER": "Tiu ĉi anoncanto ne sciigis la publikan ŝlosilon de sia konto. <a ng-click=\"showNewMessageModal()\">Kontaktu lin/ŝin</a> por ekhavi ĝin."
       },

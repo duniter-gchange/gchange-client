@@ -104,6 +104,14 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
 
           return profile;
         })
+        .then(function(profile) {
+          // Check if linked
+          if (profile.pubkey) {
+            console.debug("[ES] [profile] Check if user profile is linked to a member account - TODO");
+          }
+
+          return profile;
+        })
         .catch(function(err){
           // no profile defined
           if (err && err.ucode && err.ucode == 404) {
@@ -400,6 +408,8 @@ angular.module('cesium.es.profile.services', ['cesium.services', 'cesium.es.http
       deferred.resolve();
       return deferred.promise;
     }
+
+    console.debug("[ES] [profile] Load profile " + data.pubkey);
 
     // Load full profile
     getProfile(data.pubkey)

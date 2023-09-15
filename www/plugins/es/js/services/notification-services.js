@@ -102,16 +102,15 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
         return res.count;
       });
   }
-
-  // Load user notifications
-  function loadNotifications(pubkey, options) {
+  // Load user events (_source, with an id)
+  function loadUserEvents(pubkey, options) {
     options = options || {};
     options.from = options.from || 0;
     options.size = options.size || constants.DEFAULT_LOAD_SIZE;
     var request = {
       query: createFilterQuery(pubkey, options),
-      sort : [
-        { "time" : {"order" : "desc"}}
+      sort: options.sort || [
+        {"time": {"order": "desc"}}
       ],
       from: options.from,
       size: options.size,
@@ -119,17 +118,33 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
     };
 
     return that.raw.postSearch(request)
-      .then(function(res) {
+      .then(function (res) {
         if (!res.hits || !res.hits.total) return [];
-        var notifications = res.hits.hits.reduce(function(res, hit) {
-          var item = new EsNotification(hit._source, markNotificationAsRead);
+        return res.hits.hits.reduce(function(res, hit) {
+          var item = hit._source;
           item.id = hit._id;
+          return res.concat(item);
+        }, []);
+      });
+  }
+
+  // Load user notifications
+  function loadNotifications(pubkey, options) {
+    // Load user events
+    return loadUserEvents(options)
+      .then(function(events) {
+        // Transform into notifications
+        var notifications = (events || []).reduce(function(res, event) {
+          var item = new EsNotification(event, markNotificationAsRead);
+          item.id = event.id;
           return res.concat(item);
         }, []);
 
         return csWot.extendAll(notifications);
       });
   }
+
+
 
   function onNewUserEvent(event) {
     if (!event || !csWallet.isLogin()) return;
@@ -359,6 +374,9 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
   });
 
   // Exports
+  that.source = {
+    load: loadUserEvents
+  };
   that.load = loadNotifications;
   that.unreadCount = loadUnreadNotificationsCount;
   that.html5 = {

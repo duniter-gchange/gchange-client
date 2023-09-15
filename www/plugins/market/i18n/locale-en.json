@@ -167,7 +167,7 @@
     },
     "WALLET": {
       "DUNITER_PUBKEY": "Public key to receive payments",
-      "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
+      "DUNITER_ACCOUNT": "Receipt of payments in {{currency|abbreviate}}",
       "DUNITER_ACCOUNT_HELP": "The public key (above) indicates the destination of the payments you will receive.",
       "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "No public account key has been entered. You will need to give it to prospective buyers.<br/>You can enter it at any time, <b>by editing your profile</b>."
     },
@@ -230,7 +230,7 @@
       "VIEW": {
         "BTN_RECORDS": "Ads",
         "DUNITER_PUBKEY": "Public key to receive payments",
-        "DUNITER_ACCOUNT": "Receipt of payments in {{currency|currencySymbol}}",
+        "DUNITER_ACCOUNT": "Receipt of payments in {{currency|abbreviate}}",
         "DUNITER_ACCOUNT_HELP": "The public key (above) is the account to be used to pay for this user.",
         "DUNITER_ACCOUNT_HELP_ASK_USER": "This user has not communicated their account public key. <a ng-click=\"showNewMessageModal()\">Contact him</a> to get it."
       },

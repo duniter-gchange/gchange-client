@@ -29,19 +29,9 @@ angular.module("cesium.config", [])
 		"maxContentLength": 1300
 	},
 	"node": {
-		"host": "data.gchange.fr",
-		"port": "443"
+		"host": "localhost",
+		"port": "9200"
 	},
-	"fallbackNodes": [
-		{
-			"host": "data.gchange.fr",
-			"port": "443"
-		},
-		{
-			"host": "gchange.data.presles.fr",
-			"port": "443"
-		}
-	],
 	"share": {
 		"mastodonAuthor": "@gchange@framapiaf.org"
 	},
@@ -62,7 +52,7 @@ angular.module("cesium.config", [])
 			}
 		},
 		"converse": {
-			"enable": true,
+			"enable": false,
 			"jid": "anonymous.duniter.org",
 			"bosh_service_url": "https://chat.duniter.org/http-bind/",
 			"auto_join_rooms": [

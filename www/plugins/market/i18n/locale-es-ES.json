@@ -260,7 +260,7 @@
       },
       "WALLET": {
         "DUNITER_PUBKEY": "Llave pública de recepción de pagos",
-        "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|currencySymbol}}",
+        "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|abbreviate}}",
         "DUNITER_ACCOUNT_HELP": "La llave pública (de arriba) indica el destino de los pagos que recibirá.",
         "DUNITER_ACCOUNT_NO_PUBKEY_HELP": "Ninguna llave pública ha sido introducida. Deberá enviársela a los eventuales compradores.<br/>La puede obtener en cualquier momento <b>editando su perfil</b>."
       },
@@ -270,7 +270,7 @@
         },
         "VIEW": {
           "BTN_RECORDS": "Anuncios",
-          "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|currencySymbol}}",
+          "DUNITER_ACCOUNT": "Recepción de pagos en {{currency|abbreviate}}",
           "DUNITER_ACCOUNT_HELP": "La llave pública (de arriba) indica el destino de los pagos que recibirá.",
           "DUNITER_ACCOUNT_HELP_ASK_USER": "Este usuario no ha comunicado su llave pública. <a ng-click=\"showNewMessageModal()\">Contáctelo</a> para obtenerla.",
           "DUNITER_PUBKEY": "Llave pública para recepción de pagos"

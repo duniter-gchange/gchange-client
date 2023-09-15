@@ -2,12 +2,18 @@
 <!-- General section -->
 <ng-if ng-if="::extensionPoint === 'general'">
 
+  <!-- pubkey -->
   <ion-item class="item-icon-left item-text-wrap ink"
             ng-if="formData.profile.pubkey"
             copy-on-click="{{:rebind:formData.profile.pubkey}}">
     <i class="icon ion-card"></i>
     <span translate>MARKET.WOT.VIEW.DUNITER_PUBKEY</span>
     <h4 id="pubkey" class="dark text-left">{{:rebind:formData.profile.pubkey}}</h4>
+
+    <h4 class="gray"
+        ng-repeat="event in :rebind:formData.events | filter: {type: 'pubkey'}">
+      <span trust-as-html="event.message | translate:event.messageParams"></span>
+    </h4>
   </ion-item>
 
   <div class="item item-icon-left item-text-wrap item-wallet-event">
@@ -16,10 +22,12 @@
     <h4 class="gray"
         ng-if="formData.profile.pubkey"
         translate>MARKET.WOT.VIEW.DUNITER_ACCOUNT_HELP</h4>
-    <h4
-        ng-if="!formData.profile.pubkey"
+    <h4 ng-if="!formData.profile.pubkey"
         trust-as-html="'MARKET.WOT.VIEW.DUNITER_ACCOUNT_HELP_ASK_USER'|translate"></h4>
+
   </div>
+
+
 </ng-if>
 
 <ng-if ng-if="::extensionPoint === 'after-general'">

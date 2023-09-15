@@ -25,9 +25,16 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
       },
     };
 
-  function getRecordPrefix(record) {
+  function computeRecordPrefix(record, uppercase) {
     if (!record || !record.id) throw Error('Invalid record: missing record or record.id');
-    return [constants.COMMENTS_PREFIX, record.id].join(':').toUpperCase();
+
+    // For compatibility: allow to use uppercase
+    if (uppercase === true) {
+      return [constants.COMMENTS_PREFIX, record.id].join(':').toUpperCase();
+    }
+
+    // Standard prefix (=keep exact record id)
+    return [constants.COMMENTS_PREFIX, record.id].join(':');
   }
 
   function postSearch(currency, request) {
@@ -48,17 +55,18 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
     console.debug("[market] [tx] Loading TX stats of record {{0}}...".format(record.id));
 
     // Compute prefix, if need
-    options.prefix = options.prefix || getRecordPrefix(record);
+    options.prefix = options.prefix || computeRecordPrefix(record, false);
+    options.oldPrefix = computeRecordPrefix(record, true); // Old format
 
     var request = {
       size: 0,
       query: {
         bool: {
-          must: {
-            match: {
-              comment: options.prefix
-            }
-          }
+          should: [
+            {match: {comment: options.prefix}},
+            {match: {comment: options.oldPrefix}},
+          ],
+          minimum_should_match: 1
         }
       },
       aggs: {
@@ -191,7 +199,7 @@ angular.module('cesium.market.tx.services', ['cesium.services', 'cesium.es.servi
 
   return {
     record: {
-      computePrefix: getRecordPrefix,
+      computePrefix: computeRecordPrefix,
       fillTx: fillRecordTx
     },
     uri: {

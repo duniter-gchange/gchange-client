@@ -16,7 +16,8 @@ function EsNotification(json, markAsReadCallback) {
   // Avoid undefined errors
   json = json || {};
 
-  console.log('TODO json', json);
+  // DEBUG
+  // console.debug('[notification] Processing a JSON: ', json);
 
   that.id = json.id || ('' + Date.now()); // Keep id if exists, otherwise create it from timestamp
   that.type = json.type && json.type.toLowerCase();
@@ -27,17 +28,6 @@ function EsNotification(json, markAsReadCallback) {
   that.message = json.reference && messagePrefixes[json.reference.index] ?
     messagePrefixes[json.reference.index] + json.code :
     'EVENT.' + json.code;
-
-  // Blockchain event
-  if (json.reference.type === 'block') {
-    console.log("TODO", json);
-    if (json.code.startsWith('CROWDFUNDING')) {
-      that.message = 'EVENT.MARKET.' + json.code;
-    }
-    else if (json.code.endsWith('_PUBKEY')) {
-      that.message = 'EVENT.USER.' + json.code;
-    }
-  }
 
   that.params = json.params;
 
@@ -145,6 +135,49 @@ function EsNotification(json, markAsReadCallback) {
     else {
       that.icon = 'ion-person dark';
       that.state = 'app.view_wallet';
+    }
+  }
+
+
+  // Blockchain user event
+  if (json.reference.type === 'block') {
+    // TX crowdfunding event
+    if (json.code.startsWith('CROWDFUNDING_TX_RECEIVED')) {
+
+      // DEBUG
+      console.debug('[notification] Processing a blockchain crowdfunding event: ', json);
+
+      that.avatarIcon = 'ion-card';
+      that.message = 'EVENT.MARKET.' + json.code;
+      that.icon = (json.code === 'CROWDFUNDING_TX_RECEIVED') ? 'ion-archive balanced' : 'ion-paper-airplane dark';
+      that.medianTime = that.time;
+
+      that.state = 'app.market_view_record';
+      that.stateParams = {
+        id: json.params[2],
+        title: json.params[3],
+        refresh: true
+      };
+    }
+
+    // Blockchain user event
+    else if (json.code === 'LINK_PUBKEY' || json.code === 'UNLINK_PUBKEY') {
+
+      // DEBUG
+      console.debug('[notification] Processing a blockchain user event: ', json);
+
+      if (json.code === 'LINK_PUBKEY') {
+        var uid = that.params[1];
+        that.avatarIcon = uid ? 'ion-person' : 'ion-key';
+        that.message = 'EVENT.USER.' + (uid ? 'LINK_UID' : 'LINK_PUBKEY');
+        that.icon = 'ion-lock-combination positive';
+      }
+      // Unlink
+      else {
+        that.avatarIcon = 'ion-person';
+        that.message = 'EVENT.USER.UNLINK_PUBKEY';
+        that.icon = 'ion-alert-circled energized';
+      }
     }
   }
 

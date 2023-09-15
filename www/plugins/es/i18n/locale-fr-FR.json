@@ -91,6 +91,9 @@
       "BTN_REDO_STAR_HELP": "Actualiser votre note",
       "BTN_FOLLOW": "Suivre l'activité de ce profil",
       "BTN_STOP_FOLLOW": "Ne plus suivre ce profil"
+    },
+    "EVENT": {
+      "LINKED_UID": "Compte associé au compte membre {{currency|abbreviate}} {{uid}}"
     }
   },
   "COMMENTS": {

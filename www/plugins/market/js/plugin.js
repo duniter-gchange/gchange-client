@@ -5,7 +5,8 @@ angular.module('cesium.market.services', [
   'cesium.market.modal.services',
   'cesium.market.record.services',
   'cesium.market.tx.services',
-  'cesium.market.wallet.services',
+  'cesium.market.wallet.services',,
+  'cesium.market.profile.services',
   'cesium.market.settings.services',
   'cesium.market.category.services'
 ]);
