@@ -131,7 +131,7 @@ angular.module('cesium.es.notification.services', ['cesium.services', 'cesium.es
   // Load user notifications
   function loadNotifications(pubkey, options) {
     // Load user events
-    return loadUserEvents(options)
+    return loadUserEvents(pubkey, options)
       .then(function(events) {
         // Transform into notifications
         var notifications = (events || []).reduce(function(res, event) {
