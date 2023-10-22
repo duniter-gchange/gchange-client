@@ -21,7 +21,7 @@
         "WARNING": "You now have to complete your user profile.<br/><br/>This is <b>public information</b>, accessible to everyone.",
         "TITLE": "Lastname, Firstname",
         "TITLE_HELP": "Lastname, Firstname or pseudonym",
-        "DESCRIPTION": "Abut me",
+        "DESCRIPTION": "About me",
         "DESCRIPTION_HELP": "Say something about you..."
       },
       "SUBSCRIPTION": {

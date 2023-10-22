@@ -11,7 +11,8 @@ angular.module('cesium.settings.services', ['ngApi', 'cesium.config'])
     {id:'eo-EO', label:'Esperanto', flag: 'eo'},
     {id:'fr-FR', label:'Français', flag: 'fr', country: 'fr'},
     {id:'fr-BE', label:'Français (BE)', flag: 'be', country: 'be'},
-    {id:'es-ES', label:'Spanish', flag: 'es', country: 'es'}
+    {id:'es-ES', label:'Spanish', flag: 'es', country: 'es'},
+    {id:'de-DE', label:'Deutsch', flag: 'de', country: 'de'}
   ];
   var fallbackLocale = csConfig.fallbackLanguage ? fixLocale(csConfig.fallbackLanguage) : 'en';
 
